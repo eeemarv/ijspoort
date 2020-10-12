@@ -79,7 +79,6 @@
   "dependencies": {
     "autocompleter": "^6.0.3",
     "electron-squirrel-startup": "^1.0.0",
-    "jquery": "^3.5.1",
     "json-loader": "^0.5.7",
     "nfc-pcsc": "^0.8.0",
     "node-gyp": "^7.1.0",

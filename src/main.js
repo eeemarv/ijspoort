@@ -59,8 +59,6 @@ ipcMain.on('xlsx-import-btn-clicked', (ev) => {
 	importXlsxFileFromUser();
 });
 
-
-
 /////////
 /////////
 

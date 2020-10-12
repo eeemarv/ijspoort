@@ -99,22 +99,28 @@ const importXlsxFile = () => {
             console.log(err);
         });
         */
+        let search_name = person.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        let search_first_name = person.first_name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        let search_address = person.address.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
         let person_by_first_name = {
-            "_id": person.first_name.toLowerCase() + '_' + person_id,
+            "_id": search_first_name + ' ' + search_name + '_' + person_id,
             "person_id": person_id,
             "type": "first_name"
         };
+
         let person_by_name = {
-            "_id": person.name.toLowerCase() + '_' + person_id,
+            "_id": search_name + ' ' / search_first_name + '_' + person_id,
             "person_id": person_id,
             "type": "name"
         };
+
         let person_by_address = {
-            "_id": person.address.toLowerCase() + '_' + person_id,
+            "_id": search_address + '_' + person_id,
             "person_id": person_id,
             "type": "address"
         };
+
         let person_by_phone = {
             "_id": person.phone + '_' + person_id,
             "person_id": person_id,
@@ -175,7 +181,7 @@ ipcRenderer.on('nfc', (ev, card) => {
         console.log(person);
         addReg({"id": person._id, "doc": person}, 'nfc');
         nfc_uid_to_reg = '';
-    }).catch(function (err) {
+    }).catch((err) => {
         console.log(err);
         console.log('nfc open to reg');
         nfc_uid_to_reg = uid;
@@ -202,7 +208,7 @@ ipcRenderer.on('eid', (ev, eid) => {
     el_eid_first_names.textContent = eid.first_names;
     el_eid_name.textContent = eid.name;
 
-    let eid_search_name = eid.name.toLowerCase();
+    let eid_search_name = eid.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     let birth_ary = eid.birth_date.toLowerCase().replace('  ', ' ').split(' ');
 
     console.log('BIRTH DATE');
@@ -291,19 +297,19 @@ autocomplete({
     emptyMsg: '-- Niets gevonden --',
     className: 'autocomplete',
     fetch: (text, update) => {
-        let lower_text = text.toLowerCase();
+        let search_text = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
         db_person_search.allDocs({
-            startkey: lower_text,
-            endkey: lower_text + 'zzz',
-            limit: 12,
+            startkey: search_text,
+            endkey: search_text + 'zzz',
+            limit: 15,
             include_docs: true
         }).then((result) => {
             let person_ids = [];
             result.rows.forEach((r) => {
-                if (r.doc.type === 'birth_date'){
-                    return;
+                if (r.doc.type !== 'birth_date'){
+                    person_ids.push(r.doc.person_id);
                 }
-                person_ids.push(r.doc.person_id);
             });
             return person_ids;
         }).then((person_ids) => {
