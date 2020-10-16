@@ -90,37 +90,26 @@ const importXlsxFile = () => {
 
         db_person.put(person);
 
-        /*
-        db_person.get(person_id).then((doc) => {
-            let rev_person = person;
-            rev_person._rev = doc._rev;
-            return db.put(rev_person);
-        }).catch((err) => {
-            console.log(err);
-        });
-        */
-        let search_name = person.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        let search_first_name = person.first_name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-        let search_address = person.address.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+        let search_name = person.name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+        let search_first_name = person.first_name.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+        let search_address = person.address.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+        let search_email = person.email.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
 
         let person_by_first_name = {
-            "_id": search_first_name + ' ' + search_name + '_' + person_id,
+            "_id": search_first_name + search_name + '_' + person_id,
             "person_id": person_id,
             "type": "first_name"
         };
-
         let person_by_name = {
-            "_id": search_name + ' ' / search_first_name + '_' + person_id,
+            "_id": search_name + search_first_name + '_' + person_id,
             "person_id": person_id,
             "type": "name"
         };
-
         let person_by_address = {
             "_id": search_address + '_' + person_id,
             "person_id": person_id,
             "type": "address"
         };
-
         let person_by_phone = {
             "_id": person.phone + '_' + person_id,
             "person_id": person_id,
@@ -130,6 +119,11 @@ const importXlsxFile = () => {
             "_id": person.birth_date + '_' + person_id,
             "person_id": person_id,
             "type": "birth_date"
+        };
+        let person_by_email = {
+            "_id": search_email + '_' + person_id,
+            "person_id": person_id,
+            "type": "email"
         };
 
         db_person_search.put(person_by_first_name);
@@ -142,6 +136,9 @@ const importXlsxFile = () => {
         }
         if (person.birth_date !== ''){
             db_person_search.put(person_by_birth_date);
+        }
+        if (person.email !== ''){
+            db_person_search.put(person_by_email);
         }
 
         console.log(person);
@@ -479,7 +476,7 @@ function addReg(item, method){
         "ts_local": now.toString(),
         "ts_epoch": now.getTime(),
         "method": method,
-        "_id": 'ts_' + now.getTime().toString()
+        "_id": 'ts_' + now.getTime().toString() + '_' + item.id
     };
     db_reg.put(reg);
     document.getElementById('manual').focus();
