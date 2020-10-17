@@ -159,6 +159,7 @@ ipcRenderer.on('xlsx-imported', (ev, file, contents) => {
 ipcRenderer.on('nfc-reader', (ev) => {
     el_nfc_reader.classList.add('bg-on');
 });
+
 ipcRenderer.on('nfc-reader-end', (ev) => {
     el_nfc_reader.classList.remove('bg-on');
     nfc_uid_to_reg = '';
@@ -194,6 +195,7 @@ ipcRenderer.on('nfc-off', (ev, card) => {
 ipcRenderer.on('eid-reader', (ev) => {
     el_eid_reader.classList.add('bg-on');
 });
+
 ipcRenderer.on('eid-reader-end', (ev) => {
     el_eid_reader.classList.remove('bg-on');
 });
@@ -328,13 +330,20 @@ autocomplete({
         let item_row_1_div = document.createElement("div");
         let item_row_2_div = document.createElement("div");
         item_row_1_div.setAttribute('class', 'd-flex w-100 justify-content-between');
+        item_row_2_div.setAttribute('class', 'd-flex w-100 justify-content-between');
+
         let item_name_div = document.createElement("div");
         let item_phone_div = document.createElement("div");
+        let item_address_div = document.createElement("div");
+        let item_email_div = document.createElement("div");
         item_name_div.textContent = item.doc.first_name + ' ' + item.doc.name;
         item_phone_div.textContent = item.doc.phone;
-        item_row_2_div.textContent = item.doc.address + ', ' + item.doc.postcode + ' ' + item.doc.municipality;
+        item_address_div.textContent = item.doc.address + ', ' + item.doc.postcode + ' ' + item.doc.municipality;
+        item_email_div.textContent = item.doc.email;
         item_row_1_div.append(item_name_div);
         item_row_1_div.append(item_phone_div);
+        item_row_2_div.append(item_address_div);
+        item_row_2_div.append(item_email_div);
         item_div.append(item_row_1_div);
         item_div.append(item_row_2_div);
         return item_div;
