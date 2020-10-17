@@ -294,24 +294,23 @@ autocomplete({
     emptyMsg: '-- Niets gevonden --',
     className: 'autocomplete',
     fetch: (text, update) => {
-        let search_text = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
-
+        let search_text = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         db_person_search.allDocs({
             startkey: search_text,
             endkey: search_text + 'zzz',
             limit: 15,
             include_docs: true
         }).then((result) => {
-            let person_ids = [];
+            let person_ids = {};
             result.rows.forEach((r) => {
                 if (r.doc.type !== 'birth_date'){
-                    person_ids.push(r.doc.person_id);
+                    person_ids[r.doc.person_id] = r.doc.person_id;
                 }
             });
             return person_ids;
         }).then((person_ids) => {
             return db_person.allDocs({
-                keys: person_ids,
+                keys: Object.values(person_ids),
                 include_docs: true
             });
         }).then((persons) => {
