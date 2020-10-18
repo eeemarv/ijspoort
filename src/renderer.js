@@ -6,6 +6,10 @@ import fs from 'fs';
 import XLSX from 'xlsx';
 import autocomplete from 'autocompleter';
 
+// import Store from 'electron-store';
+
+// const store = new Store();
+
 let csv_map = '';
 
 const eid_months = {
@@ -37,7 +41,6 @@ const db_prefix = 'ijspoort_';
 const db_reg = new PouchDB(db_prefix + 'reg');
 const db_nfc = new PouchDB(db_prefix + 'nfc');
 const db_eid = new PouchDB(db_prefix + 'eid');
-const db_eid_img = new PouchDB(db_prefix + 'eid_img');
 const db_person = new PouchDB(db_prefix + 'person');
 const db_person_search = new PouchDB(db_prefix + 'person_search');
 const db_person_nfc_search = new PouchDB(db_prefix + 'person_nfc_search');
@@ -285,12 +288,12 @@ ipcRenderer.on('eid-off', (ev, eid) => {
     el_eid_name.textContent = '---';
 });
 
-let regList = document.getElementById('reg_list');
+let reg_list = document.getElementById('reg_list');
 
 let count = 0;
 
 autocomplete({
-    input: document.getElementById('manual'),
+    input: el_manual,
     minLength: 1,
     preventSubmit: true,
     emptyMsg: '-- Niets gevonden --',
@@ -418,64 +421,64 @@ function addReg(item, method){
 
     count++;
     let now = new Date();
-    let listItem = document.createElement('li');
-    listItem.setAttribute('class', 'list-group-item');
-    let justifyDiv = document.createElement('div');
-    justifyDiv.setAttribute('class', 'd-flex w-100 justify-content-between');
+    let list_item = document.createElement('li');
+    list_item.setAttribute('class', 'list-group-item');
+    let justify_div = document.createElement('div');
+    justify_div.setAttribute('class', 'd-flex w-100 justify-content-between');
 
-    let btnsDiv = document.createElement('div');
-    let nfcBtn = document.createElement('button');
-    nfcBtn.setAttribute('class', 'btn btn-warning mr-1');
-    nfcBtn.setAttribute('data-nfc-reg-btn', item.id);
-    nfcBtn.setAttribute('type', 'button');
-    nfcBtn.addEventListener('click', () => {
+    let btns_div = document.createElement('div');
+    let nfc_btn = document.createElement('button');
+    nfc_btn.setAttribute('class', 'btn btn-warning mr-1');
+    nfc_btn.setAttribute('data-nfc-reg-btn', item.id);
+    nfc_btn.setAttribute('type', 'button');
+    nfc_btn.addEventListener('click', () => {
         registerNFC(item.id);
     });
-    nfcBtn.textContent = 'NFC';
-    let editBtn = document.createElement('button');
-    editBtn.setAttribute('class', 'btn btn-primary mr-1');
-    editBtn.setAttribute('type', 'button');
-    editBtn.textContent = 'Aanpassen';
-    let delBtn = document.createElement('button');
-    delBtn.setAttribute('class', 'btn btn-danger');
-    delBtn.setAttribute('type', 'button');
-    delBtn.textContent = 'Verwijderen';
+    nfc_btn.textContent = 'NFC';
+    let edit_btn = document.createElement('button');
+    edit_btn.setAttribute('class', 'btn btn-primary mr-1');
+    edit_btn.setAttribute('type', 'button');
+    edit_btn.textContent = 'Aanpassen';
+    let del_btn = document.createElement('button');
+    del_btn.setAttribute('class', 'btn btn-danger');
+    del_btn.setAttribute('type', 'button');
+    del_btn.textContent = 'Verwijderen';
 
-    btnsDiv.append(nfcBtn);
-    btnsDiv.append(editBtn);
-    btnsDiv.append(delBtn);
+    btns_div.append(nfc_btn);
+    btns_div.append(edit_btn);
+    btns_div.append(del_btn);
 
-    let dataDiv = document.createElement('div');
-    let nameP = document.createElement('div');
-    let phoneP = document.createElement('div');
-    phoneP.setAttribute('class', 'd-flex w-100 justify-content-between mb-0');
+    let data_div = document.createElement('div');
+    let name_div = document.createElement('div');
+    let phone_div = document.createElement('div');
+    phone_div.setAttribute('class', 'd-flex w-100 justify-content-between mb-0');
 
-    let countSpan = document.createElement('span');
-    countSpan.textContent = count + '.) ';
-    let timeSpan = document.createElement('span');
-    timeSpan.setAttribute('class', 'text-warning');
-    let h_m = now.getHours() + ':' + now.getMinutes();
-    timeSpan.textContent = h_m + ' ';
-    let nameSpan = document.createElement('span');
-    nameSpan.textContent = item.doc.first_name + ' ' + item.doc.name;
-    nameP.append(countSpan);
-    nameP.append(timeSpan);
-    nameP.append(nameSpan);
-    nameP.setAttribute('class', 'mb-0');
+    let count_span = document.createElement('span');
+    count_span.textContent = count + ' .) ';
+    let time_span = document.createElement('span');
+    time_span.setAttribute('class', 'text-warning');
+    let h_m = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+    time_span.textContent = h_m + ' ';
+    let name_span = document.createElement('span');
+    name_span.textContent = item.doc.first_name + ' ' + item.doc.name;
+    name_div.append(count_span);
+    name_div.append(time_span);
+    name_div.append(name_span);
+    name_div.setAttribute('class', 'mb-0');
 
-    let phoneSpan = document.createElement('div');
-    phoneSpan.textContent = item.doc.phone;
-    phoneP.append(phoneSpan);
-    phoneP.append(nfc_span);
+    let phone_span = document.createElement('div');
+    phone_span.textContent = item.doc.phone;
+    phone_div.append(phone_span);
+    phone_div.append(nfc_span);
 
-    dataDiv.append(nameP);
-    dataDiv.append(phoneP);
+    data_div.append(name_div);
+    data_div.append(phone_div);
 
-    justifyDiv.append(dataDiv);
-    justifyDiv.append(btnsDiv);
-    listItem.append(justifyDiv);
-    regList.prepend(listItem);
-    document.getElementById('manual').value = '';
+    justify_div.append(data_div);
+    justify_div.append(btns_div);
+    list_item.append(justify_div);
+    reg_list.prepend(list_item);
+    el_manual.value = '';
 
     let reg = {
         "h:m": h_m,
@@ -486,8 +489,9 @@ function addReg(item, method){
         "method": method,
         "_id": 'ts_' + now.getTime().toString() + '_' + item.id
     };
+
     db_reg.put(reg);
-    document.getElementById('manual').focus();
+    el_manual.focus();
 }
 
 console.log('👋 This message is being logged by "renderer.js", included via webpack');
