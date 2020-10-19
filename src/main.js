@@ -6,7 +6,9 @@ const fs = require('fs');
 /////////
 const { NFC } = require('nfc-pcsc');
 const { spawn } = require('child_process');
-import Eid from './eid';
+// const pkcs11js =  require('pkcs11js');
+// import Eid from './eid';
+import EidPk from './eid_pk';
 /////////
 ////////
 
@@ -84,6 +86,10 @@ nfc.on('reader', reader => {
 		}
 
 		if (!reader.autoProcessing){
+
+			let eid_pk = new EidPk();
+
+			/*
 			var eidenv = spawn('eidenv');
 			eidenv.on('error', function(err) {
 				console.log('stderr: <'+err+'>' );
@@ -104,6 +110,7 @@ nfc.on('reader', reader => {
 			console.log('stderr: <'+data+'>' );
 			window.webContents.send('eid-error', data);
 		});
+		*/
 		}
 	});
 

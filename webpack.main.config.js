@@ -12,5 +12,6 @@ module.exports = {
     leveldown: 'leveldown',
     pouchdb: 'pouchdb',
     pouchdbFind: 'pouchdb-find',
+    pkcs11js: 'pkcs11js',
   }
 };

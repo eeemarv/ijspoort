@@ -9,8 +9,19 @@ module.exports = [
     loader: 'json-loader',
   },
   {
+    test: /\.m?js$/,
+    exclude: /node_modules/,
+    use: {
+      loader: "babel-loader",
+      options: {
+        presets: ['@babel/preset-env'],
+        plugins: ['@babel/plugin-proposal-class-properties'],
+      }
+    }
+  },
+  {
     test: /\.(m?js|node)$/,
-//    parser: { amd: false },
+    parser: { amd: false },
     use: {
       loader: '@marshallofsound/webpack-asset-relocator-loader',
       options: {
