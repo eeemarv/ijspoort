@@ -5,10 +5,7 @@ import { ipcRenderer, remote } from 'electron';
 import fs from 'fs';
 import XLSX from 'xlsx';
 import autocomplete from 'autocompleter';
-
-// import Store from 'electron-store';
-
-// const store = new Store();
+import settings from 'electron-settings';
 
 let csv_map = '';
 

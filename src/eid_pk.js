@@ -1,7 +1,5 @@
 import pkcs11js from 'pkcs11js';
 
-// const pkcs11js = require('pkcs11js');
-
 export default class EidPk {
 
     static pkcs11 = new pkcs11js.PKCS11();
