@@ -7,9 +7,7 @@ Developed on Ubuntu 20.04 (& Linux Mint 20)
 
 Dependencies
 
-Belgian eid middleware, eid-viewer
-
-opensc
+Belgian eid middleware
 
 dependencies listed on [nfc-pcsc](https://github.com/pokusew/nfc-pcsc)
 

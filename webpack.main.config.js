@@ -13,5 +13,6 @@ module.exports = {
     pouchdb: 'pouchdb',
     pouchdbFind: 'pouchdb-find',
     pkcs11js: 'pkcs11js',
+    pcsclite: 'pcsclite'
   }
 };

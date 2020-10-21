@@ -5,6 +5,7 @@ import { ipcRenderer, remote } from 'electron';
 import fs from 'fs';
 import XLSX from 'xlsx';
 import autocomplete from 'autocompleter';
+
 import settings from 'electron-settings';
 
 let csv_map = '';
@@ -145,7 +146,6 @@ const importXlsxFile = () => {
     });
 
     console.log(json_sheet);
-
 }
 
 el_btn_import.addEventListener('click', () => {
@@ -156,16 +156,16 @@ ipcRenderer.on('xlsx-imported', (ev, file, contents) => {
 
 });
 
-ipcRenderer.on('nfc-reader', (ev) => {
+ipcRenderer.on('dev.nfc.on', (ev) => {
     el_nfc_reader.classList.add('bg-on');
 });
 
-ipcRenderer.on('nfc-reader-end', (ev) => {
+ipcRenderer.on('dev.nfc.off', (ev) => {
     el_nfc_reader.classList.remove('bg-on');
     nfc_uid_to_reg = '';
 });
 
-ipcRenderer.on('nfc', (ev, card) => {
+ipcRenderer.on('nfc.on', (ev, card) => {
     el_nfc.classList.add('bg-on');
     el_nfc_uid.textContent = card.uid;
 
@@ -186,21 +186,21 @@ ipcRenderer.on('nfc', (ev, card) => {
     });
 });
 
-ipcRenderer.on('nfc-off', (ev, card) => {
+ipcRenderer.on('nfc.off', (ev) => {
     el_nfc.classList.remove('bg-on');
     el_nfc_uid.textContent = '---';
     nfc_uid_to_reg = '';
 });
 
-ipcRenderer.on('eid-reader', (ev) => {
+ipcRenderer.on('dev.eid.on', (ev) => {
     el_eid_reader.classList.add('bg-on');
 });
 
-ipcRenderer.on('eid-reader-end', (ev) => {
+ipcRenderer.on('dev.eid.off', (ev) => {
     el_eid_reader.classList.remove('bg-on');
 });
 
-ipcRenderer.on('eid', (ev, eid) => {
+ipcRenderer.on('eid.on', (ev, eid) => {
 
     el_eid.classList.add('bg-on');
     el_eid_national_number.textContent = eid.national_number;
@@ -278,7 +278,7 @@ ipcRenderer.on('eid', (ev, eid) => {
     });
 });
 
-ipcRenderer.on('eid-off', (ev, eid) => {
+ipcRenderer.on('eid.off', (ev) => {
     el_eid.classList.remove('bg-on');
     el_eid_national_number.textContent = '---';
     el_eid_first_names.textContent = '---';

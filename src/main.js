@@ -1,18 +1,6 @@
-const { app, BrowserWindow, Menu, ipcMain, dialog } = require('electron');
-const path = require('path');
-const fs = require('fs');
-
-/////////
-/////////
-const { NFC } = require('nfc-pcsc');
-const { spawn } = require('child_process');
-// const pkcs11js =  require('pkcs11js');
-// import Eid from './eid';
-import EidPk from './eid_pk';
-/////////
-////////
-
-let window = null;
+import { app, BrowserWindow, Menu, ipcMain, dialog } from 'electron';
+import { NFC } from 'nfc-pcsc';
+import EidReader from './eid_reader';
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -20,10 +8,12 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 const createWindow = () => {
-  // Create the browser window.
-  window = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 800,
-    height: 600,
+	height: 600,
+	show: false,
+	darkTheme: true,
+	backgroundColor: '#000000',
     webPreferences: {
       nodeIntegration: true,
 	  nodeIntegrationInWorker: true,
@@ -31,16 +21,111 @@ const createWindow = () => {
     }
   });
 
-  // and load the index.html of the app.
-  window.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
+  win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
+  .then(() => {
+	console.log('win then');
+	listenPcsc(win);
+  });
 
-  // Open the DevTools.
-  window.webContents.openDevTools({
+  win.webContents.openDevTools({
     'mode': 'bottom'
   });
+
+  win.once('ready-to-show', () => {
+	console.log('win event ready-to-show');
+	win.show();
+  });
+
+  return win;
 };
 
-app.on('ready', createWindow);
+const listenPcsc = (win) => {
+	const pcsc = new NFC();
+	const eid_reader = new EidReader();
+
+	pcsc.on('error', err => {
+		win.webContents.send('device.error', err);
+	});
+
+	pcsc.on('reader', reader => {
+		if (reader.name.toLowerCase().indexOf('acr122') === -1) {
+			return;
+		}
+
+		console.log('dev.nfc.on', reader.reader.name);
+		win.webContents.send('dev.nfc.on');
+
+		reader.on('card', card => {
+			console.log(reader.reader.name, 'nfc.on', card);
+			win.webContents.send('nfc.on', card);
+		});
+
+		reader.on('card.off', card => {
+			console.log(reader.reader.name, 'nfc.off', card);
+			win.webContents.send('nfc.off');
+		});
+
+		reader.on('error', err => {
+			console.log(reader.reader.name, 'dev.nfc.error', err);
+			win.webContents.send('dev.nfc.error', err);
+		});
+
+		reader.on('end', () => {
+			console.log(reader.reader.name, 'dev.nfc.off');
+			win.webContents.send('dev.nfc.off');
+		});
+	});
+
+	pcsc.on('reader', reader => {
+		if (reader.name.toLowerCase().indexOf('acr122') !== -1) {
+			return;
+		}
+
+		console.log(reader.reader.name, 'dev.eid.on');
+		reader.autoProcessing = false;
+		win.webContents.send('dev.eid.on');
+
+		reader.on('card', card => {
+			win.webContents.send('eid.wati');
+
+			let eid_slot = eid_reader.get_slot();
+
+			if (typeof eid_slot === 'undefined'){
+				console.log(reader.reader.name, 'eid.undefined', card);
+				win.webContents.send('eid.undefined');
+				return;
+			}
+			let eid = eid_reader.read(eid_slot);
+			if (typeof eid === 'undefined'){
+				console.log(reader.reader.name, 'eid.undefined', card);
+				win.webContents.send('eid.undefined');
+				return;
+			}
+
+			console.log('eid.on', eid);
+			win.webContents.send('eid.on', eid);
+		});
+
+		reader.on('card.off', card => {
+			console.log(reader.reader.name, 'eid.of');
+			win.webContents.send('eid.off');
+		});
+
+		reader.on('error', err => {
+			console.log(reader.reader.name, 'dev.eid.error', err);
+			win.webContents.send('dev.eid.error', err);
+		});
+
+		reader.on('end', () => {
+			console.log(reader.reader.name, 'dev.eid.off');
+			win.webContents.send('dev.eid.off');
+		});
+	});
+};
+
+app.on('ready', () => {
+	createWindow();
+});
 
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -59,90 +144,4 @@ app.on('activate', () => {
 ipcMain.on('xlsx-import-btn-clicked', (ev) => {
 	cconsole.log('click-handle');
 	importXlsxFileFromUser();
-});
-
-/////////
-/////////
-
-const nfc = new NFC();
-
-nfc.on('reader', reader => {
-	if (reader.name.toLowerCase().indexOf('acr122') === -1) {
-		reader.autoProcessing = false;
-		window.webContents.send('eid-reader');
-	} else {
-		window.webContents.send('nfc-reader');
-	}
-
-	console.log(`${reader.reader.name}  device attached`);
-
-	reader.on('card', card => {
-		console.log(`${reader.reader.name}  card inserted`, card);
-		window.webContents.send('card', card);
-
-		if (reader.autoProcessing){
-			console.log('uid:: ' + card.uid);
-			window.webContents.send('nfc', card);
-		}
-
-		if (!reader.autoProcessing){
-
-			let eid_pk = new EidPk();
-
-			/*
-			var eidenv = spawn('eidenv');
-			eidenv.on('error', function(err) {
-				console.log('stderr: <'+err+'>' );
-				window.webContents.send('eidenv-error', err);
-			});
-
-		eidenv.stdout.on('data', function (eidenv_out) {
-			let eid = new Eid(eidenv_out.toString());
-			console.log(eid);
-			if (eid.name === ''){
-				window.webContents.send('eid-empty', eid);
-			} else {
-				window.webContents.send('eid', eid);
-			}
-		});
-
-		eidenv.stderr.on('data', function (data) {
-			console.log('stderr: <'+data+'>' );
-			window.webContents.send('eid-error', data);
-		});
-		*/
-		}
-	});
-
-	reader.on('card.off', card => {
-		console.log(`${reader.reader.name}  card removed`, card);
-		if (reader.autoProcessing){
-			window.webContents.send('nfc-off', card);
-		} else {
-			window.webContents.send('eid-off', card);
-		}
-	});
-
-	reader.on('error', err => {
-		console.log(`${reader.reader.name}  an error occurred`, err);
-		if (reader.autoProcessing){
-			window.webContents.send('nfc-reader-error', err);
-		} else {
-			window.webContents.send('eid-reader-error', err);
-		}
-	});
-
-	reader.on('end', () => {
-		console.log(`${reader.reader.name}  device removed`);
-		if (reader.autoProcessing){
-			window.webContents.send('nfc-reader-end');
-		} else {
-			window.webContents.send('eid-reader-end');
-		}
-	});
-});
-
-nfc.on('error', err => {
-	console.log('an error occurred', err);
-	window.webContents.send('pcsc-error', err);
 });
