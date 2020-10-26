@@ -29,6 +29,19 @@ module.exports = [
       },
     },
   },
+  {
+    test: /\.svelte$/,
+    exclude: /node_modules/,
+    use: {
+      loader: 'svelte-loader',
+      options: {
+        css: false,
+        hotReload: false,
+      },
+    },
+  },
+
+
 
   // Put your webpack loader rules in this array.  This is where you would put
   // your ts-loader configuration for instance:

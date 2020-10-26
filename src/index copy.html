@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>ijspoort</title>
+  </head>
+  <body class="vh-100">
+    <div class="container-fluid">
+      <div class="row vh-100">
+        <div class="col-md-9 vh-100">
+            <div class="form-group">
+              <label for="manual">Manuele selectie van lid</label>
+              <input type="text" id="manual" class="form-control" id="exampleInputEmail1" aria-describedby="manual_help" placeholder="" value="" data-manual-input>
+              <span id="manual_help" class="form-text">Typ voornaam, achternaam, adres, emaill of telefoonnummer om auto-suggesties te krijgen</span>
+            </div>
+          <div class="row" data-unknown-tag hidden>
+            <div class="col bg-danger">
+              <h2>Onbekende tag</h2>
+            </div>
+          </div>
+          <div class="row" data-unknown-person hidden>
+            <div class="col bg-danger">
+              <h2>Persoon niet gekend</h2>
+            </div>
+          </div>
+          <div class="row" data-inactive-member hidden>
+            <div class="col bg-warning">
+              <h2>Niet actief lid</h2>
+            </div>
+          </div>
+          <div class="row" data-verify hidden>
+            <div class="col bg-warning">
+              <h2>Verifieer gegevens</h2>
+            </div>
+          </div>
+          <div class="row" data-ok hidden>
+            <div class="col bg-success">
+              <h2>Ok</h2>
+            </div>
+          </div>
+          <div class="row" data-already-registered hidden>
+            <div class="col bg-success">
+              <h2>Reeds geregistreerd</h2>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col h-100">
+              <ul class="list-group list-group-scroll list-group-striped list-group-border-bottom" id="reg_list">
+              </ul>
+
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 bg-primary h-100">
+          <div class="row h-25">
+            <div class="col">
+
+              <div class="card text-white border border-white m-3">
+                <div class="card-body border-bottom border-white py-2" id="eid_reader">eID</div>
+                <div class="card-body py-2" id="eid">
+                  <p class="card-text py-0 mb-0" id="eid_national_number">---</p>
+                  <p class="card-text py-0 mb-0" id="eid_first_names">---</p>
+                  <p class="card-text py-0 mb-0" id="eid_name">---</p>
+                </div>
+              </div>
+
+              <div class="card text-white border border-white m-3">
+                <div class="card-body border-bottom border-white py-2" id="nfc_reader">NFC</div>
+                <div class="card-body py-2" id="nfc">
+                  <p class="card-text py-0 mb-0" id="nfc_uid">---</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <div class="row h-25">
+            <div class="col">
+            </div>
+          </div>
+          <div class="row h-25">
+            <div class="col">
+              <div class="card text-white border border-white m-3">
+                <div class="card-body border-bottom border-white py-2">
+                  <button type="button" class="btn btn-info" id="btn_import">Import</button>
+                </div>
+                <div class="card-body py-2">
+                  <button type="button" class="btn btn-info" id="btn_map">Map</button>
+                </div>
+              </div>
+
+
+
+            </div>
+          </div>
+
+          <div class="row h-25">
+            <div class="col p-5">
+                <h1>ijspoort</h1>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

@@ -4,6 +4,7 @@ module.exports = {
    * that runs in the main process.
    */
   entry: './src/main.js',
+  devtool: 'source-map',
   // Put your normal webpack config below here
   module: {
     rules: require('./webpack.rules'),
@@ -11,7 +12,6 @@ module.exports = {
   externals: {
     leveldown: 'leveldown',
     pouchdb: 'pouchdb',
-    pouchdbFind: 'pouchdb-find',
     pkcs11js: 'pkcs11js',
     pcsclite: 'pcsclite'
   }

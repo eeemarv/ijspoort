@@ -9,17 +9,23 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 
 const createWindow = () => {
   const win = new BrowserWindow({
-    width: 800,
-	height: 600,
+    width: 1400,
+	height: 800,
 	show: false,
 	darkTheme: true,
 	backgroundColor: '#000000',
     webPreferences: {
+		/*
+	  worldSafeExecuteJavaScript: true,
+	  contextIsolation: true,
+	  */
       nodeIntegration: true,
 	  nodeIntegrationInWorker: true,
 	  enableRemoteModule: true
     }
   });
+
+  win.setMinimumSize(1400, 768);
 
   win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
   .then(() => {
@@ -86,7 +92,7 @@ const listenPcsc = (win) => {
 		win.webContents.send('dev.eid.on');
 
 		reader.on('card', card => {
-			win.webContents.send('eid.wati');
+			win.webContents.send('eid.wait');
 
 			let eid_slot = eid_reader.get_slot();
 

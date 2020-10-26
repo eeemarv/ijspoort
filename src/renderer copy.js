@@ -1,20 +1,5 @@
-import App from './App.svelte';
-
 import './bootstrap.css';
 import './index.css';
-
-const app = new App({
-	target: document.body,
-	props: {
-		name: 'world'
-	}
-});
-
-window.app = app;
-
-export default app;
-
-/*
 
 import { ipcRenderer, remote } from 'electron';
 import fs from 'fs';
@@ -49,7 +34,7 @@ const eid_months = {
 var nfc_uid_to_reg = '';
 
 const PouchDB = require('pouchdb').default;
-PouchDB.plugin(require('pouchdb-find'));
+// PouchDB.plugin(require('pouchdb-find'));
 const db_prefix = 'ijspoort_';
 const db_reg = new PouchDB(db_prefix + 'reg');
 const db_nfc = new PouchDB(db_prefix + 'nfc');
@@ -507,5 +492,3 @@ function addReg(item, method){
 }
 
 console.log('👋 This message is being logged by "renderer.js", included via webpack');
-
-*/
