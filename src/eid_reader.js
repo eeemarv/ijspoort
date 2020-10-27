@@ -1,6 +1,6 @@
-import pkcs11js from 'pkcs11js';
+const pkcs11js = require('pkcs11js');
 
-export default class EidReader {
+class EidReader {
     static pkcs11 = new pkcs11js.PKCS11();
 
     static eid_fields = {
@@ -84,3 +84,5 @@ export default class EidReader {
         }
     }
 };
+
+module.exports = EidReader;

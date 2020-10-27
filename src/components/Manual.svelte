@@ -1,7 +1,10 @@
 <script>
     import { onMount } from 'svelte';
     import autocomplete from 'autocompleter';
-    const PouchDB = require('pouchdb').default;
+    import PouchDB from 'pouchdb';
+
+
+    //const PouchDB = require('pouchdb').default;
 // PouchDB.plugin(require('pouchdb-find'));
 const db_prefix = 'ijspoort_';
 const db_reg = new PouchDB(db_prefix + 'reg');

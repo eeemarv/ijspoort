@@ -1,5 +1,5 @@
 <script>
-    import { ipcRenderer } from 'electron';
+    const { ipcRenderer } = window.require('electron');
 
     let dev_on = false;
     let eid;

@@ -1,7 +1,7 @@
 <script>
     import Reg from './Reg.svelte';
 
-    let registrations = {};
+    let registrations = [];
 </script>
 
 <div class="row">

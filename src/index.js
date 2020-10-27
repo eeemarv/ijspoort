@@ -1,6 +1,13 @@
-import { app, BrowserWindow, Menu, ipcMain, dialog } from 'electron';
-import { NFC } from 'nfc-pcsc';
-import EidReader from './eid_reader';
+const { app, BrowserWindow, ipcMain } = require('electron');
+const { NFC } = require('nfc-pcsc');
+const EidReader = require('./eid_reader');
+const path = require('path');
+
+// Live Reload
+require('electron-reload')(__dirname, {
+  electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
+  awaitWriteFinish: true
+});
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
@@ -15,7 +22,7 @@ const createWindow = () => {
 	darkTheme: true,
 	backgroundColor: '#000000',
     webPreferences: {
-		/*
+	  /*
 	  worldSafeExecuteJavaScript: true,
 	  contextIsolation: true,
 	  */
@@ -27,7 +34,7 @@ const createWindow = () => {
 
   win.setMinimumSize(1400, 768);
 
-  win.loadURL(MAIN_WINDOW_WEBPACK_ENTRY)
+  win.loadFile(path.join(__dirname, '../public/index.html'))
   .then(() => {
 	console.log('win then');
 	listenPcsc(win);

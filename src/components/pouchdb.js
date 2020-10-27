@@ -1,4 +1,8 @@
-const PouchDB = require('pouchdb').default;
+//const PouchDB = require('pouchdb').default;
+
+//import PouchDB from 'pouchdb';
+import * as PouchDB from 'pouchdb';
+
 
 // PouchDB.plugin(require('pouchdb-find'));
 const db_prefix = 'ijspoort_';
