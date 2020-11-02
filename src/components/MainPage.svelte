@@ -1,5 +1,5 @@
 <script>
-    import Manual from './Manual.svelte';
+    import ManualAutocomplete from './ManualAutocomplete.svelte';
     import RegList from './RegList.svelte';
     import EID from './EID.svelte';
     import NFC from './NFC.svelte';
@@ -8,7 +8,7 @@
 <div class="container-fluid">
     <div class="row vh-100">
       <div class="col-md-9 vh-100">
-          <Manual/>
+          <ManualAutocomplete/>
           <RegList/>
       </div>
 

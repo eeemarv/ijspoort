@@ -1,6 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const { NFC } = require('nfc-pcsc');
-const EidReader = require('./eid_reader');
+const EidReader = require('./services/eid_reader');
 const path = require('path');
 
 // Live Reload
