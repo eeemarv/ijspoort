@@ -1,7 +1,10 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, MenuItem } = require('electron');
 const { NFC } = require('nfc-pcsc');
 const EidReader = require('./services/eid_reader');
 const path = require('path');
+const cron = require('node-cron');
+
+let win;
 
 // Live Reload
 require('electron-reload')(__dirname, {
@@ -15,7 +18,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 }
 
 const createWindow = () => {
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1400,
 	height: 800,
 	show: false,
@@ -49,7 +52,7 @@ const createWindow = () => {
 	win.show();
   });
 
-  return win;
+  //return win;
 };
 
 const listenPcsc = (win) => {
@@ -144,6 +147,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+  console.log('all windows closed');
 });
 
 app.on('activate', () => {
@@ -157,4 +161,23 @@ app.on('activate', () => {
 ipcMain.on('xlsx-import-btn-clicked', (ev) => {
 	cconsole.log('click-handle');
 	importXlsxFileFromUser();
+});
+
+const importMenu = new Menu();
+importMenu.append(new MenuItem({ label: 'leden Assist Xlsx', click: () => { win.webContents.send('xlsx.assist.import')} }));
+
+const exportMenu = new Menu();
+exportMenu.append(new MenuItem({ label: 'Registraties als csv', click: () => { win.webContents.send('csv.reg.export')} }));
+
+const menu = new Menu();
+menu.append(new MenuItem({ label: 'Import', submenu: importMenu }));
+menu.append(new MenuItem({ label: 'Export', submenu: exportMenu }));
+menu.append(new MenuItem({ label: 'Instellingen', click: () => console.log('meuh')} ));
+menu.append(new MenuItem({role: 'viewMenu'}));
+menu.append(new MenuItem({role: 'windowMenu'}));
+
+Menu.setApplicationMenu(menu);
+
+cron.schedule('* * * * *', () => {
+	console.log('running a task every minute');
 });

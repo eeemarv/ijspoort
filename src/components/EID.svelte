@@ -1,4 +1,5 @@
 <script>
+    import { Card, CardText } from 'sveltestrap';
     const { ipcRenderer } = window.require('electron');
 
     let dev_on = false;
@@ -48,20 +49,26 @@
         eid_unknown = false;
         eid_error = true;
     });
-
-
-
 </script>
 
-<div class="card text-white border border-white m-3">
-    <div class="card-body border-bottom border-white py-2" class:bg-on={dev_on}>eID</div>
+<Card class="text-white border border-white m-3">
+    <div class="card-body border-bottom border-white py-2"
+        class:bg-on={dev_on}>
+        eID
+    </div>
     <div class="card-body py-2"
         class:bg-on={eid_ok}
         class:bg-warn={eid_unknown}
         class:bg-err={eid_error}
     >
-      <p class="card-text py-0 mb-0">{ eid ? eid.national_number : '---' }</p>
-      <p class="card-text py-0 mb-0">{ eid ? eid.firstnames : '---' }</p>
-      <p class="card-text py-0 mb-0">{ eid ? eid.surname : '---' }</p>
+        <CardText class="py-0 mb-0">
+            { eid ? eid.national_number : '---' }
+        </CardText>
+        <CardText class="py-0 mb-0">
+            { eid ? eid.firstnames : '---' }
+        </CardText>
+        <CardText class="py-0 mb-0">
+            { eid ? eid.surname : '---' }
+        </CardText>
     </div>
-</div>
+</Card>
