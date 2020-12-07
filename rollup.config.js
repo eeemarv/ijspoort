@@ -43,7 +43,8 @@ export default {
 		}),
 		commonjs(),
 		scss({
-			output: "public/build/base.css"
+			output: 'public/build/base.css',
+			watch: 'scss'
 		}),
 		nodePolyfills(),
 

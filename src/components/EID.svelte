@@ -2,64 +2,53 @@
     import { Card, CardText } from 'sveltestrap';
     const { ipcRenderer } = window.require('electron');
 
-    let dev_on = false;
+    let dev_status = 'off';
+    let eid_status = 'off';
     let eid;
-    let eid_ok = false;
-    let eid_unknown = false;
-    let eid_error = false;
 
     ipcRenderer.on('dev.eid.on', (ev) => {
-        dev_on = true;
+        dev_status = 'on';
     });
-
     ipcRenderer.on('dev.eid.off', (ev) => {
-        dev_on = false;
+        dev_status = 'off';
     });
-
     ipcRenderer.on('dev.eid.error', (ev, err) => {
-        dev_on = false;
+        dev_status = 'error';
     });
 
     ipcRenderer.on('eid.wait', (ev) => {
+        eid_status = 'wait';
         eid.national_number = 'Lezen ...';
-        eid.firstnames = '...';
-        eid.surname = '...';
     });
 
     ipcRenderer.on('eid.unknown', (ev, err) => {
+        eid_status = 'unknown';
         eid.national_number = 'Onleesbare kaart';
     });
 
     ipcRenderer.on('eid.on', (ev, card) => {
-        eid = card;
-        eid_ok = true;
-
-        console.log(eid);
+        eid_status = 'ok';
     });
 
     ipcRenderer.on('eid.off', (ev) => {
-        eid = '';
-        eid_ok = false;
-        eid_unknown = false;
+        eid_status = 'off';
     });
 
     ipcRenderer.on('eid.error', (ev, err) => {
+        eid_status = 'error';
         eid = err;
-        eid_ok = false;
-        eid_unknown = false;
-        eid_error = true;
     });
 </script>
 
-<Card class="text-white border border-white m-3">
-    <div class="card-body border-bottom border-white py-2"
-        class:bg-on={dev_on}>
+<Card class=m-3>
+    <div class="card-header py-2"
+        class:bg-success={dev_status === 'on'}>
         eID
     </div>
     <div class="card-body py-2"
-        class:bg-on={eid_ok}
-        class:bg-warn={eid_unknown}
-        class:bg-err={eid_error}
+        class:bg-success={eid_status === 'ok'}
+        class:bg-warning={(eid_status === 'wait') || (eid_status = 'unknwon')}
+        class:bg-danger={eid_status === 'error'}
     >
         <CardText class="py-0 mb-0">
             { eid ? eid.national_number : '---' }

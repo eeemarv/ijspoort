@@ -1,6 +1,13 @@
 
-.bg-on {
-  background-color: #040;
+$theme-colors: (
+  warning: darken($yellow, 10%),
+  success: darken($success, 10%),
+  danger: darken($danger, 20%),
+  accent: darken($purple, 10%)
+);
+
+.list-group-item-info {
+  background-color: $info;
 }
 
 .list-scroll {

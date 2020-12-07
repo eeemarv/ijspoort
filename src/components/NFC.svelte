@@ -1,15 +1,15 @@
 <script>
-    import { Card, CardText } from 'sveltestrap';
+    import { Card, CardBody, CardFooter, CardHeader, CardText } from 'sveltestrap';
+    import { Button } from 'sveltestrap';
     const { ipcRenderer } = window.require('electron');
 
     let dev_status = 'off';
+    let nfc_status = 'off';
     let uid = '';
-    let uid_ok = false;
-    let uid_unknown = false;
-    let not_writable = false;
+    let saveable = false;
 
     ipcRenderer.on('dev.nfc.on', (ev) => {
-        dev_status = 'on';
+        dev_status = 'ok';
     });
     ipcRenderer.on('dev.nfc.off', (ev) => {
         dev_status = 'off';
@@ -19,30 +19,37 @@
     });
     ipcRenderer.on('nfc.on', (ev, card) => {
         uid = card.uid;
-        uid_ok = true;
+        nfc_status = 'ok';
     });
     ipcRenderer.on('nfc.off', (ev) => {
         uid = '';
-        uid_ok = false;
-        uid_unknown = false;
+        nfc_status = 'off';
     });
 
 </script>
 
-<Card class="text-white border border-white m-3">
-    <div class="card-body border-bottom border-white py-2"
-        class:bg-on={dev_status === 'on'}
-        class:bg-danger={dev_status === 'error'}>
+<Card class=m-3>
+    <div class="card-header py-2"
+        class:bg-success={dev_status === 'ok'}
+        class:bg-danger={dev_status === 'error'}
+    >
         NFC
         {dev_status === 'error' ? ' fout apparaat' : ''}
-
     </div>
     <div class="card-body py-2"
-        class:bg-on={uid !== ''}
-        class:bg-warning={uid_unknown}
-        class:bg-danger={not_writable}>
+        class:bg-success={nfc_status === 'ok'}
+        class:bg-warning={nfc_status === 'not_found'}
+        class:bg-danger={nfc_status === 'unvalid'}>
         <CardText class="py-0 mb-0">
             {uid ? uid : '---'}
         </CardText>
+
+
+
     </div>
+    <CardFooter class="d-flex w-100 justify-content-end">
+        <Button color=accent title="link persoon aan NFC-tag">
+            Schrijf
+        </Button>
+    </CardFooter>
 </Card>
