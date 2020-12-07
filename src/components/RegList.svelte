@@ -1,4 +1,5 @@
 <script>
+    import { Row, Col, ListGroup } from 'sveltestrap';
     import Reg from './Reg.svelte';
 
     let registrations = [];
@@ -22,16 +23,16 @@
     }
 </script>
 
-<div class="row">
-    <div class="col h-100">
-    <ul class="list-group list-group-scroll list-group-striped list-group-border-bottom" id="reg_list">
-    </ul>
-    {#each registrations as reg, index}
-        <Reg
-        localCount={registrations.length - index}
-        reg={reg}
-        on:remove={removeReg}
-        on:update={updateReg} />
-    {/each}
-    </div>
-</div>
+<Row>
+    <Col class=h-100>
+        <ListGroup class="list-group-scroll list-group-striped list-group-border-bottom" id="reg_list">
+            {#each registrations as reg, index}
+                <Reg
+                regIndex={registrations.length - index}
+                reg={reg}
+                on:remove={removeReg}
+                on:update={updateReg} />
+            {/each}
+        </ListGroup>
+    </Col>
+</Row>
