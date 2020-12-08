@@ -8,7 +8,7 @@
 <CardGroup>
   <Card>
     <CardHeader class=bg-info>
-      Lid (Assist database)
+      Lid (Assist)
     </CardHeader>
     <ListGroup>
       <ListGroupItem class="d-flex w-100 justify-content-between">
@@ -47,7 +47,7 @@
 
     </ListGroup>
     <CardFooter>
-      <Button color=success>2020</Button>
+      <Button color=success class=mr-3>2020</Button>
       <Button color=dark>2021</Button>
     </CardFooter>
   </Card>
@@ -56,18 +56,36 @@
     <CardHeader class=bg-info>
       Gelinkte data
     </CardHeader>
+    <ListGroup>
+      <ListGroupItem class="bg-danger d-flex w-100 justify-content-between">
+        <div>
+        Hola dit kan echt niet
+        </div>
+        <div>
+          <Button color=danger class="border border-white" title="Verwijder dit commentaar">
+            Verw
+          </Button>
+        </div>
+      </ListGroupItem>
+      <ListGroupItem class="d-flex w-100 justify-content-end">
+        <Button color=dark>
+          Toon alle (6)
+        </Button>
+        <Button color=primary>
+          Opmerking toevoegen
+        </Button>
+      </ListGroupItem>
+    </ListGroup>
     <CardBody>
       Data
     </CardBody>
-    <CardFooter class="d-flex w-100 justify-content-end">
-      <div>
-        <Button color=dark>
-          Sluiten
-        </Button>
-      <Button color=primary>
+    <div class="card-footer d-flex w-100 justify-content-end">
+      <Button color=dark class=ml-3>
+        Sluiten
+      </Button>
+      <Button color=primary class=ml-3>
         Registreer
       </Button>
-      </div>
-    </CardFooter>
+    </div>
   </Card>
 </CardGroup>

@@ -1,5 +1,5 @@
 <script>
-    import { Card, CardBody, CardFooter, CardHeader, CardText } from 'sveltestrap';
+    import { Badge, Card, CardBody, CardFooter, CardHeader, CardText } from 'sveltestrap';
     import { Button } from 'sveltestrap';
     const { ipcRenderer } = window.require('electron');
 
@@ -29,12 +29,19 @@
 </script>
 
 <Card class=m-3>
-    <div class="card-header py-2"
+    <div class="card-header py-2 d-flex w-100 justify-content-between"
         class:bg-success={dev_status === 'ok'}
         class:bg-danger={dev_status === 'error'}
     >
+        <div title="NFC/RFiD tags">
         NFC
         {dev_status === 'error' ? ' fout apparaat' : ''}
+        </div>
+        <div>
+            <Badge color=info title="Totaal aantaal NFC-tags geregistreerd">
+                15
+            </Badge>
+        </div>
     </div>
     <div class="card-body py-2"
         class:bg-success={nfc_status === 'ok'}
@@ -48,8 +55,8 @@
 
     </div>
     <CardFooter class="d-flex w-100 justify-content-end">
-        <Button color=accent title="link persoon aan NFC-tag">
-            Schrijf
+        <Button color=accent title="Registreer deze NFC-tag voor deze persoon" disabled>
+            Registreer
         </Button>
     </CardFooter>
 </Card>

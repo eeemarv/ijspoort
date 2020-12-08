@@ -1,5 +1,5 @@
 <script>
-    import { Card, CardText } from 'sveltestrap';
+    import { Badge, Card, CardText } from 'sveltestrap';
     const { ipcRenderer } = window.require('electron');
 
     let dev_status = 'off';
@@ -41,9 +41,14 @@
 </script>
 
 <Card class=m-3>
-    <div class="card-header py-2"
+    <div class="card-header py-2 d-flex w-100 justify-content-between"
         class:bg-success={dev_status === 'on'}>
-        eID
+        <div>eiD</div>
+        <div>
+            <Badge color=info title="Totaal aantal eIDs geregistreerd">
+                15
+            </Badge>
+        </div>
     </div>
     <div class="card-body py-2"
         class:bg-success={eid_status === 'ok'}
