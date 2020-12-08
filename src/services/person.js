@@ -1,8 +1,14 @@
-import { db_person, db_person_search } from './pouchdb';
+import { db_person, db_person_man_search } from './pouchdb';
+import { shallow_compare } from './pouchdb';
+
+const XLSX = require('xlsx');
 
 const assist_map = {
     lidnummer: {
-        key: "membership_id"
+        key: "member_id"
+    },
+    inschrijvingsdatum: {
+        key: "member_since"
     },
     voornaam: {
         key: "firstname"
@@ -25,41 +31,42 @@ const assist_map = {
     land: {
         key: "country"
     },
-    telefoon_thuis: {
+    telefoonthuis: {
         key: "phone_home",
-        process:  (v) => { v.replace(/\D/g,'') }
+        process:  (v) => { return v.replace(/\D/g,''); }
     },
-    telefoon_werk: {
+    telefoonwerk: {
         key: "phone_work",
-        process:  (v) => { v.replace(/\D/g,'') }
+        process:  (v) => { return v.replace(/\D/g,''); }
     },
     gsm: {
         key: "phone_mobile",
-        process:  (v) => { v.replace(/\D/g,'') }
+        process: (v) => { return v.replace(/\D/g,''); }
     },
     email: {
         key: "email",
-        process: (v) => { v.toLowerCase() }
+        process: (v) => { return v.toLowerCase(); }
     },
-    email_werk: {
+    emailwerk: {
         key: "email_work",
-        process: (v) => { v.toLowerCase() }
+        process: (v) => { return v.toLowerCase(); }
     },
     geboortedatum: {
         key: "date_of_birth"
     },
     geboorteplaats: {
+        ignore: true, // not applicable
         key: "place_of_birth"
     },
     geslacht: {
         key: "gender",
-        process: (v) => { v.toLowerCase().replace('v', 'f') }
+        process: (v) => { return v.toLowerCase().replace('v', 'f'); }
     },
     rijksregisternummer: {
         ignore: true, // will be removed from Assist export
         key: "national_number"
     },
-    meer_info: {
+    meerinfo: {
         key: "info"
     },
     nationaliteit: {
@@ -68,36 +75,30 @@ const assist_map = {
     ploeg: {
         key: "team"
     },
-    functie_in_ploeg: {
-        key: "team_rank"
-    },
     werkgroepen: {
-        key: "working_group"
+        key: "group"
     },
-    functie_in_werkgroep: {
-        key: "working_group_rank"
-    },
-    te_betalen_lidgeld: {
+    tebetalenlidgeld: {
         key: "membership_fee_to_pay"
     },
-    al_betaald_lidgeld: {
+    albetaaldlidgeld: {
         key: "membership_fee_already_paid"
     },
-    openstaand_saldo: {
+    openstaandsaldo: {
         key: "to_be_paid"
     }
 };
 
 let progress = 0;
 
-const importXlsxFile = (file) => {
+const xls_assist_import = (file) => {
     const workbook = XLSX.readFile(file);
     const sheet_name_list = workbook.SheetNames;
     const json_sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {defval: '', raw: false});
 
     json_sheet.forEach((a_per) => {
         let new_person = {};
-        Object.keys(a_per).foreach((a_per_key) => {
+        Object.keys(a_per).forEach((a_per_key) => {
             let norm_key = a_per_key.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
             if ((norm_key in assist_map) && !('ignore' in assist_map[norm_key])){
                 let a_val = a_per[a_per_key];
@@ -109,28 +110,76 @@ const importXlsxFile = (file) => {
             }
         });
 
-        new_person._id = 'n_' + new_person.membership_id.padStart(8, '0');
+        new_person._id = 'n' + new_person.member_id.padStart(8, '0');
 
-        db_person.get(person._id).then((fetch_person) => {
-            if (Object.entries(fetch_person).sort().toString() !== Object.entries(new_person).sort().toString()){
-                return fetch_person;
+        let update_ids = [];
+
+        db_person.get(new_person._id).catch((err) => {
+            if (err.name == 'not_found'){
+                return 'put';
             }
-        }).then((fetch_person) => {
-            new_person._rev = fetch_person._rev;
-            db_person.put(new_person).then(() => {
-                // show update
-            }).catch((err) => {
-                console.log(err);
-            });
+            throw err;
+        }).then((res) => {
+            if (res === 'put'){
+                return new_person;
+            }
+            let compare_person = { ...res};
+            delete compare_person._rev;
+            if (shallow_compare(compare_person, new_person)){
+                throw 'no_change for ' + res._id;
+            }
+            new_person._rev = res._id;
+            return new_person;
+        }).then((res) => {
+            console.log('new updated', res);
+            return db_person.put(res);
         }).catch((err) => {
-            if (err.name === 'not_found'){
-                db_pseron.put(new_person).then(() => {
+            console.log(err);
+        });
 
-                    // log insert
+
+
+        /*
+
+        then((updated_person) => {
+
+
+
+
+
+        })
+
+
+            if (fetch_person.ok === true){
+                return db_person.get(res._id);
+            }
+            return res;
+        }).then((fetch_person) => {
+            let compare_person = { ...fetch_person};
+            delete compare_person._rev;
+            if (shallow_compare(compare_person, new_person)){
+                throw 'no_change';
+            }
+            new_person._rev = fetch_person._rev;
+            return db_person.put(new_person);
+        }).catch((err) => {
+            if (err === 'no_change'){
+                console.log('no change for ' + new_parson._id);
+                return;
+            } else if (err.name === 'not_found'){
+                return db_person.put(new_person);
+
+                .then(() => {
+
                 }).catch((err) => {
                     console.log(err);
                 });
+            } else {
+                console.log(err);
+                return;
             }
+        }).then((val) => {
+
         });
 
         let search_surname = person.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
@@ -202,11 +251,10 @@ const importXlsxFile = (file) => {
         }
 
         console.log(person);
+        */
     });
 
-    console.log(json_sheet);
+    // console.log(json_sheet);
 }
 
-
-
-export {};
+export { xls_assist_import };

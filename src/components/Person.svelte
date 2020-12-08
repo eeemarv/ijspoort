@@ -1,8 +1,15 @@
 <script>
+  const { ipcRenderer } = window.require('electron');
   import { Card, CardHeader, CardBody, CardFooter, CardGroup } from 'sveltestrap';
   import { Button } from 'sveltestrap';
   import { ListGroup, ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
+  import { xls_assist_import } from './../services/person';
+
+  ipcRenderer.on('xls.assist.import', (ev, file) => {
+    xls_assist_import(file);
+  });
+
 </script>
 
 <CardGroup>
@@ -16,22 +23,22 @@
         <div title="inschrijvingsdatum">05.05.1962</div>
       </ListGroupItem>
       <ListGroupItem>
-        <span title="voornaam">Maarten</span>
-        <span title="achternaam">Vandekeybus</span>
+        <span title="voornaam">   </span>
+        <span title="achternaam">  </span>
       </ListGroupItem>
       <ListGroupItem>
         <Badge color=info title=man>M</Badge>
         <Badge color=danger title=vrouw>V</Badge>
-        <span title="geboortedatum">15 mei 1974</span>
+        <span title="geboortedatum">25 jan 1986</span>
       </ListGroupItem>
       <ListGroupItem class="d-flex w-100 justify-content-between">
-        <div title="gsm">0467 09 28 94</div>
+        <div title="gsm">04674</div>
         <idv>
           <Button color=primary>GSM</Button>
         </idv>
       </ListGroupItem>
       <ListGroupItem class="d-flex w-100 justify-content-between">
-        <div title="telefoon thuis">0467 09 28 94</div>
+        <div title="telefoon thuis">0467 09 94</div>
         <idv>
           <Button color=primary>Tel. thuis</Button>
         </idv>
@@ -41,7 +48,7 @@
         Redders
       </ListGroupItem>
       <ListGroupItem active title="ploeg">
-        a@martti.be
+
       </ListGroupItem>
 
 

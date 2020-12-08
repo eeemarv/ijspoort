@@ -159,6 +159,10 @@ const listenPcsc = (win) => {
 				let new_access = Buffer.from(key_A + '7f00f800' + key_B, 'hex');
 				try {
 					for (let block = 3; block < 64; block = block + 4){
+						if (block > 7 && block < 32){
+							// keep blocks 8 - 31 open
+							continue;
+						}
 						await reader.authenticate(block, KEY_TYPE_A, 'ffffffffffff');
 						await reader.write(block, new_access, 16);
 					}
@@ -419,7 +423,7 @@ const importAssistXlsx = () => {
     if (!files){
         return;
     }
-	win.webContents.send('xlsx.assist.import', files[0]);
+	win.webContents.send('xls.assist.import', files[0]);
 };
 
 const importMenu = new Menu();

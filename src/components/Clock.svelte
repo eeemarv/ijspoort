@@ -18,7 +18,12 @@
 </script>
 
 <Card>
-    <CardBody class="d-flex w-100 justify-content-end">
+    <CardBody class="d-flex w-100 justify-content-between">
+        <div title="synchronisatie met remote database">
+            <Badge color=warning>
+                Sync
+            </Badge>
+        </div>
         <div title="klok">
         {hours}&nbsp;{seconds % 2 ? ':' : ' '}&nbsp;{minutes}
         </div>

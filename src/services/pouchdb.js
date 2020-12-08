@@ -17,7 +17,41 @@ const generate_id = () => {
     return Array(12).fill(0).map(x => Math.random().toString(36).charAt(2)).join('');
 };
 
+const shallow_compare = (a, b) => {
+    const keys_a = Object.keys(a);
+    const keys_b = Object.keys(a);
+    if (keys_a.length !== keys_b.length){
+        return false;
+    }
+    for (let k of keys_a) {
+        if (a[k] !== b[k]) {
+            return false;
+        }
+    }
+    return true;
+};
+
+db_person.changes({
+    since: 0,
+    live: true,
+    include_docs: true
+}).on('change', function (change) {
+    console.log('CHANGE');
+    console.log(change);
+    // change.id contains the doc id, change.doc contains the doc
+    if (change.deleted) {
+    // document was deleted
+    } else {
+      // document was added/modified
+    }
+}).on('error', function (err) {
+    console.log('db_person.changes error');
+    console.log(err);
+});
+
+
 export {
+    shallow_compare,
     generate_id,
     db_reg,
     db_nfc,
