@@ -24,28 +24,30 @@ $theme-colors: (
 
 .autocomplete {
   font-size: 1.0em;
-  background-color: white;
-  color: black;
-  border: 1px solid black;
+  background-color: black;
+  color: white;
+  border: 1px solid white;
   cursor: pointer;
   z-index: 1000;
 }
 .autocomplete .autocomplete-suggestion {
   padding: 15px 20px;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid white;
 }
 .autocomplete .autocomplete-suggestion:hover{
-  background-color: lightblue;
+  background-color: darkslateblue;
 }
 .autocomplete .empty {
-  padding: 15px 20px;
-  background-color: gray;
+  padding: 2em;
+  background-color: darkred;
   color: white;
+  text-align: center;
+  font-size: 1.5em;
 }
 .autocomplete .selected {
-  background-color: darkblue;
+  background-color: blue;
   color: white;
 }
 .autocomplete .selected:hover{
-  background-color: blue;
+  background-color: slateblue;
 }

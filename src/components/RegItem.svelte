@@ -1,9 +1,17 @@
 <script>
   import { ListGroupItem, Button, Badge } from 'sveltestrap';
+  import { createEventDispatcher } from 'svelte';
   export let regIndex;
   export let reg;
   export let nfcCount = 0;
   export let eidCount = 0;
+
+  const dispatch = createEventDispatcher();
+
+  const handleRemoveReg = dispatch('remove_reg', {});
+  const handleSelectReg = dispatch('select_reg', {});
+
+
 
 </script>
 
@@ -34,10 +42,10 @@
       </div>
     </dvi>
     <div>
-      <Button color=primary class=mr-1>
-        Aanpassen
+      <Button color=primary class=mr-1 on:click={handleSelectReg}>
+        Selecteer
       </Button>
-      <Button color=danger>
+      <Button color=danger on:click={handleRemoveReg}>
         Verwijderen
       </Button>
     </div>

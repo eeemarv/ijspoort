@@ -1,10 +1,12 @@
 <script>
-    import { Badge, Card, CardText } from 'sveltestrap';
+    import { Badge, Card, CardBody, CardText } from 'sveltestrap';
     const { ipcRenderer } = window.require('electron');
+    import { eid } from './../services/store';
 
     let dev_status = 'off';
-    let eid_status = 'off';
-    let eid;
+
+    let eid_err_msg;
+    let dev_err_msg;
 
     ipcRenderer.on('dev.eid.on', (ev) => {
         dev_status = 'on';
@@ -13,31 +15,25 @@
         dev_status = 'off';
     });
     ipcRenderer.on('dev.eid.error', (ev, err) => {
-        dev_status = 'error';
+        dev_err_msg = err;
     });
-
     ipcRenderer.on('eid.wait', (ev) => {
-        eid_status = 'wait';
-        eid.national_number = 'Lezen ...';
+        $eid = undefined;
+        eid_err_msg = undefined;
     });
-
     ipcRenderer.on('eid.unknown', (ev, err) => {
-        eid_status = 'unknown';
-        eid.national_number = 'Onleesbare kaart';
+        eid_err_msg = err;
     });
-
     ipcRenderer.on('eid.on', (ev, card) => {
-        eid_status = 'ok';
+        $eid = card;
     });
-
     ipcRenderer.on('eid.off', (ev) => {
-        eid_status = 'off';
+        $eid = undefined;
+    });
+    ipcRenderer.on('eid.error', (ev, err) => {
+        eid_err_msg = err;
     });
 
-    ipcRenderer.on('eid.error', (ev, err) => {
-        eid_status = 'error';
-        eid = err;
-    });
 </script>
 
 <Card class=m-3>
@@ -50,19 +46,29 @@
             </Badge>
         </div>
     </div>
-    <div class="card-body py-2"
-        class:bg-success={eid_status === 'ok'}
-        class:bg-warning={(eid_status === 'wait') || (eid_status = 'unknwon')}
-        class:bg-danger={eid_status === 'error'}
-    >
-        <CardText class="py-0 mb-0">
-            { eid ? eid.national_number : '---' }
-        </CardText>
-        <CardText class="py-0 mb-0">
-            { eid ? eid.firstnames : '---' }
-        </CardText>
-        <CardText class="py-0 mb-0">
-            { eid ? eid.surname : '---' }
-        </CardText>
-    </div>
+    {#if $eid}
+        <CardBody class="bg-success py-2">
+            <CardText class="py-0 mb-0">
+                {$eid.national_number}
+            </CardText>
+            <CardText class="py-0 mb-0">
+                {$eid.firstnames}
+            </CardText>
+            <CardText class="py-0 mb-0">
+                {$eid.surname}
+            </CardText>
+        </CardBody>
+    {:else if eid_err_msg || dev_err_msg}
+        <CardBody class="bg-danger py-2">
+            <CardText class="py-0 mb-0">
+                {eid_err_msg || dev_err_msg}
+            </CardText>
+        </CardBody>
+    {:else}
+        <CardBody class="py-2">
+            <CardText class="py-0 mb-0">
+                ---
+            </CardText>
+        </CardBody>
+    {/if}
 </Card>

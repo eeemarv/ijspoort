@@ -1,12 +1,13 @@
 <script>
-    import { Badge, Card, CardBody, CardFooter, CardHeader, CardText } from 'sveltestrap';
+    import { Badge, Card, CardFooter, CardText } from 'sveltestrap';
     import { Button } from 'sveltestrap';
     const { ipcRenderer } = window.require('electron');
+    import { nfc_uid, person } from './../services/store';
 
     let dev_status = 'off';
     let nfc_status = 'off';
-    let uid = '';
-    let saveable = false;
+
+    $: can_activate = $person && $nfc_uid;
 
     ipcRenderer.on('dev.nfc.on', (ev) => {
         dev_status = 'ok';
@@ -18,11 +19,11 @@
         dev_status = 'error';
     });
     ipcRenderer.on('nfc.on', (ev, card) => {
-        uid = card.uid;
+        $nfc_uid = card.uid;
         nfc_status = 'ok';
     });
     ipcRenderer.on('nfc.off', (ev) => {
-        uid = '';
+        $nfc_uid = undefined;
         nfc_status = 'off';
     });
 
@@ -48,15 +49,15 @@
         class:bg-warning={nfc_status === 'not_found'}
         class:bg-danger={nfc_status === 'unvalid'}>
         <CardText class="py-0 mb-0">
-            {uid ? uid : '---'}
+            {$nfc_uid ? $nfc_uid : '---'}
         </CardText>
 
 
 
     </div>
     <CardFooter class="d-flex w-100 justify-content-end">
-        <Button color=accent title="Registreer deze NFC-tag voor deze persoon" disabled>
-            Registreer
+        <Button color=accent title="Activeer deze NFC-tag voor deze persoon" disabled={!can_activate}>
+            Activeer
         </Button>
     </CardFooter>
 </Card>

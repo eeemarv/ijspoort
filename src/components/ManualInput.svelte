@@ -1,10 +1,9 @@
 <script>
-    import { onMount,createEventDispatcher } from 'svelte';
+    import { onMount } from 'svelte';
     import { db_person, put_design_person_text_search } from './../services/pouchdb';
     import autocomplete from 'autocompleter';
     import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
-
-    const dispatch = createEventDispatcher();
+    import { person, person_selected_by } from './../services/store';
 
     const search_func =  function(text, update){
         let search_text = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
@@ -45,7 +44,8 @@
             fetch: search_func,
             onSelect: (item) => {
                 console.log(item);
-                dispatch('select_person', {person: item});
+                $person = item;
+                $person_selected_by = 'manual';
                 el_manual.value = '';
             },
             render: (item, value) => {

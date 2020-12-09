@@ -10,19 +10,12 @@
   import Stats from './Stats.svelte';
   import Clock from './Clock.svelte';
 
-  let person;
-
-
-
-  const handleSelectPerson = ((event) => {
-    person = event.detail.person;
-  });
-  const handleDeselectPerson = (() => {
-    person = undefined;
-  });
-  const handleRegisterPerson = (() => {
+  const handleRegisterByManual = (() => {
     // register
     person = undefined;
+  });
+  const handleRegisterByNFC = (() => {
+
   });
 
 </script>
@@ -32,17 +25,18 @@
 <Container fluid=true>
   <Row class=vh-100>
     <Col md=9 class=vh-100>
-      <ManualInput on:select_person={handleSelectPerson}/>
-      <Person {person}
-        on:deselect_person={handleDeselectPerson}
-        on:register_person={handleRegisterPerson}
+      <ManualInput/>
+      <Person
+        on:register_by_manual={handleRegisterByManual}
         />
       <RegList/>
     </Col>
 
     <Col class="bg-primary h-100">
       <EID/>
-      <NFC/>
+      <NFC
+        on:register_by_nfc={handleRegisterByNFC}
+      />
       <GateKeeper/>
       <div class=m-3>
         <Stats/>
