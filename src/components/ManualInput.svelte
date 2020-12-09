@@ -1,11 +1,17 @@
 <script>
-    import { onMount } from 'svelte';
+    import { onMount,createEventDispatcher } from 'svelte';
     import { db_person, put_design_person_text_search } from './../services/pouchdb';
     import autocomplete from 'autocompleter';
     import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
 
+    const dispatch = createEventDispatcher();
+
     const search_func =  function(text, update){
         let search_text = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+        if (search_text === ''){
+            update([]);
+            return;
+        }
         db_person.query('search/by_text', {
             startkey: search_text,
             endkey:search_text + '\uffff',
@@ -15,15 +21,12 @@
             let docs = {};
             let count_docs = 0;
             res.rows.forEach((v) => {
-                if (!docs[v.id] && count_docs < 11){
+                if (!docs[v.id] && count_docs < 7){
                     docs[v.id] = v.doc;
                     count_docs++;
                 }
             })
-            console.log(res);
-            let dddd = Object.values(docs);
-            console.log(dddd);
-            update(dddd);
+            update(Object.values(docs));
         }).catch((err) => {
             console.log(err);
         })
@@ -41,7 +44,9 @@
             className: 'autocomplete',
             fetch: search_func,
             onSelect: (item) => {
-                addReg(item, 'manual');
+                console.log(item);
+                dispatch('select_person', {person: item});
+                el_manual.value = '';
             },
             render: (item, value) => {
                 let suggestion_div = document.createElement("div");
@@ -53,7 +58,8 @@
                     }
                 });
                 return suggestion_div;
-            }
+            },
+            renderGroup: () => {''}
         });
     });
 </script>

@@ -9,6 +9,22 @@
   import GateKeeper from './GateKeeper.svelte';
   import Stats from './Stats.svelte';
   import Clock from './Clock.svelte';
+
+  let person;
+
+
+
+  const handleSelectPerson = ((event) => {
+    person = event.detail.person;
+  });
+  const handleDeselectPerson = (() => {
+    person = undefined;
+  });
+  const handleRegisterPerson = (() => {
+    // register
+    person = undefined;
+  });
+
 </script>
 
 <RegExport/>
@@ -16,8 +32,11 @@
 <Container fluid=true>
   <Row class=vh-100>
     <Col md=9 class=vh-100>
-      <ManualInput/>
-      <Person/>
+      <ManualInput on:select_person={handleSelectPerson}/>
+      <Person {person}
+        on:deselect_person={handleDeselectPerson}
+        on:register_person={handleRegisterPerson}
+        />
       <RegList/>
     </Col>
 

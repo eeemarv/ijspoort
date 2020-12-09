@@ -1,6 +1,7 @@
 <script>
   const { ipcRenderer } = window.require('electron');
   import { Card, CardHeader, CardBody, CardFooter, CardGroup } from 'sveltestrap';
+  import { createEventDispatcher } from 'svelte';
   import { Button } from 'sveltestrap';
   import { ListGroup, ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
@@ -10,52 +11,146 @@
     xls_assist_import(file);
   });
 
+  const dispatch = createEventDispatcher();
+
+  export let person;
+
+  $: member_2021 = person !== undefined
+    && person.open_balance !== undefined
+    && !person.open_balance.trim().startsWith('-');
+
+  const handleDeselectPerson = (() => {
+    dispatch('deselect_person');
+  });
+  const handleRegisterPerson = (() => {
+    dispatch('register_person');
+  });
+
 </script>
 
+{#if person}
 <CardGroup>
   <Card>
     <CardHeader class=bg-info>
       Lid (Assist)
     </CardHeader>
     <ListGroup>
-      <ListGroupItem class="d-flex w-100 justify-content-between">
-        <div title="lidnummer">2050</div>
-        <div title="inschrijvingsdatum">05.05.1962</div>
-      </ListGroupItem>
-      <ListGroupItem>
-        <span title="voornaam">   </span>
-        <span title="achternaam">  </span>
-      </ListGroupItem>
-      <ListGroupItem>
-        <Badge color=info title=man>M</Badge>
-        <Badge color=danger title=vrouw>V</Badge>
-        <span title="geboortedatum">25 jan 1986</span>
-      </ListGroupItem>
-      <ListGroupItem class="d-flex w-100 justify-content-between">
-        <div title="gsm">04674</div>
-        <idv>
-          <Button color=primary>GSM</Button>
-        </idv>
-      </ListGroupItem>
-      <ListGroupItem class="d-flex w-100 justify-content-between">
-        <div title="telefoon thuis">0467 09 94</div>
-        <idv>
-          <Button color=primary>Tel. thuis</Button>
-        </idv>
+      <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+        <div title="lidnummer">{person.member_id}</div>
+        {#if person.member_since }
+          <div title="inschrijvingsdatum">{person.member_since}</div>
+        {:else}
+          <div></div>
+        {/if}
       </ListGroupItem>
 
-      <ListGroupItem active title="werkgroep">
-        Redders
+      <ListGroupItem class=py-2>
+        <span title="voornaam">{person.firstname}</span>
+        {#if person.nickname}
+          <span title="roepnaam">({person.nickname})</span>
+        {/if}
+        <span title="achternaam">{person.surname}</span>
       </ListGroupItem>
-      <ListGroupItem active title="ploeg">
 
-      </ListGroupItem>
+      {#if person.gender || person.date_of_birth}
+        <ListGroupItem class=py-2>
+          {#if person.gender === 'm'}
+            <Badge color=info title=man>M</Badge>
+            &nbsp;
+          {/if}
+          {#if person.gender === 'f'}
+            <Badge color=danger title=vrouw>V</Badge>
+            &nbsp;
+          {/if}
+          {#if person.date_of_birth}
+            <span title="geboortedatum">{person.date_of_birth}</span>
+          {/if}
+        </ListGroupItem>
+      {/if}
 
+      {#if person.phone_mobile}
+        <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+          <div title="gsm">{person.phone_mobile}</div>
+          <idv>
+            <Badge color=primary>
+              GSM
+            </Badge>
+          </idv>
+        </ListGroupItem>
+      {/if}
+
+      {#if person.phone_home}
+        <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+          <div title="telefoon thuis">{person.phone_home}</div>
+          <idv>
+            <Badge color=primary>
+              Tel.thuis
+            </Badge>
+          </idv>
+        </ListGroupItem>
+      {/if}
+
+      {#if person.email}
+        <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+          <div title="email">{person.email}</div>
+          <idv>
+          </idv>
+        </ListGroupItem>
+      {/if}
+
+      {#if person.address || person.address_zipcode || person.address_municipality}
+        <ListGroupItem class=py-2>
+          {#if person.address}
+            <div title="straat en nummer">
+              {person.address}
+            </div>
+          {/if}
+          {#if person.address_zipcode || person.address_municipality}
+            <div>
+              {#if person.address_zipcode}
+              <span title="postcode">
+                {person.address_zipcode}
+              </span>&nbsp;
+              {/if}
+              {#if person.address_municipality}
+              <span title="geneente">
+                {person.address_municipality}
+              </span>
+              {/if}
+            </div>
+          {/if}
+        </ListGroupItem>
+      {/if}
+
+      {#if person.phone_work}
+        <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+          <div title="telefoon werk">{person.phone_work}</div>
+          <idv>
+            <Button color=primary>Tel.werk</Button>
+          </idv>
+        </ListGroupItem>
+      {/if}
+
+      {#if person.group}
+        <ListGroupItem active title="werkgroep" class=py-2>
+          {person.group}
+        </ListGroupItem>
+      {/if}
+
+      {#if person.team}
+        <ListGroupItem active title="ploeg" class=py-2>
+          {person.team}
+        </ListGroupItem>
+      {/if}
 
     </ListGroup>
     <CardFooter>
-      <Button color=success class=mr-3>2020</Button>
-      <Button color=dark>2021</Button>
+      <Button title="lidjaar OK" color=success class=mr-3>
+        2020
+      </Button>
+      <Button title="lidjaar{ member_2021 ? ' OK' : ''}" color={member_2021 ? 'success' : 'dark'}>
+        2021
+      </Button>
     </CardFooter>
   </Card>
 
@@ -87,12 +182,13 @@
       Data
     </CardBody>
     <div class="card-footer d-flex w-100 justify-content-end">
-      <Button color=dark class=ml-3>
+      <Button color=dark class=ml-3 on:click={handleDeselectPerson}>
         Sluiten
       </Button>
-      <Button color=primary class=ml-3>
+      <Button color=primary class=ml-3 on:click={handleRegisterPerson}>
         Registreer
       </Button>
     </div>
   </Card>
 </CardGroup>
+{/if}

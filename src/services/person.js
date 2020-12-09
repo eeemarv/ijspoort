@@ -85,7 +85,7 @@ const assist_map = {
         key: "membership_fee_already_paid"
     },
     openstaandsaldo: {
-        key: "to_be_paid"
+        key: "open_balance"
     }
 };
 
@@ -124,7 +124,7 @@ const xls_assist_import = (file) => {
             if (shallow_compare(compare_person, new_person)){
                 throw 'no_change for ' + res._id;
             }
-            new_person._rev = res._id;
+            new_person._rev = res._rev;
             return new_person;
         }).then((res) => {
             console.log('new updated', res);
