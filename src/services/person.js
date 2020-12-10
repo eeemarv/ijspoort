@@ -1,5 +1,4 @@
 import { db_person } from './pouchdb';
-import { shallow_compare } from './pouchdb';
 import lodash from 'lodash';
 
 const XLSX = require('xlsx');

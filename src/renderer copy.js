@@ -484,7 +484,7 @@ function addReg(item, method){
         "ts_local": now.toString(),
         "ts_epoch": now.getTime(),
         "method": method,
-        "_id": 'ts_' + now.getTime().toString() + '_' + item.id
+        "_id": 't' + now.getTime().toString() + '_' + item.id
     };
 
     db_reg.put(reg);

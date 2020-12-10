@@ -4,15 +4,14 @@
   import { person } from './../services/store';
   export let regIndex;
   export let reg;
-  export let nfcCount = 0;
-  export let eidCount = 0;
 
   const dispatch = createEventDispatcher();
 
   const handleRemoveReg = dispatch('remove_reg', {
 
   });
-  const handleSelectReg = () => {
+  const handleSelectReg = (event) => {
+    console.log(event);
     $person = undefined;
   };
 
@@ -26,38 +25,46 @@
           {regIndex}
         </Badge>
         &nbsp;
-        <Badge color=warning title="tijdstip">
-          {reg.hours}:{reg.minutes}
+        <Badge color=primary title="tijdstip">
+          {reg.ts_lc_hours}:{reg.ts_lc_minutes}
         </Badge>
         &nbsp;
         <Badge color=light title="lidnummer">
-          {reg.member_id}
+          {reg.person.member_id}
         </Badge>
         &nbsp;
         <span title="voornaam">
-           {reg.firstname}
+           {reg.person.firstname}
         </span>
         &nbsp;
-        {#if reg.nickname}
+        {#if reg.person.nickname}
           <span title="roepnaam">
-            ({reg.nickname})
+            ({reg.person.nickname})
           </span>
           &nbsp;
         {/if}
         <span title="achternaam">
-          {reg.surname}
+          {reg.person.surname}
         </span>
       </div>
       <div class="d-flex w-100 justify-content-between mb-0">
         <div>
-          {reg.phone_mobile ?? reg.phone_home ?? reg.phone_work}
+          {#if reg.person.phone_mobile }
+            <span title="gsm">
+              {reg.person.phone_mobile}
+            </span>
+          {:else if reg.person.phone_home}
+            <span title="telefoon thuis">
+              {reg.person.phone_home}
+            </span>
+          {:else if reg.person.phone_work}
+            <span title="telefoon werk">
+              {reg.person.phone_work}
+            </span>
+          {:else}
+            <span>&nbsp;</span>
+          {/if}
         </div>
-        <Badge color=secondary>
-          eID {eidCount}
-        </Badge>
-        <Badge color=warning>
-          NFC {nfcCount}
-        </Badge>
       </div>
     </dvi>
     <div>

@@ -1,4 +1,7 @@
+
+
 <script>
+
   import { Container, Row, Col, Badge } from 'sveltestrap';
   import ManualInput from './ManualInput.svelte';
   import Person from './Person.svelte';
@@ -9,10 +12,44 @@
   import GateKeeper from './GateKeeper.svelte';
   import Stats from './Stats.svelte';
   import Clock from './Clock.svelte';
+  import { db_reg } from './../services/pouchdb';
+  import { person, gate_keeper, nfc_uid } from './../services/store';
+
+  const add_reg = (person, source) => {
+    let now = new Date();
+    let h_m = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+    let reg = {
+        _id: 't' + now.getTime().toString(),
+        ts_lc_hours: now.getHours().toString().padStart(2, '0'),
+        ts_lc_minutes: now.getMinutes().toString().padStart(2, '0'),
+        ts_lc_seconds: now.getSeconds().toString().padStart(2, '0'),
+        ts_lc_year: now.getFullYear(),
+        ts_lc_month: now.getMonth() + 1,
+        ts_utc: now.toISOString(),
+        ts_lc: now.toString(),
+        ts_epoch: now.getTime(),
+        person: person,
+        person_id: person._id,
+        gate_keeper: $gate_keeper,
+        gate_keeper_id: $gate_keeper?._id
+    };
+    if (source = 'manual'){
+      reg.manual = true;
+    }
+    if (source === 'nfc'){
+      reg.nfc_uid = $nfc_uid;
+    }
+    db_reg.put(reg).then((res) => {
+      console.log('add_reg');
+      console.log(res);
+    }).catch((err) => {
+      console.log(err);
+    });
+  };
 
   const handleRegisterByManual = (() => {
-    // register
-    person = undefined;
+    add_reg($person, 'manual');
+    $person = undefined;
   });
   const handleRegisterByNFC = (() => {
 
