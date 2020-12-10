@@ -1,6 +1,7 @@
 <script>
   import { ListGroupItem, Button, Badge } from 'sveltestrap';
   import { createEventDispatcher } from 'svelte';
+  import { person } from './../services/store';
   export let regIndex;
   export let reg;
   export let nfcCount = 0;
@@ -8,10 +9,12 @@
 
   const dispatch = createEventDispatcher();
 
-  const handleRemoveReg = dispatch('remove_reg', {});
-  const handleSelectReg = dispatch('select_reg', {});
+  const handleRemoveReg = dispatch('remove_reg', {
 
-
+  });
+  const handleSelectReg = () => {
+    $person = undefined;
+  };
 
 </script>
 
@@ -19,14 +22,30 @@
   <div class="d-flex w-100 justify-content-between">
     <dvi>
       <div>
-        <span>
-          {regIndex} .)
-        </span>
-        <span class="text-warning">
+        <Badge color=info title="teller">
+          {regIndex}
+        </Badge>
+        &nbsp;
+        <Badge color=warning title="tijdstip">
           {reg.hours}:{reg.minutes}
+        </Badge>
+        &nbsp;
+        <Badge color=light title="lidnummer">
+          {reg.member_id}
+        </Badge>
+        &nbsp;
+        <span title="voornaam">
+           {reg.firstname}
         </span>
-        <span>
-          {reg.firstnames} {reg.nickname ? '(' + reg.nickname + ') ' : '' }{ reg.surname }
+        &nbsp;
+        {#if reg.nickname}
+          <span title="roepnaam">
+            ({reg.nickname})
+          </span>
+          &nbsp;
+        {/if}
+        <span title="achternaam">
+          {reg.surname}
         </span>
       </div>
       <div class="d-flex w-100 justify-content-between mb-0">
@@ -37,7 +56,7 @@
           eID {eidCount}
         </Badge>
         <Badge color=warning>
-          nfc {nfcCount}
+          NFC {nfcCount}
         </Badge>
       </div>
     </dvi>

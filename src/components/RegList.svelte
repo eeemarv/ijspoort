@@ -1,7 +1,8 @@
 <script>
     import { Row, Col, ListGroup } from 'sveltestrap';
     import RegItem from './RegItem.svelte';
-    import { db_reg } from './../services/pouchdb';
+    import { db_reg, db_person } from './../services/pouchdb';
+    import { person, gate_keeper } from './../services/store';
 
     let registrations = [];
 
@@ -29,12 +30,11 @@
 <Row>
     <Col class=h-100>
         <ListGroup class="list-group-scroll list-group-striped list-group-border-bottom" id="reg_list">
-            {#each registrations as reg, index}
+            {#each registrations as reg, index(reg._id)}
                 <RegItem
                 regIndex={registrations.length - index}
                 reg={reg}
-                on:remove_reg={removeReg}
-                on:select_reg />
+                on:remove_reg={removeReg}/>
             {/each}
         </ListGroup>
     </Col>

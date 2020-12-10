@@ -2,21 +2,12 @@
     import { Badge, Card, CardBody, CardFooter, CardHeader, CardText } from 'sveltestrap';
     import { Button } from 'sveltestrap';
     import { person, gate_keeper } from './../services/store';
-
-    $: console.log('gate_keeper: ', $gate_keeper);
-
-    const handleCheckIn = () => {
-        $gate_keeper = $person;
-    };
-    const handleCheckOut = () => {
-        $gate_keeper = undefined;
-    };
-
 </script>
 
 <Card class=m-3>
     <div class="card-header py-2"
         class:bg-danger={!$gate_keeper}
+        class:bg-success={$gate_keeper}
     >
         Poortwachter
     </div>
@@ -40,7 +31,7 @@
             title="poortwachter check-in"
             class=mr-3
             disabled={!$person}
-            on:click={handleCheckIn}
+            on:click={() => $gate_keeper = $person}
         >
             &gt; In
         </Button>
@@ -48,7 +39,7 @@
             color=info
             title="poortwachter check-out"
             disabled={!$gate_keeper}
-            on:click={handleCheckOut}
+            on:click={() => $gate_keeper = undefined}
         >
             Uit &gt;
         </Button>
