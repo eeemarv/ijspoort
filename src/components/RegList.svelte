@@ -14,24 +14,6 @@
         return 't' + (epoch - (3600000 * reg_hours)).toString();
     }
 
-    async function updateReg(event) {
-        const { reg } = event.detail;
-        const update = await db.put(reg)
-        if (update.ok) {
-            await updateRegList()
-        }
-    }
-
-    async function removeReg(event) {
-        const { reg: regToRemove } = event.detail;
-        const removal = await db.remove(regToRemove)
-        if (removal.ok) {
-            registrations = registrations.filter((reg) => {
-                return reg._id !== regToRemove._id
-            })
-        }
-    }
-
     onMount(() => {
         db_reg.allDocs({
             include_docs: true,
@@ -52,7 +34,12 @@
         }).on('change', (change) => {
             console.log('reg change');
             console.log(change);
+            if (change.deleted){
+                registrations = registrations.filter((reg) => reg.doc._id !== change.id);
+                return;
+            }
             change._id = change.id;
+            change.doc.newly_add = true;
             registrations = [change, ...registrations];
         }).on('error', (err) => {
             console.log(err);
@@ -71,7 +58,7 @@
                 <RegItem
                 regIndex={registrations.length - index}
                 reg={reg.doc}
-                on:remove_reg={removeReg}/>
+                />
             {/each}
             {#if registrations.length === 0}
                 <ListGroupItem class=bg-primary>

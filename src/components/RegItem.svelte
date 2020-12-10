@@ -1,24 +1,43 @@
 <script>
-  import { ListGroupItem, Button, Badge } from 'sveltestrap';
-  import { createEventDispatcher } from 'svelte';
+  import { db_person, db_reg } from './../services/pouchdb';
+  import { Button, Badge } from 'sveltestrap';
+  import { onMount } from 'svelte';
   import { person } from './../services/store';
+
   export let regIndex;
   export let reg;
 
-  const dispatch = createEventDispatcher();
+  let deleted = false;
+  let selected = false;
 
-  const handleRemoveReg = dispatch('remove_reg', {
+  function handleSelectReg(){
+    selected = true;
+    setTimeout(() => {selected = false}, 300);
+    db_person.get(reg.person_id).then((res) => {
+        $person = res;
+    }).catch((err) => {
+        console.log(err);
+    });
+  }
+  function handleRemoveReg(event){
+    deleted = true;
+    setTimeout(() => {
+        console.log(event);
+        db_reg.remove(reg).then((res) => {
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        });
+    }, 500);
+  }
 
+  onMount(() => {
+    setTimeout(() => {reg.newly_add = undefined}, 1000);
   });
-  const handleSelectReg = (event) => {
-    console.log(event);
-    $person = undefined;
-  };
-
 </script>
 
-<ListGroupItem>
-  <div class="d-flex w-100 justify-content-between">
+<li class="list-group-item{reg.newly_add ? ' bg-success' : ''}{deleted ? ' bg-danger' : ''}{selected ? ' bg-primary' : ''}">
+<div class="d-flex w-100 justify-content-between">
     <dvi>
       <div>
         <Badge color=info title="teller">
@@ -76,4 +95,4 @@
       </Button>
     </div>
   </div>
-</ListGroupItem>
+</li>
