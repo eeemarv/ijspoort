@@ -1,5 +1,6 @@
 import { db_person } from './pouchdb';
 import { shallow_compare } from './pouchdb';
+import lodash from 'lodash';
 
 const XLSX = require('xlsx');
 
@@ -121,14 +122,15 @@ const xls_assist_import = (file) => {
             }
             let compare_person = { ...res};
             delete compare_person._rev;
-            if (shallow_compare(compare_person, new_person)){
+            if (lodash.isEqual(compare_person, new_person)){
                 throw 'no_change for ' + res._id;
             }
             new_person._rev = res._rev;
             return new_person;
         }).then((res) => {
-            console.log('new updated', res);
             return db_person.put(res);
+        }).then((res) => {
+            console.log('new updated', res);
         }).catch((err) => {
             console.log(err);
         });

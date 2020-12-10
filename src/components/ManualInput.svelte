@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { db_person, put_design_person_text_search } from './../services/pouchdb';
+    import { db_person } from './../services/pouchdb';
     import autocomplete from 'autocompleter';
     import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
     import { person, person_selected_by } from './../services/store';
@@ -34,7 +34,6 @@
     let el_manual;
 
     onMount(() => {
-        put_design_person_text_search();
         autocomplete({
             input: el_manual,
             minLength: 1,

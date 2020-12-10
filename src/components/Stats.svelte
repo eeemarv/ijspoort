@@ -1,31 +1,15 @@
 <script>
     import { Badge, Card, CardGroup } from 'sveltestrap';
-    import { db_person } from './../services/pouchdb';
+    import { db_person, put_design_person_search } from './../services/pouchdb';
     import { onMount } from 'svelte';
 
     var member_count_2020 = 0;
     var member_count_2021 = 0;
 
-    const count_members_2020 = {
-        map: function (doc, emit) {
-            if (doc._id.startsWith('n0')){
-                emit(true);
-            }
-        },
-        reduce: '_count'
-    };
+    put_design_person_search();
 
-    const count_members_2021 = {
-        map: function (doc, emit) {
-            if (!doc.open_balance.trim().startsWith('-')){
-                emit(true);
-            }
-        },
-        reduce: '_count'
-    };
-
-    onMount(() => {
-        db_person.query(count_members_2020, {
+    const update_member_count = () => {
+        db_person.query('search/count_members_2020', {
             key: true,
             reduce: true,
             group: true
@@ -36,7 +20,7 @@
             console.log(err);
         });
 
-        db_person.query(count_members_2021, {
+        db_person.query('search/count_members_2021', {
             key: true,
             reduce: true,
             group: true
@@ -46,6 +30,19 @@
         }).catch(function (err) {
             console.log(err);
         });
+    };
+
+    update_member_count();
+
+    db_person.changes({
+        since: 'now',
+        live: true
+    }).on('change', (change) => {
+        console.log('person changes (Stats component)');
+        console.log(change);
+        update_member_count();
+    }).on('error', (err) => {
+        console.log(err);
     });
 
 </script>

@@ -2,6 +2,7 @@
 //import PouchDB from 'pouchdb';
 // import * as PouchDB from 'pouchdb';
 import PouchDB from 'pouchdb';
+import lodash from 'lodash';
 
 // PouchDB.plugin(require('pouchdb-find'));
 const db_prefix = 'ijspoort_';
@@ -9,11 +10,6 @@ const db_reg = new PouchDB(db_prefix + 'reg');
 const db_nfc = new PouchDB(db_prefix + 'nfc');
 const db_eid = new PouchDB(db_prefix + 'eid');
 const db_person = new PouchDB(db_prefix + 'person');
-
-/*
-const db_person_eid_search = new PouchDB(db_prefix + 'person_eid_search');
-const db_person_nfc_search = new PouchDB(db_prefix + 'person_nfc_search');
-*/
 
 function search_text_map(doc){
     let firstname = doc.firstname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
@@ -28,20 +24,59 @@ function search_text_map(doc){
     });
 };
 
-const design_search_doc = {
+function count_members_2020(doc) {
+    if (doc._id.startsWith('n0')){
+        emit(true);
+    }
+};
+
+function count_members_2021(doc) {
+    if (doc._id.startsWith('n0')
+        && !doc.open_balance.trim().startsWith('-')){
+        emit(true);
+    }
+};
+
+const design_person_search_doc = {
     _id: '_design/search',
     views: {
         by_text: {
             map: search_text_map.toString()
+        },
+        count_members_2020:{
+            map: count_members_2020.toString(),
+            reduce: '_count'
+        },
+        count_members_2021:{
+            map: count_members_2021.toString(),
+            reduce: '_count'
         }
     }
 };
 
-const put_design_person_text_search = () => {
-    db_person.put(design_search_doc).then((res) => {
+const put_design_person_search = () => {
+    db_person.get(design_person_search_doc._id).catch((err) => {
+        if (err.name === 'not_found'){
+            return 'put';
+        }
+        throw err;
+    }).then((res) => {
+        if (res === 'put'){
+            return design_person_search_doc;
+        }
+        let compare_design_doc = {...res};
+        delete compare_design_doc._rev;
+        if (lodash.isEqual(compare_design_doc, design_person_search_doc)){
+            throw 'no change for design_person_ssearch_doc';
+        }
+        design_person_search_doc._rev = res._rev;
+        return design_person_search_doc;
+    }).then((res) => {
+        return db_person.put(res);
+    }).then((res) => {
+        console.log('design_person_search_doc_updated');
         console.log(res);
     }).catch((err) => {
-        console.log('Design doc already exists');
         console.log(err);
     });
 };
@@ -50,23 +85,8 @@ const generate_id = () => {
     return Array(12).fill(0).map(x => Math.random().toString(36).charAt(2)).join('');
 };
 
-const shallow_compare = (a, b) => {
-    const keys_a = Object.keys(a);
-    const keys_b = Object.keys(a);
-    if (keys_a.length !== keys_b.length){
-        return false;
-    }
-    for (let k of keys_a) {
-        if (a[k] !== b[k]) {
-            return false;
-        }
-    }
-    return true;
-};
-
 export {
-    shallow_compare,
-    put_design_person_text_search,
+    put_design_person_search,
     generate_id,
     db_reg,
     db_nfc,
