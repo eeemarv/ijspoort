@@ -36,10 +36,6 @@ const createWindow = () => {
 	darkTheme: true,
 	backgroundColor: '#000000',
     webPreferences: {
-	  /*
-	  worldSafeExecuteJavaScript: true,
-	  contextIsolation: true,
-	  */
       nodeIntegration: true,
 	  nodeIntegrationInWorker: true,
 	  enableRemoteModule: true
@@ -144,7 +140,7 @@ const listenPcsc = (win) => {
 
 			ipcMain.on('nfc.test_transport_key', async (event) => {
 				try {
-					await reader.authenticate(6, KEY_TYPE_A, 'ffffffffffff');
+					await reader.authenticate(3, KEY_TYPE_A, 'ffffffffffff');
 					console.log('nfc.test_transport_key.ok', card.uid);
 					event.reply('nfc.test_transport_key.ok', card);
 				} catch (err) {
@@ -177,26 +173,26 @@ const listenPcsc = (win) => {
 				}
 			});
 
-			const read_name = () => {
-
-			};
-
-			const write_name = () => {
-
-			};
-
-			const read_to_utf8 = (block) => {
-
-			};
-
-			const write_from_utf8 = (block) => {
-
-			};
-
-			ipcMain.on('nfc.write.access_period', async (event, period_str) => {
+			ipcMain.on('nfc.read.access_period', async (event) => {
 				try {
 					await reader.authenticate(44, KEY_TYPE_B, key_B);
-					await reader.write(44, period_str, 16);
+					const data = await reader.read(44, 16, 16);
+					const str = data.toString();
+					console.log('nfc.read.access_period.ok', str);
+					event.reply('nfc.read.access_period.ok', card, str);
+				} catch (err) {
+					console.log(err);
+					event.reply('nfc.read.access_period.fail', card);
+				}
+			});
+
+			ipcMain.on('nfc.write.access_period', async (event, access_period_str) => {
+				const data = Buffer.alloc(16);
+				data.write(access_period_str, 'utf-8');
+				try {
+					await reader.authenticate(44, KEY_TYPE_B, key_B);
+					await reader.write(44, data, 16);
+					console.log('nfc.write.access_period.ok', access_period_str);
 					event.reply('nfc.write.access_period.ok', card);
 				} catch (err) {
 					console.log(err);
@@ -204,131 +200,106 @@ const listenPcsc = (win) => {
 				}
 			});
 
-			ipcMain.on('nfc.write.access_end_date', async (event, date_str) => {
+			ipcMain.on('nfc.read.date_of_birth_and_member_id', async (event) => {
 				try {
-					await reader.authenticate(44, KEY_TYPE_B, key_B);
-					let period = await reader.read(44, period_str, 16);
-					await reader.write(44, period_str, 16);
-					event.reply('nfc.write.access_end_date.ok', card);
+					await reader.authenticate(45, KEY_TYPE_B, key_B);
+					const data = await reader.read(45, 16, 16);
+					const str = data.toString();
+					console.log('nfc.write.date_of_birth_and_member_id.ok', str);
+					event.reply('nfc.read.date_of_birth_and_member_id.ok', card, str);
 				} catch (err) {
 					console.log(err);
-					event.reply('nfc.write.access_end_date.fail', card);
+					event.reply('nfc.read.date_of_birth_and_member_id.fail', card);
 				}
 			});
 
-			ipcMain.on('nfc.write.birthday_and_member_id', async (str) => {
-
-			});
-
-			ipcMain.on('nfc.write.null', async (event) => {
-
-			});
-
-			ipcMain.on('nfc.write.firstname', async (str) => {
-
-			});
-
-			ipcMain.on('nfc.write.surname', async (str) => {
-
-			});
-
-
-
-
-
-			/*
-			const secret_feed_B = 'dag_beeRtje,hier_is_een_bandje_voor_jou'; // voorbeeld secret feed B
-			let key_B = crypto.createHash('sha256').update(secret_feed_B + card.uid.toLowerCase()).digest('hex').substr(0, 12);
-
-			let write_new = false;
-
-			try {
-				await reader.authenticate(3, KEY_TYPE_A, key_A);
-				console.log('Yeah key A is valid');
-			} catch (err) {
-				console.log('key A not valid, write new');
-				write_new = true;
-			}
-
-			try {
-				await reader.authenticate(3, KEY_TYPE_B, key_B);
-				console.log('Yeah key B is valid');
-			} catch (err) {
-				console.log('key B not valid');
-			}
-*/
-/*
-			if (write_new){
+			ipcMain.on('nfc.write.date_of_birth_and_member_id', async (event, str) => {
+				const data = Buffer.alloc(16);
+				data.write(str, 'utf-8');
 				try {
-					await reader.authenticate(3, KEY_TYPE_A, 'ffffffffffff');
-
-					let new_auth = Buffer.from(key_A + '7f00f800' + key_B, 'hex');
-					console.log(new_auth.toString('hex'));
-
-					await reader.write(3, new_auth, 16);
-					await reader.authenticate(3, KEY_TYPE_B, key_B);
-
-					console.log('key B set for autth!');
-
+					await reader.authenticate(45, KEY_TYPE_B, key_B);
+					await reader.write(45, data, 16);
+					console.log('nfc.write.date_of_birth_and_member_id.ok', str);
+					event.reply('nfc.write.date_of_birth_and_member_id.ok', card);
 				} catch (err) {
-					console.log('authentication transport key fail.', err);
+					console.log(err);
+					event.reply('nfc.write.date_of_birth_and_member_id.fail', card);
 				}
-			}
-*/
+			});
 
+			ipcMain.on('nfc.read.firstname', async (event) => {
+				try {
+					await reader.authenticate(48, KEY_TYPE_B, key_B);
+					const data_block_48 = await reader.read(48, 48, 16);
+					await reader.authenticate(52, KEY_TYPE_B, key_B);
+					const data_block_52 = await reader.read(52, 48, 16);
+					const data = Buffer.concat([data_block_48, data_block_52]);
+					const null_index = data.indexOf(0x00);
+					const firstname = data.slice(0, null_index);
+					console.log('nfc.read.firstname.ok', firstname);
+					event.reply('nfc.read.firstname.ok', card, firstname);
+				} catch (err) {
+					console.log(err);
+					event.reply('nfc.read.firstname.fail', card);
+				}
+			});
 
+			ipcMain.on('nfc.write.firstname', async (event, firstname_str) => {
+				const data = Buffer.alloc(96);
+				data.write(firstname_str, 'utf-8');
+				const data_block_48 = Buffer.alloc(48);
+				data.copy(data_block_48, 0, 0, 48);
+				const data_block_52 = Buffer.alloc(48);
+				data.copy(data_block_52, 0, 48, 96);
+				try {
+					await reader.authenticate(48, KEY_TYPE_B, key_B);
+					await reader.write(48, data_block_48, 16);
+					await reader.authenticate(52, KEY_TYPE_B, key_B);
+					await reader.write(52, data_block_52, 16);
+					console.log('nfc.write.firstname.ok', firstname_str);
+					event.reply('nfc.write.firstname.ok', card);
+				} catch (err) {
+					console.log(err);
+					event.reply('nfc.write.firstname.fail', card);
+				}
+			});
 
+			ipcMain.on('nfc.read.surname', async (event) => {
+				try {
+					await reader.authenticate(48, KEY_TYPE_B, key_B);
+					const data_block_56 = await reader.read(56, 48, 16);
+					await reader.authenticate(52, KEY_TYPE_B, key_B);
+					const data_block_60 = await reader.read(60, 48, 16);
+					const data = Buffer.concat([data_block_56, data_block_60]);
+					const null_index = data.indexOf(0x00);
+					const surname = data.slice(0, null_index);
+					console.log('nfc.read.surname.ok', surname);
+					event.reply('nfc.read.surname.ok', card, surname);
+				} catch (err) {
+					console.log(err);
+					event.reply('nfc.read.surname.fail', card);
+				}
+			});
 
-			/*
-			const key = 'ffffffffffff'; // key must be a 12-chars HEX string, an instance of Buffer, or array of bytes
-			const keyType = KEY_TYPE_A;
-
-			try {
-
-				// we want to authenticate sector 1
-				// authenticating one block within the sector will authenticate all blocks within that sector
-				// so in our case, we choose block 4 that is within the sector 1, all blocks (4, 5, 6, 7)
-				// will be authenticated with the given key
-				await reader.authenticate(4, keyType, key);
-
-				// Note: writing might require to authenticate with a different key (based on the sector access conditions)
-
-				console.log(`sector 1 successfully authenticated`, reader);
-
-			} catch (err) {
-				console.log(`error when authenticating block 4 within the sector 1`, reader, err);
-				return;
-			}
-
-
-		// example reading 16 bytes (one block) assuming containing 32bit integer
-		// !!! note that we don't need 16 bytes - 32bit integer takes only 4 bytes !!!
-		try {
-
-			// reader.read(blockNumber, length, blockSize = 4, packetSize = 16)
-			// - blockNumber - memory block number where to start reading
-			// - length - how many bytes to read
-			// - blockSize - 4 for MIFARE Ultralight, 16 for MIFARE Classic
-			// ! Caution! length must be divisible by blockSize
-			// ! Caution! MIFARE Classic cards have sector trailers
-			//   containing access bits instead of data, each last block in sector is sector trailer
-			//   (e.g. block 3, 7, 11, 14)
-			//   see memory structure above or https://github.com/pokusew/nfc-pcsc/issues/16#issuecomment-304989178
-
-			const data = await reader.read(4, 64, 16); // blockSize=16 must specified for MIFARE Classic cards
-
-			console.log(`data read`, data);
-
-			const payload = data.toString('hex');
-
-			console.log(`data converted`, payload);
-
-		} catch (err) {
-			console.log(`error when reading data`, reader, err);
-		}
-
-		*/
-
+			ipcMain.on('nfc.write.surname', async (event, surname_str) => {
+				const data = Buffer.alloc(96);
+				data.write(surname_str, 'utf-8');
+				const data_block_56 = Buffer.alloc(48);
+				data.copy(data_block_56, 0, 0, 48);
+				const data_block_60 = Buffer.alloc(48);
+				data.copy(data_block_60, 0, 48, 96);
+				try {
+					await reader.authenticate(56, KEY_TYPE_B, key_B);
+					await reader.write(56, data_block_56, 16);
+					await reader.authenticate(60, KEY_TYPE_B, key_B);
+					await reader.write(60, data_block_60, 16);
+					console.log('nfc.write.surname.ok', surname_str);
+					event.reply('nfc.write.surname.ok', card);
+				} catch (err) {
+					console.log(err);
+					event.reply('nfc.write.surname.fail', card);
+				}
+			});
 		});
 
 		reader.on('card.off', card => {
