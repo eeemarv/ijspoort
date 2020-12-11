@@ -105,8 +105,6 @@ const listenPcsc = (win) => {
 			console.log(reader.reader.name, 'nfc.on', card);
 			win.webContents.send('nfc.on', card);
 
-			remove_nfc_listeners();
-
 			// get keys
 			let key_B = crypto.createHash('sha256').update(feed_B + card.uid.toLowerCase()).digest('hex').substr(0, 12);
 			let key_A = crypto.createHash('sha256').update(feed_A + card.uid.toLowerCase()).digest('hex').substr(0, 12);
@@ -116,7 +114,8 @@ const listenPcsc = (win) => {
 
 			ipcMain.on('nfc.test_a_key', async (event) => {
 				try {
-					await reader.authenticate(3, KEY_TYPE_A, key_A);
+					await reader.authenticate(6, KEY_TYPE_A, key_A);
+					await reader.read(6, 16, 16);
 					console.log('nfc.test_a_key.ok', card.uid);
 					event.reply('nfc.test_a_key.ok', card);
 				} catch (err) {
@@ -127,8 +126,10 @@ const listenPcsc = (win) => {
 			});
 
 			ipcMain.on('nfc.test_b_key', async (event) => {
+				const write_test = Buffer.alloc(6);
 				try {
-					await reader.authenticate(3, KEY_TYPE_B, key_B);
+					await reader.authenticate(6, KEY_TYPE_B, key_B);
+					await reader.write(6, write_test, 16);
 					console.log('nfc.test_b_key.ok', card.uid);
 					event.reply('nfc.test_b_key.ok', card);
 				} catch (err) {
@@ -140,7 +141,7 @@ const listenPcsc = (win) => {
 
 			ipcMain.on('nfc.test_transport_key', async (event) => {
 				try {
-					await reader.authenticate(3, KEY_TYPE_A, 'ffffffffffff');
+					await reader.authenticate(6, KEY_TYPE_A, 'ffffffffffff');
 					console.log('nfc.test_transport_key.ok', card.uid);
 					event.reply('nfc.test_transport_key.ok', card);
 				} catch (err) {
@@ -150,21 +151,25 @@ const listenPcsc = (win) => {
 				}
 			});
 
-			ipcMain.on('nfc.init', async (event) => {
+			ipcMain.on('nfc.init', async (event, person) => {
+				let member_id = person._id.substring(1).padStart(8, '0');
+				let db = person.date_of_birth.split('/');
+				let date_of_birth = (db[2] + db[1] + db[0]).padStart(8, '0');
+				let str = date_of_birth + member_id;
 				// key A can read everything, key B can write and read everything
-				let new_access = Buffer.from(key_A + '7f00f800' + key_B, 'hex');
+				let new_access = Buffer.from(key_A + '78778800' + key_B, 'hex');
+				const data = Buffer.alloc(16);
+				data.write(str, 'utf-8');
 				try {
-					for (let block = 3; block < 64; block = block + 4){
-						if (block > 7 && block < 32){
-							// keep blocks 8 - 31 open
-							continue;
-						}
-						await reader.authenticate(block, KEY_TYPE_A, 'ffffffffffff');
-						await reader.write(block, new_access, 16);
-					}
+					await reader.authenticate(6, KEY_TYPE_A, 'ffffffffffff');
+					await reader.write(6, data, 16);
+					await reader.write(7, new_access, 16);
 					// try key B
-					await reader.authenticate(3, KEY_TYPE_B, key_B);
+					await reader.authenticate(6, KEY_TYPE_B, key_B);
 					console.log('key B set for writing');
+					// try key A
+					await reader.authenticate(6, KEY_TYPE_A, key_A);
+					console.log('key A set for writing');
 					event.reply('nfc.init.ok', card);
 				} catch (err){
 					console.log('fail setting new access');
@@ -200,30 +205,30 @@ const listenPcsc = (win) => {
 				}
 			});
 
-			ipcMain.on('nfc.read.date_of_birth_and_member_id', async (event) => {
+			ipcMain.on('nfc.read.member_id', async (event) => {
 				try {
-					await reader.authenticate(45, KEY_TYPE_B, key_B);
-					const data = await reader.read(45, 16, 16);
+					await reader.authenticate(6, KEY_TYPE_B, key_B);
+					const data = await reader.read(6, 16, 16);
 					const str = data.toString();
-					console.log('nfc.write.date_of_birth_and_member_id.ok', str);
-					event.reply('nfc.read.date_of_birth_and_member_id.ok', card, str);
+					console.log('nfc.read.member_id.ok', str);
+					event.reply('nfc.read.member_id.ok', card, str);
 				} catch (err) {
 					console.log(err);
-					event.reply('nfc.read.date_of_birth_and_member_id.fail', card);
+					event.reply('nfc.read.member_id.fail', card);
 				}
 			});
 
-			ipcMain.on('nfc.write.date_of_birth_and_member_id', async (event, str) => {
+			ipcMain.on('nfc.write.member_id', async (event, str) => {
 				const data = Buffer.alloc(16);
 				data.write(str, 'utf-8');
 				try {
 					await reader.authenticate(45, KEY_TYPE_B, key_B);
 					await reader.write(45, data, 16);
-					console.log('nfc.write.date_of_birth_and_member_id.ok', str);
-					event.reply('nfc.write.date_of_birth_and_member_id.ok', card);
+					console.log('nfc.write.member_id.ok', str);
+					event.reply('nfc.write.member_id.ok', card);
 				} catch (err) {
 					console.log(err);
-					event.reply('nfc.write.date_of_birth_and_member_id.fail', card);
+					event.reply('nfc.write.member_id.fail', card);
 				}
 			});
 

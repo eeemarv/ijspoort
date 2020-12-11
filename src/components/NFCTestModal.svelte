@@ -4,7 +4,7 @@
 
     export let is_open = false;
     export let color = 'primary';
-    export let message_list = [];
+    export let message;
     export let progress = 0;
 
     const toggle = () => {is_open = !is_open};
@@ -14,13 +14,8 @@
     <ModalHeader {toggle}>NFC lees test</ModalHeader>
     <ModalBody>
         <Progress value={progress} color=warning/>
-        <ListGroup>
-        {#each message_list as msg}
-          <ListGroupItem>
-            {msg}
-          </ListGroupItem>
-        {/each}
-        </ListGroup>
+
+        {message}
     </ModalBody>
     <ModalFooter>
       <Button color="secondary" on:click={toggle}>
