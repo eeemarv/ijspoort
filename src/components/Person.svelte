@@ -35,7 +35,7 @@
 <CardGroup>
   <Card>
     <CardHeader class=bg-info>
-      Lid (Assist)
+      Assist
     </CardHeader>
     <ListGroup>
       <ListGroupItem class="d-flex w-100 justify-content-between py-2">
