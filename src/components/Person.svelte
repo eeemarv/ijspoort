@@ -6,7 +6,8 @@
   import { ListGroup, ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
   import { xls_assist_import } from './../services/person';
-  import { person, person_selected_by } from './../services/store';
+  import { person } from './../services/store';
+  import PersonNFC from './PersonNFC.svelte';
 
   ipcRenderer.on('xls.assist.import', (ev, file) => {
     xls_assist_import(file);
@@ -19,10 +20,6 @@
     && !$person.open_balance.trim().startsWith('-');
 
   $: console.log($person);
-
-  if (!$person){
-    $person_selected_by = undefined;
-  }
 
   const handleRegisterByManual = (() => {
     dispatch('register_by_manual');
@@ -166,6 +163,11 @@
     <CardHeader class=bg-info>
       Gelinkte data
     </CardHeader>
+    <PersonNFC/>
+    <CardBody>
+      &nbsp;
+    </CardBody>
+    <!--
     <ListGroup>
       <ListGroupItem class="bg-danger d-flex w-100 justify-content-between">
         <div>
@@ -189,6 +191,7 @@
     <CardBody>
       Data
     </CardBody>
+    -->
     <div class="card-footer d-flex w-100 justify-content-end">
       <Button color=dark class=ml-3 on:click={() => $person = undefined}>
         Sluiten

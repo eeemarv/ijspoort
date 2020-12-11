@@ -1,9 +1,13 @@
 <script>
     import { Badge, Card, CardBody, CardText } from 'sveltestrap';
     const { ipcRenderer } = window.require('electron');
+    import { onMount } from 'svelte';
+    import { db_eid } from './../services/pouchdb';
     import { eid } from './../services/store';
+    import { person, gate_keeper } from './../services/store';
 
     let dev_status = 'off';
+    let eid_count_total = 0;
 
     let eid_err_msg;
     let dev_err_msg;
@@ -34,6 +38,53 @@
         eid_err_msg = err;
     });
 
+    const add_eid = (card, person) => {
+        let now = new Date();
+        let eid = {
+            _id: 'c' + card.cardnumber,
+            ts_epoch: now.getTime(),
+            card: card,
+            person: person,
+            person_id: person._id,
+            gate_keeper: $gate_keeper,
+            gate_keeper_id: $gate_keeper?._id
+        };
+
+        db_eid.put(eid).then((res) => {
+            console.log('add_nfc');
+            console.log(res);
+        }).catch((err) => {
+            console.log(err);
+        });
+    };
+
+    const update_eid_count_total = () => {
+        db_eid.query('search/count_total', {
+            key: true,
+            reduce: true,
+            group: true
+        }).then((res) => {
+            console.log(res)
+            eid_count_total = res.rows[0].value;
+        }).catch((err) => {
+            console.log(err);
+        });
+    };
+
+    onMount(() => {
+        update_eid_count_total();
+    });
+
+    db_eid.changes({
+        since: 'now',
+        live: true
+    }).on('change', (change) => {
+        console.log('eid changes (EID component)');
+        console.log(change);
+        update_eid_count_total();
+    }).on('error', (err) => {
+        console.log(err);
+    });
 </script>
 
 <Card class=m-3>
@@ -42,7 +93,7 @@
         <div>eiD</div>
         <div>
             <Badge color=info title="Totaal aantal eIDs geregistreerd">
-                15
+                {eid_count_total}
             </Badge>
         </div>
     </div>

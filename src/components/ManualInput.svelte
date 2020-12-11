@@ -3,7 +3,7 @@
     import { db_person } from './../services/pouchdb';
     import autocomplete from 'autocompleter';
     import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
-    import { person, person_selected_by } from './../services/store';
+    import { person } from './../services/store';
 
     const search_func =  function(text, update){
         let search_text = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
@@ -44,7 +44,6 @@
             onSelect: (item) => {
                 console.log(item);
                 $person = item;
-                $person_selected_by = 'manual';
                 el_manual.value = '';
             },
             render: (item, value) => {

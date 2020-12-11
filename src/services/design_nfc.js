@@ -1,20 +1,32 @@
 import { db_nfc } from './pouchdb';
 import lodash from 'lodash';
 
-function search_nfc_member_id_map(doc) {
-    emit(doc.member_id);
+function search_nfc_person_id_map(doc) {
+    emit(doc.person_id);
 };
+
 function search_nfc_gate_keeper_id_map(doc){
     emit(doc.gate_keeper_id);
 }
+
+function count_nfc_total(doc) {
+    if (doc._id.startsWith('c')){
+        emit(true);
+    }
+};
+
 const design_nfc_search_doc = {
     _id: '_design/search',
     views: {
-        by_member_id: {
-            map: search_nfc_member_id_map.toString()
+        by_person_id: {
+            map: search_nfc_person_id_map.toString()
         },
         by_gate_keeper_id: {
             map: search_nfc_gate_keeper_id_map.toString()
+        },
+        count_total: {
+            map: count_nfc_total.toString(),
+            reduce: '_count'
         }
     }
 };

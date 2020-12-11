@@ -1,7 +1,6 @@
 
 
 <script>
-
   import { Container, Row, Col, Badge } from 'sveltestrap';
   import ManualInput from './ManualInput.svelte';
   import Person from './Person.svelte';
@@ -14,20 +13,15 @@
   import Clock from './Clock.svelte';
   import { db_reg } from './../services/pouchdb';
   import { person, gate_keeper, nfc_uid } from './../services/store';
+  import { onMount } from 'svelte';
 
   const add_reg = (person, source) => {
     let now = new Date();
-    let h_m = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
     let reg = {
         _id: 't' + now.getTime().toString(),
+        ts_epoch: now.getTime(),
         ts_lc_hours: now.getHours().toString().padStart(2, '0'),
         ts_lc_minutes: now.getMinutes().toString().padStart(2, '0'),
-        ts_lc_seconds: now.getSeconds().toString().padStart(2, '0'),
-        ts_lc_year: now.getFullYear(),
-        ts_lc_month: now.getMonth() + 1,
-        ts_utc: now.toISOString(),
-        ts_lc: now.toString(),
-        ts_epoch: now.getTime(),
         person: person,
         person_id: person._id,
         gate_keeper: $gate_keeper,

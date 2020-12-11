@@ -7,6 +7,8 @@
   export let regIndex;
   export let reg;
 
+  $: ts_date = new Date(reg.ts_epoch);
+
   let deleted = false;
   let selected = false;
 
@@ -45,7 +47,8 @@
         </Badge>
         &nbsp;
         <Badge color=primary title="tijdstip">
-          {reg.ts_lc_hours}:{reg.ts_lc_minutes}
+          {ts_date.getHours().toString().padStart(2, '0')}:
+          {ts_date.getMinutes().toString().padStart(2, '0')}
         </Badge>
         &nbsp;
         <Badge color=light title="lidnummer">
