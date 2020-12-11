@@ -247,14 +247,6 @@
         {/if}
     </div>
     <CardFooter class="d-flex w-100 justify-content-end">
-        <!--
-        <Button color=info
-            on:click={handle_test_nfc}
-            disabled={!$nfc_uid}
-        >
-            Test
-        </Button>-->
-
         <Button
             color=success
             title="Activeer deze NFC-tag voor deze persoon"
@@ -263,14 +255,4 @@
             Activeer
         </Button>
     </CardFooter>
-    <!--
-    <CardFooter>
-        <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="quick_scan_reg" bind:checked={quick_scan_reg}>
-            <label class="custom-control-label" for="quick_scan_reg">
-                Snel scan registratie
-            </label>
-        </div>
-    </CardFooter>
-    -->
 </Card>
