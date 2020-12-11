@@ -20,14 +20,12 @@
     let reg = {
         _id: 't' + now.getTime().toString(),
         ts_epoch: now.getTime(),
-        ts_lc_hours: now.getHours().toString().padStart(2, '0'),
-        ts_lc_minutes: now.getMinutes().toString().padStart(2, '0'),
         person: person,
         person_id: person._id,
         gate_keeper: $gate_keeper,
         gate_keeper_id: $gate_keeper?._id
     };
-    if (source = 'manual'){
+    if (source === 'manual'){
       reg.manual = true;
     }
     if (source === 'nfc'){
@@ -45,8 +43,9 @@
     add_reg($person, 'manual');
     $person = undefined;
   });
-  const handleRegisterByNFC = (() => {
-
+  const handleRegisterByNFC = ((event) => {
+    $person = undefined;
+    add_reg(event.detail.person, 'nfc');
   });
 
 </script>

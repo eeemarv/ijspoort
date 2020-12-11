@@ -1,10 +1,12 @@
 <script>
-    import { onMount } from 'svelte';
+    import { createEventDispatcher, onMount } from 'svelte';
     import { Badge, Card, CardFooter, CardText } from 'sveltestrap';
     import { Button } from 'sveltestrap';
     const { ipcRenderer } = window.require('electron');
-    import { db_nfc } from './../services/pouchdb';
+    import { db_nfc, db_person } from './../services/pouchdb';
     import { nfc_uid, person, gate_keeper } from './../services/store';
+
+    const dispatch = createEventDispatcher();
 
     let dev_status = 'off';
     let nfc_status = 'off';
@@ -24,9 +26,17 @@
 
     ipcRenderer.on('nfc.on', (ev, card) => {
         $nfc_uid = card.uid;
-        db_nfc.get('c'+ card.uid).then((res) => {
+        db_nfc.get('uid_'+ card.uid).then((res) => {
             console.log(res);
             nfc_status = 'ok';
+            return res.person_id;
+        }).then((res) => {
+            return db_person.get(res);
+        }).then((res) => {
+            console.log('register_by_nfc event');
+            dispatch('register_by_nfc', {
+                person: res
+            });
         }).catch((err) => {
             console.log(err);
             if (err.name === 'not_found'){
@@ -41,16 +51,14 @@
         nfc_status = 'off';
     });
 
-
-
-    const add_nfc = (person, uid) => {
+    const add_nfc = () => {
         let now = new Date();
         let nfc = {
-            _id: 'c' + uid,
+            _id: 'uid_' + $nfc_uid,
             ts_epoch: now.getTime(),
-            uid: uid,
-            person: person,
-            person_id: person._id,
+            uid: $nfc_uid,
+            person: $person,
+            person_id: $person._id,
             gate_keeper: $gate_keeper,
             gate_keeper_id: $gate_keeper?._id
         };
@@ -58,6 +66,7 @@
         db_nfc.put(nfc).then((res) => {
             console.log('add_nfc');
             console.log(res);
+            nfc_status = 'ok';
         }).catch((err) => {
             console.log(err);
         });
@@ -122,7 +131,11 @@
         {/if}
     </div>
     <CardFooter class="d-flex w-100 justify-content-end">
-        <Button color=accent title="Activeer deze NFC-tag voor deze persoon" disabled={!can_activate}>
+        <Button
+            color=success
+            title="Activeer deze NFC-tag voor deze persoon"
+            disabled={!can_activate}
+            on:click={add_nfc}>
             Activeer
         </Button>
     </CardFooter>

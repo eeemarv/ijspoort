@@ -10,7 +10,7 @@ function search_nfc_gate_keeper_id_map(doc){
 }
 
 function count_nfc_total(doc) {
-    if (doc._id.startsWith('c')){
+    if (doc._id.startsWith('uid_')){
         emit(true);
     }
 };
