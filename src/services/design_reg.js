@@ -6,7 +6,12 @@ function search_reg_member_id_map(doc) {
 };
 function search_reg_gate_keeper_id_map(doc){
     emit(doc.gate_keeper_id);
-}
+};
+function find_reg_dates_since_30_days(doc){
+
+};
+
+
 const design_reg_search_doc = {
     _id: '_design/search',
     views: {

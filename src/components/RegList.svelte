@@ -1,8 +1,7 @@
 <script>
     import { Row, Col, ListGroup, ListGroupItem } from 'sveltestrap';
     import RegItem from './RegItem.svelte';
-    import { db_reg, db_person } from './../services/pouchdb';
-    import { person, gate_keeper } from './../services/store';
+    import { db_reg } from './../services/pouchdb';
     import { onMount } from 'svelte';
 
     const reg_hours = 5;
@@ -14,7 +13,7 @@
         return 't' + (epoch - (3600000 * reg_hours)).toString();
     }
 
-    onMount(() => {
+    const refresh_reg_list = () => {
         db_reg.allDocs({
             include_docs: true,
             limit: reg_limit,
@@ -26,6 +25,10 @@
         }).catch((err) => {
             console.log(err);
         });
+    };
+
+    onMount(() => {
+        refresh_reg_list();
 
         db_reg.changes({
             since: 'now',
@@ -45,6 +48,8 @@
             console.log(err);
         });
     });
+
+    setInterval(refresh_reg_list(), 900000);
 
 </script>
 
