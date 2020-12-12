@@ -7,10 +7,13 @@ function search_reg_member_id_map(doc) {
 function search_reg_gate_keeper_id_map(doc){
     emit(doc.gate_keeper_id);
 };
-function find_reg_dates_since_30_days(doc){
-
+function search_reg_date_map(doc){
+    let ts_date = new Date(doc.ts_epoch);
+    let year = ts_date.getFullYear().toString();
+    let month = (ts_date.getMonth() + 1).toString().padStart(2, '0');
+    let date = ts_date.getDate().toString().padStart(2, '0');
+    emit(year + '-' + month + '-' + date);
 };
-
 
 const design_reg_search_doc = {
     _id: '_design/search',
@@ -20,6 +23,13 @@ const design_reg_search_doc = {
         },
         by_gate_keeper_id: {
             map: search_reg_gate_keeper_id_map.toString()
+        },
+        by_date: {
+            map: search_reg_date_map.toString()
+        },
+        count_by_date: {
+            map: search_reg_date_map.toString(),
+            reduce: '_count'
         }
     }
 };

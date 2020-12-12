@@ -59,5 +59,6 @@ export {
     db_reg,
     db_nfc,
     db_eid,
-    db_person
+    db_person,
+    env
 };

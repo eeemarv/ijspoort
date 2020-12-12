@@ -406,7 +406,9 @@ const importMenu = new Menu();
 importMenu.append(new MenuItem({ label: 'leden Assist Xlsx', click: importAssistXlsx }));
 
 const exportMenu = new Menu();
-exportMenu.append(new MenuItem({ label: 'Registraties csv', click: () => { win.webContents.send('csv.reg.export'); }}));
+exportMenu.append(new MenuItem({ label: 'Registraties CSV (covid-19 tracing)', click: () => { win.webContents.send('reg.csv.export'); }}));
+// exportMenu.append(new MenuItem({ label: 'NFC CSV', click: () => { win.webContents.send('nfc.csv.export'); }}));
+exportMenu.append(new MenuItem({ label: 'Database JSON', click: () => { win.webContents.send('db.json.export'); }}));
 
 const menu = new Menu();
 menu.append(new MenuItem({ label: 'Import', submenu: importMenu }));

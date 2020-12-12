@@ -7,13 +7,14 @@
   import RegList from './RegList.svelte';
   import EID from './EID.svelte';
   import NFC from './NFC.svelte';
-  import RegExport from './RegExport.svelte';
+  import RegCSVExport from './RegCSVExport.svelte';
   import GateKeeper from './GateKeeper.svelte';
   import Stats from './Stats.svelte';
   import Clock from './Clock.svelte';
   import { db_reg } from './../services/pouchdb';
   import { person, gate_keeper, nfc_uid } from './../services/store';
   import { onMount } from 'svelte';
+  import DbJSONExport from './DbJSONExport.svelte';
 
   const add_reg = (person, source) => {
     let now = new Date();
@@ -50,7 +51,8 @@
 
 </script>
 
-<RegExport/>
+<RegCSVExport/>
+<DbJSONExport/>
 
 <Container fluid=true>
   <Row class=vh-100>
