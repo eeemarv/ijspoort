@@ -6,7 +6,7 @@
   import { ListGroup, ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
   import { xls_assist_import } from './../services/person';
-  import { person } from './../services/store';
+  import { person, person_nfc_list } from './../services/store';
   import PersonNFC from './PersonNFC.svelte';
 
   ipcRenderer.on('xls.assist.import', (ev, file) => {
@@ -19,7 +19,13 @@
     && $person.open_balance !== undefined
     && !$person.open_balance.trim().startsWith('-');
 
-  $: console.log($person);
+  $: {
+    console.log($person);
+    if ($person === undefined){
+      $person_nfc_list = [];
+    }
+
+  }
 
   const handleRegisterByManual = (() => {
     dispatch('register_by_manual');

@@ -4,18 +4,19 @@
   import PersonNfcItem from './PersonNFCItem.svelte';
 
   const update_person_nfc_list = (person_id) => {
+
     db_nfc.query('search/by_person_id', {
-          key: person_id,
-          include_docs: true
-      }).then(function (res) {
-          console.log(res);
-          $person_nfc_list = res.rows;
-      }).catch(function (err) {
-          console.log(err);
-      });
+        key: person_id,
+        include_docs: true
+    }).then(function (res) {
+        console.log(res);
+        $person_nfc_list = res.rows;
+    }).catch(function (err) {
+        console.log(err);
+    });
   };
 
-  $: update_person_nfc_list($person._id);
+  $: update_person_nfc_list($person?._id);
 
   db_nfc.changes({
       since: 'now',

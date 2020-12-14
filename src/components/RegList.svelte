@@ -1,5 +1,5 @@
 <script>
-    import { Row, Col, ListGroup, ListGroupItem } from 'sveltestrap';
+    import { Row, Col, ListGroup, ListGroupItem, Badge } from 'sveltestrap';
     import RegItem from './RegItem.svelte';
     import { db_reg } from './../services/pouchdb';
     import { onMount } from 'svelte';
@@ -7,6 +7,7 @@
     const reg_hours = 5;
     const reg_limit = 500;
     let registrations = [];
+    export let blocked_reg;
 
     const get_key_since = () => {
         let epoch = (new Date()).getTime();
@@ -50,7 +51,6 @@
     });
 
     setInterval(refresh_reg_list(), 900000);
-
 </script>
 
 <Row>
@@ -59,6 +59,18 @@
             <ListGroupItem>
                 <p><br></p>
             </ListGroupItem>
+            {#if blocked_reg}
+                <ListGroupItem class=bg-warning>
+                    <p>Reeds geregistreerd (binnen 5 minuten)</p>
+                    <Badge color=light title="lidnummer">
+                        {blocked_reg.person.member_id}
+                    </Badge>
+                    &nbsp;
+                    {blocked_reg.person.firstname}
+                    &nbsp;
+                    {blocked_reg.person.surname}
+                </ListGroupItem>
+            {/if}
             {#each registrations as reg, index(reg.doc._id)}
                 <RegItem
                 regIndex={registrations.length - index}

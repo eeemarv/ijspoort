@@ -7,6 +7,9 @@ function search_reg_member_id_map(doc) {
 function search_reg_gate_keeper_id_map(doc){
     emit(doc.gate_keeper_id);
 };
+function search_reg_person_id_and_ts_epoch_map(doc){
+    emit(doc.person_id + '_' + doc.ts_epoch.toString());
+}
 function search_reg_date_map(doc){
     let ts_date = new Date(doc.ts_epoch);
     let year = ts_date.getFullYear().toString();
@@ -23,6 +26,9 @@ const design_reg_search_doc = {
         },
         by_gate_keeper_id: {
             map: search_reg_gate_keeper_id_map.toString()
+        },
+        by_person_id_and_ts_epoch: {
+            map: search_reg_person_id_and_ts_epoch_map.toString()
         },
         by_date: {
             map: search_reg_date_map.toString()
