@@ -1,6 +1,7 @@
 import { writable } from 'svelte/store';
 
 export const person = writable();
+export const person_nfc_list = writable([]);
 export const nfc_uid = writable();
 export const eid = writable();
 export const gate_keeper = writable();

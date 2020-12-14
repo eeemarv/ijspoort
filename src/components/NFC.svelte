@@ -5,7 +5,7 @@
     import { setTimeout } from 'timers';
     const { ipcRenderer } = window.require('electron');
     import { db_nfc, db_person } from './../services/pouchdb';
-    import { nfc_uid, person, gate_keeper } from './../services/store';
+    import { nfc_uid, person, person_nfc_list, gate_keeper } from './../services/store';
     import NfcTestModal from './NFCTestModal.svelte';
     import NFCWriteModal from './NFCWriteModal.svelte';
 
@@ -248,11 +248,14 @@
     </div>
     <CardFooter class="d-flex w-100 justify-content-end">
         <Button
-            color=success
+            color={$person_nfc_list.length > 0 ? 'danger' : 'success'}
             title="Activeer deze NFC-tag voor deze persoon"
             disabled={!can_activate}
             on:click={handle_activate_nfc}>
             Activeer
+            {#if $person_nfc_list.length > 0}
+                extra tag
+            {/if}
         </Button>
     </CardFooter>
 </Card>
