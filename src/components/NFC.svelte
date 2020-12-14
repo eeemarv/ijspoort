@@ -172,8 +172,12 @@
             reduce: true,
             group: true
         }).then((res) => {
-            console.log(res)
-            nfc_count_total = res.rows[0].value;
+            console.log(res);
+            if (res.rows.length > 0){
+                nfc_count_total = res.rows[0].value;
+            } else {
+                nfc_count_total = 0;
+            }
         }).catch((err) => {
             console.log(err);
         });

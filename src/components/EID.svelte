@@ -64,8 +64,12 @@
             reduce: true,
             group: true
         }).then((res) => {
-            console.log(res)
-            eid_count_total = res.rows[0].value;
+            console.log(res);
+            if (res.rows.length > 0){
+                eid_count_total = res.rows[0].value;
+            } else {
+                eid_count_total = 0;
+            }
         }).catch((err) => {
             console.log(err);
         });
