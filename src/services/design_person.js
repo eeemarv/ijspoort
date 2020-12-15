@@ -1,44 +1,38 @@
 import { db_person } from './pouchdb';
 import lodash from 'lodash';
 
-function search_person_text_map(doc){
-    let firstname = doc.firstname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-    let surname = doc.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-    emit(firstname + surname);
-    emit(surname + firstname);
-    const ks = ['nickname', 'address', 'email', 'email_work', 'phone_mobile', 'phone_home', 'phone_work'];
-    ks.forEach((k) => {
-        if (doc[k]){
-            emit(doc[k].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, ''));
-        }
-    });
-};
-
-function count_members_2020_map(doc) {
-    if (doc._id.startsWith('n0')){
-        emit(true);
-    }
-};
-
-function count_members_2021_map(doc) {
-    if (doc._id.startsWith('n0')
-        && !doc.open_balance.trim().startsWith('-')){
-        emit(true);
-    }
-};
-
 const design_person_search_doc = {
     _id: '_design/search',
     views: {
         by_text: {
-            map: search_person_text_map.toString()
+            map: ((doc) => {
+                let firstname = doc.firstname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+                let surname = doc.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+                emit(firstname + surname);
+                emit(surname + firstname);
+                const ks = ['nickname', 'address', 'email', 'email_work', 'phone_mobile', 'phone_home', 'phone_work'];
+                ks.forEach((k) => {
+                    if (doc[k]){
+                        emit(doc[k].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, ''));
+                    }
+                });
+            }).toString()
         },
         count_members_2020:{
-            map: count_members_2020_map.toString(),
+            map: ((doc) => {
+                if (doc._id.startsWith('n0')){
+                    emit(true);
+                }
+            }).toString(),
             reduce: '_count'
         },
         count_members_2021:{
-            map: count_members_2021_map.toString(),
+            map: ((doc) => {
+                if (doc._id.startsWith('n0')
+                    && !doc.open_balance.trim().startsWith('-')){
+                    emit(true);
+                }
+            }).toString(),
             reduce: '_count'
         }
     }

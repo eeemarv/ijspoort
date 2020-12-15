@@ -1,40 +1,41 @@
 import { db_reg } from './pouchdb';
 import lodash from 'lodash';
 
-function search_reg_member_id_map(doc) {
-    emit(doc.member_id);
-};
-function search_reg_gate_keeper_id_map(doc){
-    emit(doc.gate_keeper_id);
-};
-function search_reg_person_id_and_ts_epoch_map(doc){
-    emit(doc.person_id + '_' + doc.ts_epoch.toString());
-}
-function search_reg_date_map(doc){
-    let ts_date = new Date(doc.ts_epoch);
-    let year = ts_date.getFullYear().toString();
-    let month = (ts_date.getMonth() + 1).toString().padStart(2, '0');
-    let date = ts_date.getDate().toString().padStart(2, '0');
-    emit(year + '-' + month + '-' + date);
-};
-
 const design_reg_search_doc = {
     _id: '_design/search',
     views: {
         by_member_id: {
-            map: search_reg_member_id_map.toString()
+            map: ((doc) => {
+                emit(doc.member_id);
+            }).toString()
         },
         by_gate_keeper_id: {
-            map: search_reg_gate_keeper_id_map.toString()
+            map: ((doc) => {
+                emit(doc.gate_keeper_id);
+            }).toString()
         },
         by_person_id_and_ts_epoch: {
-            map: search_reg_person_id_and_ts_epoch_map.toString()
+            map: ((doc) => {
+                emit(doc.person_id + '_' + doc.ts_epoch.toString());
+            }).toString()
         },
         by_date: {
-            map: search_reg_date_map.toString()
+            map: ((doc) => {
+                let ts_date = new Date(doc.ts_epoch);
+                let year = ts_date.getFullYear().toString();
+                let month = (ts_date.getMonth() + 1).toString().padStart(2, '0');
+                let date = ts_date.getDate().toString().padStart(2, '0');
+                emit(year + '-' + month + '-' + date);
+            }).toString()
         },
         count_by_date: {
-            map: search_reg_date_map.toString(),
+            map: ((doc) => {
+                let ts_date = new Date(doc.ts_epoch);
+                let year = ts_date.getFullYear().toString();
+                let month = (ts_date.getMonth() + 1).toString().padStart(2, '0');
+                let date = ts_date.getDate().toString().padStart(2, '0');
+                emit(year + '-' + month + '-' + date);
+            }).toString(),
             reduce: '_count'
         }
     }

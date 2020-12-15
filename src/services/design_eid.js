@@ -1,31 +1,25 @@
 import { db_eid } from './pouchdb';
 import lodash from 'lodash';
 
-function search_eid_person_id_map(doc) {
-    emit(doc.person_id);
-};
-
-function search_eid_gate_keeper_id_map(doc){
-    emit(doc.gate_keeper_id);
-}
-
-function count_eid_total(doc) {
-    if (doc._id.startsWith('c')){
-        emit(true);
-    }
-};
-
 const design_eid_search_doc = {
     _id: '_design/search',
     views: {
         by_person_id: {
-            map: search_eid_person_id_map.toString()
+            map: ((doc) => {
+                emit(doc.person_id);
+            }).toString()
         },
         by_gate_keeper_id: {
-            map: search_eid_gate_keeper_id_map.toString()
+            map: ((doc) => {
+                emit(doc.gate_keeper_id);
+            }).toString()
         },
         count_total: {
-            map: count_eid_total.toString(),
+            map: ((doc) => {
+                if (doc._id.startsWith('c')){
+                    emit(true);
+                }
+            }).toString(),
             reduce: '_count'
         }
     }
