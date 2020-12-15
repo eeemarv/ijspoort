@@ -3,7 +3,7 @@
     import { Badge, Card, CardBody, CardText } from 'sveltestrap';
 
 	let time = new Date();
-	$: hours = time.getHours().toString();
+	$: hours = time.getHours().toString().padStart(2, '0');
 	$: minutes = time.getMinutes().toString().padStart(2, '0');
     $: seconds = time.getSeconds();
 

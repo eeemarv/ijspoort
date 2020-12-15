@@ -94,7 +94,7 @@
 <Card class=m-3>
     <div class="card-header py-2 d-flex w-100 justify-content-between"
         class:bg-success={dev_status === 'on'}>
-        <div>eiD</div>
+        <div>eID</div>
         <div>
             <Badge color=info title="Totaal aantal eIDs geregistreerd">
                 {eid_count_total}
