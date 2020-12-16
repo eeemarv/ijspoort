@@ -22,7 +22,10 @@ const db_remote_sync_enabled = env.DB_REMOTE_SYNC_ENABLED === '1' ? true : false
 
 const sync_options = {
     live: true,
-    retry: true
+    retry: true,
+    filter: function (doc) {
+        return !doc._id.startsWith('_design');
+    }
 };
 
 const db_prefix = env.DB_PREFIX;
