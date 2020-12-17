@@ -1,18 +1,22 @@
 <script>
     import { Badge, Card, CardGroup } from 'sveltestrap';
-    import { db_person } from './../services/pouchdb';
+    import { db_person, mount_db_remote } from './../services/pouchdb';
     import { put_design_person_search } from './../services/design_person';
     import { put_design_reg_search } from './../services/design_reg';
     import { put_design_nfc_search } from './../services/design_nfc';
     import { put_design_eid_search } from './../services/design_eid';
+import { onMount } from 'svelte';
 
     var member_count_2020 = 0;
     var member_count_2021 = 0;
 
-    put_design_person_search();
-    put_design_reg_search();
-    put_design_nfc_search();
-    put_design_eid_search();
+    onMount(() => {
+        put_design_person_search();
+        put_design_reg_search();
+        put_design_nfc_search();
+        put_design_eid_search();
+        mount_db_remote();
+    });
 
     const update_member_count = () => {
         db_person.query('search/count_members_2020', {

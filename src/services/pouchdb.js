@@ -1,6 +1,5 @@
 const env = window.require('electron').remote.process.env;
 import PouchDB from 'pouchdb';
-PouchDB.plugin(require('pouchdb-authentication'));
 
 if (!env.DB_PREFIX){
     throw 'env DB_PREFIX not set';
@@ -15,10 +14,10 @@ if (!env.DB_PASSWORD){
     throw 'env DB_PASSWORD not set';
 }
 
+const db_prefix = env.DB_PREFIX;
 const db_host = env.DB_HOST;
 const db_password = env.DB_PASSWORD;
 const db_username = env.DB_USERNAME;
-const db_remote_sync_enabled = env.DB_REMOTE_SYNC_ENABLED === '1' ? true : false;
 
 const sync_options = {
     live: true,
@@ -28,7 +27,6 @@ const sync_options = {
     }
 };
 
-const db_prefix = env.DB_PREFIX;
 const i_reg = db_prefix + 'reg';
 const i_nfc = db_prefix + 'nfc';
 const i_eid = db_prefix + 'eid';
@@ -41,7 +39,7 @@ const db_person = new PouchDB(i_person);
 
 const auth_conn = db_password + ':' + db_username + '@' + db_host;
 
-if (db_remote_sync_enabled){
+const mount_db_remote = () => {
     const db_remote_reg = new PouchDB(auth_conn + i_reg);
     db_reg.sync(db_remote_reg, sync_options)
     .on('change', function (info) {
@@ -51,10 +49,10 @@ if (db_remote_sync_enabled){
     }).on('paused', function (err) {
         console.log('PAUSED');
         console.log(err);
-            // replication paused (e.g. replication up to date, user went offline)
+        // replication paused (e.g. replication up to date, user went offline)
     }).on('active', function () {
         console.log('ACTIVE');
-            // replicate resumed (e.g. new changes replicating, user went back online)
+        // replicate resumed (e.g. new changes replicating, user went back online)
     }).on('denied', function (err) {
         console.log('DENIED');
         console.log(err);
@@ -85,7 +83,7 @@ if (db_remote_sync_enabled){
     }).on('denied', function (err) {
         console.log('DENIED');
         console.log(err);
-        // a document failed to replicate (e.g. due to permissions)
+    // a document failed to replicate (e.g. due to permissions)
     }).on('complete', function (info) {
         console.log('COMPLETE');
         console.log(info);
@@ -106,7 +104,7 @@ if (db_remote_sync_enabled){
     }).on('paused', function (err) {
         console.log('PAUSED');
         console.log(err);
-        // replication paused (e.g. replication up to date, user went offline)
+    // replication paused (e.g. replication up to date, user went offline)
     }).on('active', function () {
         console.log('ACTIVE');
         // replicate resumed (e.g. new changes replicating, user went back online)
@@ -126,6 +124,7 @@ if (db_remote_sync_enabled){
 }
 
 export {
+    mount_db_remote,
     db_reg,
     db_nfc,
     db_eid,
