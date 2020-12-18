@@ -1,11 +1,14 @@
 <script>
     import { Badge, Card, CardGroup } from 'sveltestrap';
-    import { db_person, mount_db_remote } from './../services/pouchdb';
+    import { db_person } from './../services/pouchdb';
+    import { db_remote_person } from './../services/pouchdb';
+    import { db_remote_reg } from './../services/pouchdb';
+    import { db_remote_nfc } from './../services/pouchdb';
     import { put_design_person_search } from './../services/design_person';
     import { put_design_reg_search } from './../services/design_reg';
     import { put_design_nfc_search } from './../services/design_nfc';
     import { put_design_eid_search } from './../services/design_eid';
-import { onMount } from 'svelte';
+    import { onMount } from 'svelte';
 
     var member_count_2020 = 0;
     var member_count_2021 = 0;
@@ -15,7 +18,22 @@ import { onMount } from 'svelte';
         put_design_reg_search();
         put_design_nfc_search();
         put_design_eid_search();
-        mount_db_remote();
+
+        db_remote_nfc.info().then((info) => {
+            console.log(info);
+        }).catch((err) => {
+            console.log(err);
+        });
+        db_remote_reg.info().then((info) => {
+            console.log(info);
+        }).catch((err) => {
+            console.log(err);
+        });
+        db_remote_person.info().then((info) => {
+            console.log(info);
+        }).catch((err) => {
+            console.log(err);
+        });
     });
 
     const update_member_count = () => {
@@ -58,7 +76,7 @@ import { onMount } from 'svelte';
 </script>
 
 <CardGroup>
-    <Card body >
+    <Card body>
         <div class="d-flex w-100 justify-content-between">
         <div>2020</div>
         <div>
