@@ -10,7 +10,7 @@
         include_docs: true
     }).then(function (res) {
         console.log(res);
-        $person_nfc_list = res.rows;
+        $person_nfc_list = res.rows.sort((a, b) => a.doc.ts_epoch < b.doc.ts_epoch ? -1 : 1);
     }).catch(function (err) {
         console.log(err);
     });
@@ -31,6 +31,6 @@
 
 </script>
 
-{#each $person_nfc_list as item}
+{#each $person_nfc_list as item(item.doc._id)}
   <PersonNfcItem nfc={item.doc}/>
 {/each}

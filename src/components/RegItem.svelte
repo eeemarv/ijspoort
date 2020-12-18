@@ -94,7 +94,7 @@
         Selecteer
       </Button>
       <Button color=danger on:click={handleRemoveReg}>
-        Verwijderen
+        Verwijder
       </Button>
     </div>
   </div>

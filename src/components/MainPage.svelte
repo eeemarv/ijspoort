@@ -87,7 +87,6 @@
       <NFC
         on:register_by_nfc={handleRegisterByNFC}
       />
-      <GateKeeper/>
       <div class=m-3>
         <Stats/>
         <Clock/>

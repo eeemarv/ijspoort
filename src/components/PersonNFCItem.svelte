@@ -1,6 +1,6 @@
 <script>
-  import { onMount } from 'svelte';
   import { ListGroupItem, Badge } from 'sveltestrap';
+  import { nfc_uid } from './../services/store';
 
   export let nfc;
 
@@ -8,7 +8,7 @@
 
 </script>
 
-<ListGroupItem>
+<ListGroupItem active={$nfc_uid === nfc.uid}>
   <Badge color=success title="toegangsbadge">NFC</Badge>
   <Badge color=primary title="unieke code van badge">{nfc.uid}</Badge>
   &nbsp;

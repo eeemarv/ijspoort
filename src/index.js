@@ -190,9 +190,9 @@ const listenPcsc = (win) => {
 					let bmonth = str.substring(4, 6);
 					let bdate = str.substring(6, 8);
 					let date_of_birth = bdate + '/' + bmonth + '/' + byear;
-					let member_id = 'n' + str.substring(9, 16);
-					console.log('nfc.read.ok', card.uid, member_id, date_of_birth);
-					event.reply('nfc.read.ok', card, member_id, date_of_birth);
+					let member_id = str.substring(8, 16);
+					console.log('nfc.read.ok', card.uid, date_of_birth, member_id);
+					event.reply('nfc.read.ok', card, date_of_birth, member_id);
 				} catch (err) {
 					console.log(err);
 					console.log('nfc.read.fail', card.uid);

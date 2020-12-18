@@ -5,7 +5,8 @@
     import { setTimeout } from 'timers';
     const { ipcRenderer } = window.require('electron');
     import { db_nfc, db_person } from './../services/pouchdb';
-    import { nfc_uid, person, person_nfc_list, gate_keeper } from './../services/store';
+    import { person, person_nfc_list, gate_keeper } from './../services/store';
+    import { nfc_uid, nfc_auto_reg } from './../services/store';
     import NfcTestModal from './NFCTestModal.svelte';
     import NFCWriteModal from './NFCWriteModal.svelte';
 
@@ -14,7 +15,6 @@
     let dev_status = 'off';
     let nfc_status = 'off';
     let nfc_count_total = 0;
-    let quick_scan_reg = true;
 
     let write_modal_open = false;
     let write_modal_progress = 0;
@@ -53,7 +53,7 @@
         }).then((res) => {
             return db_person.get(res);
         }).then((res) => {
-            if (quick_scan_reg){
+            if ($nfc_auto_reg){
                 console.log('register_by_nfc event');
                 dispatch('register_by_nfc', {
                     person: res
@@ -93,23 +93,24 @@
     });
 
     /*** READ TEST *****/
-    const handle_test_nfc = () => {
-        console.log('handle_test_nfc');
+    const handle_nfc_read = () => {
+        console.log('handle_nfc_read');
         test_modal_open = true;
         test_modal_progress = 0;
-        ipcRenderer.send('nfc.read.member_id');
+        ipcRenderer.send('nfc.read');
     };
-    ipcRenderer.on('nfc.read.member_id.ok', (event, card, str) => {
-        console.log('str', str);
+    ipcRenderer.on('nfc.read.ok', (event, card, date_of_birth, member_id) => {
         console.log('card', card);
+        console.log('str1', date_of_birth);
+        console.log('str2', member_id);
         test_modal_progress = 100;
-        test_modal_message = 'Data ' + str;
-        test_modal_color='success';
+        test_modal_message = 'Data ' + date_of_birth + ' ' + member_id;
+        test_modal_color='bg-success';
         setTimeout(() => {
             test_modal_open = false;
-        }, 2000);
+        }, 10000);
     });
-    ipcRenderer.on('nfc.read.member_id.fail', (event, card, str) => {
+    ipcRenderer.on('nfc.read.fail', (event, card, str) => {
         test_modal_message = 'Lees test niet geslaagd';
         test_modal_color='danger';
     });
@@ -138,7 +139,28 @@
         write_modal_color='danger';
     });
 
-    /****/
+    /**** RESET ****/
+
+    const handle_nfc_reset = () => {
+        console.log($nfc_uid);
+        db_nfc.get('uid_' + $nfc_uid).then((doc) => {
+            return db_nfc.remove(doc);
+        }).then((res) => {
+            console.log(res);
+            console.log('nfc.reset', $nfc_uid);
+            ipcRenderer.send('nfc.reset');
+        }).catch((err) => {
+            console.log(err);
+        });
+    };
+    ipcRenderer.on('nfc.reset.ok', (ev, card) => {
+        console.log('nfc.reset.ok');
+    });
+    ipcRenderer.on('nfc.reset.fail', (ev, card) => {
+        console.log('nfc.reset.fail');
+    });
+
+    /*******/
 
     ipcRenderer.on('nfc.off', (ev) => {
         $nfc_uid = undefined;
@@ -262,4 +284,24 @@
             {/if}
         </Button>
     </CardFooter>
+    <CardFooter>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="nfc_auto_reg" bind:checked={$nfc_auto_reg}>
+            <label class="custom-control-label" for="nfc_auto_reg" title="Registreer automatisch wanneer NFC tag gescand wordt. Vink af voor andere handelingen.">
+                Automatische registratie
+            </label>
+        </div>
+    </CardFooter>
+    {#if !$nfc_auto_reg  && $person && $nfc_uid && !can_activate && false}
+    <CardFooter>
+        <div class="d-flex w-100 justify-content-between">
+            <Button color=info on:click={handle_nfc_read}>
+                Lees
+            </Button>
+            <Button color=danger on:click={handle_nfc_reset}>
+                Wis
+            </Button>
+        </div>
+    </CardFooter>
+    {/if}
 </Card>
