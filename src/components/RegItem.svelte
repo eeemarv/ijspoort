@@ -12,7 +12,7 @@
   let deleted = false;
   let selected = false;
 
-  function handleSelectReg(){
+  const handle_select_reg = () => {
     selected = true;
     setTimeout(() => {selected = false}, 300);
     db_person.get(reg.person_id).then((res) => {
@@ -21,7 +21,7 @@
         console.log(err);
     });
   }
-  function handleRemoveReg(event){
+  const handle_remove_reg = (event) => {
     deleted = true;
     setTimeout(() => {
         console.log(event);
@@ -90,10 +90,10 @@
       </div>
     </dvi>
     <div>
-      <Button color=primary class=mr-1 on:click={handleSelectReg}>
+      <Button color=primary class=mr-1 on:click={handle_select_reg}>
         Selecteer
       </Button>
-      <Button color=danger on:click={handleRemoveReg}>
+      <Button color=danger on:click={handle_remove_reg}>
         Verwijder
       </Button>
     </div>

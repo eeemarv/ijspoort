@@ -70,17 +70,14 @@ const remove_nfc_listeners = () => {
 	ipcMain.removeAllListeners('nfc.test_b_key');
 	ipcMain.removeAllListeners('nfc.test_transport_key');
 	ipcMain.removeAllListeners('nfc.init');
-	ipcMain.removeAllListeners('nfc.write.null');
-	ipcMain.removeAllListeners('nfc.write.access_period');
-	ipcMain.removeAllListeners('nfc.write.access_end_date');
-	ipcMain.removeAllListeners('nfc.write.birthday_and_member_id');
-	ipcMain.removeAllListeners('nfc.write.firstname');
-	ipcMain.removeAllListeners('nfc.write.surname');
+	ipcMain.removeAllListeners('nfc.read');
+	ipcMain.removeAllListeners('nfc.reset');
 };
 
 const listenPcsc = (win) => {
 	const pcsc = new NFC();
 	const eid_reader = new EidReader();
+	let reader_ready = true;
 
 	pcsc.on('error', err => {
 		win.webContents.send('device.error', err);
@@ -95,6 +92,8 @@ const listenPcsc = (win) => {
 		win.webContents.send('dev.nfc.on');
 
 		reader.on('card', async card => {
+			remove_nfc_listeners();
+
 			if (card.type !== TAG_ISO_14443_3){
 				console.log('It\'s not a ISO 14443-3 tag');
 				return;
@@ -112,49 +111,78 @@ const listenPcsc = (win) => {
 			let key_B = crypto.createHash('sha256').update(feed_B + card.uid.toLowerCase()).digest('hex').substr(0, 12);
 			let key_A = crypto.createHash('sha256').update(feed_A + card.uid.toLowerCase()).digest('hex').substr(0, 12);
 
-			console.log('feed', feed_B, 'key_B', key_B);
-			console.log('feed', feed_A, 'key_A', key_A);
+			console.log('key_B', key_B);
+			console.log('key_A', key_A);
 
 			ipcMain.on('nfc.test_a_key', async (event) => {
+				if (!reader_ready){
+					console.log('nfc.test_a_key ignored, reader busy ...');
+					return;
+				}
+				reader_ready = false;
+				console.log('nfc.test_a_key');
 				try {
 					await reader.authenticate(6, KEY_TYPE_A, key_A);
 					await reader.read(6, 16, 16);
 					console.log('nfc.test_a_key.ok', card.uid);
+					reader_ready = true;
 					event.reply('nfc.test_a_key.ok', card);
 				} catch (err) {
 					console.log(err);
 					console.log('nfc.test_a_key.fail', card.uid);
+					reader_ready = true;
 					event.reply('nfc.test_a_key.fail', card);
 				}
 			});
 
 			ipcMain.on('nfc.test_b_key', async (event) => {
-				const write_test = Buffer.alloc(6);
+				if (!reader_ready){
+					console.log('nfc.test_b_key ignored, reader busy ...');
+					return;
+				}
+				reader_ready = false;
+				console.log('nfc.test_b_key');
 				try {
 					await reader.authenticate(6, KEY_TYPE_B, key_B);
-					await reader.write(6, write_test, 16);
+					await reader.read(6, 16, 16);
 					console.log('nfc.test_b_key.ok', card.uid);
+					reader_ready = true;
 					event.reply('nfc.test_b_key.ok', card);
 				} catch (err) {
 					console.log(err);
 					console.log('nfc.test_b_key.fail', card.uid);
+					reader_ready = true;
 					event.reply('nfc.test_b_key.fail', card);
 				}
 			});
 
 			ipcMain.on('nfc.test_transport_key', async (event) => {
+				if (!reader_ready){
+					console.log('nfc.test_transport_key ignored, reader busy ...');
+					return;
+				}
+				reader_ready = false;
+				console.log('nfc.test_transport_key');
 				try {
 					await reader.authenticate(6, KEY_TYPE_A, transport_key);
 					console.log('nfc.test_transport_key.ok', card.uid);
+					reader_ready = true;
 					event.reply('nfc.test_transport_key.ok', card);
 				} catch (err) {
 					console.log(err);
 					console.log('nfc.test_transport_key.fail', card.uid);
+					reader_ready = true;
 					event.reply('nfc.test_transport_key.fail', card);
 				}
 			});
 
 			ipcMain.on('nfc.init', async (event, person) => {
+				if (!reader_ready){
+					console.log('nfc.init ignored, reader busy ...');
+					return;
+				}
+				reader_ready = false;
+				console.log('nfc.init');
 				let member_id = person._id.substring(1).padStart(8, '0');
 				let db = person.date_of_birth.split('/');
 				let date_of_birth = (db[2] + db[1] + db[0]).padStart(8, '0');
@@ -173,15 +201,23 @@ const listenPcsc = (win) => {
 					await reader.authenticate(6, KEY_TYPE_A, key_A);
 					console.log('key A set for reading', card.uid);
 					console.log('nfc.init.ok', card.uid);
+					reader_ready = true;
 					event.reply('nfc.init.ok', card);
 				} catch (err){
 					console.log('fail setting new access');
 					console.log(err);
+					reader_ready = true;
 					event.reply('nfc.init.fail', card);
 				}
 			});
 
 			ipcMain.on('nfc.read', async (event) => {
+				if (!reader_ready){
+					console.log('nfc.read ignored, reader busy ...');
+					return;
+				}
+				reader_ready = false;
+				console.log('nfc.read');
 				try {
 					await reader.authenticate(6, KEY_TYPE_A, key_A);
 					let data = await reader.read(6, 16, 16);
@@ -189,19 +225,27 @@ const listenPcsc = (win) => {
 					let byear = str.substring(0, 4);
 					let bmonth = str.substring(4, 6);
 					let bdate = str.substring(6, 8);
-					let date_of_birth = bdate + '/' + bmonth + '/' + byear;
+					let date_of_birth = byear + '.' + bmonth + '.' + bdate;
 					let member_id = str.substring(8, 16);
 					console.log('nfc.read.ok', card.uid, date_of_birth, member_id);
+					reader_ready = true;
 					event.reply('nfc.read.ok', card, date_of_birth, member_id);
 				} catch (err) {
 					console.log(err);
 					console.log('nfc.read.fail', card.uid);
+					reader_ready = true;
 					event.reply('nfc.read.fail', card);
 				}
 			});
 
 			ipcMain.on('nfc.reset', async (event) => {
-				let reset_access = Buffer.from(transport_key + transport_access + transport_key);
+				if (!reader_ready){
+					console.log('nfc.reset ignored, reader busy ...');
+					return;
+				}
+				reader_ready = false;
+				console.log('nfc.reset');
+				let reset_access = Buffer.from(transport_key + transport_access + transport_key, 'hex');
 				let null_data = Buffer.alloc(16);
 				try {
 					await reader.authenticate(6, KEY_TYPE_B, key_B);
@@ -210,10 +254,12 @@ const listenPcsc = (win) => {
 					// try transport_key
 					await reader.authenticate(6, KEY_TYPE_A, transport_key);
 					console.log('Tag reset to transport keys', card.uid);
+					reader_ready = true;
 					event.reply('nfc.reset.ok', card);
 				} catch (err){
 					console.log('fail setting new access');
 					console.log(err);
+					reader_ready = true;
 					event.reply('nfc.reset.fail', card);
 				}
 			});

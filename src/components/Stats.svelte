@@ -41,10 +41,10 @@
             key: true,
             reduce: true,
             group: true
-        }).then(function (res) {
+        }).then((res) => {
             console.log(res)
             member_count_2020 = res.rows[0].value;
-        }).catch(function (err) {
+        }).catch((err) => {
             console.log(err);
         });
 
@@ -52,10 +52,10 @@
             key: true,
             reduce: true,
             group: true
-        }).then(function (res) {
+        }).then((res) => {
             console.log(res)
             member_count_2021 = res.rows[0].value;
-        }).catch(function (err) {
+        }).catch((err) => {
             console.log(err);
         });
     };
@@ -78,7 +78,9 @@
 <CardGroup>
     <Card body>
         <div class="d-flex w-100 justify-content-between">
-        <div>2020</div>
+        <div>
+            2020
+        </div>
         <div>
             <Badge color=info title="aantal leden in 2020">
                 {member_count_2020}
@@ -88,7 +90,9 @@
     </Card>
     <Card body>
         <div class="d-flex w-100 justify-content-between">
-            <div>2021</div>
+            <div>
+                2021
+            </div>
             <div>
                 <Badge color=info title="aantal leden in 2021">
                     {member_count_2021}

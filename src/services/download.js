@@ -9,7 +9,7 @@ const download = (data, filename, type) => {
         a.download = filename;
         document.body.appendChild(a);
         a.click();
-        setTimeout(function() {
+        setTimeout(() => {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
         }, 0);

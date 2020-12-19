@@ -5,7 +5,7 @@
     import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
     import { person } from './../services/store';
 
-    const search_func =  function(text, update){
+    const search_func = (text, update) => {
         let search_text = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         if (search_text === ''){
             update([]);

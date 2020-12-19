@@ -6,4 +6,3 @@ export const nfc_uid = writable();
 export const nfc_auto_reg = writable(true);
 export const eid = writable();
 export const gate_keeper = writable();
-export const db_sync_enabled = writable(false);
