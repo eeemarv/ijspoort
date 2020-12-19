@@ -47,78 +47,60 @@ db_reg.sync(db_remote_reg, sync_options)
 .on('change', (info) => {
     console.log('CHANGE');
     console.log(info);
-    // handle change
 }).on('paused', (err) => {
     console.log('PAUSED');
     console.log(err);
-    // replication paused (e.g. replication up to date, user went offline)
 }).on('active', () => {
     console.log('ACTIVE');
-    // replicate resumed (e.g. new changes replicating, user went back online)
 }).on('denied', (err) => {
     console.log('DENIED');
     console.log(err);
-        // a document failed to replicate (e.g. due to permissions)
 }).on('complete', (info) => {
     console.log('COMPLETE');
     console.log(info);
-        // handle complete
 }).on('error', (err) => {
     console.log('UNHANDLED ERROR');
     console.log(err);
-    // handle error
 });
 
 db_nfc.sync(db_remote_nfc, sync_options)
 .on('change', (info) => {
     console.log('CHANGE');
     console.log(info);
-    // handle change
 }).on('paused', (err) => {
     console.log('PAUSED');
     console.log(err);
-    // replication paused (e.g. replication up to date, user went offline)
 }).on('active', () => {
     console.log('ACTIVE');
-    // replicate resumed (e.g. new changes replicating, user went back online)
 }).on('denied', (err) => {
     console.log('DENIED');
     console.log(err);
-// a document failed to replicate (e.g. due to permissions)
 }).on('complete', (info) => {
     console.log('COMPLETE');
     console.log(info);
-    // handle complete
 }).on('error', (err) => {
     console.log('UNHANDLED ERROR');
     console.log(err);
-    // handle error
 });
 
 db_person.sync(db_remote_person, sync_options)
 .on('change', (info) => {
     console.log('CHANGE');
     console.log(info);
-    // handle change
 }).on('paused', (err) => {
     console.log('PAUSED');
     console.log(err);
-// replication paused (e.g. replication up to date, user went offline)
 }).on('active', () => {
     console.log('ACTIVE');
-    // replicate resumed (e.g. new changes replicating, user went back online)
 }).on('denied', (err) => {
     console.log('DENIED');
     console.log(err);
-    // a document failed to replicate (e.g. due to permissions)
 }).on('complete', (info) => {
     console.log('COMPLETE');
     console.log(info);
-    // handle complete
 }).on('error', (err) => {
     console.log('UNHANDLED ERROR');
     console.log(err);
-    // handle error
 });
 
 export {
