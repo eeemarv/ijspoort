@@ -10,7 +10,7 @@ const design_person_search_doc = {
                 let surname = doc.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
                 emit(firstname + surname);
                 emit(surname + firstname);
-                const ks = ['nickname', 'address', 'email', 'email_work', 'phone_mobile', 'phone_home', 'phone_work'];
+                const ks = ['member_id', 'nickname', 'address', 'email', 'email_work', 'phone_mobile', 'phone_home', 'phone_work'];
                 ks.forEach((k) => {
                     if (doc[k]){
                         emit(doc[k].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, ''));

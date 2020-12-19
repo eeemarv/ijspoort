@@ -68,6 +68,6 @@
     </label>
     <input type="text" id="manual" class="form-control" aria-describedby="manual_help" value="" bind:this={el_manual}>
     <span id="manual_help">
-        Typ voornaam, achternaam, adres, emaill of telefoonnummer om auto-suggesties te krijgen
+        Typ voornaam, achternaam, adres, email, lid- of telefoonnummer om auto-suggesties te krijgen
     </span>
 </div>

@@ -10,7 +10,8 @@
     import { person, person_nfc_list, gate_keeper } from './../services/store';
     import { nfc_uid, nfc_auto_reg } from './../services/store';
 
-    const nfc_reset_writable = env.NFC_RESET_WRITABLE_ENABLED ? true : false;
+    const nfc_reset_writable_enabled = env.NFC_RESET_WRITABLE_ENABLED === '1';
+    const nfc_reset_enabled = env.NFC_RESET_ENABLED === '1';
 
     const dispatch = createEventDispatcher();
 
@@ -339,10 +340,12 @@
             <Button color=info on:click={handle_nfc_read}>
                 Lees
             </Button>
-            {#if nfc_status === 'ok' || (nfc_status === 'writable' && nfc_reset_writable)}
-            <Button color=danger on:click={handle_nfc_reset}>
-                Wis
-            </Button>
+            {#if nfc_reset_enabled}
+                {#if nfc_status === 'ok' || (nfc_status === 'writable' && nfc_reset_writable_enabled)}
+                <Button color=danger on:click={handle_nfc_reset}>
+                    Wis
+                </Button>
+                {/if}
             {/if}
         </div>
     </CardFooter>

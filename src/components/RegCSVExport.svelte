@@ -1,7 +1,8 @@
 <script>
+    const env = window.require('electron').remote.process.env;
     const { ipcRenderer } = window.require('electron');
-    import { Button, Col, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'sveltestrap';
-    import { db_reg, env } from '../services/pouchdb';
+    import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'sveltestrap';
+    import { db_reg } from '../services/pouchdb';
     import { download } from '../services/download';
     import Papa from 'papaparse';
 
@@ -64,7 +65,7 @@
             return Papa.unparse(exp);
         }).then((csv) => {
             download(csv,
-                env.DB_PREFIX + 'reg_' + date_key + '.csv',
+                env.DB_LOCAL_PREFIX + 'reg_' + date_key + '.csv',
                 'test/csv'
             );
             open = false;
