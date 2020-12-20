@@ -4,7 +4,10 @@
   import PersonNfcItem from './PersonNFCItem.svelte';
 
   const update_person_nfc_list = (person_id) => {
-
+    if (person_id === undefined){
+      $person_nfc_list = [];
+      return;
+    }
     db_nfc.query('search/by_person_id', {
         key: person_id,
         include_docs: true

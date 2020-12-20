@@ -271,7 +271,7 @@
         {modal_message}
     </ModalBody>
     <ModalFooter>
-        <Button color="secondary" on:click={modal_toggle}>
+        <Button color=secondary on:click={modal_toggle}>
             Sluiten
         </Button>
     </ModalFooter>
