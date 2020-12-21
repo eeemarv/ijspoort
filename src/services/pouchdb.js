@@ -35,7 +35,7 @@ const db_remote_person = new PouchDB(auth_conn_prefix + 'person', {auth: auth});
 const sync_options = {
     live: true,
     retry: true,
-    batch_size: 50,
+    batch_size: 100,
     batch_limit: 1,
     checkpoint: false,
     filter: (doc) => {

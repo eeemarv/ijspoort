@@ -46,6 +46,7 @@ const createWindow = () => {
   });
 
   win.setMinimumSize(1400, 768);
+  win.maximize();
 
   win.loadFile(path.join(__dirname, '../public/index.html'))
   .then(() => {
