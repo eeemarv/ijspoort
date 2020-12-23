@@ -1,5 +1,5 @@
 <script>
-  import { db_person, db_reg } from './../services/pouchdb';
+  import { db_person, db_reg } from '../services/db';
   import { Button, Badge } from 'sveltestrap';
   import { onMount } from 'svelte';
   import { person } from './../services/store';

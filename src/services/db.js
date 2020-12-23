@@ -1,5 +1,6 @@
 const env = window.require('electron').remote.process.env;
 import PouchDB from 'pouchdb';
+import { sync_monitor } from './store';
 
 if (!env.DB_LOCAL_PREFIX){
     throw 'env DB_LOCAL_PREFIX not set';
@@ -47,60 +48,78 @@ db_reg.sync(db_remote_reg, sync_options)
 .on('change', (info) => {
     console.log('CHANGE');
     console.log(info);
+    sync_monitor.set('active');
 }).on('paused', (err) => {
     console.log('PAUSED');
     console.log(err);
+    sync_monitor.set('paused');
 }).on('active', () => {
     console.log('ACTIVE');
+    sync_monitor.set('active');
 }).on('denied', (err) => {
     console.log('DENIED');
     console.log(err);
+    sync_monitor.set('denied');
 }).on('complete', (info) => {
     console.log('COMPLETE');
     console.log(info);
+    sync_monitor.set('complete');
 }).on('error', (err) => {
     console.log('UNHANDLED ERROR');
     console.log(err);
+    sync_monitor.set('error');
 });
 
 db_nfc.sync(db_remote_nfc, sync_options)
 .on('change', (info) => {
     console.log('CHANGE');
     console.log(info);
+    sync_monitor.set('change');
 }).on('paused', (err) => {
     console.log('PAUSED');
     console.log(err);
+    sync_monitor.set('paused');
 }).on('active', () => {
     console.log('ACTIVE');
+    sync_monitor.set('active');
 }).on('denied', (err) => {
     console.log('DENIED');
     console.log(err);
+    sync_monitor.set('denied');
 }).on('complete', (info) => {
     console.log('COMPLETE');
     console.log(info);
+    sync_monitor.set('complete');
 }).on('error', (err) => {
     console.log('UNHANDLED ERROR');
     console.log(err);
+    sync_monitor.set('error');
 });
 
 db_person.sync(db_remote_person, sync_options)
 .on('change', (info) => {
     console.log('CHANGE');
     console.log(info);
+    sync_monitor.set('change');
 }).on('paused', (err) => {
     console.log('PAUSED');
     console.log(err);
+    sync_monitor.set('paused');
 }).on('active', () => {
     console.log('ACTIVE');
+    sync_monitor.set('active');
 }).on('denied', (err) => {
     console.log('DENIED');
     console.log(err);
+    sync_monitor.set('denied');
 }).on('complete', (info) => {
     console.log('COMPLETE');
     console.log(info);
+    sync_monitor('complete');
 }).on('error', (err) => {
     console.log('UNHANDLED ERROR');
     console.log(err);
+    sync_monitor.set('error');
 });
 
 export {

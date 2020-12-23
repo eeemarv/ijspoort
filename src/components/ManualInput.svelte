@@ -1,6 +1,6 @@
 <script>
     import { onMount } from 'svelte';
-    import { db_person } from './../services/pouchdb';
+    import { db_person } from '../services/db';
     import autocomplete from 'autocompleter';
     import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
     import { person } from './../services/store';

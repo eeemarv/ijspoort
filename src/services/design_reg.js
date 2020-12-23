@@ -1,4 +1,4 @@
-import { db_reg } from './pouchdb';
+import { db_reg } from './db';
 import lodash from 'lodash';
 
 const design_reg_search_doc = {

@@ -1,7 +1,7 @@
 <script>
     const { ipcRenderer } = window.require('electron');
     import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
-    import { db_reg, db_nfc, db_person } from '../services/pouchdb';
+    import { db_reg, db_nfc, db_person } from '../services/db';
     import { download } from './../services/download';
 
     let open = false;

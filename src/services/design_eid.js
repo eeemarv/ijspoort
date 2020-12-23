@@ -1,4 +1,4 @@
-import { db_eid } from './pouchdb';
+import { db_eid } from './db';
 import lodash from 'lodash';
 
 const design_eid_search_doc = {

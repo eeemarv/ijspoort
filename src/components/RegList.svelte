@@ -1,7 +1,7 @@
 <script>
     import { Row, Col, ListGroup, ListGroupItem, Badge } from 'sveltestrap';
     import RegItem from './RegItem.svelte';
-    import { db_reg } from './../services/pouchdb';
+    import { db_reg } from '../services/db';
     import { onMount } from 'svelte';
 
     const reg_hours = 5;

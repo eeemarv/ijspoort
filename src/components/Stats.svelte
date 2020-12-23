@@ -1,9 +1,9 @@
 <script>
     import { Badge, Card, CardGroup } from 'sveltestrap';
-    import { db_person } from './../services/pouchdb';
-    import { db_remote_person } from './../services/pouchdb';
-    import { db_remote_reg } from './../services/pouchdb';
-    import { db_remote_nfc } from './../services/pouchdb';
+    import { db_person } from '../services/db';
+    import { db_remote_person } from '../services/db';
+    import { db_remote_reg } from '../services/db';
+    import { db_remote_nfc } from '../services/db';
     import { put_design_person_search } from './../services/design_person';
     import { put_design_reg_search } from './../services/design_reg';
     import { put_design_nfc_search } from './../services/design_nfc';

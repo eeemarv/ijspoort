@@ -2,7 +2,7 @@
 
   import MainPage from './MainPage.svelte';
   import { Container, Row } from 'sveltestrap';
-  import { db_reg } from './../services/pouchdb';
+  import { db_reg } from '../services/db';
   import { person, gate_keeper, nfc_uid } from './../services/store';
 
   const block_time = 300000; // 5 minutes

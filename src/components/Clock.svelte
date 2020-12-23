@@ -1,6 +1,18 @@
 <script>
     import { onMount } from 'svelte';
-    import { Badge, Card, CardBody, CardText } from 'sveltestrap';
+    import { Badge, Card, CardBody } from 'sveltestrap';
+    import { sync_monitor } from './../services/store';
+
+    const map_sync_color = {
+        paused: 'warning',
+        error: 'danger',
+        active: 'success',
+        complete: 'success',
+        denied: 'danger'
+    };
+
+    let sync_color = 'warning';
+    $: sync_color = map_sync_color[$sync_monitor];
 
 	let time = new Date();
 	$: hours = time.getHours().toString().padStart(2, '0');
@@ -14,13 +26,13 @@
 		return () => {
 			clearInterval(interval);
 		};
-	});
+    });
 </script>
 
 <Card>
     <CardBody class="d-flex w-100 justify-content-between">
         <div title="synchronisatie met remote database">
-            <Badge color=warning>
+            <Badge color={sync_color}>
                 Sync
             </Badge>
         </div>

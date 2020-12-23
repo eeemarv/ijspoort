@@ -6,7 +6,7 @@
     import { Button } from 'sveltestrap';
     import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
     import { setTimeout } from 'timers';
-    import { db_nfc, db_person } from './../services/pouchdb';
+    import { db_nfc, db_person } from '../services/db';
     import { person, person_nfc_list, gate_keeper } from './../services/store';
     import { nfc_uid, nfc_auto_reg } from './../services/store';
 

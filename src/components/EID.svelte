@@ -2,7 +2,7 @@
     import { Badge, Card, CardBody, CardText } from 'sveltestrap';
     const { ipcRenderer } = window.require('electron');
     import { onMount } from 'svelte';
-    import { db_eid } from './../services/pouchdb';
+    import { db_eid } from '../services/db';
     import { eid } from './../services/store';
     import { person, gate_keeper } from './../services/store';
 

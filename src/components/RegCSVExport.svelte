@@ -2,7 +2,7 @@
     const env = window.require('electron').remote.process.env;
     const { ipcRenderer } = window.require('electron');
     import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'sveltestrap';
-    import { db_reg } from '../services/pouchdb';
+    import { db_reg } from '../services/db';
     import { download } from '../services/download';
     import Papa from 'papaparse';
 

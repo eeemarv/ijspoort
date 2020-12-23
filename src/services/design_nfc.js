@@ -1,4 +1,4 @@
-import { db_nfc } from './pouchdb';
+import { db_nfc } from './db';
 import lodash from 'lodash';
 
 const design_nfc_search_doc = {

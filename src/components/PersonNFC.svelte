@@ -1,5 +1,5 @@
 <script>
-  import { db_nfc } from '../services/pouchdb';
+  import { db_nfc } from '../services/db';
   import { person, person_nfc_list } from './../services/store';
   import PersonNfcItem from './PersonNFCItem.svelte';
 

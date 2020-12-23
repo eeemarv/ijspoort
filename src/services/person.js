@@ -1,4 +1,4 @@
-import { db_person } from './pouchdb';
+import { db_person } from './db';
 import lodash from 'lodash';
 
 const XLSX = require('xlsx');
