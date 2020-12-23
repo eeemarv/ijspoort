@@ -50,7 +50,9 @@
         });
     });
 
-    setInterval(refresh_reg_list(), 900000);
+    setInterval(() => {
+        refresh_reg_list();
+    }, 900000);
 </script>
 
 <Row>
