@@ -1,12 +1,16 @@
 <script>
     import { Row, Col, ListGroup, ListGroupItem, Badge } from 'sveltestrap';
     import RegItem from './RegItem.svelte';
-    import { db_reg } from '../services/db';
+    import { db_person, db_reg } from '../services/db';
     import { onMount } from 'svelte';
 
     const reg_hours = 5;
-    const reg_limit = 500;
+    const reg_limit = 1000;
+    const refresh_interval = 60000;
+
     let registrations = [];
+    let tmp_regs = [];
+    let reg_persons = [];
     export let blocked_reg;
 
     const get_key_since = () => {
@@ -52,7 +56,7 @@
 
     setInterval(() => {
         refresh_reg_list();
-    }, 900000);
+    }, refresh_interval);
 </script>
 
 <Row>

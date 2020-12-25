@@ -2,12 +2,13 @@
     const env = window.require('electron').remote.process.env;
     const { ipcRenderer } = window.require('electron');
     import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'sveltestrap';
-    import { db_reg } from '../services/db';
+    import { db_reg, db_person } from '../services/db';
     import { download } from '../services/download';
     import Papa from 'papaparse';
 
     const period_in_days = 30;
     let download_buttons = [];
+    let persons = {};
 
     let open = false;
     const toggle = () => (open = !open);
@@ -44,14 +45,21 @@
             fields:['tijdstip', 'naam', 'tel', 'e-mail'],
             data:[]
         };
-        db_reg.query('search/by_date', {
-            key: date_key,
+        db_person.allDocs({
             include_docs: true
+        }).then((res) => {
+            res.rows.forEach((v) => {
+                persons[v.id] = v.doc;
+            });
+            return db_reg.query('search/by_date', {
+                key: date_key,
+                include_docs: true
+            });
         }).then((res) => {
             console.log(res.rows);
             res.rows.forEach((v) => {
                 let ts_date = new Date(v.doc.ts_epoch);
-                let p = v.doc.person;
+                let p = persons[v.doc.person_id];
                 let h = ts_date.getHours().toString().padStart(2, '0');
                 let m = ts_date.getMinutes().toString().padStart(2, '0');
                 let d = [];

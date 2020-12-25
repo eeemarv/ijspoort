@@ -24,7 +24,7 @@
                     docs[v.id] = v.doc;
                     count_docs++;
                 }
-            })
+            });
             update(Object.values(docs));
         }).catch((err) => {
             console.log(err);
@@ -46,7 +46,7 @@
                 $person = item;
                 el_manual.value = '';
             },
-            render: (item, value) => {
+            render: (item) => {
                 let suggestion_div = document.createElement("div");
                 suggestion_div.setAttribute('class', 'autocomplete-suggestion');
                 new AutocompleteSuggestion({

@@ -11,6 +11,7 @@
 
   let deleted = false;
   let selected = false;
+  let person_data = {};
 
   const handle_select_reg = () => {
     selected = true;
@@ -34,6 +35,10 @@
   }
 
   onMount(() => {
+    db_person.get(reg.person_id).then((res) => {
+      console.log('mount reg, get person data');
+      person_data = res;
+    });
     setTimeout(() => {reg.newly_add = undefined}, 1000);
   });
 </script>
@@ -52,36 +57,36 @@
         </Badge>
         &nbsp;
         <Badge color=light title="lidnummer">
-          {reg.person.member_id}
+          {person_data.member_id}
         </Badge>
         &nbsp;
         <span title="voornaam">
-           {reg.person.firstname}
+           {person_data.firstname}
         </span>
         &nbsp;
-        {#if reg.person.nickname}
+        {#if person_data.nickname}
           <span title="roepnaam">
-            ({reg.person.nickname})
+            ({person_data.nickname})
           </span>
           &nbsp;
         {/if}
         <span title="achternaam">
-          {reg.person.surname}
+          {person_data.surname}
         </span>
       </div>
       <div class="d-flex w-100 justify-content-between mb-0">
         <div>
-          {#if reg.person.phone_mobile }
+          {#if person_data.phone_mobile }
             <span title="gsm">
-              {reg.person.phone_mobile}
+              {person_data.phone_mobile}
             </span>
-          {:else if reg.person.phone_home}
+          {:else if person_data.phone_home}
             <span title="telefoon thuis">
-              {reg.person.phone_home}
+              {person_data.phone_home}
             </span>
-          {:else if reg.person.phone_work}
+          {:else if person_data.phone_work}
             <span title="telefoon werk">
-              {reg.person.phone_work}
+              {person_data.phone_work}
             </span>
           {:else}
             <span>&nbsp;</span>
