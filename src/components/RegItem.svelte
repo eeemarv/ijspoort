@@ -3,15 +3,26 @@
   import { Button, Badge } from 'sveltestrap';
   import { onMount } from 'svelte';
   import { person } from './../services/store';
+  import TimeTag from './TimeTag.svelte';
+  import PersonName from './PersonName.svelte';
+  import PersonMemberId from './PersonMemberId.svelte';
 
-  export let regIndex;
+  export let reg_index;
   export let reg;
+  export let newly_add = true;
+  export let blocked = false;
 
-  $: ts_date = new Date(reg.ts_epoch);
-
+  const scan_previous_hours = 5;
+  let reg_item;
   let deleted = false;
   let selected = false;
   let person_data = {};
+  let previous_regs = [];
+
+  const get_scan_since = () => {
+    let epoch = (new Date()).getTime();
+    return (epoch - (3600000 * scan_previous_hours)).toString();
+  }
 
   const handle_select_reg = () => {
     selected = true;
@@ -21,7 +32,8 @@
     }).catch((err) => {
         console.log(err);
     });
-  }
+  };
+
   const handle_remove_reg = (event) => {
     deleted = true;
     setTimeout(() => {
@@ -32,47 +44,63 @@
             console.log(err);
         });
     }, 500);
-  }
+  };
 
   onMount(() => {
     db_person.get(reg.person_id).then((res) => {
       console.log('mount reg, get person data');
       person_data = res;
+    }).catch((err) => {
+      console.log(err);
     });
-    setTimeout(() => {reg.newly_add = undefined}, 1000);
+
+    db_reg.query('search/by_person_id_and_ts_epoch', {
+      startkey: reg.person_id + '_' + get_scan_since(),
+      endkey: reg.person_id + '_\uffff',
+      include_docs: true
+    }).then((res) => {
+      console.log('search/by_person_id_and_ts_epoch');
+      console.log(res);
+      previous_regs = res.rows;
+    }).catch((err) => {
+      console.log(err);
+    });
+
+    if (blocked){
+      newly_add = false;
+      setTimeout(() => {
+        reg_item.parentNode.removeChild(reg_item);
+      }, 1500);
+    }
+    setTimeout(() => {
+      newly_add = false;
+    }, 1000);
   });
 </script>
 
-<li class="list-group-item{reg.newly_add ? ' bg-success' : ''}{deleted ? ' bg-danger' : ''}{selected ? ' bg-primary' : ''}">
+<li bind:this={reg_item} class="list-group-item{blocked ? ' bg-warning' : ''}{newly_add ? ' bg-success' : ''}{deleted ? ' bg-danger' : ''}{selected ? ' bg-primary' : ''}">
 <div class="d-flex w-100 justify-content-between">
     <dvi>
       <div>
-        <Badge color=info title="teller">
-          {regIndex}
-        </Badge>
-        &nbsp;
-        <Badge color=primary title="tijdstip">
-          {ts_date.getHours().toString().padStart(2, '0')}:
-          {ts_date.getMinutes().toString().padStart(2, '0')}
-        </Badge>
-        &nbsp;
-        <Badge color=light title="lidnummer">
-          {person_data.member_id}
-        </Badge>
-        &nbsp;
-        <span title="voornaam">
-           {person_data.firstname}
-        </span>
-        &nbsp;
-        {#if person_data.nickname}
-          <span title="roepnaam">
-            ({person_data.nickname})
-          </span>
+        {#if reg_index}
+          <Badge color=info title="teller">
+            {reg_index}
+          </Badge>
           &nbsp;
         {/if}
-        <span title="achternaam">
-          {person_data.surname}
-        </span>
+        {#if !blocked}
+          <TimeTag ts={reg.ts_epoch}/>
+          &nbsp;
+        {/if}
+        <PersonMemberId member_id={person_data.member_id} />
+        &nbsp;
+        <PersonName person={person_data}/>
+        {#if blocked}
+          &nbsp;
+          <Badge color=dark>
+            Reeds geregistreerd in laatste 5 minuten.
+          </Badge>
+        {/if}
       </div>
       <div class="d-flex w-100 justify-content-between mb-0">
         <div>
@@ -95,12 +123,25 @@
       </div>
     </dvi>
     <div>
-      <Button color=primary class=mr-1 on:click={handle_select_reg}>
-        Selecteer
-      </Button>
-      <Button color=danger on:click={handle_remove_reg}>
-        Verwijder
-      </Button>
+      {#if !blocked}
+        <Button color=primary class=mr-1 on:click={handle_select_reg}>
+          Selecteer
+        </Button>
+        <Button color=danger on:click={handle_remove_reg}>
+          Verwijder
+        </Button>
+      {/if}
     </div>
   </div>
+  {#if false}
+  <div>
+    {#if previous_regs}
+    Ook om:&nbsp;
+  {/if}
+  {#each previous_regs as prev}
+    <TimeTag ts={prev.doc.ts_epoch}/>
+    &nbsp;
+  {/each}
+  </div>
+  {/if}
 </li>

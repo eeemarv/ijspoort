@@ -8,6 +8,8 @@
   import { xls_assist_import } from './../services/person';
   import { person, person_nfc_list } from './../services/store';
   import PersonNFC from './PersonNFC.svelte';
+  import PersonName from './PersonName.svelte';
+  import PersonMemberId from './PersonMemberId.svelte';
 
   ipcRenderer.on('xls.assist.import', (ev, file) => {
     xls_assist_import(file);
@@ -45,9 +47,7 @@
     </CardHeader>
     <ListGroup>
       <ListGroupItem class="d-flex w-100 justify-content-between py-2">
-        <Badge color=light title="lidnummer">
-          {$person.member_id}
-        </Badge>
+        <PersonMemberId member_id={$person.member_id} />
         {#if $person.member_since }
           <div title="inschrijvingsdatum">{$person.member_since}</div>
         {:else}
@@ -56,11 +56,7 @@
       </ListGroupItem>
 
       <ListGroupItem class=py-2>
-        <span title="voornaam">{$person.firstname}</span>
-        {#if $person.nickname}
-          <span title="roepnaam">({$person.nickname})</span>
-        {/if}
-        <span title="achternaam">{$person.surname}</span>
+        <PersonName person={$person}/>
       </ListGroupItem>
 
       {#if $person.gender || $person.date_of_birth}

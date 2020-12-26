@@ -9,11 +9,6 @@ const design_nfc_search_doc = {
                 emit(doc.person_id);
             }).toString()
         },
-        by_gate_keeper_id: {
-            map: ((doc) => {
-                emit(doc.gate_keeper_id);
-            }).toString()
-        },
         count_total: {
             map: ((doc) => {
                 if(doc._id.startsWith('uid_')){

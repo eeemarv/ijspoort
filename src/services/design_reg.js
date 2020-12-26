@@ -9,11 +9,6 @@ const design_reg_search_doc = {
                 emit(doc.member_id);
             }).toString()
         },
-        by_gate_keeper_id: {
-            map: ((doc) => {
-                emit(doc.gate_keeper_id);
-            }).toString()
-        },
         by_person_id_and_ts_epoch: {
             map: ((doc) => {
                 emit(doc.person_id + '_' + doc.ts_epoch.toString());

@@ -7,7 +7,7 @@
     import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
     import { setTimeout } from 'timers';
     import { db_nfc, db_person } from '../services/db';
-    import { person, person_nfc_list, gate_keeper } from './../services/store';
+    import { person, person_nfc_list } from './../services/store';
     import { nfc_uid, nfc_auto_reg } from './../services/store';
 
     const nfc_reset_writable_enabled = env.NFC_RESET_WRITABLE_ENABLED === '1';
@@ -213,10 +213,7 @@
             _id: 'uid_' + $nfc_uid,
             ts_epoch: now.getTime(),
             uid: $nfc_uid,
-            person: $person,
             person_id: $person._id,
-            gate_keeper: $gate_keeper,
-            gate_keeper_id: $gate_keeper?._id
         };
 
         db_nfc.put(nfc).then((res) => {

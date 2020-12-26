@@ -4,7 +4,7 @@
     import { onMount } from 'svelte';
     import { db_eid } from '../services/db';
     import { eid } from './../services/store';
-    import { person, gate_keeper } from './../services/store';
+    import { person } from './../services/store';
 
     let dev_status = 'off';
     let eid_count_total = 0;
@@ -44,10 +44,7 @@
             _id: 'c' + card.cardnumber,
             ts_epoch: now.getTime(),
             card: card,
-            person: person,
-            person_id: person._id,
-            gate_keeper: $gate_keeper,
-            gate_keeper_id: $gate_keeper?._id
+            person_id: person._id
         };
 
         db_eid.put(eid).then((res) => {

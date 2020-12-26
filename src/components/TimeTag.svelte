@@ -1,0 +1,11 @@
+<script>
+  import { Badge } from 'sveltestrap';
+
+  export let ts;
+  $: ts_date = new Date(ts);
+</script>
+
+<Badge color=primary title="tijdstip">
+  {ts_date.getHours().toString().padStart(2, '0')}:
+  {ts_date.getMinutes().toString().padStart(2, '0')}
+</Badge>
