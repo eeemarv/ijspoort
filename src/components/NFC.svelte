@@ -55,7 +55,10 @@
         }).then((res) => {
             return db_person.get(res);
         }).then((res) => {
-            if ($nfc_auto_reg){
+            let member_2021 = res.open_balance !== undefined
+                && !res.open_balance.trim().startsWith('-');
+
+            if ($nfc_auto_reg && member_2021){
                 console.log('register_by_nfc event');
                 dispatch('register_by_nfc', {
                     person: res
