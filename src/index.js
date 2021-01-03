@@ -7,6 +7,8 @@ const path = require('path');
 const cron = require('node-cron');
 
 let win;
+let debug_enabled = true;
+const env_debug = process.env?.DEBUG;
 const feed_A = process.env?.FEED_A;
 const feed_B = process.env?.FEED_B;
 const read_a_write_b_access = '78778800';
@@ -18,6 +20,9 @@ if (typeof feed_A === 'undefined' || !feed_A){
 }
 if (typeof feed_B === 'undefined' || !feed_B){
 	throw 'No FEED_B set!';
+}
+if (typeof env_debug === 'undefined' || !env_debug || env_debug === '0'){
+	debug_enabled = false;
 }
 
 // Live Reload
@@ -54,9 +59,11 @@ const createWindow = () => {
 	listenPcsc(win);
   });
 
-  win.webContents.openDevTools({
-    'mode': 'bottom'
-  });
+  if (debug_enabled){
+	win.webContents.openDevTools({
+		'mode': 'bottom'
+	  });
+  }
 
   win.once('ready-to-show', () => {
 	console.log('win event ready-to-show');
