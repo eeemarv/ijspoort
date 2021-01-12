@@ -31,7 +31,7 @@
             console.log(res);
             let download_buttons = res.rows;
             let col_size = Math.ceil(download_buttons.length / 3);
-            console.log('col size', col_size);
+            btn_cols = [];
             while (download_buttons.length){
                 btn_cols.push(download_buttons.splice(0, col_size));
             }

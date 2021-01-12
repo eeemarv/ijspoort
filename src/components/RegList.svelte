@@ -84,6 +84,10 @@
         registrations = registrations.filter((reg) => reg.doc._id !== change.id);
         return;
       }
+      if (change.id < get_key_since()){
+        console.log('change too old, do no display >', change.id);
+        return;
+      }
       change._id = change.id;
       registrations = [change, ...registrations];
     }).on('error', (err) => {
