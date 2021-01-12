@@ -1,13 +1,13 @@
 <script>
     const env = window.require('electron').remote.process.env;
     const { ipcRenderer } = window.require('electron');
-    import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'sveltestrap';
+    import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Row, Col } from 'sveltestrap';
     import { db_reg, db_person } from '../services/db';
     import { download } from '../services/download';
     import Papa from 'papaparse';
 
     const period_in_days = 30;
-    let download_buttons = [];
+    let btn_cols = [];
     let persons = {};
 
     let open = false;
@@ -29,7 +29,12 @@
             group: true
         }).then((res) => {
             console.log(res);
-            download_buttons = res.rows;
+            let download_buttons = res.rows;
+            let col_size = Math.ceil(download_buttons.length / 3);
+            console.log('col size', col_size);
+            while (download_buttons.length){
+                btn_cols.push(download_buttons.splice(0, col_size));
+            }
         }).catch((err) => {
             console.log(err);
         });
@@ -83,23 +88,29 @@
     };
 </script>
 
-<Modal isOpen={open} {toggle}>
+<Modal isOpen={open} {toggle} size=xl>
     <ModalHeader {toggle}>
         Export registraties per dag (Covid-19 tracing)
     </ModalHeader>
     <ModalBody>
-        <ListGroup>
-        {#each download_buttons as btn}
-            <ListGroupItem>
-            <Button color=info on:click={() => {handle_export(btn.key)}}>
-                {btn.key} ({btn.value})
-            </Button>
-            </ListGroupItem>
-        {/each}
-        </ListGroup>
-        {#if download_buttons.length === 0}
+        <Row>
+            {#each btn_cols as col}
+            <Col>
+                <ListGroup>
+                    {#each col as btn}
+                        <ListGroupItem>
+                        <Button color=info on:click={() => {handle_export(btn.key)}}>
+                            {btn.key} ({btn.value})
+                        </Button>
+                        </ListGroupItem>
+                    {/each}
+                </ListGroup>
+            </Col>
+            {/each}
+        </Row>
+        {#if btn_cols.length === 0}
         <p>
-            Geen registraties de laatste 30 dagen.
+            Geen registraties de laatste {period_in_days} dagen.
         </p>
         {/if}
     </ModalBody>
