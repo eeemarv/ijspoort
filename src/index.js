@@ -43,6 +43,7 @@ const createWindow = () => {
 	show: false,
 	darkTheme: true,
 	backgroundColor: '#000000',
+	icon: path.join(__dirname, '/../icon/512x512.png'),
     webPreferences: {
       nodeIntegration: true,
 	  nodeIntegrationInWorker: true,
