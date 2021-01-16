@@ -48,78 +48,72 @@ db_reg.sync(db_remote_reg, sync_options)
 .on('change', (info) => {
     console.log('CHANGE');
     console.log(info);
-    sync_monitor.set('active');
+    sync_monitor.set_active();
 }).on('paused', (err) => {
     console.log('PAUSED');
     console.log(err);
-    sync_monitor.set('paused');
 }).on('active', () => {
     console.log('ACTIVE');
-    sync_monitor.set('active');
+    sync_monitor.set_active();
 }).on('denied', (err) => {
     console.log('DENIED');
     console.log(err);
-    sync_monitor.set('denied');
+    sync_monitor.set_error();
 }).on('complete', (info) => {
     console.log('COMPLETE');
     console.log(info);
-    sync_monitor.set('complete');
 }).on('error', (err) => {
     console.log('UNHANDLED ERROR');
     console.log(err);
-    sync_monitor.set('error');
+    sync_monitor.set_error();
 });
 
 db_nfc.sync(db_remote_nfc, sync_options)
 .on('change', (info) => {
     console.log('CHANGE');
     console.log(info);
-    sync_monitor.set('change');
+    sync_monitor.set_active();
 }).on('paused', (err) => {
     console.log('PAUSED');
     console.log(err);
-    sync_monitor.set('paused');
 }).on('active', () => {
     console.log('ACTIVE');
-    sync_monitor.set('active');
+    sync_monitor.set_active();
 }).on('denied', (err) => {
     console.log('DENIED');
     console.log(err);
-    sync_monitor.set('denied');
+    sync_monitor.set_error();
 }).on('complete', (info) => {
     console.log('COMPLETE');
     console.log(info);
-    sync_monitor.set('complete');
 }).on('error', (err) => {
     console.log('UNHANDLED ERROR');
     console.log(err);
-    sync_monitor.set('error');
+    sync_monitor.set_error();
 });
 
 db_person.sync(db_remote_person, sync_options)
 .on('change', (info) => {
     console.log('CHANGE');
     console.log(info);
-    sync_monitor.set('change');
+    sync_monitor.set_active();
 }).on('paused', (err) => {
     console.log('PAUSED');
     console.log(err);
-    sync_monitor.set('paused');
 }).on('active', () => {
     console.log('ACTIVE');
-    sync_monitor.set('active');
+    sync_monitor.set_active();
 }).on('denied', (err) => {
     console.log('DENIED');
     console.log(err);
-    sync_monitor.set('denied');
+    sync_monitor.set_error();
 }).on('complete', (info) => {
     console.log('COMPLETE');
     console.log(info);
-    sync_monitor('complete');
 }).on('error', (err) => {
     console.log('UNHANDLED ERROR');
     console.log(err);
-    sync_monitor.set('error');
+    sync_monitor.set_error();
 });
 
 export {
