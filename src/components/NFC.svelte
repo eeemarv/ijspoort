@@ -77,6 +77,12 @@
                 ipcRenderer.send('nfc.test_transport_key');
             }
         });
+
+        window.scroll({
+            top: 0,
+            left: 0,
+            behavior: 'smooth'
+        });
     });
 
     /******/

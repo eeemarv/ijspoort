@@ -22,11 +22,11 @@
     && !$person.open_balance.trim().startsWith('-');
 
   $: {
-    console.log($person);
     if ($person === undefined){
       $person_nfc_list = [];
+    } else {
+      console.log($person);
     }
-
   }
 
   const handleRegisterByManual = (() => {
@@ -37,7 +37,6 @@
   });
 
 </script>
-
 
 {#if $person}
 <CardGroup>
@@ -173,7 +172,7 @@
     <ListGroup>
       <ListGroupItem class="bg-danger d-flex w-100 justify-content-between">
         <div>
-        Hola dit kan echt niet
+
         </div>
         <div>
           <Button color=danger class="border border-white" title="Verwijder dit commentaar">
