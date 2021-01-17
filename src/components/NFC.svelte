@@ -15,7 +15,8 @@
 
     const dispatch = createEventDispatcher();
 
-    let dev_status = 'off';
+    let dev_on = false;
+    let dev_error = false;
     let nfc_status = 'off';
     let nfc_count_total = 0;
 
@@ -31,13 +32,16 @@
     $: can_activate = $person && $nfc_uid && nfc_status === 'transport_key';
 
     ipcRenderer.on('dev.nfc.on', (ev) => {
-        dev_status = 'ok';
+        dev_on = true;
     });
     ipcRenderer.on('dev.nfc.off', (ev) => {
-        dev_status = 'off';
+        dev_on = false;
     });
     ipcRenderer.on('dev.nfc.error', (ev) => {
-        dev_status = 'error';
+        dev_error = true;
+        setTimeout(() => {
+            dev_error = false;
+        }, 5000);
     });
 
     ipcRenderer.on('nfc.on', (ev, card) => {
@@ -279,12 +283,12 @@
 
 <Card class=m-3>
     <div class="card-header py-2 d-flex w-100 justify-content-between"
-        class:bg-success={dev_status === 'ok'}
-        class:bg-danger={dev_status === 'error'}
+        class:bg-success={dev_on && !dev_error}
+        class:bg-danger={dev_error}
     >
         <div title="NFC/RFiD tags">
         NFC
-        {dev_status === 'error' ? ' fout apparaat' : ''}
+        {dev_error ? ' fout apparaat' : ''}
         </div>
         <div>
             <Badge color=info title="Totaal aantaal NFC-tags geregistreerd">
