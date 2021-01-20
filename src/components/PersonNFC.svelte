@@ -8,9 +8,10 @@
       $person_nfc_list = [];
       return;
     }
-    db_nfc.query('search/by_person_id', {
+    db_nfc.query('search/count_by_person_id', {
         key: person_id,
-        include_docs: true
+        include_docs: true,
+        reduce: false
     }).then((res) => {
         console.log(res);
         $person_nfc_list = res.rows.sort((a, b) => a.doc.ts_epoch < b.doc.ts_epoch ? -1 : 1);

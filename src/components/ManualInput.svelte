@@ -11,11 +11,12 @@
             update([]);
             return;
         }
-        db_person.query('search/by_text', {
+        db_person.query('search/count_by_text', {
             startkey: search_text,
             endkey:search_text + '\uffff',
             limit: 30,
-            include_docs: true
+            include_docs: true,
+            reduce: false
         }).then((res) => {
             let docs = {};
             let count_docs = 0;

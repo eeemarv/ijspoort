@@ -27,13 +27,13 @@
       reg.nfc_uid = $nfc_uid;
     }
 
-    db_reg.query('search/by_person_id_and_ts_epoch', {
+    db_reg.query('search/count_by_person_id_and_ts_epoch', {
       startkey: person._id + '_' + (reg.ts_epoch - block_time).toString(),
       endkey: person._id + '_\uffff',
       limit: 1,
       reduce: false
     }).then((res) => {
-      console.log('search/by_person_id_and_ts_epoch');
+      console.log('search/count_by_person_id_and_ts_epoch (no reduce)');
       console.log(res);
       if (res.rows.length > 0){
         blocked_regs = [reg, ...blocked_regs];

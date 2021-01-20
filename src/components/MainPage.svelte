@@ -42,21 +42,21 @@
 
 <svelte:window on:scroll={handle_scroll} bind:scrollY={y}/>
 
-<RegCSVExport/>
-<DbJSONExport/>
+<RegCSVExport />
+<DbJSONExport />
 
 <Col md=9 class=vh-100>
-  <ManualInput/>
+  <ManualInput />
   <Person on:register_by_manual={handle_register_by_manual} />
   <RegList bind:this={reg_list}/>
 </Col>
 
 <Col class="bg-primary h-100">
-  <EID/>
+  <EID />
   <NFC on:register_by_nfc={handle_register_by_nfc} />
   <div class=m-3>
-    <Stats/>
-    <Clock/>
+    <Stats />
+    <Clock />
   </div>
 </Col>
 

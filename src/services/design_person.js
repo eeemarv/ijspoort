@@ -4,7 +4,7 @@ import lodash from 'lodash';
 const design_person_search_doc = {
     _id: '_design/search',
     views: {
-        by_text: {
+        count_by_text: {
             map: ((doc) => {
                 let firstname = doc.firstname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
                 let surname = doc.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
@@ -16,7 +16,8 @@ const design_person_search_doc = {
                         emit(doc[k].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, ''));
                     }
                 });
-            }).toString()
+            }).toString(),
+            reduce: '_count'
         },
         count_members_2020:{
             map: ((doc) => {

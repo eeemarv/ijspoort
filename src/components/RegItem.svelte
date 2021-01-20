@@ -60,13 +60,13 @@
       console.log(err);
     });
 
-    db_reg.query('search/by_person_id_and_ts_epoch', {
+    db_reg.query('search/count_by_person_id_and_ts_epoch', {
       startkey: reg.person_id + '_' + get_scan_since(),
       endkey: reg.person_id + '_\uffff',
       include_docs: true,
       reduce: false
     }).then((res) => {
-      console.log('search/by_person_id_and_ts_epoch');
+      console.log('search/count_by_person_id_and_ts_epoch (no reduce)');
       console.log(res);
       previous_regs = res.rows;
     }).catch((err) => {

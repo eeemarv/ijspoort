@@ -4,10 +4,11 @@ import lodash from 'lodash';
 const design_eid_search_doc = {
     _id: '_design/search',
     views: {
-        by_person_id: {
+        count_by_person_id: {
             map: ((doc) => {
                 emit(doc.person_id);
-            }).toString()
+            }).toString(),
+            reduce: '_count'
         },
         count_total: {
             map: ((doc) => {

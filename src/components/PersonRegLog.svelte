@@ -23,7 +23,7 @@
             return;
         }
 
-        db_reg.query('search/by_person_id_and_ts_epoch', {
+        db_reg.query('search/count_by_person_id_and_ts_epoch', {
             startkey: $person._id + '_',
             endkey: $person._id + '_\uffff',
             reduce: true
@@ -35,7 +35,7 @@
             console.log(err);
         });
 
-        db_reg.query('search/by_person_id_and_ts_epoch', {
+        db_reg.query('search/count_by_person_id_and_ts_epoch', {
             startkey: $person._id + '_\uffff',
             endkey: $person._id + '_',
             descending: true,

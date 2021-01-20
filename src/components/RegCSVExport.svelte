@@ -56,9 +56,10 @@
             res.rows.forEach((v) => {
                 persons[v.id] = v.doc;
             });
-            return db_reg.query('search/by_date', {
+            return db_reg.query('search/count_by_date', {
                 key: date_key,
-                include_docs: true
+                include_docs: true,
+                reduce: false
             });
         }).then((res) => {
             console.log(res.rows);

@@ -57,7 +57,7 @@
       </ListGroupItem>
 
       <ListGroupItem class=py-2>
-        <PersonName person={$person}/>
+        <PersonName person={$person} />
       </ListGroupItem>
 
       {#if $person.gender || $person.date_of_birth}
