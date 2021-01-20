@@ -10,6 +10,7 @@
   import PersonNFC from './PersonNFC.svelte';
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
+  import PersonRegLog from './PersonRegLog.svelte';
 
   ipcRenderer.on('xls.assist.import', (ev, file) => {
     xls_assist_import(file);
@@ -39,6 +40,7 @@
 </script>
 
 {#if $person}
+
 <CardGroup>
   <Card>
     <CardHeader class=bg-info>
@@ -164,9 +166,9 @@
     <CardHeader class=bg-info>
       Gelinkte data
     </CardHeader>
-    <PersonNFC/>
+    <PersonNFC />
     <CardBody>
-      &nbsp;
+      <PersonRegLog />
     </CardBody>
     <!--
     <ListGroup>

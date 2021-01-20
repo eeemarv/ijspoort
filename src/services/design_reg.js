@@ -12,7 +12,8 @@ const design_reg_search_doc = {
         by_person_id_and_ts_epoch: {
             map: ((doc) => {
                 emit(doc.person_id + '_' + doc.ts_epoch.toString());
-            }).toString()
+            }).toString(),
+            reduce: '_count'
         },
         by_date: {
             map: ((doc) => {

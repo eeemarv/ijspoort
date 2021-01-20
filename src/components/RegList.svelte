@@ -30,7 +30,8 @@
     db_reg.query('search/by_person_id_and_ts_epoch', {
       startkey: person._id + '_' + (reg.ts_epoch - block_time).toString(),
       endkey: person._id + '_\uffff',
-      limit: 1
+      limit: 1,
+      reduce: false
     }).then((res) => {
       console.log('search/by_person_id_and_ts_epoch');
       console.log(res);

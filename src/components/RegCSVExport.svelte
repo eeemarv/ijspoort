@@ -115,6 +115,8 @@
         {/if}
     </ModalBody>
     <ModalFooter>
-        <Button color=primary on:click={toggle}>Sluiten</Button>
+        <Button color=primary on:click={toggle}>
+            Sluiten
+        </Button>
     </ModalFooter>
 </Modal>

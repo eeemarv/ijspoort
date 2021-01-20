@@ -3,9 +3,9 @@
   import { Button, Badge } from 'sveltestrap';
   import { onMount } from 'svelte';
   import { person } from './../services/store';
-  import TimeTag from './TimeTag.svelte';
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
+  import RegTimeTag from './RegTimeTag.svelte';
 
   export let reg_index;
   export let reg;
@@ -45,6 +45,7 @@
         console.log(event);
         db_reg.remove(reg).then((res) => {
             console.log(res);
+            $person = undefined;
         }).catch((err) => {
             console.log(err);
         });
@@ -62,7 +63,8 @@
     db_reg.query('search/by_person_id_and_ts_epoch', {
       startkey: reg.person_id + '_' + get_scan_since(),
       endkey: reg.person_id + '_\uffff',
-      include_docs: true
+      include_docs: true,
+      reduce: false
     }).then((res) => {
       console.log('search/by_person_id_and_ts_epoch');
       console.log(res);
@@ -94,7 +96,7 @@
           &nbsp;
         {/if}
         {#if !blocked}
-          <TimeTag ts={reg.ts_epoch}/>
+          <RegTimeTag {reg} />
           &nbsp;
         {/if}
         <PersonMemberId member_id={person_data.member_id} />
@@ -144,9 +146,11 @@
     Ook om:&nbsp;
   {/if}
   {#each previous_regs as prev}
-    <TimeTag ts={prev.doc.ts_epoch}/>
+    <RegTimeTag reg={prev.doc} />
     &nbsp;
   {/each}
+  <Button color=info>Reg-Info</Button>
   </div>
   {/if}
+
 </li>

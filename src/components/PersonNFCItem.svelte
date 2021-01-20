@@ -1,6 +1,7 @@
 <script>
   import { ListGroupItem, Badge } from 'sveltestrap';
   import { nfc_uid } from './../services/store';
+import LocaleDateString from './LocaleDateString.svelte';
 
   export let nfc;
 
@@ -12,8 +13,5 @@
   <Badge color=success title="toegangsbadge">NFC</Badge>
   <Badge color=primary title="unieke code van badge">{nfc.uid}</Badge>
   &nbsp;
-  <span title="datum van activatie">
-    {ts_date.toLocaleDateString('nl-BE', {month: 'short', year: 'numeric', day:'numeric'})}
-  </span>
-
+  <LocaleDateString ts={nfc.ts_epoch} title="datum van activatie" />
 </ListGroupItem>

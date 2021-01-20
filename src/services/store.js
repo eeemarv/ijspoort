@@ -1,6 +1,5 @@
 import { writable } from 'svelte/store';
 
-
 const create_sync_monitor = () => {
     const { subscribe, set } = writable('paused');
     return {
