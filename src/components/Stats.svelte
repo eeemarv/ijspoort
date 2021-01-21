@@ -5,6 +5,7 @@
     import { db_remote_reg } from '../services/db';
     import { db_remote_nfc } from '../services/db';
     import { put_design_person_search } from './../services/design_person';
+    import { put_design_member_search } from './../services/design_member';
     import { put_design_reg_search } from './../services/design_reg';
     import { put_design_nfc_search } from './../services/design_nfc';
     import { put_design_eid_search } from './../services/design_eid';
@@ -15,6 +16,7 @@
 
     onMount(() => {
         put_design_person_search();
+        put_design_member_search();
         put_design_reg_search();
         put_design_nfc_search();
         put_design_eid_search();

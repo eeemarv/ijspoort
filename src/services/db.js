@@ -23,15 +23,18 @@ const db_reg = new PouchDB(db_local_prefix + 'reg');
 const db_nfc = new PouchDB(db_local_prefix + 'nfc');
 const db_eid = new PouchDB(db_local_prefix + 'eid');
 const db_person = new PouchDB(db_local_prefix + 'person');
+const db_member = new PouchDB(db_local_prefix + 'member');
 
-const auth_conn_prefix = env.DB_URL + '/' + env.DB_REMOTE_PREFIX;
+const conn_prefix = env.DB_URL + '/' + env.DB_REMOTE_PREFIX;
 const auth = {
     username: env.DB_USERNAME,
     password: env.DB_PASSWORD
 };
-const db_remote_reg = new PouchDB(auth_conn_prefix + 'reg', {auth: auth});
-const db_remote_nfc = new PouchDB(auth_conn_prefix + 'nfc', {auth: auth});
-const db_remote_person = new PouchDB(auth_conn_prefix + 'person', {auth: auth});
+
+const db_remote_reg = new PouchDB(conn_prefix + 'reg', {auth: auth});
+const db_remote_nfc = new PouchDB(conn_prefix + 'nfc', {auth: auth});
+const db_remote_person = new PouchDB(conn_prefix + 'person', {auth: auth});
+const db_remote_member = new PouchDB(conn_prefix + 'member', {auth: auth});
 
 const sync_options = {
     live: true,
@@ -116,13 +119,39 @@ db_person.sync(db_remote_person, sync_options)
     sync_monitor.set_error();
 });
 
+db_member.sync(db_remote_member, sync_options)
+.on('change', (info) => {
+    console.log('CHANGE');
+    console.log(info);
+    sync_monitor.set_active();
+}).on('paused', (err) => {
+    console.log('PAUSED');
+    console.log(err);
+}).on('active', () => {
+    console.log('ACTIVE');
+    sync_monitor.set_active();
+}).on('denied', (err) => {
+    console.log('DENIED');
+    console.log(err);
+    sync_monitor.set_error();
+}).on('complete', (info) => {
+    console.log('COMPLETE');
+    console.log(info);
+}).on('error', (err) => {
+    console.log('UNHANDLED ERROR');
+    console.log(err);
+    sync_monitor.set_error();
+});
+
 export {
     db_remote_nfc,
     db_remote_reg,
     db_remote_person,
+    db_remote_member,
     db_reg,
     db_nfc,
     db_eid,
     db_person,
+    db_member,
     env
 };
