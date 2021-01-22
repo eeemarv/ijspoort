@@ -8,7 +8,9 @@ const cron = require('node-cron');
 
 let win;
 let debug_enabled = true;
+let assist_import_enabled = true;
 const env_debug = process.env?.DEBUG;
+const assist_import_year = process.env?.ASSIST_IMPORT_YEAR;
 const feed_A = process.env?.FEED_A;
 const feed_B = process.env?.FEED_B;
 const read_a_write_b_access = '78778800';
@@ -23,6 +25,9 @@ if (typeof feed_B === 'undefined' || !feed_B){
 }
 if (typeof env_debug === 'undefined' || !env_debug || env_debug === '0'){
 	debug_enabled = false;
+}
+if (typeof assist_import_year === 'undefined' || !assist_import_year || assist_import_year === '0'){
+	assist_import_enabled = false;
 }
 
 // Live Reload
@@ -357,28 +362,30 @@ app.on('activate', () => {
   }
 });
 
-const importAssistXlsx = () => {
+const import_assist_xlsx = () => {
 	const files = dialog.showOpenDialogSync(win, {
 		properties: ['openFile'],
         filters: {name: 'MS Excell', extensions: ['xls', 'xlsx']},
-        message: 'Import xlsx leden vanuit Assist'
+        message: 'Import xlsx leden uit Assist, LIDJAAR ' + assist_import_year
 	});
     if (!files){
         return;
     }
-	win.webContents.send('xls.assist.import', files[0]);
+	win.webContents.send('xls.assist.import', files[0], assist_import_year);
 };
 
-const importMenu = new Menu();
-importMenu.append(new MenuItem({ label: 'leden Assist Xlsx', click: importAssistXlsx }));
+const menu = new Menu();
+
+if(assist_import_enabled){
+	const importMenu = new Menu();
+	importMenu.append(new MenuItem({ label: 'leden Assist Xlsx', click: import_assist_xlsx }));
+	menu.append(new MenuItem({ label: 'Import', submenu: importMenu }));
+}
 
 const exportMenu = new Menu();
 exportMenu.append(new MenuItem({ label: 'Registraties CSV (covid-19 tracing)', click: () => { win.webContents.send('reg.csv.export'); }}));
-// exportMenu.append(new MenuItem({ label: 'NFC CSV', click: () => { win.webContents.send('nfc.csv.export'); }}));
 exportMenu.append(new MenuItem({ label: 'Database JSON', click: () => { win.webContents.send('db.json.export'); }}));
 
-const menu = new Menu();
-menu.append(new MenuItem({ label: 'Import', submenu: importMenu }));
 menu.append(new MenuItem({ label: 'Export', submenu: exportMenu }));
 menu.append(new MenuItem({ label: 'Instellingen', click: () => console.log('meuh')} ));
 menu.append(new MenuItem({role: 'viewMenu'}));

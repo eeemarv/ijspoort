@@ -12,8 +12,8 @@
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonRegLog from './PersonRegLog.svelte';
 
-  ipcRenderer.on('xls.assist.import', (ev, file) => {
-    xls_assist_import(file);
+  ipcRenderer.on('xls.assist.import', (ev, file, year) => {
+    xls_assist_import(file, year);
   });
 
   const dispatch = createEventDispatcher();

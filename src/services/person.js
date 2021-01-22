@@ -1,9 +1,9 @@
-import { db_person } from './db';
+import { db_person, db_member } from './db';
 import lodash from 'lodash';
 
 const XLSX = require('xlsx');
 
-const assist_map = {
+const assist_person_map = {
     lidnummer: {
         key: "member_id"
     },
@@ -77,7 +77,10 @@ const assist_map = {
     },
     werkgroepen: {
         key: "group"
-    },
+    }
+};
+
+const assist_member_map = {
     tebetalenlidgeld: {
         key: "membership_fee_to_pay"
     },
@@ -89,26 +92,38 @@ const assist_map = {
     }
 };
 
-const xls_assist_import = (file) => {
+const xls_assist_import = (file, year) => {
     const workbook = XLSX.readFile(file);
     const sheet_name_list = workbook.SheetNames;
     const json_sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {defval: '', raw: false});
 
     json_sheet.forEach((a_per) => {
+        let person_id;
         let new_person = {};
+        let remove_member = false;
+        let add_member = false;
         Object.keys(a_per).forEach((a_per_key) => {
             let norm_key = a_per_key.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-            if ((norm_key in assist_map) && !('ignore' in assist_map[norm_key])){
-                let a_val = a_per[a_per_key];
-                if ('process' in assist_map[norm_key]){
-                    new_person[assist_map[norm_key].key] = assist_map[norm_key].process(a_val);
+            let a_val = a_per[a_per_key];
+            if ((norm_key in assist_person_map) && !('ignore' in assist_person_map[norm_key])){
+                if ('process' in assist_person_map[norm_key]){
+                    new_person[assist_person_map[norm_key].key] = assist_person_map[norm_key].process(a_val);
                 } else {
-                    new_person[assist_map[norm_key].key] = a_val;
+                    new_person[assist_person_map[norm_key].key] = a_val;
+                }
+            }
+
+            if (norm_key === 'openstaandsaldo'){
+                if (a_val.trim().startsWith('-')){
+                    remove_member = true;
+                } else {
+                    add_member = true;
                 }
             }
         });
 
-        new_person._id = 'n' + new_person.member_id.padStart(8, '0');
+        person_id = 'n' + new_person.member_id.padStart(8, '0');
+        new_person._id = person_id;
 
         db_person.get(new_person._id).catch((err) => {
             if (err.name == 'not_found'){
@@ -133,6 +148,35 @@ const xls_assist_import = (file) => {
         }).catch((err) => {
             console.log(err);
         });
+
+        let new_member = {
+            _id: year + '_' + person_id,
+            person_id: person_id,
+            year: year
+        };
+
+        db_member.get(new_member._id).catch((err) => {
+            if (err.name == 'not_found' && add_member){
+                return db_member.put(new_member);
+            }
+            throw err;
+        }).then((res) => {
+            if (remove_member){
+                return db_member.remove(res);
+            }
+            return res;
+        }).then((res) => {
+            if (add_member){
+                console.log('add member');
+            }
+            if (remove_member){
+                console.log('remove member');
+            }
+            console.log('db_member ', res);
+        }).catch((err) => {
+            console.log(err);
+        });
+
     });
 };
 

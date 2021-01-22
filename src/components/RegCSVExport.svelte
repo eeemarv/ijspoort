@@ -11,7 +11,9 @@
     let persons = {};
 
     let open = false;
-    const toggle = () => (open = !open);
+    const toggle = () => {
+        open = !open
+    };
 
     ipcRenderer.on('reg.csv.export', () => {
         open = true
