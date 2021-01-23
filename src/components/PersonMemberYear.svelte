@@ -18,7 +18,7 @@
   let member_short_list = [];
   let member_long_list = [];
   let long_list_cols = [];
-  let years_short_list = 6;
+  let years_short_list = 5;
   let years_long_list = 9;
 
   const update_member_year_list = (person_id) => {
