@@ -54,7 +54,7 @@
                 };
             });
             while (regs.length){
-                person_reg_cols.push(regs.splice(0, col_size));
+                person_reg_cols = [...person_reg_cols, regs.splice(0, col_size)];
             }
             console.log('person_reg_cols', person_reg_cols);
         }).catch((err) => {

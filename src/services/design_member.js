@@ -10,7 +10,7 @@ const design_member_search_doc = {
             }).toString(),
             reduce: '_count'
         },
-        count_by_person:{
+        count_by_person_id:{
             map: ((doc) => {
                 emit(doc.person_id);
             }).toString(),

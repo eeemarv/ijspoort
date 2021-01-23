@@ -152,31 +152,41 @@ const xls_assist_import = (file, year) => {
         let new_member = {
             _id: year + '_' + person_id,
             person_id: person_id,
-            year: year
+            year: parseInt(year)
         };
 
         db_member.get(new_member._id).catch((err) => {
-            if (err.name == 'not_found' && add_member){
-                return db_member.put(new_member);
+            if (err.name == 'not_found'){
+                return 'not_found';
             }
             throw err;
         }).then((res) => {
+            if (remove_member && res === 'not_found'){
+                return 'not found: ' + new_member._id + ', not removed';
+            }
             if (remove_member){
                 return db_member.remove(res);
             }
-            return res;
-        }).then((res) => {
             if (add_member){
-                console.log('add member');
+                if (res === 'not_found'){
+                    console.log('db_member new put');
+                    return db_member.put(new_member);
+                }
+                let compare_member = { ...res};
+                delete compare_member._rev;
+                if (lodash.isEqual(compare_member, new_member)){
+                    throw 'db_member no_change for ' + res._id;
+                }
+                new_member._rev = res._rev;
+                console.log('db_member update put');
+                return db_member.put(new_member);
             }
-            if (remove_member){
-                console.log('remove member');
-            }
+            return 'db_member no info --?--';
+        }).then((res) => {
             console.log('db_member ', res);
         }).catch((err) => {
             console.log(err);
         });
-
     });
 };
 

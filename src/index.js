@@ -29,6 +29,11 @@ if (typeof env_debug === 'undefined' || !env_debug || env_debug === '0'){
 if (typeof assist_import_year === 'undefined' || !assist_import_year || assist_import_year === '0'){
 	assist_import_enabled = false;
 }
+if (assist_import_enabled){
+	if (!(Number.isInteger(Number(assist_import_year)) && (Number(assist_import_year) >= 0))){
+		throw 'ASSIST_IMPORT_YEAR not valid';
+	}
+}
 
 // Live Reload
 require('electron-reload')(__dirname, {

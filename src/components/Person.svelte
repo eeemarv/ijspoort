@@ -11,16 +11,13 @@
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonRegLog from './PersonRegLog.svelte';
+  import PersonMemberYear from './PersonMemberYear.svelte';
 
   ipcRenderer.on('xls.assist.import', (ev, file, year) => {
     xls_assist_import(file, year);
   });
 
   const dispatch = createEventDispatcher();
-
-  $: member_2021 = $person !== undefined
-    && $person.open_balance !== undefined
-    && !$person.open_balance.trim().startsWith('-');
 
   $: {
     if ($person === undefined){
@@ -140,25 +137,20 @@
       {/if}
 
       {#if $person.group}
-        <ListGroupItem active title="werkgroep" class=py-2>
+        <ListGroupItem title="werkgroep" class="py-2 bg-info">
           {$person.group}
         </ListGroupItem>
       {/if}
 
       {#if $person.team}
-        <ListGroupItem active title="ploeg" class=py-2>
+        <ListGroupItem title="ploeg" class="py-2 bg-primary">
           {$person.team}
         </ListGroupItem>
       {/if}
 
     </ListGroup>
     <CardFooter>
-      <Button title="lidjaar OK" color=success class=mr-3>
-        2020
-      </Button>
-      <Button title="lidjaar{ member_2021 ? ' OK' : ''}" color={member_2021 ? 'success' : 'dark'}>
-        2021
-      </Button>
+      <PersonMemberYear />
     </CardFooter>
   </Card>
 

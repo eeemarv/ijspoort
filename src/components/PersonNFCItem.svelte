@@ -1,11 +1,9 @@
 <script>
   import { ListGroupItem, Badge } from 'sveltestrap';
   import { nfc_uid } from './../services/store';
-import LocaleDateString from './LocaleDateString.svelte';
+  import LocaleDateString from './LocaleDateString.svelte';
 
   export let nfc;
-
-  let ts_date = new Date(nfc.ts_epoch);
 
 </script>
 
