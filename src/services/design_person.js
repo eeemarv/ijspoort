@@ -18,23 +18,6 @@ const design_person_search_doc = {
                 });
             }).toString(),
             reduce: '_count'
-        },
-        count_members_2020:{
-            map: ((doc) => {
-                if (doc._id.startsWith('n0')){
-                    emit(true);
-                }
-            }).toString(),
-            reduce: '_count'
-        },
-        count_members_2021:{
-            map: ((doc) => {
-                if (doc._id.startsWith('n0')
-                    && !doc.open_balance.trim().startsWith('-')){
-                    emit(true);
-                }
-            }).toString(),
-            reduce: '_count'
         }
     }
 };

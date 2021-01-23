@@ -46,13 +46,13 @@
         for (let y = year - years_short_list + 1; y <= year; y++){
             member_short_list = [...member_short_list, {
               year: y,
-              is_member: member_year_list.includes(y.toString())
+              is_member: member_year_list.includes(y)
             }];
         }
         for (y = year - years_long_list + 1; y <= year; y++){
             member_long_list = [...member_long_list, {
               year: y,
-              is_member: member_year_list.includes(y.toString())
+              is_member: member_year_list.includes(y)
             }];
         }
         let col_size = Math.ceil(member_long_list.length / 4);

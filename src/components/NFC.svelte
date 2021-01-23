@@ -6,7 +6,7 @@
     import { Button } from 'sveltestrap';
     import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
     import { setTimeout } from 'timers';
-    import { db_nfc, db_person } from '../services/db';
+    import { db_member, db_nfc, db_person } from '../services/db';
     import { person, person_nfc_list } from './../services/store';
     import { nfc_uid, nfc_auto_reg } from './../services/store';
 
@@ -46,6 +46,9 @@
 
     ipcRenderer.on('nfc.on', (ev, card) => {
         $nfc_uid = card.uid;
+        let res_person = undefined;
+        let year_str = new Date().getFullYear().toString();
+
         db_nfc.get('uid_'+ card.uid).then((res) => {
             console.log(res);
             nfc_status = 'ok';
@@ -58,23 +61,31 @@
             throw err;
         }).then((res) => {
             return db_person.get(res);
+        }).catch((err) => {
+            console.log(err);
+            if (err.name === 'not_found'){
+                console.log('person linked to this nfc not found');
+                ipcRenderer.send('nfc.test_transport_key');
+                throw 'person was not found';
+            }
+            throw err;
         }).then((res) => {
-            let member_2021 = res.open_balance !== undefined
-                && !res.open_balance.trim().startsWith('-');
-
-            if ($nfc_auto_reg && member_2021){
+            res_person = res;
+            let member_id = year_str + '_' + res._id;
+            return db_member.get(member_id);
+        }).then((res) => {
+            if ($nfc_auto_reg){
                 console.log('register_by_nfc event');
                 dispatch('register_by_nfc', {
-                    person: res
+                    person: res_person
                 });
                 return;
             }
-            $person = res;
+            $person = res_person;
         }).catch((err) => {
-            console.log(err);
-            console.log('person linked to this nfc not found');
+            connsole.log(err);
             if (err.name === 'not_found'){
-                ipcRenderer.send('nfc.test_transport_key');
+                $person = res_person;
             }
         });
 

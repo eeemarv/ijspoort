@@ -13,8 +13,8 @@
   import PersonRegLog from './PersonRegLog.svelte';
   import PersonMemberYear from './PersonMemberYear.svelte';
 
-  ipcRenderer.on('xls.assist.import', (ev, file, year) => {
-    xls_assist_import(file, year);
+  ipcRenderer.on('xls.assist.import', (ev, file, year, only_member_on_even_balance) => {
+    xls_assist_import(file, year, only_member_on_even_balance);
   });
 
   const dispatch = createEventDispatcher();

@@ -92,7 +92,7 @@ const assist_member_map = {
     }
 };
 
-const xls_assist_import = (file, year) => {
+const xls_assist_import = (file, year, only_member_on_even_balance) => {
     const workbook = XLSX.readFile(file);
     const sheet_name_list = workbook.SheetNames;
     const json_sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {defval: '', raw: false});
@@ -113,13 +113,18 @@ const xls_assist_import = (file, year) => {
                 }
             }
 
-            if (norm_key === 'openstaandsaldo'){
-                if (a_val.trim().startsWith('-')){
-                    remove_member = true;
-                } else {
-                    add_member = true;
+            if (only_member_on_even_balance){
+                if (norm_key === 'openstaandsaldo'){
+                    if (a_val.trim().startsWith('-')){
+                        remove_member = true;
+                    } else {
+                        add_member = true;
+                    }
                 }
+            } else {
+                add_member = true;
             }
+
         });
 
         person_id = 'n' + new_person.member_id.padStart(8, '0');

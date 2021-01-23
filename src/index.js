@@ -9,8 +9,10 @@ const cron = require('node-cron');
 let win;
 let debug_enabled = true;
 let assist_import_enabled = true;
+let assist_only_member_on_even_balance = false;
 const env_debug = process.env?.DEBUG;
 const assist_import_year = process.env?.ASSIST_IMPORT_YEAR;
+const env_assist_only_member_on_even_balance = process.env?.ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE;
 const feed_A = process.env?.FEED_A;
 const feed_B = process.env?.FEED_B;
 const read_a_write_b_access = '78778800';
@@ -32,6 +34,10 @@ if (typeof assist_import_year === 'undefined' || !assist_import_year || assist_i
 if (assist_import_enabled){
 	if (!(Number.isInteger(Number(assist_import_year)) && (Number(assist_import_year) >= 0))){
 		throw 'ASSIST_IMPORT_YEAR not valid';
+	}
+	if (typeof env_assist_only_member_on_even_balance !== 'undefined'
+		&& env_assist_only_member_on_even_balance === '1'){
+			assist_only_member_on_even_balance = true;
 	}
 }
 
@@ -376,7 +382,7 @@ const import_assist_xlsx = () => {
     if (!files){
         return;
     }
-	win.webContents.send('xls.assist.import', files[0], assist_import_year);
+	win.webContents.send('xls.assist.import', files[0], assist_import_year, assist_only_member_on_even_balance);
 };
 
 const menu = new Menu();
