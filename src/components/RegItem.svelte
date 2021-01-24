@@ -6,6 +6,7 @@
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
   import RegTimeTag from './RegTimeTag.svelte';
+import PersonPhone from './PersonPhone.svelte';
 
   export let reg_index;
   export let reg;
@@ -111,21 +112,7 @@
       </div>
       <div class="d-flex w-100 justify-content-between mb-0">
         <div>
-          {#if person_data.phone_mobile }
-            <span title="gsm">
-              {person_data.phone_mobile}
-            </span>
-          {:else if person_data.phone_home}
-            <span title="telefoon thuis">
-              {person_data.phone_home}
-            </span>
-          {:else if person_data.phone_work}
-            <span title="telefoon werk">
-              {person_data.phone_work}
-            </span>
-          {:else}
-            <span>&nbsp;</span>
-          {/if}
+          <PersonPhone person={person_data} />
         </div>
       </div>
     </dvi>
