@@ -6,7 +6,7 @@
     import { Button } from 'sveltestrap';
     import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
     import { setTimeout } from 'timers';
-    import { db_member, db_nfc, db_person } from '../services/db';
+    import { db_nfc, db_person } from '../services/db';
     import { person, person_nfc_list } from './../services/store';
     import { nfc_uid, nfc_auto_reg } from './../services/store';
 
@@ -46,8 +46,7 @@
 
     ipcRenderer.on('nfc.on', (ev, card) => {
         $nfc_uid = card.uid;
-        let res_person = undefined;
-        let year_str = new Date().getFullYear().toString();
+        let year_key = 'y' + new Date().getFullYear().toString();
 
         db_nfc.get('uid_'+ card.uid).then((res) => {
             console.log(res);
@@ -70,22 +69,22 @@
             }
             throw err;
         }).then((res) => {
-            res_person = res;
-            let member_id = year_str + '_' + res._id;
-            return db_member.get(member_id);
-        }).then((res) => {
-            if ($nfc_auto_reg){
+            let is_member = false;
+            if (res.member_year !== undefined && res.member_year[year_key]){
+                is_member = true;
+            }
+            if ($nfc_auto_reg && is_member){
                 console.log('register_by_nfc event');
                 dispatch('register_by_nfc', {
-                    person: res_person
+                    person: res
                 });
                 return;
             }
-            $person = res_person;
+            $person = res;
         }).catch((err) => {
             connsole.log(err);
             if (err.name === 'not_found'){
-                $person = res_person;
+                $person = res;
             }
         });
 

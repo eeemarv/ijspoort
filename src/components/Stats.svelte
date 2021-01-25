@@ -1,14 +1,10 @@
 <script>
     import { Button, Card, CardGroup, Progress } from 'sveltestrap';
     import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
-    import { Badge } from 'sveltestrap';
-    import { ListGroup, ListGroupItem } from 'sveltestrap';
-    import { db_member } from '../services/db';
-    import { db_remote_person } from '../services/db';
+    import { db_person, db_remote_person } from '../services/db';
     import { db_remote_reg } from '../services/db';
     import { db_remote_nfc } from '../services/db';
     import { put_design_person_search } from './../services/design_person';
-    import { put_design_member_search } from './../services/design_member';
     import { put_design_reg_search } from './../services/design_reg';
     import { put_design_nfc_search } from './../services/design_nfc';
     import { put_design_eid_search } from './../services/design_eid';
@@ -25,7 +21,6 @@
 
     onMount(() => {
         put_design_person_search();
-        put_design_member_search();
         put_design_reg_search();
         put_design_nfc_search();
         put_design_eid_search();
@@ -48,7 +43,7 @@
     });
 
     const update_member_count = () => {
-        db_member.query('search/count_by_year', {
+        db_person.query('search/count_by_member_year', {
             reduce: true,
             group: true
         }).then((res) => {
@@ -66,7 +61,7 @@
 
     update_member_count();
 
-    db_member.changes({
+    db_person.changes({
         since: 'now',
         live: true
     }).on('change', (change) => {

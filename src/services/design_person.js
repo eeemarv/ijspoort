@@ -18,6 +18,17 @@ const design_person_search_doc = {
                 });
             }).toString(),
             reduce: '_count'
+        },
+        count_by_member_year: {
+            map: ((doc) => {
+                if (doc.member_year !== undefined)
+                {
+                    Object.keys(doc.member_year).forEach((yk) => {
+                        emit(yk.substring(1));
+                    });
+                }
+            }).toString(),
+            reduce: '_count'
         }
     }
 };

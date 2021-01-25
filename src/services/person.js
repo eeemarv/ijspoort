@@ -1,4 +1,4 @@
-import { db_person, db_member } from './db';
+import { db_person } from './db';
 import lodash from 'lodash';
 
 const XLSX = require('xlsx');
