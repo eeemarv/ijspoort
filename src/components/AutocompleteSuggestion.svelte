@@ -1,9 +1,11 @@
 <script>
+  import { Badge } from 'sveltestrap';
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonPhone from './PersonPhone.svelte';
 
   export let person;
+  const year_str = new Date().getFullYear().toString();
 
 </script>
 
@@ -13,6 +15,12 @@
             <PersonMemberId member_id={person.member_id} />
             &nbsp;
             <PersonName {person} />
+            {#if person.member_year && person.member_year['y' + year_str]}
+                &nbsp;
+                <Badge color=success title="lid in {year_str}">
+                    {year_str}
+                </Badge>
+            {/if}
         </div>
         <div>
             <PersonPhone {person} />
