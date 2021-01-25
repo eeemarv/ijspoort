@@ -92,16 +92,19 @@ const assist_member_map = {
     }
 };
 
-const xls_assist_import = (file, year, only_member_on_even_balance) => {
+const xls_assist_import = (file, year_str, only_member_on_even_balance) => {
+    const year_key = 'y' + year_str;
     const workbook = XLSX.readFile(file);
     const sheet_name_list = workbook.SheetNames;
     const json_sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {defval: '', raw: false});
 
     json_sheet.forEach((a_per) => {
-        let person_id;
-        let new_person = {};
-        let remove_member = false;
-        let add_member = false;
+        let new_person = {
+            member_year: {}
+        };
+        let remove_member_year = false;
+        let add_member_year = false;
+
         Object.keys(a_per).forEach((a_per_key) => {
             let norm_key = a_per_key.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
             let a_val = a_per[a_per_key];
@@ -116,19 +119,21 @@ const xls_assist_import = (file, year, only_member_on_even_balance) => {
             if (only_member_on_even_balance){
                 if (norm_key === 'openstaandsaldo'){
                     if (a_val.trim().startsWith('-')){
-                        remove_member = true;
+                        remove_member_year = true;
                     } else {
-                        add_member = true;
+                        add_member_year = true;
                     }
                 }
             } else {
-                add_member = true;
+                add_member_year = true;
             }
-
         });
 
-        person_id = 'n' + new_person.member_id.padStart(8, '0');
-        new_person._id = person_id;
+        if (add_member_year){
+            new_person.member_year[year_key] = true;
+        }
+
+        new_person._id = 'n' + new_person.member_id.padStart(8, '0');
 
         db_person.get(new_person._id).catch((err) => {
             if (err.name == 'not_found'){
@@ -141,6 +146,17 @@ const xls_assist_import = (file, year, only_member_on_even_balance) => {
             }
             let compare_person = { ...res};
             delete compare_person._rev;
+
+            if (compare_person.member_year){
+                new_person.member_year = {...compare_person.member_year};
+                if (add_member_year){
+                    new_person.member_year[year_key] = true;
+                }
+                if (remove_member_year){
+                    delete new_person.member_year[year_key];
+                }
+            }
+
             if (lodash.isEqual(compare_person, new_person)){
                 throw 'no_change for ' + res._id;
             }
@@ -150,45 +166,6 @@ const xls_assist_import = (file, year, only_member_on_even_balance) => {
             return db_person.put(res);
         }).then((res) => {
             console.log('new updated', res);
-        }).catch((err) => {
-            console.log(err);
-        });
-
-        let new_member = {
-            _id: year + '_' + person_id,
-            person_id: person_id,
-            year: parseInt(year)
-        };
-
-        db_member.get(new_member._id).catch((err) => {
-            if (err.name == 'not_found'){
-                return 'not_found';
-            }
-            throw err;
-        }).then((res) => {
-            if (remove_member && res === 'not_found'){
-                return 'not found: ' + new_member._id + ', not removed';
-            }
-            if (remove_member){
-                return db_member.remove(res);
-            }
-            if (add_member){
-                if (res === 'not_found'){
-                    console.log('db_member new put');
-                    return db_member.put(new_member);
-                }
-                let compare_member = { ...res};
-                delete compare_member._rev;
-                if (lodash.isEqual(compare_member, new_member)){
-                    throw 'db_member no_change for ' + res._id;
-                }
-                new_member._rev = res._rev;
-                console.log('db_member update put');
-                return db_member.put(new_member);
-            }
-            return 'db_member no info --?--';
-        }).then((res) => {
-            console.log('db_member ', res);
         }).catch((err) => {
             console.log(err);
         });

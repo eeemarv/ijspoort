@@ -6,7 +6,7 @@
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
   import RegTimeTag from './RegTimeTag.svelte';
-import PersonPhone from './PersonPhone.svelte';
+  import PersonPhone from './PersonPhone.svelte';
 
   export let reg_index;
   export let reg;

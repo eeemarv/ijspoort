@@ -13,7 +13,7 @@
         }
         db_person.query('search/count_by_text', {
             startkey: search_text,
-            endkey:search_text + '\uffff',
+            endkey: search_text + '\uffff',
             limit: 30,
             include_docs: true,
             reduce: false

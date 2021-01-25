@@ -1,5 +1,5 @@
 <script>
-  import { db_member } from '../services/db';
+  import { db_person } from '../services/db';
   import { person } from '../services/store';
   import { Button } from 'sveltestrap';
   import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
@@ -13,66 +13,50 @@
     open = !open;
   };
 
-  let member_year_list = [];
   let year = new Date().getFullYear();
   let member_short_list = [];
   let member_long_list = [];
   let long_list_cols = [];
-  let years_short_list = 5;
-  let years_long_list = 9;
+  const years_short_list = 5;
+  const years_long_list = 9;
 
-  const update_member_year_list = (person_id) => {
+  const update_member_year_list = () => {
     year = new Date().getFullYear();
     member_year_list = [];
     member_short_list = [];
     member_long_list = [];
     long_list_cols = [];
-    if (person_id === undefined){
+    if ($person === undefined){
       return;
     }
-    db_member.query('search/count_by_person_id', {
-        key: person_id,
-        include_docs: true,
-        reduce: false
-    }).then((res) => {
-        console.log('MEMBERS ---');
-        console.log(res);
-        res.rows.forEach((v) => {
-          member_year_list.push(v.doc.year);
-        });
-        member_year_list.sort((a, b) => {
-          return a < b ? -1 : 1;
-        });
-        for (let y = year - years_short_list + 1; y <= year; y++){
-            member_short_list = [...member_short_list, {
-              year: y,
-              is_member: member_year_list.includes(y)
-            }];
-        }
-        for (y = year - years_long_list + 1; y <= year; y++){
-            member_long_list = [...member_long_list, {
-              year: y,
-              is_member: member_year_list.includes(y)
-            }];
-        }
-        let col_size = Math.ceil(member_long_list.length / 4);
-        while (member_long_list.length){
-            long_list_cols = [...long_list_cols, member_long_list.splice(0, col_size)];
-        }
-    }).catch((err) => {
-        console.log(err);
-    });
+    for (let y = year - years_short_list + 1; y <= year; y++){
+        member_short_list = [...member_short_list, {
+          year: y,
+          is_member: $person.member_year && $person.member_year['y' + y]
+        }];
+    }
+    for (y = year - years_long_list + 1; y <= year; y++){
+        member_long_list = [...member_long_list, {
+          year: y,
+          is_member: $person.member_year && $person.member_year['y' + y]
+        }];
+    }
+    let col_size = Math.ceil(member_long_list.length / 4);
+    while (member_long_list.length){
+        long_list_cols = [...long_list_cols, member_long_list.splice(0, col_size)];
+    }
   };
 
-  $: update_member_year_list($person?._id);
+  $: {
+    $person;
+    update_member_year_list();
+  }
 
-  db_member.changes({
+  db_person.changes({
       since: 'now',
       live: true
   }).on('change', (change) => {
-      console.log('member year changes (PersonMemberYear component)');
-      console.log(change);
-      update_member_year_list($person?._id);
+      update_member_year_list();
   }).on('error', (err) => {
       console.log(err);
   });

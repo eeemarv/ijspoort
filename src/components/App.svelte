@@ -5,6 +5,6 @@
 
 <Container fluid=true>
     <Row class=vh-100>
-        <MainPage/>
+        <MainPage />
     </Row>
 </Container>
