@@ -1,6 +1,6 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { Card, CardHeader, CardBody, CardFooter, CardGroup } from 'sveltestrap';
+  import { Card, CardHeader, CardBody, CardFooter, CardGroup, Popover, Tooltip } from 'sveltestrap';
   import { createEventDispatcher } from 'svelte';
   import { Button } from 'sveltestrap';
   import { ListGroup, ListGroupItem } from 'sveltestrap';
@@ -12,6 +12,7 @@
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonRegLog from './PersonRegLog.svelte';
   import PersonMemberYear from './PersonMemberYear.svelte';
+  import PersonSearchSimular from './PersonSearchSimular.svelte';
 
   ipcRenderer.on('xls.assist.import', (ev, file, year, only_member_on_even_balance) => {
     xls_assist_import(file, year, only_member_on_even_balance);
@@ -53,12 +54,16 @@
         {/if}
       </ListGroupItem>
 
-      <ListGroupItem class=py-2>
-        <PersonName person={$person} />
+      <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+          <div>
+            <PersonName person={$person} />
+          </div>
+          <PersonSearchSimular type=name />
       </ListGroupItem>
 
       {#if $person.gender || $person.date_of_birth}
-        <ListGroupItem class=py-2>
+        <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+          <div>
           {#if $person.gender === 'm'}
             <Badge color=info title=man>M</Badge>
             &nbsp;
@@ -70,27 +75,51 @@
           {#if $person.date_of_birth}
             <span title="geboortedatum">{$person.date_of_birth}</span>
           {/if}
+          </div>
+          <PersonSearchSimular type=date_of_birth />
         </ListGroupItem>
       {/if}
 
       {#if $person.phone_mobile}
         <ListGroupItem class="d-flex w-100 justify-content-between py-2">
-          <div title="gsm">{$person.phone_mobile}</div>
-          <idv>
+          <div title="gsm">
+            {$person.phone_mobile}
+            &nbsp;
             <Badge color=primary>
               GSM
             </Badge>
-          </idv>
+          </div>
+
+          <div>
+            <PersonSearchSimular type=phone_mobile />
+          </div>
         </ListGroupItem>
       {/if}
 
       {#if $person.phone_home}
         <ListGroupItem class="d-flex w-100 justify-content-between py-2">
-          <div title="telefoon thuis">{$person.phone_home}</div>
-          <idv>
+          <div title="telefoon thuis">
+            {$person.phone_home}
+            &nbsp;
             <Badge color=primary>
               Tel.thuis
             </Badge>
+          </div>
+          <div>
+            <PersonSearchSimular type=phone_home />
+          </div>
+        </ListGroupItem>
+      {/if}
+
+      {#if $person.phone_work}
+        <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+          <div title="telefoon werk">
+            {$person.phone_work}
+            &nbsp;
+            <Button color=primary>Tel.werk</Button>
+          </div>
+          <idv>
+            <PersonSearchSimular type=phone_work />
           </idv>
         </ListGroupItem>
       {/if}
@@ -98,13 +127,13 @@
       {#if $person.email}
         <ListGroupItem class="d-flex w-100 justify-content-between py-2">
           <div title="email">{$person.email}</div>
-          <idv>
-          </idv>
+          <PersonSearchSimular type=email />
         </ListGroupItem>
       {/if}
 
       {#if $person.address || $person.address_zipcode || $person.address_municipality}
-        <ListGroupItem class=py-2>
+        <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+          <div>
           {#if $person.address}
             <div title="straat en nummer">
               {$person.address}
@@ -124,15 +153,8 @@
               {/if}
             </div>
           {/if}
-        </ListGroupItem>
-      {/if}
-
-      {#if $person.phone_work}
-        <ListGroupItem class="d-flex w-100 justify-content-between py-2">
-          <div title="telefoon werk">{$person.phone_work}</div>
-          <idv>
-            <Button color=primary>Tel.werk</Button>
-          </idv>
+          </div>
+          <PersonSearchSimular type=address />
         </ListGroupItem>
       {/if}
 
@@ -162,31 +184,6 @@
     <CardBody>
       <PersonRegLog />
     </CardBody>
-    <!--
-    <ListGroup>
-      <ListGroupItem class="bg-danger d-flex w-100 justify-content-between">
-        <div>
-
-        </div>
-        <div>
-          <Button color=danger class="border border-white" title="Verwijder dit commentaar">
-            Verw
-          </Button>
-        </div>
-      </ListGroupItem>
-      <ListGroupItem class="d-flex w-100 justify-content-end">
-        <Button color=dark>
-          Toon alle (6)
-        </Button>
-        <Button color=primary on:click={handleAddComment}>
-          Opmerking toevoegen
-        </Button>
-      </ListGroupItem>
-    </ListGroup>
-    <CardBody>
-      Data
-    </CardBody>
-    -->
     <div class="card-footer d-flex w-100 justify-content-end">
       <Button color=dark class=ml-3 on:click={() => $person = undefined}>
         Sluiten

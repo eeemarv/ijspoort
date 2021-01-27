@@ -76,10 +76,12 @@
     "sveltestrap": "^3.9.5"
   },
   "dependencies": {
+    "add": "^2.0.6",
     "autocompleter": "^6.0.3",
     "dotenv": "^8.2.0",
     "electron-reload": "^1.5.0",
     "electron-squirrel-startup": "^1.0.0",
+    "git": "^0.1.5",
     "lodash": "^4.17.20",
     "nfc-pcsc": "^0.8.0",
     "node-cron": "^2.0.3",
