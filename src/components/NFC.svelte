@@ -2,13 +2,15 @@
     const env = window.require('electron').remote.process.env;
     const { ipcRenderer } = window.require('electron');
     import { createEventDispatcher, onMount } from 'svelte';
-    import { Badge, Card, CardFooter, CardText, CustomInput, Progress } from 'sveltestrap';
+    import { Card, CardFooter, CardText, Progress } from 'sveltestrap';
     import { Button } from 'sveltestrap';
     import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
     import { setTimeout } from 'timers';
     import { db_nfc, db_person } from '../services/db';
-    import { person, person_nfc_list } from './../services/store';
+    import { person } from './../services/store';
     import { nfc_uid, nfc_auto_reg } from './../services/store';
+    import NFCActivate from './NFCActivate.svelte';
+    import NFCCount from './NFCCount.svelte';
 
     const nfc_reset_writable_enabled = env.NFC_RESET_WRITABLE_ENABLED === '1';
     const nfc_reset_enabled = env.NFC_RESET_ENABLED === '1';
@@ -18,7 +20,6 @@
     let dev_on = false;
     let dev_error = false;
     let nfc_status = 'off';
-    let nfc_count_total = 0;
 
     let modal_open = false;
     let modal_title = '';
@@ -142,37 +143,6 @@
         test_modal_message = 'Lees test niet geslaagd';
     });
 
-    /** INIT ***/
-    const handle_activate_nfc = () => {
-        console.log('handle_activate_nfc');
-        modal_open = true;
-        modal_progress = 0;
-        modal_title = 'Activeer NFC tag';
-        modal_message = 'Schrijf sleutels';
-        console.log('send nfc.init');
-        ipcRenderer.send('nfc.init', $person);
-    };
-
-    ipcRenderer.on('nfc.init.ok', (ev, card) => {
-        add_nfc();
-        modal_open = true;
-        modal_title = 'Activeer NFC tag';
-        modal_message = 'Iinitialisatie ok.';
-        modal_progress = 100;
-        setTimeout(() => {
-            modal_open = false;
-        }, 300);
-    });
-    ipcRenderer.on('nfc.init.fail', (ev, card) => {
-        modal_open = true;
-        modal_title = 'Activeer NFC tag';
-        modal_message = 'Initialisering niet gelukt';
-        modal_progress = 20;
-        setTimeout(() => {
-            modal_open = false;
-        }, 5000);
-    });
-
     /**** RESET ****/
 
     const handle_nfc_reset = () => {
@@ -229,57 +199,6 @@
         $nfc_uid = undefined;
         nfc_status = 'off';
     });
-
-    const add_nfc = () => {
-        let now = new Date();
-        let nfc = {
-            _id: 'uid_' + $nfc_uid,
-            ts_epoch: now.getTime(),
-            uid: $nfc_uid,
-            person_id: $person._id,
-        };
-
-        db_nfc.put(nfc).then((res) => {
-            console.log('add_nfc');
-            console.log(res);
-            nfc_status = 'ok';
-        }).catch((err) => {
-            console.log(err);
-        });
-    };
-
-    const update_nfc_count_total = () => {
-        db_nfc.query('search/count_total', {
-            key: true,
-            reduce: true,
-            group: true
-        }).then((res) => {
-            console.log(res);
-            if (res.rows.length > 0){
-                nfc_count_total = res.rows[0].value;
-            } else {
-                nfc_count_total = 0;
-            }
-        }).catch((err) => {
-            console.log(err);
-        });
-    };
-
-    onMount(() => {
-        update_nfc_count_total();
-    });
-
-    db_nfc.changes({
-        since: 'now',
-        live: true
-    }).on('change', (change) => {
-        console.log('nfc changes (NFC component)');
-        console.log(change);
-        update_nfc_count_total();
-    }).on('error', (err) => {
-        console.log(err);
-    });
-
 </script>
 
 <Modal isOpen={modal_open} toggle={modal_toggle}>
@@ -307,9 +226,7 @@
         {dev_error ? ' fout apparaat' : ''}
         </div>
         <div>
-            <Badge color=info title="Totaal aantaal NFC-tags geregistreerd">
-                {nfc_count_total}
-            </Badge>
+            <NFCCount />
         </div>
     </div>
     <div class="card-body py-2"
@@ -335,16 +252,7 @@
         {/if}
     </div>
     <CardFooter class="d-flex w-100 justify-content-end">
-        <Button
-            color={$person_nfc_list.length > 0 ? 'danger' : 'success'}
-            title="Activeer deze NFC-tag voor deze persoon"
-            disabled={!can_activate}
-            on:click={handle_activate_nfc}>
-            Activeer
-            {#if $person_nfc_list.length > 0}
-                extra tag
-            {/if}
-        </Button>
+        <NFCActivate {nfc_status} />
     </CardFooter>
     <CardFooter>
         <div class="custom-control custom-checkbox">
