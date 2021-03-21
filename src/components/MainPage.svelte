@@ -1,5 +1,5 @@
 <script>
-  import { Button, Col, Popover, Tooltip } from 'sveltestrap';
+  import { Col } from 'sveltestrap';
   import ManualInput from './ManualInput.svelte';
   import Person from './Person.svelte';
   import RegList from './RegList.svelte';

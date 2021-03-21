@@ -11,6 +11,7 @@ let debug_enabled = true;
 let assist_import_enabled = true;
 let assist_only_member_on_even_balance = false;
 const env_debug = process.env?.DEBUG;
+const gate_modus_enabled = process.env?.GATE_MODUS === '1';
 const assist_import_year = process.env?.ASSIST_IMPORT_YEAR;
 const env_assist_only_member_on_even_balance = process.env?.ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE;
 const feed_A = process.env?.FEED_A;
@@ -66,9 +67,12 @@ const createWindow = () => {
 	  enableRemoteModule: true
     }
   });
-
   win.setMinimumSize(1400, 768);
   win.maximize();
+
+  if (gate_modus_enabled){
+	win.setFullScreen(true);
+  }
 
   win.loadFile(path.join(__dirname, '../public/index.html'))
   .then(() => {

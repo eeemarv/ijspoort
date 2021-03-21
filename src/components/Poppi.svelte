@@ -3,10 +3,10 @@
 </script>
 
 <div>
-    <Button id=hi color=info>
+    <Button id="hi" color="info">
     Hi Poppi!
     </Button>
-    <Popover target=hi placement=bottom>
+    <Popover target="hi" placement="bottom">
         Hi Poppi!
     </Popover>
 </div>
