@@ -10,15 +10,14 @@
     import { person } from './../services/store';
     import { nfc_uid, nfc_auto_reg } from './../services/store';
     import NFCActivate from './NFCActivate.svelte';
-    import NFCCount from './NFCCount.svelte';
+    import NFCDevice from './NFCDevice.svelte';
+    import NFCReadTest from './NFCReadTest.svelte';
 
     const nfc_reset_writable_enabled = env.NFC_RESET_WRITABLE_ENABLED === '1';
     const nfc_reset_enabled = env.NFC_RESET_ENABLED === '1';
 
     const dispatch = createEventDispatcher();
 
-    let dev_on = false;
-    let dev_error = false;
     let nfc_status = 'off';
 
     let modal_open = false;
@@ -29,21 +28,6 @@
         modal_open = !modal_open;
         modal_pogress = 0;
     };
-
-    $: can_activate = $person && $nfc_uid && nfc_status === 'transport_key';
-
-    ipcRenderer.on('dev.nfc.on', (ev) => {
-        dev_on = true;
-    });
-    ipcRenderer.on('dev.nfc.off', (ev) => {
-        dev_on = false;
-    });
-    ipcRenderer.on('dev.nfc.error', (ev) => {
-        dev_error = true;
-        setTimeout(() => {
-            dev_error = false;
-        }, 5000);
-    });
 
     ipcRenderer.on('nfc.on', (ev, card) => {
         $nfc_uid = card.uid;
@@ -122,27 +106,6 @@
         nfc_status = 'not_writable';
     });
 
-    /*** READ TEST *****/
-    const handle_nfc_read = (ev) => {
-        console.log('handle_nfc_read');
-        modal_open = true;
-        modal_progress = 0;
-        modal_title = 'Lees tag';
-        ipcRenderer.send('nfc.read');
-    };
-    ipcRenderer.on('nfc.read.ok', (event, card, date_of_birth, member_id) => {
-        console.log('nfc.read.ok');
-        console.log('date_of_birth', date_of_birth);
-        console.log('member_id', member_id);
-        modal_open = true;
-        modal_progress = 100;
-        modal_title = 'Lees tag';
-        modal_message = date_of_birth + ' ' + member_id;
-    });
-    ipcRenderer.on('nfc.read.fail', (event, card, str) => {
-        test_modal_message = 'Lees test niet geslaagd';
-    });
-
     /**** RESET ****/
 
     const handle_nfc_reset = () => {
@@ -217,18 +180,7 @@
 </Modal>
 
 <Card class=m-3>
-    <div class="card-header py-2 d-flex w-100 justify-content-between"
-        class:bg-success={dev_on && !dev_error}
-        class:bg-danger={dev_error}
-    >
-        <div title="NFC/RFiD tags">
-        NFC
-        {dev_error ? ' fout apparaat' : ''}
-        </div>
-        <div>
-            <NFCCount />
-        </div>
-    </div>
+    <NFCDevice />
     <div class="card-body py-2"
         class:bg-success={nfc_status === 'ok'}
         class:bg-warning={nfc_status === 'writable'}
@@ -265,9 +217,7 @@
     {#if !$nfc_auto_reg  && $nfc_uid && (nfc_status === 'writable' || nfc_status === 'ok')}
     <CardFooter>
         <div class="d-flex w-100 justify-content-between">
-            <Button color=info on:click={handle_nfc_read}>
-                Lees
-            </Button>
+            <NFCReadTest />
             {#if nfc_reset_enabled}
                 {#if nfc_status === 'ok' || (nfc_status === 'writable' && nfc_reset_writable_enabled)}
                 <Button color=danger on:click={handle_nfc_reset}>
