@@ -14,8 +14,11 @@
   import PersonMemberYear from './PersonMemberYear.svelte';
   import PersonSearchSimular from './PersonSearchSimular.svelte';
 
-  ipcRenderer.on('xls.assist.import', (ev, file, year, only_member_on_even_balance) => {
-    xls_assist_import(file, year, only_member_on_even_balance);
+  ipcRenderer.on('xls.assist.import', (ev, file, assist_import) => {
+    if (!assist_import.enabled){
+      return;
+    }
+    xls_assist_import(file, assist_import);
   });
 
   const dispatch = createEventDispatcher();
@@ -31,10 +34,6 @@
   const handleRegisterByManual = (() => {
     dispatch('register_by_manual');
   });
-  const handleAddComment = ((event) => {
-    dispatch('add_comment', {});
-  });
-
 </script>
 
 {#if $person}

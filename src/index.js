@@ -6,14 +6,20 @@ const EidReader = require('./services/eid_reader');
 const path = require('path');
 const cron = require('node-cron');
 
+let assist_import = {
+	enabled: false,
+	year: '',
+	only_member_on_even_balance: false,
+	remove_non_members: false
+};
+const env_assist_import_year = process.env?.ASSIST_IMPORT_YEAR;
+const env_assist_only_member_on_even_balance = process.env?.ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE;
+const env_assist_remove_non_members = process.env?.ASSIST_REMOVE_NON_MEMBERS;
+
 let win;
 let debug_enabled = true;
-let assist_import_enabled = true;
-let assist_only_member_on_even_balance = false;
 const env_debug = process.env?.DEBUG;
 const gate_modus_enabled = process.env?.GATE_MODUS === '1';
-const assist_import_year = process.env?.ASSIST_IMPORT_YEAR;
-const env_assist_only_member_on_even_balance = process.env?.ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE;
 const feed_A = process.env?.FEED_A;
 const feed_B = process.env?.FEED_B;
 const read_a_write_b_access = '78778800';
@@ -29,16 +35,27 @@ if (typeof feed_B === 'undefined' || !feed_B){
 if (typeof env_debug === 'undefined' || !env_debug || env_debug === '0'){
 	debug_enabled = false;
 }
-if (typeof assist_import_year === 'undefined' || !assist_import_year || assist_import_year === '0'){
-	assist_import_enabled = false;
+
+if (typeof env_assist_import_year !== 'undefined'
+	&& env_assist_import_year
+	&& env_assist_import_year !== '0'){
+	assist_import.enabled = true;
 }
-if (assist_import_enabled){
-	if (!(Number.isInteger(Number(assist_import_year)) && (Number(assist_import_year) >= 0))){
+if (assist_import.enabled){
+	if (!(Number.isInteger(Number(env_assist_import_year)) && (Number(env_assist_import_year) >= 2000))){
 		throw 'ASSIST_IMPORT_YEAR not valid';
 	}
+
+	assist_import.year = env_assist_import_year;
+
 	if (typeof env_assist_only_member_on_even_balance !== 'undefined'
 		&& env_assist_only_member_on_even_balance === '1'){
-			assist_only_member_on_even_balance = true;
+			assist_import.only_member_on_even_balance = true;
+	}
+
+	if (typeof env_assist_remove_non_members !== 'undefined'
+		&& env_assist_remove_non_members === '1'){
+			assist_import.remove_non_members = true;
 	}
 }
 
@@ -378,20 +395,23 @@ app.on('activate', () => {
 });
 
 const import_assist_xlsx = () => {
+	if (!assist_import.enabled){
+		return;
+	}
 	const files = dialog.showOpenDialogSync(win, {
 		properties: ['openFile'],
         filters: {name: 'MS Excell', extensions: ['xls', 'xlsx']},
-        message: 'Import xlsx leden uit Assist, LIDJAAR ' + assist_import_year
+        message: 'Import xlsx leden uit Assist, LIDJAAR ' + assist_import.year
 	});
     if (!files){
         return;
     }
-	win.webContents.send('xls.assist.import', files[0], assist_import_year, assist_only_member_on_even_balance);
+	win.webContents.send('xls.assist.import', files[0], assist_import);
 };
 
 const menu = new Menu();
 
-if(assist_import_enabled){
+if(assist_import.enabled){
 	const importMenu = new Menu();
 	importMenu.append(new MenuItem({ label: 'leden Assist Xlsx', click: import_assist_xlsx }));
 	menu.append(new MenuItem({ label: 'Import', submenu: importMenu }));

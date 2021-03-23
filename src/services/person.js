@@ -80,20 +80,8 @@ const assist_person_map = {
     }
 };
 
-const assist_member_map = {
-    tebetalenlidgeld: {
-        key: "membership_fee_to_pay"
-    },
-    albetaaldlidgeld: {
-        key: "membership_fee_already_paid"
-    },
-    openstaandsaldo: {
-        key: "open_balance"
-    }
-};
-
-const xls_assist_import = (file, year_str, only_member_on_even_balance) => {
-    const year_key = 'y' + year_str;
+const xls_assist_import = (file, assist_import) => {
+    const year_key = 'y' + assist_import.year;
     const workbook = XLSX.readFile(file);
     const sheet_name_list = workbook.SheetNames;
     const json_sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {defval: '', raw: false});
@@ -116,7 +104,7 @@ const xls_assist_import = (file, year_str, only_member_on_even_balance) => {
                 }
             }
 
-            if (only_member_on_even_balance){
+            if (assist_import.only_member_on_even_balance){
                 if (norm_key === 'openstaandsaldo'){
                     if (a_val.trim().startsWith('-')){
                         remove_member_year = true;
