@@ -81,10 +81,12 @@ const assist_person_map = {
 };
 
 const xls_assist_import = (file, assist_import) => {
-    const year_key = 'y' + assist_import.year;
+    const year_key = 'y' + assist_import.year.substring(0);
     const workbook = XLSX.readFile(file);
     const sheet_name_list = workbook.SheetNames;
     const json_sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {defval: '', raw: false});
+    let omit_remove_member_year_ids = {};
+    let remove_member_year_docs = [];
 
     json_sheet.forEach((a_per) => {
         let new_person = {
@@ -145,6 +147,15 @@ const xls_assist_import = (file, assist_import) => {
                 }
             }
 
+            /*
+            Object.keys(new_person.member_year).forEach((ykk) => {
+                if (ykk === '2020' || ykk === '2021'){
+                    return;
+                }
+                delete new_person.member_year[ykk];
+            });
+            */
+
             if (lodash.isEqual(compare_person, new_person)){
                 throw 'no_change for ' + res._id;
             }
@@ -157,6 +168,43 @@ const xls_assist_import = (file, assist_import) => {
         }).catch((err) => {
             console.log(err);
         });
+
+        omit_remove_member_year_ids[new_person._id] = true;
+    });
+
+    if (!assist_import.remove_non_members){
+        return;
+    }
+
+    db_person.query('search/count_by_member_year', {
+        key: assist_import.year,
+        reduce: false,
+        include_docs: true
+    }).then((res) => {
+        console.log('ALL MEMBERS ' + assist_import.year);
+        console.log(res);
+        res.rows.forEach((v) => {
+            if (omit_remove_member_year_ids[v.id]){
+                return;
+            }
+            console.log('HHHHHH');
+            console.log(v);
+            let remove_member_year_doc = {...v.doc};
+            delete remove_member_year_doc.member_year[year_key];
+            remove_member_year_docs.push(remove_member_year_doc);
+        });
+        if (!remove_member_year_docs.length){
+            throw 'no member years to be removed. Ok.';
+        }
+        console.log('bulkDocs');
+        console.log(remove_member_year_docs);
+        return db_person.bulkDocs(remove_member_year_docs);
+    }).then((res) => {
+        console.log('RM member_year');
+        console.log(res);
+    }).catch((err) => {
+        console.log('ERR RM member_year');
+        console.log(err);
     });
 };
 
