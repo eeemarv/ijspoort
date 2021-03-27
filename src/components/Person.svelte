@@ -31,7 +31,7 @@
     }
   }
 
-  const handleRegisterByManual = (() => {
+  const handle_register_by_manual = (() => {
     dispatch('register_by_manual');
   });
 </script>
@@ -187,7 +187,7 @@
       <Button color=dark class=ml-3 on:click={() => $person = undefined}>
         Sluiten
       </Button>
-      <Button color=primary class=ml-3 on:click={handleRegisterByManual}>
+      <Button color=primary class=ml-3 on:click={handle_register_by_manual}>
         Registreer
       </Button>
     </div>
