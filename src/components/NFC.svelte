@@ -1,17 +1,15 @@
 <script>
     const env = window.require('electron').remote.process.env;
     const { ipcRenderer } = window.require('electron');
-    import { createEventDispatcher, onMount } from 'svelte';
-    import { Card, CardFooter, CardText, Progress } from 'sveltestrap';
-    import { Button } from 'sveltestrap';
-    import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
-    import { setTimeout } from 'timers';
+    import { createEventDispatcher } from 'svelte';
+    import { Card, CardFooter, CardText } from 'sveltestrap';
     import { db_nfc, db_person } from '../services/db';
     import { person } from './../services/store';
     import { nfc_uid, nfc_auto_reg } from './../services/store';
     import NFCActivate from './NFCActivate.svelte';
     import NFCDevice from './NFCDevice.svelte';
     import NFCReadTest from './NFCReadTest.svelte';
+    import NFCReset from './NFCReset.svelte';
 
     const nfc_reset_writable_enabled = env.NFC_RESET_WRITABLE_ENABLED === '1';
     const nfc_reset_enabled = env.NFC_RESET_ENABLED === '1';
@@ -19,15 +17,6 @@
     const dispatch = createEventDispatcher();
 
     let nfc_status = 'off';
-
-    let modal_open = false;
-    let modal_title = '';
-    let modal_message = '';
-    let modal_progress = 0;
-    const modal_toggle = () => {
-        modal_open = !modal_open;
-        modal_pogress = 0;
-    };
 
     ipcRenderer.on('nfc.on', (ev, card) => {
         $nfc_uid = card.uid;
@@ -67,7 +56,7 @@
             }
             $person = res;
         }).catch((err) => {
-            connsole.log(err);
+            console.log(err);
             if (err.name === 'not_found'){
                 $person = res;
             }
@@ -86,74 +75,29 @@
         console.log('nfc.test_transport_key.ok', card);
         nfc_status = 'transport_key';
     });
+
     ipcRenderer.on('nfc.test_transport_key.fail', (ev, card) => {
         console.log('nfc.test_transport_key.fail', card);
         console.log('test for B key, nfc.test_b_key');
         ipcRenderer.send('nfc.test_b_key');
     });
+
     ipcRenderer.on('nfc.test_a_key.ok', (ev) => {
         console.log('A key OK');
     });
+
     ipcRenderer.on('nfc.test_a_key.fail', (ev) => {
         console.log('A key FAIL');
     });
+
     ipcRenderer.on('nfc.test_b_key.ok', (ev) => {
         console.log('nfc.test_b_key.ok');
         nfc_status = 'writable';
     });
+
     ipcRenderer.on('nfc.test_b_key.fail', (ev) => {
         console.log('nfc.test_b_key.fail');
         nfc_status = 'not_writable';
-    });
-
-    /**** RESET ****/
-
-    const handle_nfc_reset = () => {
-        modal_title = 'Wis NFC tag';
-        modal_message = 'Wis uit database';
-        modal_progress = 0;
-        modal_open = true;
-        console.log($nfc_uid);
-        db_nfc.get('uid_' + $nfc_uid).catch((err) => {
-            console.log(err);
-            if (err.name === 'not_found'){
-                return 'not_found';
-            }
-            throw err;
-        }).then((doc) => {
-            if (doc === 'not_found'){
-                return 'not_from_database';
-            }
-            return db_nfc.remove(doc);
-        }).then((res) => {
-            console.log(res);
-            console.log('nfc.reset', $nfc_uid);
-            modal_progress = 50;
-            if (res === 'not_from_database'){
-                modal_message = 'Tag was niet aanwezig in database.';
-            } else {
-                modal_message = 'Tag gewist uit database';
-            }
-            ipcRenderer.send('nfc.reset');
-        }).catch((err) => {
-            console.log(err);
-            modal_title = 'Wis NFC tag';
-            modal_message = 'Fout: ' + err;
-            modal_progress = 0;
-            modal_open = true;
-        });
-    };
-    ipcRenderer.on('nfc.reset.ok', (ev, card) => {
-        modal_open = true;
-        modal_title = 'Wis NFC tag';
-        modal_message = 'Wissen voltooid, test transport sleutel';
-        modal_progress = 100;
-        setTimeout(() => {modal_open = false}, 1000);
-        ipcRenderer.send('nfc.test_transport_key');
-        console.log('nfc.reset.ok');
-    });
-    ipcRenderer.on('nfc.reset.fail', (ev, card) => {
-        console.log('nfc.reset.fail');
     });
 
     /*******/
@@ -163,21 +107,6 @@
         nfc_status = 'off';
     });
 </script>
-
-<Modal isOpen={modal_open} toggle={modal_toggle}>
-    <ModalHeader>
-        {modal_title}
-    </ModalHeader>
-    <ModalBody>
-        <Progress value={modal_progress} color=light/>
-        {modal_message}
-    </ModalBody>
-    <ModalFooter>
-        <Button color=secondary on:click={modal_toggle}>
-            Sluiten
-        </Button>
-    </ModalFooter>
-</Modal>
 
 <Card class=m-3>
     <NFCDevice />
@@ -204,7 +133,7 @@
         {/if}
     </div>
     <CardFooter class="d-flex w-100 justify-content-end">
-        <NFCActivate {nfc_status} />
+        <NFCActivate {nfc_status} on:activated={() => { nfc_status = 'ok'; }} />
     </CardFooter>
     <CardFooter>
         <div class="custom-control custom-checkbox">
@@ -220,9 +149,7 @@
             <NFCReadTest />
             {#if nfc_reset_enabled}
                 {#if nfc_status === 'ok' || (nfc_status === 'writable' && nfc_reset_writable_enabled)}
-                <Button color=danger on:click={handle_nfc_reset}>
-                    Wis
-                </Button>
+                    <NFCReset />
                 {/if}
             {/if}
         </div>

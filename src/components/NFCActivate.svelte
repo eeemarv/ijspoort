@@ -1,45 +1,46 @@
 <script>
     const { ipcRenderer } = window.require('electron');
+    import { createEventDispatcher, onMount } from 'svelte';
     import { Button } from 'sveltestrap';
-    import { setTimeout } from 'timers';
     import { db_nfc } from '../services/db';
     import { person, person_nfc_list } from './../services/store';
-    import { nfc_uid } from './../services/store';
-    import NfcModal from './NFCModal.svelte';
+    import { nfc_uid, modals } from './../services/store';
+    import NFCProgress from './NFCProgress.svelte';
 
     export let nfc_status;
 
-    let open = false;
-    let message = '';
-    let progress = 0;
+    const dispatch = createEventDispatcher();
+
+
+    onMount(() => {
+        modals.add('nfc_activate', NFCProgress);
+        modals.title('nfc_activate', 'Activeer NFC tag');
+    });
 
     $: can_activate = $person && $nfc_uid && nfc_status === 'transport_key';
 
     const handle_activate_nfc = () => {
         console.log('handle_activate_nfc');
-        open = true;
-        progress = 0;
-        message = 'Schrijf sleutels';
+        modals.open('nfc_activate');
+        modals.progress('nfc_activate', 0);
+        modals.message('nfc_activate', 'Schrijf sleutels');
         console.log('send nfc.init');
         ipcRenderer.send('nfc.init', $person);
     };
 
     ipcRenderer.on('nfc.init.ok', (ev, card) => {
         add_nfc();
-        open = true;
-        message = 'Iinitialisatie ok.';
-        progress = 100;
-        setTimeout(() => {
-            open = false;
-        }, 300);
+        modals.open('nfc_activate');
+        modals.progress('nfc_activate', 100);
+        modals.message('nfc_activate', 'Initialisatie ok.');
+        modals.close_after('nfc_activate', 1000);
     });
+
     ipcRenderer.on('nfc.init.fail', (ev, card) => {
-        open = true;
-        message = 'Initialisering niet gelukt';
-        progress = 20;
-        setTimeout(() => {
-            open = false;
-        }, 5000);
+        modals.open('nfc_activate');
+        modals.progress('nfc_activate', 20);
+        modals.message('nfc_activate', 'Initialisatie niet gelukt.');
+        modals.close_after('nfc_activate', 5000);
     });
 
     const add_nfc = () => {
@@ -54,16 +55,16 @@
         db_nfc.put(nfc).then((res) => {
             console.log('add_nfc');
             console.log(res);
-            nfc_status = 'ok';
+            dispatch('activated', {});
         }).catch((err) => {
             console.log(err);
         });
     };
 
 </script>
-
+<!--
 <NfcModal title="Activeer NFC tag" {progress} {open} {message} />
-
+-->
 <Button
     color={$person_nfc_list.length > 0 ? 'danger' : 'success'}
     title="Activeer deze NFC-tag voor deze persoon"

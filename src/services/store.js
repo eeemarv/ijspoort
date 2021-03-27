@@ -19,22 +19,49 @@ const create_sync_monitor = () => {
     }
 };
 
-const create_modal = () => {
-    const id = {};
-    const state = {
-        id: id,
-        open: false,
-        title: '',
-        size: 'md',
-        color: 'default',
-        message: '',
-        popover: -1
+const create_modals = () => {
+    const { subscribe, update } = writable({});
+    const set_prop = (id, name, value) => {
+        update((n) => {
+            n[id].props[name] = value;
+            return {...n};
+        });
     };
-    const { subscribe } = writeable();
     return {
-        toggle: (state) => {
-            state.open = !state.open;
-            return state;
+        subscribe,
+        add: (id, component) => {
+            update((n) => {
+                n[id] = {
+                    component: component,
+                    props: {
+                        open: false,
+                        title: '',
+                        message: '',
+                        progress: 0
+                    }
+                };
+                return {...n};
+            });
+        },
+        open: (id) => {
+            set_prop(id, 'open', true);
+        },
+        close: (id) => {
+            set_prop(id, 'open', false);
+        },
+        close_after: (id, sec) => {
+            setTimeout(() => {
+                set_prop(id, 'open', false)
+            }, sec);
+        },
+        progress: (id, value) => {
+            set_prop(id, 'progress', value);
+        },
+        message: (id, message) => {
+            set_prop(id, 'message', message);
+        },
+        title: (id, title) => {
+            set_prop(id, 'title', title);
         }
     }
 }
@@ -45,3 +72,4 @@ export const nfc_uid = writable();
 export const nfc_auto_reg = writable(true);
 export const eid = writable();
 export const sync_monitor = create_sync_monitor();
+export const modals = create_modals();
