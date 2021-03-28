@@ -11,7 +11,6 @@
 
     const dispatch = createEventDispatcher();
 
-
     onMount(() => {
         modals.add('nfc_activate', NFCProgress);
         modals.title('nfc_activate', 'Activeer NFC tag');
@@ -62,9 +61,7 @@
     };
 
 </script>
-<!--
-<NfcModal title="Activeer NFC tag" {progress} {open} {message} />
--->
+
 <Button
     color={$person_nfc_list.length > 0 ? 'danger' : 'success'}
     title="Activeer deze NFC-tag voor deze persoon"

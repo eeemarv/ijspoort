@@ -14,6 +14,7 @@
       behavior: 'smooth'
     });
   });
+
   const handle_scroll = () => {
     if (y > 50){
       el_btn_to_top.style.visibility = 'visible';

@@ -12,6 +12,7 @@
   export let reg;
   export let newly_add = true;
   export let blocked = false;
+  export let block_time = 300000;
 
   const scan_previous_hours = 5;
   let reg_item;
@@ -27,7 +28,7 @@
 
   const handle_select_reg = () => {
     selected = true;
-    setTimeout(() => {selected = false}, 300);
+    setTimeout(() => {selected = false}, 1000);
     db_person.get(reg.person_id).then((res) => {
         $person = res;
     }).catch((err) => {
@@ -106,7 +107,7 @@
         {#if blocked}
           &nbsp;
           <Badge color=dark>
-            Reeds geregistreerd in laatste 5 minuten.
+            Reeds geregistreerd in laatste {Math.floor(block_time / 60000)} minuten.
           </Badge>
         {/if}
       </div>

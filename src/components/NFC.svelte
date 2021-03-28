@@ -49,7 +49,7 @@
             }
             if ($nfc_auto_reg && is_member){
                 console.log('register_by_nfc event');
-                dispatch('register_by_nfc', {
+                dispatch('register', {
                     person: res
                 });
                 return;
@@ -144,15 +144,15 @@
         </div>
     </CardFooter>
     {#if !$nfc_auto_reg  && $nfc_uid && (nfc_status === 'writable' || nfc_status === 'ok')}
-    <CardFooter>
-        <div class="d-flex w-100 justify-content-between">
-            <NFCReadTest />
-            {#if nfc_reset_enabled}
-                {#if nfc_status === 'ok' || (nfc_status === 'writable' && nfc_reset_writable_enabled)}
-                    <NFCReset />
+        <CardFooter>
+            <div class="d-flex w-100 justify-content-between">
+                <NFCReadTest />
+                {#if nfc_reset_enabled}
+                    {#if nfc_status === 'ok' || (nfc_status === 'writable' && nfc_reset_writable_enabled)}
+                        <NFCReset />
+                    {/if}
                 {/if}
-            {/if}
-        </div>
-    </CardFooter>
+            </div>
+        </CardFooter>
     {/if}
 </Card>

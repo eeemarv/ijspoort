@@ -9,16 +9,17 @@
     ipcRenderer.on('dev.nfc.on', (ev) => {
         on = true;
     });
+
     ipcRenderer.on('dev.nfc.off', (ev) => {
         on = false;
     });
+
     ipcRenderer.on('dev.nfc.error', (ev) => {
         error = true;
         setTimeout(() => {
             error = false;
         }, 5000);
     });
-
 </script>
 
 <div class="card-header py-2 d-flex w-100 justify-content-between"

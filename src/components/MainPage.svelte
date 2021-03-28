@@ -7,37 +7,51 @@
   import NFC from './NFC.svelte';
   import Stats from './Stats.svelte';
   import Clock from './Clock.svelte';
-  import { person } from './../services/store';
   import DbSync from './DbSync.svelte';
+  import Reg from './Reg.svelte';
+  import { onMount } from 'svelte';
 
+  let reg;
   let reg_list;
+  let block_time;
+  let handle_reg_by_manual;
+  let handle_reg_by_nfc;
+  let handle_blocked_reg;
 
-  const handle_register_by_manual = (() => {
-    reg_list.add_reg($person, 'manual');
-    $person = undefined;
-  });
-  const handle_register_by_nfc = ((event) => {
-    $person = undefined;
-    reg_list.add_reg(event.detail.person, 'nfc');
-  });
+  onMount(() => {
+    block_time = reg.block_time;
 
+    handle_reg_by_manual = () => {
+      reg.add_by_manual();
+    };
+
+    handle_reg_by_nfc = (event) => {
+      reg.add_by_nfc(event.detail.person);
+    }
+
+    handle_blocked_reg = (event) => {
+      reg_list.add_blocked_reg(event.detail.reg);
+    }
+  });
 </script>
+
+<Reg bind:this={reg} on:blocked_reg={handle_blocked_reg} />
 
 <Col md=9 class=vh-100>
   <ManualInput />
-  <Person on:register_by_manual={handle_register_by_manual} />
-  <RegList bind:this={reg_list}/>
+  <Person on:register={handle_reg_by_manual} />
+  <RegList bind:this={reg_list} {block_time} />
 </Col>
 
 <Col class="bg-primary vh-100">
   <EID />
-  <NFC on:register_by_nfc={handle_register_by_nfc} />
+  <NFC on:register={handle_reg_by_nfc} />
   <div class=m-3>
     <Stats />
     <Card>
       <CardBody class="d-flex w-100 justify-content-between">
-          <DbSync />
-          <Clock />
+        <DbSync />
+        <Clock />
       </CardBody>
     </Card>
   </div>

@@ -4,6 +4,8 @@
 
 </script>
 
+<svelte:body class=h-100 />
+
 <Container fluid=true class="h-100">
   <Row class="h-75">
     <Col>

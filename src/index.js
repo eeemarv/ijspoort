@@ -19,7 +19,7 @@ const env_assist_remove_non_members = process.env?.ASSIST_REMOVE_NON_MEMBERS;
 let win;
 let debug_enabled = true;
 const env_debug = process.env?.DEBUG;
-const gate_modus_enabled = process.env?.GATE_MODUS === '1';
+const gate_enabled = process.env?.GATE === '1';
 const feed_A = process.env?.FEED_A;
 const feed_B = process.env?.FEED_B;
 const read_a_write_b_access = '78778800';
@@ -87,7 +87,7 @@ const createWindow = () => {
   win.setMinimumSize(1400, 768);
   win.maximize();
 
-  if (gate_modus_enabled){
+  if (gate_enabled){
 	win.setFullScreen(true);
   }
 
