@@ -1,14 +1,7 @@
 <script>
     import { Button, Card, CardGroup, Progress } from 'sveltestrap';
     import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
-    import { db_person, db_remote_person } from '../services/db';
-    import { db_remote_reg } from '../services/db';
-    import { db_remote_nfc } from '../services/db';
-    import { put_design_person_search } from './../services/design_person';
-    import { put_design_reg_search } from './../services/design_reg';
-    import { put_design_nfc_search } from './../services/design_nfc';
-    import { put_design_eid_search } from './../services/design_eid';
-    import { onMount } from 'svelte';
+    import { db_person } from '../services/db';
 
     let open = false;
     const toggle = () => {
@@ -18,29 +11,6 @@
     let member_year_count = [];
     let member_max_year_count = 100;
     let member_year_count_2 = [];
-
-    onMount(() => {
-        put_design_person_search();
-        put_design_reg_search();
-        put_design_nfc_search();
-        put_design_eid_search();
-
-        db_remote_nfc.info().then((info) => {
-            console.log(info);
-        }).catch((err) => {
-            console.log(err);
-        });
-        db_remote_reg.info().then((info) => {
-            console.log(info);
-        }).catch((err) => {
-            console.log(err);
-        });
-        db_remote_person.info().then((info) => {
-            console.log(info);
-        }).catch((err) => {
-            console.log(err);
-        });
-    });
 
     const update_member_count = () => {
         db_person.query('search/count_by_member_year', {

@@ -1,9 +1,9 @@
 <script>
   const env = window.require('electron').remote.process.env;
-  import MainPage from './MainPage.svelte';
-  import { Container, Row } from 'sveltestrap';
-  import GatePage from './GatePage.svelte';
   import { modals } from './../services/store';
+  import DbInit from './DbInit.svelte';
+  import GateContainer from './GateContainer.svelte';
+  import MainContainer from './MainContainer.svelte';
 
   const gate_modus_enabled = env.GATE_MODUS === '1';
 
@@ -12,16 +12,14 @@
 
 </script>
 
+<DbInit />
+
 {#each mods as mod}
   <svelte:component this={mod.component} {...mod.props} />
 {/each}
 
-<Container fluid=true>
-  <Row class=vh-100>
-    {#if gate_modus_enabled}
-      <GatePage />
-    {:else}
-      <MainPage />
-    {/if}
-  </Row>
-</Container>
+{#if gate_modus_enabled}
+  <GateContainer />
+{:else}
+  <MainContainer />
+{/if}
