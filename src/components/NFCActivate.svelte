@@ -1,7 +1,7 @@
 <script>
     const { ipcRenderer } = window.require('electron');
     import { createEventDispatcher, onMount } from 'svelte';
-    import { Button } from 'sveltestrap';
+    import { Button, CardFooter } from 'sveltestrap';
     import { db_nfc } from '../services/db';
     import { person, person_nfc_list } from './../services/store';
     import { nfc_uid, modals } from './../services/store';
@@ -62,13 +62,15 @@
 
 </script>
 
-<Button
-    color={$person_nfc_list.length > 0 ? 'danger' : 'success'}
-    title="Activeer deze NFC-tag voor deze persoon"
-    disabled={!can_activate}
-    on:click={handle_activate_nfc}>
-    Activeer
-    {#if $person_nfc_list.length > 0}
-        extra tag
-    {/if}
-</Button>
+<CardFooter class="d-flex w-100 justify-content-end">
+    <Button
+        color={$person_nfc_list.length > 0 ? 'danger' : 'success'}
+        title="Activeer deze NFC-tag voor deze persoon"
+        disabled={!can_activate}
+        on:click={handle_activate_nfc}>
+        Activeer
+        {#if $person_nfc_list.length > 0}
+            extra tag
+        {/if}
+    </Button>
+</CardFooter>

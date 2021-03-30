@@ -1,7 +1,8 @@
 <script>
     import { onMount } from 'svelte';
-    import { Badge } from 'sveltestrap';
     import { db_nfc } from '../services/db';
+
+    export let font_size = '1em';
 
     let nfc_count = 0;
 
@@ -39,6 +40,16 @@
 
 </script>
 
-<Badge color=info title="Totaal aantal NFC-tags geregistreerd">
+<span
+    class="badge badge-info"
+    title="Totaal aantal NFC-tags geregistreerd"
+    style="--font-size: {font_size};"
+>
     {nfc_count}
-</Badge>
+</span>
+
+<style>
+span {
+ font-size: var(--font-size);
+}
+</style>

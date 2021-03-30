@@ -6,7 +6,7 @@
 
   const reg_hours = 5;
   const reg_limit = 1000;
-  const refresh_interval = 5000;
+  const refresh_interval = 10000;
 
   let registrations = [];
   let blocked_regs = [];

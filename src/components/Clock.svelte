@@ -1,6 +1,8 @@
 <script>
     import { onMount } from 'svelte';
 
+	export let font_size = '1.3em';
+
 	let time = new Date();
 	$: hours = time.getHours().toString().padStart(2, '0');
 	$: minutes = time.getMinutes().toString().padStart(2, '0');
@@ -16,6 +18,15 @@
     });
 </script>
 
-<div title="klok">
-    {hours}&nbsp;{seconds % 2 ? ':' : ' '}&nbsp;{minutes}
+<div title="klok" class=m-0 style="--font-size: {font_size};">
+	{hours}{seconds % 2 ? ':' : ' '}{minutes}
 </div>
+
+<style>
+div {
+ font-weight: bold;
+ font-family: Courier;
+ font-size: var(--font-size);
+ line-height: 1.05;
+}
+</style>

@@ -1,8 +1,9 @@
 <script>
     import { onMount } from 'svelte';
-    import { Badge } from 'sveltestrap';
     import { sync_monitor } from './../services/store';
     import { db_remote_reg } from './../services/db';
+
+    export let font_size = '1em';
 
     const map_sync_color = {
         paused: 'warning',
@@ -31,11 +32,17 @@
     });
 </script>
 
-<div>
-    <Badge color={sync_color} title="synchronisatie met remote database">
+<div style="--font-size: {font_size};">
+    <span class="badge badge-{sync_color} mr-1" title="synchronisatie met remote database">
         Sync
-    </Badge>
-    <Badge color={probe_db_color} title="remote database verbinding">
+    </span>
+    <span class="badge badge-{probe_db_color}" title="remote database verbinding">
         DB
-    </Badge>
+    </span>
 </div>
+
+<style>
+span {
+ font-size: var(--font-size);
+}
+</style>

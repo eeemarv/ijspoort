@@ -4,7 +4,7 @@
   import Person from './Person.svelte';
   import RegList from './RegList.svelte';
   import EID from './EID.svelte';
-  import NFC from './NFC.svelte';
+  import NFCCard from './NFCCard.svelte';
   import Stats from './Stats.svelte';
   import Clock from './Clock.svelte';
   import DbSync from './DbSync.svelte';
@@ -37,15 +37,17 @@
 
 <Reg bind:this={reg} on:blocked_reg={handle_blocked_reg} />
 
-<Col md=9 class=vh-100>
+<Col md=9 class=min-vh-100>
   <ManualInput />
   <Person on:register={handle_reg_by_manual} />
   <RegList bind:this={reg_list} {block_time} />
 </Col>
 
-<Col class="bg-primary vh-100">
+<Col class="bg-primary min-vh-100">
+  <!--
   <EID />
-  <NFC on:register={handle_reg_by_nfc} />
+  -->
+  <NFCCard on:register={handle_reg_by_nfc} />
   <div class=m-3>
     <Stats />
     <Card>

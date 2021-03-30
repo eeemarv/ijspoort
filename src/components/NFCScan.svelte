@@ -1,22 +1,13 @@
 <script>
-    const env = window.require('electron').remote.process.env;
     const { ipcRenderer } = window.require('electron');
     import { createEventDispatcher } from 'svelte';
-    import { Card, CardFooter, CardText } from 'sveltestrap';
     import { db_nfc, db_person } from '../services/db';
     import { person } from './../services/store';
     import { nfc_uid, nfc_auto_reg } from './../services/store';
-    import NFCActivate from './NFCActivate.svelte';
-    import NFCDevice from './NFCDevice.svelte';
-    import NFCReadTest from './NFCReadTest.svelte';
-    import NFCReset from './NFCReset.svelte';
-
-    const nfc_reset_writable_enabled = env.NFC_RESET_WRITABLE_ENABLED === '1';
-    const nfc_reset_enabled = env.NFC_RESET_ENABLED === '1';
 
     const dispatch = createEventDispatcher();
 
-    let nfc_status = 'off';
+    export let nfc_status = 'off';
 
     ipcRenderer.on('nfc.on', (ev, card) => {
         $nfc_uid = card.uid;
@@ -107,52 +98,3 @@
         nfc_status = 'off';
     });
 </script>
-
-<Card class=m-3>
-    <NFCDevice />
-    <div class="card-body py-2"
-        class:bg-success={nfc_status === 'ok'}
-        class:bg-warning={nfc_status === 'writable'}
-        class:bg-info={nfc_status === 'transport_key'}
-        class:bg-danger={nfc_status === 'not_writable'}>
-        <CardText class="py-0 mb-0">
-            {$nfc_uid ? $nfc_uid : '---'}
-        </CardText>
-        {#if nfc_status === 'writable'}
-            <CardText>
-                NIET GEVONDEN: mogelijke synchronisatie fout
-            </CardText>
-        {:else if nfc_status === 'transport_key'}
-            <CardText>
-                LEEG: activeerbaar
-            </CardText>
-        {:else if nfc_status === 'not_writable'}
-            <CardText>
-                NIET LEESBAAR: ongeldige sleutel
-            </CardText>
-        {/if}
-    </div>
-    <CardFooter class="d-flex w-100 justify-content-end">
-        <NFCActivate {nfc_status} on:activated={() => { nfc_status = 'ok'; }} />
-    </CardFooter>
-    <CardFooter>
-        <div class="custom-control custom-checkbox">
-            <input type="checkbox" class="custom-control-input" id="nfc_auto_reg" bind:checked={$nfc_auto_reg}>
-            <label class="custom-control-label" for="nfc_auto_reg" title="Registreer automatisch wanneer NFC tag gescand wordt. Vink af voor andere handelingen.">
-                Automatische registratie
-            </label>
-        </div>
-    </CardFooter>
-    {#if !$nfc_auto_reg  && $nfc_uid && (nfc_status === 'writable' || nfc_status === 'ok')}
-        <CardFooter>
-            <div class="d-flex w-100 justify-content-between">
-                <NFCReadTest />
-                {#if nfc_reset_enabled}
-                    {#if nfc_status === 'ok' || (nfc_status === 'writable' && nfc_reset_writable_enabled)}
-                        <NFCReset />
-                    {/if}
-                {/if}
-            </div>
-        </CardFooter>
-    {/if}
-</Card>

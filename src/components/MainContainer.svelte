@@ -29,9 +29,9 @@
 <RegCSVExport />
 <DbJSONExport />
 
-<Container fluid=true>
-  <Row class=vh-100>
-      <MainPage />
+<Container fluid>
+  <Row class=min-vh-100>
+    <MainPage />
   </Row>
 </Container>
 
