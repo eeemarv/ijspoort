@@ -1,6 +1,6 @@
 # ijspoort
 
-Standalone desktop app voor toegangscontrole met Mifare Classic NFC tags. Initieel ontwikkeld voor de [Deurnese IJsberen vzw](https://www.deurnese-ijsberen.be). Geschreven in [Electronjs](https://www.electronjs.org), met [Svelte](https://svelte.dev) componenten. Pouchdb database die synchroniseerd met online Couchdb protocal database (CouchDb, Cloudant, Coucbbase, Pouchdb).De app werkt offline-first. Dus internet verbinding is geen absolute vereiste. Doch voor de veiligheid is het nodig om altijd verbinding te maken nadat nieuwe data is toegevoegd zodat de nieuwe data niet verloren kan gaan. Leden-data wordt verkregen door leden export vanuit [Assist](https://assistonline.eu). De aangemaakte tags worden gekoppeld aan de lidnummers.
+Standalone desktop app voor toegangscontrole met Mifare Classic NFC tags. Initieel ontwikkeld voor de [Deurnese IJsberen vzw](https://www.deurnese-ijsberen.be). Geschreven in [Electronjs](https://www.electronjs.org), met [Svelte](https://svelte.dev) componenten. [Pouchdb](https://pouchdb.com) database die synchroniseerd met online Couchdb protocol database (CouchDb, Cloudant, Coucbbase, Pouchdb).De app werkt offline-first. Dus internet verbinding is geen absolute vereiste. Doch voor de veiligheid is het nodig om altijd verbinding te maken nadat nieuwe data is toegevoegd zodat de nieuwe data niet verloren kan gaan. Leden-data wordt verkregen door leden export vanuit [Assist](https://assistonline.eu). De aangemaakte tags worden gekoppeld aan de lidnummers.
 
 Het programma kent twee algemene modi:
 
@@ -27,7 +27,7 @@ yarn start
 
 Plaats in een .env tekstbestand in de root de (geheime) environment variabelen. Let op, de environment variabelen wordt alleen geladen bij het opstarten van het programma (Het is dus nodig het programma opnieuw op te starten als een variabele aangepast wordt).
 
-De toegang tot de online remote database:
+De toegang tot de online remote database (bvb. De [Cloudant](https://www.ibm.com/cloud/cloudant) service van IBM):
 
 ```
 DB_URL=
