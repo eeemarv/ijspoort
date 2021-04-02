@@ -2,7 +2,6 @@ require('dotenv').config();
 const { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog } = require('electron');
 const { NFC, TAG_ISO_14443_3, KEY_TYPE_A, KEY_TYPE_B } = require('nfc-pcsc');
 const crypto = require('crypto');
-const EidReader = require('./services/eid_reader');
 const path = require('path');
 const cron = require('node-cron');
 
@@ -122,7 +121,6 @@ const remove_nfc_listeners = () => {
 
 const listenPcsc = (win) => {
 	const pcsc = new NFC();
-	const eid_reader = new EidReader();
 	let reader_ready = true;
 
 	pcsc.on('error', err => {
@@ -325,52 +323,6 @@ const listenPcsc = (win) => {
 		reader.on('end', () => {
 			console.log(reader.reader.name, 'dev.nfc.off');
 			win.webContents.send('dev.nfc.off');
-		});
-	});
-
-	pcsc.on('reader', reader => {
-		if (reader.name.toLowerCase().indexOf('acr122') !== -1) {
-			return;
-		}
-
-		console.log(reader.reader.name, 'dev.eid.on');
-		reader.autoProcessing = false;
-		win.webContents.send('dev.eid.on');
-
-		reader.on('card', card => {
-			win.webContents.send('eid.wait');
-
-			let eid_slot = eid_reader.get_slot();
-
-			if (typeof eid_slot === 'undefined'){
-				console.log(reader.reader.name, 'eid.undefined', card);
-				win.webContents.send('eid.undefined');
-				return;
-			}
-			let eid = eid_reader.read(eid_slot);
-			if (typeof eid === 'undefined'){
-				console.log(reader.reader.name, 'eid.undefined', card);
-				win.webContents.send('eid.undefined');
-				return;
-			}
-
-			console.log('eid.on', eid);
-			win.webContents.send('eid.on', eid);
-		});
-
-		reader.on('card.off', card => {
-			console.log(reader.reader.name, 'eid.of');
-			win.webContents.send('eid.off');
-		});
-
-		reader.on('error', err => {
-			console.log(reader.reader.name, 'dev.eid.error', err);
-			win.webContents.send('dev.eid.error', err);
-		});
-
-		reader.on('end', () => {
-			console.log(reader.reader.name, 'dev.eid.off');
-			win.webContents.send('dev.eid.off');
 		});
 	});
 };

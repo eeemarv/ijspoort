@@ -11,6 +11,7 @@
     class:badge-success={on && !error}
     class:badge-danger={error}
     class:badge-dark={!on && !error}
+    title="Status NFC tag scanner"
 >
     NFC
 </span>

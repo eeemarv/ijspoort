@@ -3866,7 +3866,7 @@ mute-stream@0.0.8:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
-nan@^2.13.2, nan@^2.14.0, nan@^2.14.2:
+nan@^2.13.2, nan@^2.14.0:
   version "2.14.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
   integrity sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
@@ -4445,13 +4445,6 @@ pinkie@^2.0.0:
   version "2.0.4"
   resolved "https://registry.yarnpkg.com/pinkie/-/pinkie-2.0.4.tgz#72556b80cfa0d48a974e80e77248e80ed4f7f870"
   integrity sha1-clVrgM+g1IqXToDnckjoDtT3+HA=
-
-pkcs11js@^1.0.22:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/pkcs11js/-/pkcs11js-1.2.2.tgz#e52854401b4d72d7b226833c461855629a09c47c"
-  integrity sha512-xZYdI3qOfOQhSl4j79iR+8Yj3ZkwlILkIfpJkhWPLDP00DyT0aiPOVTh8tt8vgda0GrSjyJza3GFjFyRdV+eFg==
-  dependencies:
-    nan "^2.14.2"
 
 pkg-dir@^4.2.0:
   version "4.2.0"

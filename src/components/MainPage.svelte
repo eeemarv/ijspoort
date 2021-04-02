@@ -3,7 +3,6 @@
   import ManualInput from './ManualInput.svelte';
   import Person from './Person.svelte';
   import RegList from './RegList.svelte';
-  import EID from './EID.svelte';
   import NFCCard from './NFCCard.svelte';
   import Stats from './Stats.svelte';
   import Clock from './Clock.svelte';
@@ -44,9 +43,6 @@
 </Col>
 
 <Col class="bg-primary min-vh-100">
-  <!--
-  <EID />
-  -->
   <NFCCard on:register={handle_reg_by_nfc} />
   <div class=m-3>
     <Stats />

@@ -21,7 +21,6 @@ if (!env.DB_PASSWORD){
 const db_local_prefix = env.DB_LOCAL_PREFIX;
 const db_reg = new PouchDB(db_local_prefix + 'reg');
 const db_nfc = new PouchDB(db_local_prefix + 'nfc');
-const db_eid = new PouchDB(db_local_prefix + 'eid');
 const db_person = new PouchDB(db_local_prefix + 'person');
 
 const conn_prefix = env.DB_URL + '/' + env.DB_REMOTE_PREFIX;
@@ -123,7 +122,6 @@ export {
     db_remote_person,
     db_reg,
     db_nfc,
-    db_eid,
     db_person,
     env
 };
