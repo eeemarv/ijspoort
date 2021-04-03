@@ -9,6 +9,7 @@
   import DbSync from './DbSync.svelte';
   import Reg from './Reg.svelte';
   import { onMount } from 'svelte';
+  import MainPageLinks from './MainPageLinks.svelte';
 
   let reg;
   let reg_list;
@@ -26,11 +27,11 @@
 
     handle_reg_by_nfc = (event) => {
       reg.add_by_nfc(event.detail.person);
-    }
+    };
 
     handle_blocked_reg = (event) => {
       reg_list.add_blocked_reg(event.detail.reg);
-    }
+    };
   });
 </script>
 
@@ -52,5 +53,8 @@
         <Clock />
       </CardBody>
     </Card>
+  </div>
+  <div class=m-3>
+    <MainPageLinks />
   </div>
 </Col>

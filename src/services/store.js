@@ -70,6 +70,5 @@ export const person = writable();
 export const person_nfc_list = writable([]);
 export const nfc_uid = writable();
 export const nfc_auto_reg = writable(true);
-export const eid = writable();
 export const sync_monitor = create_sync_monitor();
 export const modals = create_modals();

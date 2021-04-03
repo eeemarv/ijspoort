@@ -6,7 +6,6 @@
 
   export let person;
   const year_str = new Date().getFullYear().toString();
-
 </script>
 
 <div>
