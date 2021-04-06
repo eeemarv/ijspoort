@@ -1,5 +1,5 @@
 <script>
-    import NFCCount from './NFCCount.svelte';
+    import NFCCountButton from './NFCCountButton.svelte';
     import NFCDevice from './NFCDevice.svelte';
 
     let on;
@@ -17,6 +17,6 @@
     {error ? ' fout apparaat' : ''}
     </div>
     <div>
-        <NFCCount />
+        <NFCCountButton />
     </div>
 </div>

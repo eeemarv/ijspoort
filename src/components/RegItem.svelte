@@ -3,10 +3,9 @@
   import { Button, Badge } from 'sveltestrap';
   import { onMount } from 'svelte';
   import { person } from './../services/store';
-  import PersonName from './PersonName.svelte';
-  import PersonMemberId from './PersonMemberId.svelte';
   import RegTimeTag from './RegTimeTag.svelte';
   import PersonPhone from './PersonPhone.svelte';
+  import PersonTag from './PersonTag.svelte';
 
   export let reg_index;
   export let reg;
@@ -101,9 +100,7 @@
           <RegTimeTag {reg} />
           &nbsp;
         {/if}
-        <PersonMemberId member_id={person_data.member_id} />
-        &nbsp;
-        <PersonName person={person_data}/>
+        <PersonTag person={person_data} />
         {#if blocked}
           &nbsp;
           <Badge color=dark>

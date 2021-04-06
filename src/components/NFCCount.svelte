@@ -2,9 +2,7 @@
     import { onMount } from 'svelte';
     import { db_nfc } from '../services/db';
 
-    export let font_size = '1em';
-
-    let nfc_count = 0;
+    export let nfc_count = 0;
 
     const update_nfc_count = () => {
         db_nfc.query('search/count_total', {
@@ -39,17 +37,3 @@
     });
 
 </script>
-
-<span
-    class="badge badge-info"
-    title="Totaal aantal NFC-tags geregistreerd"
-    style="--font-size: {font_size};"
->
-    {nfc_count}
-</span>
-
-<style>
-span {
- font-size: var(--font-size);
-}
-</style>

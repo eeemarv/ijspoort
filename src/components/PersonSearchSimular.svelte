@@ -4,6 +4,7 @@
   import { db_person } from './../services/db';
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonName from './PersonName.svelte';
+  import SelectableListGroupItem from './SelectableListGroupItem.svelte';
 
   let open = false;
   const toggle = () => {
@@ -82,8 +83,8 @@
     <ModalBody>
         <ListGroup>
             {#each result_persons as prs(prs._id)}
-                <div
-                    class="list-group-item{prs._id === $person._id ? ' active' : ''}"
+                <SelectableListGroupItem
+                    active={prs._id === $person._id}
                     on:click={handle_select(prs)}
                 >
                     <PersonMemberId member_id={prs.member_id} />
@@ -98,7 +99,7 @@
                             {year_str}
                         </Badge>
                     {/if}
-                    </div>
+                </SelectableListGroupItem>
             {/each}
         </ListGroup>
     </ModalBody>
@@ -121,15 +122,3 @@
 </Button>
 {/if}
 </div>
-
-<style>
-.list-group-item {
-    cursor: pointer;
-}
-.list-group-item:hover {
-    background-color: rgb(59, 59, 59);
-}
-.list-group-item.active:hover {
-    background-color: rgb(44, 106, 141);
-}
-</style>

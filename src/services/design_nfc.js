@@ -17,6 +17,12 @@ const design_nfc_search_doc = {
                 }
             }).toString(),
             reduce: '_count'
+        },
+        count_by_ts_epoch: {
+            map: ((doc) => {
+                emit(doc.ts_epoch);
+            }).toString(),
+            reduce: '_count'
         }
     }
 };
