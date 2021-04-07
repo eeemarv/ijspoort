@@ -35,7 +35,7 @@
         <slot name=footer_left></slot>
       </div>
       <div>
-        <Button color=secondary on:click={toggle}>
+        <Button color=primary on:click={toggle}>
           Sluiten
         </Button>
       </div>

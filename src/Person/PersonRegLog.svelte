@@ -115,6 +115,7 @@
         <Badge color=accent>
           NFC
         </Badge>
+        &nbsp;
         <Badge color=warning>
           Manueel
         </Badge>

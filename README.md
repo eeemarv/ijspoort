@@ -14,11 +14,22 @@ Reguirements:
 Dependencies:
 * ACR122u driver:
 ```
-sudo apt-get install libusb-1.0
+sudo apt-get install libnfc-bin
+sudo apt-get install pcscd pcsc-tools
+```
+[Blacklist pre-installed drivers](https://oneguyoneblog.com/2016/11/02/acr122u-nfc-usb-reader-linux-mint/)
+
+```
+sudo nano /etc/modprobe.d/blacklist.conf
+```
+Voeg toe aan het einde van dit bestand:
+```
+install nfc /bin/false
+install pn533 /bin/false
 ```
 * [node-hid](https://github.com/node-hid/node-hid#compiling-from-source)
 ```
-sudo apt-get install libnfc-bin
+sudo apt-get install libusb-1.0
 ```
 * [nfc-pcsc](https://github.com/pokusew/nfc-pcsc)
 ```

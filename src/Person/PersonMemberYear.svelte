@@ -21,44 +21,47 @@
   const years_long_list = 9;
 
   const update_member_year_list = () => {
+    if ($person === undefined){
+      return;
+    }
+
     year = new Date().getFullYear();
     member_year_list = [];
     member_short_list = [];
     member_long_list = [];
     long_list_cols = [];
-    if ($person === undefined){
-      return;
-    }
+
     for (let y = year - years_short_list + 1; y <= year; y++){
-        member_short_list = [...member_short_list, {
-          year: y,
-          is_member: $person.member_year && $person.member_year['y' + y]
-        }];
+      member_short_list = [...member_short_list, {
+        year: y,
+        is_member: $person.member_year && $person.member_year['y' + y]
+      }];
     }
+
     for (y = year - years_long_list + 1; y <= year; y++){
-        member_long_list = [...member_long_list, {
-          year: y,
-          is_member: $person.member_year && $person.member_year['y' + y]
-        }];
+      member_long_list = [...member_long_list, {
+        year: y,
+        is_member: $person.member_year && $person.member_year['y' + y]
+      }];
     }
+
     let col_size = Math.ceil(member_long_list.length / 4);
     while (member_long_list.length){
         long_list_cols = [...long_list_cols, member_long_list.splice(0, col_size)];
     }
   };
 
-  $: {
-    $person;
+  $: if ($person) {
     update_member_year_list();
   }
 
   db_person.changes({
-      since: 'now',
-      live: true
+    since: 'now',
+    live: true
   }).on('change', (change) => {
-      update_member_year_list();
+    update_member_year_list();
   }).on('error', (err) => {
-      console.log(err);
+    console.log(err);
   });
 
 </script>
@@ -71,28 +74,31 @@
   </ModalHeader>
   <ModalBody>
     <Row>
-      {#each long_list_cols as col}
-      <Col>
+     {#each long_list_cols as col}
+       <Col>
           <ListGroup>
-              {#each col as myc}
-                  <ListGroupItem>
-                  <Button
-                    color={myc.is_member ? 'success' : 'dark'}
-                    title="{myc.is_member ? 'Lid in' : 'Geen lid in'} {myc.year}"
-                  >
-                    {myc.year}
-                  </Button>
-                  </ListGroupItem>
-              {/each}
+            {#each col as myc}
+              <ListGroupItem>
+              <Button
+                color={myc.is_member ? 'success' : 'dark'}
+                title="{myc.is_member ? 'Lid in' : 'Geen lid in'} {myc.year}"
+              >
+                {myc.year}
+              </Button>
+              </ListGroupItem>
+            {/each}
           </ListGroup>
-      </Col>
+       </Col>
       {/each}
-  </Row>
+    </Row>
   </ModalBody>
   <ModalFooter>
-      <Button color=primary on:click={toggle}>
-          Sluiten
-      </Button>
+    <Button
+      color=primary
+      on:click={toggle}
+    >
+      Sluiten
+    </Button>
   </ModalFooter>
 </Modal>
 
