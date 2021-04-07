@@ -1,11 +1,9 @@
 <script>
   import { Col, Container, Row } from 'sveltestrap';
-import Badge from 'sveltestrap/src/Badge.svelte';
   import Clock from './Clock.svelte';
 import DbSync from './DbSync.svelte';
 import GateCounterRow from './GateCounterRow.svelte';
-import GateLocaleDate from './GateLocaleDate.svelte';
-import NFCCountBadge from './NfcCountBadge.svelte';
+import NfcCountBadge from './NfcCountBadge.svelte';
 import NfcDeviceBadge from './NfcDeviceBadge.svelte';
 
 </script>
@@ -41,7 +39,7 @@ import NfcDeviceBadge from './NfcDeviceBadge.svelte';
       <div class="h-50 d-flex justify-content-right">
         <div class=mr-2>
           <NfcDeviceBadge />
-          <NFCCountBadge font_size=2em />
+          <NfcCountBadge font_size=2em />
         </div>
         <DbSync font_size=2em />
       </div>

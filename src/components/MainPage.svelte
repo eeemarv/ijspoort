@@ -3,13 +3,13 @@
   import ManualInput from './ManualInput.svelte';
   import Person from './Person.svelte';
   import RegList from './RegList.svelte';
-  import NFCCard from './NfcCard.svelte';
   import Stats from './Stats.svelte';
   import Clock from './Clock.svelte';
   import DbSync from './DbSync.svelte';
   import Reg from './Reg.svelte';
   import { onMount } from 'svelte';
   import MainPageLinks from './MainPageLinks.svelte';
+  import NfcCard from './NfcCard.svelte';
 
   let reg;
   let reg_list;
@@ -44,7 +44,7 @@
 </Col>
 
 <Col class="bg-primary min-vh-100">
-  <NFCCard on:register={handle_reg_by_nfc} />
+  <NfcCard on:register={handle_reg_by_nfc} />
   <div class=m-3>
     <Stats />
     <Card>

@@ -1,18 +1,18 @@
 <script>
-    const { ipcRenderer } = window.require('electron');
-    import { createEventDispatcher, onMount } from 'svelte';
-    import { Button, CardFooter } from 'sveltestrap';
-    import { db_nfc } from '../services/db';
-    import { person, person_nfc_list } from '../services/store';
-    import { nfc_uid, modals } from '../services/store';
-    import NFCProgress from './NfcProgress.svelte';
+  const { ipcRenderer } = window.require('electron');
+  import { createEventDispatcher, onMount } from 'svelte';
+  import { Button, CardFooter } from 'sveltestrap';
+  import { db_nfc } from '../services/db';
+  import { person, person_nfc_list } from '../services/store';
+  import { nfc_uid, modals } from '../services/store';
+  import NfcProgress from './NfcProgress.svelte';
 
     export let nfc_status;
 
     const dispatch = createEventDispatcher();
 
     onMount(() => {
-        modals.add('nfc_activate', NFCProgress);
+        modals.add('nfc_activate', NfcProgress);
         modals.title('nfc_activate', 'Activeer NFC tag');
     });
 

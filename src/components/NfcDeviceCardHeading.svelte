@@ -1,22 +1,22 @@
 <script>
-    import NFCCountButton from './NfcCountButton.svelte';
-    import NFCDevice from './NfcDevice.svelte';
+    import NfcCountButton from './NfcCountButton.svelte';
+    import NfcDevice from './NfcDevice.svelte';
 
     let on;
     let error;
 </script>
 
-<NFCDevice bind:on bind:error />
+<NfcDevice bind:on bind:error />
 
 <div class="card-header py-2 d-flex w-100 justify-content-between"
     class:bg-success={on && !error}
     class:bg-danger={error}
 >
-    <div title="NFC/RFiD tags">
+    <div title="Nfc/RFiD tags">
     NFC
     {error ? ' fout apparaat' : ''}
     </div>
     <div>
-        <NFCCountButton />
+        <NfcCountButton />
     </div>
 </div>

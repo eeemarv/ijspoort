@@ -1,0 +1,19 @@
+{
+
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true,
+    "[svelte]": {
+        "editor.tabSize": 2,
+        "editor.insertSpaces": true
+    },
+    "[javascript]": {
+        "editor.tabSize": 2
+    },
+    "[scss]": {
+        "editor.suggest.insertMode": "replace",
+        "editor.tabSize": 2
+    },
+    "[css]": {
+        "editor.tabSize": 2
+    }
+}

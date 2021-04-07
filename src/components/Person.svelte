@@ -7,7 +7,7 @@
   import { Badge } from 'sveltestrap';
   import { xls_assist_import } from './../services/person';
   import { person, person_nfc_list } from './../services/store';
-  import PersonNFC from './PersonNFC.svelte';
+  import PersonNfc from './PersonNfc.svelte';
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonRegLog from './PersonRegLog.svelte';
@@ -179,7 +179,7 @@
     <CardHeader class=bg-info>
       Gelinkte data
     </CardHeader>
-    <PersonNFC />
+    <PersonNfc />
     <CardBody>
       <PersonRegLog />
     </CardBody>

@@ -1,7 +1,7 @@
 <script>
   import { db_nfc } from '../services/db';
   import { person, person_nfc_list } from './../services/store';
-  import PersonNfcItem from './PersonNFCItem.svelte';
+  import PersonNfcItem from './PersonNfcItem.svelte';
 
   const update_person_nfc_list = (person_id) => {
     if (person_id === undefined){
@@ -26,7 +26,7 @@
       since: 'now',
       live: true
   }).on('change', (change) => {
-      console.log('nfc changes (PersonNFC component)');
+      console.log('nfc changes (PersonNfc component)');
       console.log(change);
       update_person_nfc_list($person?._id);
   }).on('error', (err) => {

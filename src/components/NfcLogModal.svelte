@@ -2,7 +2,7 @@
     import { Button, ListGroup, Modal, ModalBody, ModalFooter, ModalHeader, Row, Col } from 'sveltestrap';
     import { db_nfc, db_person } from '../services/db';
     import { nfc_uid, person } from '../services/store';
-    import NFCTag from './NfcTag.svelte';
+    import NfcTag from './NfcTag.svelte';
     import PersonTag from './PersonTag.svelte';
     import SelectableListGroupItem from './SelectableListGroupItem.svelte';
 
@@ -81,7 +81,7 @@
                         >
                             <Row>
                                 <Col md=6>
-                                    <NFCTag nfc={n.doc} />
+                                    <NfcTag nfc={n.doc} />
                                 </Col>
                                 <Col>
                                     {#if persons[n.doc.person_id]}

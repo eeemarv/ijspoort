@@ -3,10 +3,10 @@
     import { onMount } from 'svelte';
     import { Button } from 'sveltestrap';
     import { modals } from '../services/store';
-    import NFCProgress from './NfcProgress.svelte';
+    import NfcProgress from './NfcProgress.svelte';
 
     onMount(() => {
-        modals.add('nfc_read_test', NFCProgress);
+        modals.add('nfc_read_test', NfcProgress);
         modals.title('nfc_read_test', 'Lees NFC tag');
     });
 

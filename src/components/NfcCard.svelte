@@ -1,21 +1,21 @@
 <script>
-    import { Card } from 'sveltestrap';
-    import NFCActivate from './NfcActivate.svelte';
-    import NFCAutoReg from './NfcAutoReg.svelte';
-    import NFCDeviceCardHeading from './NfcDeviceCardHeading.svelte';
-    import NFCCardBody from './NfcCardBody.svelte';
-    import NFCReadAndReset from './NfcReadAndReset.svelte';
-    import NFCScan from './NfcScan.svelte';
+  import { Card } from 'sveltestrap';
+  import NfcActivate from './NfcActivate.svelte';
+  import NfcAutoReg from './NfcAutoReg.svelte';
+  import NfcDeviceCardHeading from './NfcDeviceCardHeading.svelte';
+  import NfcCardBody from './NfcCardBody.svelte';
+  import NfcReadAndReset from './NfcReadAndReset.svelte';
+  import NfcScan from './NfcScan.svelte';
 
-    let nfc_status;
+  let nfc_status;
 </script>
 
-<NFCScan bind:nfc_status on:register />
+<NfcScan bind:nfc_status on:register />
 
 <Card class=m-3>
-    <NFCDeviceCardHeading />
-    <NFCCardBody {nfc_status} />
-    <NFCActivate {nfc_status} on:activated={() => { nfc_status = 'ok'; }} />
-    <NFCAutoReg />
-    <NFCReadAndReset {nfc_status} />
+  <NfcDeviceCardHeading />
+  <NfcCardBody {nfc_status} />
+  <NfcActivate {nfc_status} on:activated={() => { nfc_status = 'ok'; }} />
+  <NfcAutoReg />
+  <NfcReadAndReset {nfc_status} />
 </Card>
