@@ -14,7 +14,7 @@
 
 <Button
     disabled={nfc_count === 0}
-    color=info
+    color=accent
     size=sm
     on:click={nfc_log_modal.toggle()}
     title="Totaal aantal geregistreerde NFC tags. Klik voor log van laatste 20.">

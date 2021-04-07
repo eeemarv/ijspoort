@@ -184,11 +184,20 @@
       <PersonRegLog />
     </CardBody>
     <div class="card-footer d-flex w-100 justify-content-end">
-      <Button color=dark class=ml-3 on:click={() => $person = undefined}>
-        Sluiten
+      <Button
+        color=warning
+        class=ml-3
+        on:click={handle_register}
+        title="Registratie zonder tag!"
+      >
+        Registreer Manueel &#9888;
       </Button>
-      <Button color=primary class=ml-3 on:click={handle_register}>
-        Registreer
+      <Button
+        color=primary
+        class=ml-3
+        on:click={() => $person = undefined}
+      >
+        Sluiten
       </Button>
     </div>
   </Card>
