@@ -14,9 +14,13 @@ Reguirements:
 Dependencies:
 * ACR122u driver:
 ```
+sudo apt-get install libusb-1.0
+```
+* [node-hid](https://github.com/node-hid/node-hid#compiling-from-source)
+```
 sudo apt-get install libnfc-bin
 ```
-* Zie [nfc-pcsc](https://github.com/pokusew/nfc-pcsc)
+* [nfc-pcsc](https://github.com/pokusew/nfc-pcsc)
 ```
 sudo apt-get install libpcsclite1 libpcsclite-dev
 sudo apt-get install build-essential
