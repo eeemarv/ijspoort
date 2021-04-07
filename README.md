@@ -12,15 +12,24 @@ Reguirements:
 * NFC tag reader ACR122u
 
 Dependencies:
-* ACR122u driver: `sudo apt-get install libnfc-bin`
+* ACR122u driver:
+```
+sudo apt-get install libnfc-bin
+```
 * Zie [nfc-pcsc](https://github.com/pokusew/nfc-pcsc)
+```
+sudo apt-get install libpcsclite1 libpcsclite-dev
+sudo apt-get install build-essential
+sudo apt-get install gcc
+
+```
 
 Installatie:
 ```
 yarn install
 yarn upgrade
 ```
-Run app:
+Run app (dev mode):
 ```
 yarn start
 ```
