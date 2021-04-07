@@ -16,15 +16,29 @@
 
 <Modal isOpen={open} toggle={toggle} contentClassName="bg-default">
     <ModalHeader>
-        {title}
+        <slot name=header>
+            {title}
+        </slot>
     </ModalHeader>
     <ModalBody>
-        <Progress value={progress} color=light/>
-        {message}
+        <slot name=progress>
+            <Progress value={progress} color=light/>
+        </slot>
+        <slot name=message>
+            {message}
+        </slot>
+        <slot name=body></slot>
     </ModalBody>
     <ModalFooter>
-        <Button color=secondary on:click={toggle}>
-            Sluiten
-        </Button>
+        <div class="flex-d w-100 justify-confent-between">
+            <div>
+                <slot name=footer_left></slot>
+            </div>
+            <div>
+                <Button color=secondary on:click={toggle}>
+                    Sluiten
+                </Button>
+            </div>
+        </div>
     </ModalFooter>
 </Modal>

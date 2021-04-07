@@ -1,11 +1,11 @@
 <script>
   import { ListGroupItem, Badge } from 'sveltestrap';
   import { nfc_uid } from './../services/store';
-  import NFCTag from './NFCTag.svelte';
+  import NfcTag from './NFCTag.svelte';
 
   export let nfc;
 </script>
 
 <ListGroupItem active={$nfc_uid === nfc.uid}>
-  <NFCTag {nfc} />
+  <NfcTag {nfc} />
 </ListGroupItem>

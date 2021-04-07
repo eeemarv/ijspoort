@@ -49,11 +49,12 @@
         });
     };
 
-    $: {
-        $nfc_uid;
-        $person;
-        open = false;
+    $: if (open){
         update_nfcs();
+    }
+
+    $: if ($nfc_uid || $person){
+        open = false;
     }
 </script>
 
@@ -78,11 +79,16 @@
                             active={$person && $person._id === n.doc.person_id}
                             on:click={() => $person = persons[n.doc.person_id]}
                         >
-                            <NFCTag nfc={n.doc} />
-                            &nbsp;
-                            {#if persons[n.doc.person_id]}
-                                <PersonTag person={persons[n.doc.person_id]} show_member_year />
-                            {/if}
+                            <Row>
+                                <Col md=6>
+                                    <NFCTag nfc={n.doc} />
+                                </Col>
+                                <Col>
+                                    {#if persons[n.doc.person_id]}
+                                    <PersonTag person={persons[n.doc.person_id]} show_member_year />
+                                    {/if}
+                                </Col>
+                            </Row>
                         </SelectableListGroupItem>
                     {/each}
                 </ListGroup>

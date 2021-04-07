@@ -1,7 +1,7 @@
 <script>
   import { db_nfc } from '../services/db';
   import { person, person_nfc_list } from './../services/store';
-  import PersonNFCItem from './PersonNFCItem.svelte';
+  import PersonNfcItem from './PersonNFCItem.svelte';
 
   const update_person_nfc_list = (person_id) => {
     if (person_id === undefined){
@@ -36,5 +36,5 @@
 </script>
 
 {#each $person_nfc_list as item(item.doc._id)}
-  <PersonNFCItem nfc={item.doc}/>
+  <PersonNfcItem nfc={item.doc}/>
 {/each}
