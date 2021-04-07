@@ -38,44 +38,7 @@ Run app (dev mode):
 yarn start
 ```
 
-Plaats in een .env tekstbestand in de root de (geheime) environment variabelen. Let op, de environment variabelen wordt alleen geladen bij het opstarten van het programma (Het is dus nodig het programma opnieuw op te starten als een variabele aangepast wordt).
-
-De toegang tot de online remote database (bvb. De [Cloudant](https://www.ibm.com/cloud/cloudant) service van IBM):
-
-```
-DB_URL=
-DB_PASSWORD=
-DB_USERNAME=
-```
-Elk tag wordt uniek schrijf- en leesbeveiligd met aparte A en B sleutels, die aangemaakt worden vanuit geheime feeds.
-```
-FEED_A=.zWemmen_is_geZond.
-FEED_B=..wAter..IS..nIet..dRooG..
-```
-Het resetten van tags is enkel mogelijk met deze variabelen op "1":
-```
-NFC_RESET_WRITABLE_ENABLED=1
-NFC_RESET_ENABLED=1
-```
-Assist import
-```
-ASSIST_IMPORT_YEAR=2021
-ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE=1 #enkel lid wanneer lidgeld betaald is.
-ASSIST_REMOVE_NON_MEMBERS=1 #verwijder eerder toegevoegde leden wanneer niet aanwezig in deze Assist import.
-```
-Prefixen van de remote en lokale databases:
-```
-DB_REMOTE_PREFIX=ijs_
-DB_LOCAL_PREFIX=ijs_
-```
-Om het programma in "poort modus" te laten draaien, voeg toe:
-```
-GATE=1
-```
-De "debug modus" geeft extra informatie tijdens programma ontwikkeling:
-```
-DEBUG=1
-```
+Zie [./dot_env_info] voor informatie over alle omgevingsvariabelen waarmee de applicatie opgestart wordt.
 
 ## MIT license
 

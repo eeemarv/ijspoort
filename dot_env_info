@@ -1,0 +1,27 @@
+# CouchDb/Cloudant connection remote database
+DB_URL=
+DB_PASSWORD=
+DB_USERNAME=
+
+# Feeds to produce key A and key B for the Mifare Tags
+FEED_A=swimming..in..cold..wAter
+FEED_B=iS_.._reFreshinggg_
+
+# Enable resets of Mifare tags (set to "1")
+NFC_RESET_WRITABLE_ENABLED=0
+NFC_RESET_ENABLED=1
+
+# Assist import year must match the export from Assist (leden > per lid > export)
+ASSIST_IMPORT_YEAR=2021
+ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE=1
+ASSIST_REMOVE_NON_MEMBERS=1
+
+# Prefixes of remote and local database names.
+DB_REMOTE_PREFIX=ijspoort_
+DB_LOCAL_PREFIX=ijspoort_
+
+# Set GATE to "1" for gate modus
+GATE=0
+
+# Set DEBUG to "1" to open developer tools
+DEBUG=0
