@@ -1,11 +1,11 @@
 <script>
     import { Card } from 'sveltestrap';
-    import NFCActivate from './NFCActivate.svelte';
-    import NFCAutoReg from './NFCAutoReg.svelte';
-    import NFCDeviceCardHeading from './NFCDeviceCardHeading.svelte';
-    import NFCCardBody from './NFCCardBody.svelte';
-    import NFCReadAndReset from './NFCReadAndReset.svelte';
-    import NFCScan from './NFCScan.svelte';
+    import NFCActivate from './NfcActivate.svelte';
+    import NFCAutoReg from './NfcAutoReg.svelte';
+    import NFCDeviceCardHeading from './NfcDeviceCardHeading.svelte';
+    import NFCCardBody from './NfcCardBody.svelte';
+    import NFCReadAndReset from './NfcReadAndReset.svelte';
+    import NFCScan from './NfcScan.svelte';
 
     let nfc_status;
 </script>

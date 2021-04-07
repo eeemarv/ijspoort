@@ -3,8 +3,8 @@
     import { onMount } from 'svelte';
     import { Button } from 'sveltestrap';
     import { db_nfc } from '../services/db';
-    import { nfc_uid, modals } from './../services/store';
-    import NfcProgress from './NFCProgress.svelte';
+    import { nfc_uid, modals } from '../services/store';
+    import NfcProgress from './NfcProgress.svelte';
 
     onMount(() => {
         modals.add('nfc_reset', NfcProgress);

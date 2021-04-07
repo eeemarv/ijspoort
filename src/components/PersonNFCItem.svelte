@@ -1,7 +1,7 @@
 <script>
   import { ListGroupItem, Badge } from 'sveltestrap';
   import { nfc_uid } from './../services/store';
-  import NfcTag from './NFCTag.svelte';
+  import NfcTag from './NfcTag.svelte';
 
   export let nfc;
 </script>

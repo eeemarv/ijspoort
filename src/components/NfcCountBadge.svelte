@@ -1,5 +1,5 @@
 <script>
-    import NFCCount from './NFCCount.svelte';
+    import NFCCount from './NfcCount.svelte';
 
     export let font_size = '1em';
 

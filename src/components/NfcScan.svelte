@@ -2,8 +2,8 @@
     const { ipcRenderer } = window.require('electron');
     import { createEventDispatcher } from 'svelte';
     import { db_nfc, db_person } from '../services/db';
-    import { person } from './../services/store';
-    import { nfc_uid, nfc_auto_reg } from './../services/store';
+    import { person } from '../services/store';
+    import { nfc_uid, nfc_auto_reg } from '../services/store';
 
     const dispatch = createEventDispatcher();
 

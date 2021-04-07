@@ -1,9 +1,9 @@
 <script>
     const env = window.require('electron').remote.process.env;
     import { CardFooter } from 'sveltestrap';
-    import { nfc_uid, nfc_auto_reg } from './../services/store';
-    import NFCReadTest from './NFCReadTest.svelte';
-    import NFCReset from './NFCReset.svelte';
+    import { nfc_uid, nfc_auto_reg } from '../services/store';
+    import NFCReadTest from './NfcReadTest.svelte';
+    import NFCReset from './NfcReset.svelte';
 
     const nfc_reset_writable_enabled = env.NFC_RESET_WRITABLE_ENABLED === '1';
     const nfc_reset_enabled = env.NFC_RESET_ENABLED === '1';

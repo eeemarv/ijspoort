@@ -1,6 +1,6 @@
 <script>
-    import NFCCountButton from './NFCCountButton.svelte';
-    import NFCDevice from './NFCDevice.svelte';
+    import NFCCountButton from './NfcCountButton.svelte';
+    import NFCDevice from './NfcDevice.svelte';
 
     let on;
     let error;

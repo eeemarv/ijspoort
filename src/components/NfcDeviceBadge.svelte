@@ -1,5 +1,5 @@
 <script>
-    import NFCDevice from './NFCDevice.svelte';
+    import NFCDevice from './NfcDevice.svelte';
 
     let on;
     let error;

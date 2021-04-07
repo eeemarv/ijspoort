@@ -3,7 +3,7 @@
     import { onMount } from 'svelte';
     import { Button } from 'sveltestrap';
     import { modals } from '../services/store';
-    import NFCProgress from './NFCProgress.svelte';
+    import NFCProgress from './NfcProgress.svelte';
 
     onMount(() => {
         modals.add('nfc_read_test', NFCProgress);

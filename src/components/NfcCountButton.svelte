@@ -1,7 +1,7 @@
 <script>
     import { Button } from 'sveltestrap';
-    import NfcCount from './NFCCount.svelte';
-    import NfcLogModal from './NFCLogModal.svelte';
+    import NfcCount from './NfcCount.svelte';
+    import NfcLogModal from './NfcLogModal.svelte';
 
     let nfc_count = 0;
     let nfc_log_modal;

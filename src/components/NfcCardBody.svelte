@@ -1,6 +1,6 @@
 <script>
     import { CardText } from 'sveltestrap';
-    import { nfc_uid } from './../services/store';
+    import { nfc_uid } from '../services/store';
 
     export let nfc_status;
 </script>

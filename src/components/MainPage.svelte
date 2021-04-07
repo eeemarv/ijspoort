@@ -3,7 +3,7 @@
   import ManualInput from './ManualInput.svelte';
   import Person from './Person.svelte';
   import RegList from './RegList.svelte';
-  import NFCCard from './NFCCard.svelte';
+  import NFCCard from './NfcCard.svelte';
   import Stats from './Stats.svelte';
   import Clock from './Clock.svelte';
   import DbSync from './DbSync.svelte';

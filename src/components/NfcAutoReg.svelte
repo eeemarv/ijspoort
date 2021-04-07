@@ -1,6 +1,6 @@
 <script>
     import { CardFooter } from 'sveltestrap';
-    import { nfc_auto_reg } from './../services/store';
+    import { nfc_auto_reg } from '../services/store';
 </script>
 
 <CardFooter>

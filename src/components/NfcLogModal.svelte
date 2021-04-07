@@ -1,8 +1,8 @@
 <script>
     import { Button, ListGroup, Modal, ModalBody, ModalFooter, ModalHeader, Row, Col } from 'sveltestrap';
     import { db_nfc, db_person } from '../services/db';
-    import { nfc_uid, person } from './../services/store';
-    import NFCTag from './NFCTag.svelte';
+    import { nfc_uid, person } from '../services/store';
+    import NFCTag from './NfcTag.svelte';
     import PersonTag from './PersonTag.svelte';
     import SelectableListGroupItem from './SelectableListGroupItem.svelte';
 

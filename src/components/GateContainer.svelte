@@ -5,8 +5,8 @@ import Badge from 'sveltestrap/src/Badge.svelte';
 import DbSync from './DbSync.svelte';
 import GateCounterRow from './GateCounterRow.svelte';
 import GateLocaleDate from './GateLocaleDate.svelte';
-import NFCCountBadge from './NFCCountBadge.svelte';
-import NfcDeviceBadge from './NFCDeviceBadge.svelte';
+import NFCCountBadge from './NfcCountBadge.svelte';
+import NfcDeviceBadge from './NfcDeviceBadge.svelte';
 
 </script>
 
