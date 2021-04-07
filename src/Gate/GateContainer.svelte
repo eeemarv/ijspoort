@@ -1,10 +1,10 @@
 <script>
   import { Col, Container, Row } from 'sveltestrap';
-  import Clock from './Clock.svelte';
-import DbSync from './DbSync.svelte';
-import GateCounterRow from './GateCounterRow.svelte';
-import NfcCountBadge from './NfcCountBadge.svelte';
-import NfcDeviceBadge from './NfcDeviceBadge.svelte';
+  import Clock from '../Common/Clock.svelte';
+  import DbSync from '../Db/DbSync.svelte';
+  import GateCounterRow from './GateCounterRow.svelte';
+  import NfcCountBadge from '../Nfc/NfcCountBadge.svelte';
+  import NfcDeviceBadge from '../Nfc/NfcDeviceBadge.svelte';
 
 </script>
 

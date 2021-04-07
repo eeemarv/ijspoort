@@ -67,29 +67,29 @@
 </script>
 
 <Row>
-    <Col class=h-100>
-        <ListGroup class="list-group-scroll list-group-striped list-group-border-bottom" id="reg_list">
-            <ListGroupItem>
-                <p><br></p>
-            </ListGroupItem>
-            {#each blocked_regs as blocked_reg(blocked_reg._id)}
-                <RegItem
-                reg={blocked_reg}
-                blocked={true}
-                {block_time}
-                />
-            {/each}
-            {#each registrations as reg, index(reg.doc._id)}
-                <RegItem
-                reg_index={registrations.length - index}
-                reg={reg.doc}
-                />
-            {/each}
-            {#if registrations.length === 0}
-                <ListGroupItem class=bg-primary>
-                    <p>Nog geen registraties</p>
-                </ListGroupItem>
-            {/if}
-        </ListGroup>
-    </Col>
+  <Col class=h-100>
+    <ListGroup class="list-group-scroll list-group-striped list-group-border-bottom" id="reg_list">
+      <ListGroupItem>
+          <p><br></p>
+      </ListGroupItem>
+      {#each blocked_regs as blocked_reg(blocked_reg._id)}
+        <RegItem
+        reg={blocked_reg}
+        blocked={true}
+        {block_time}
+        />
+      {/each}
+      {#each registrations as reg, index(reg.doc._id)}
+        <RegItem
+        reg_index={registrations.length - index}
+        reg={reg.doc}
+        />
+      {/each}
+      {#if registrations.length === 0}
+        <ListGroupItem class=bg-primary>
+            <p>Nog geen registraties</p>
+        </ListGroupItem>
+      {/if}
+    </ListGroup>
+  </Col>
 </Row>

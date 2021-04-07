@@ -4,7 +4,7 @@
   import { db_person } from './../services/db';
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonName from './PersonName.svelte';
-  import SelectableListGroupItem from './SelectableListGroupItem.svelte';
+  import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
 
   let open = false;
   const toggle = () => {

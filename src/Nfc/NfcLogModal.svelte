@@ -3,8 +3,8 @@
     import { db_nfc, db_person } from '../services/db';
     import { nfc_uid, person } from '../services/store';
     import NfcTag from './NfcTag.svelte';
-    import PersonTag from './PersonTag.svelte';
-    import SelectableListGroupItem from './SelectableListGroupItem.svelte';
+    import PersonTag from '../Person/PersonTag.svelte';
+    import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
 
     let nfc_count = 0;
     let nfcs = [];

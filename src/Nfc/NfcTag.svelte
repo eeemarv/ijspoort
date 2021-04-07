@@ -1,6 +1,6 @@
 <script>
   import { Badge } from 'sveltestrap';
-  import LocaleDateString from './LocaleDateString.svelte';
+  import LocaleDateString from '../Common/LocaleDateString.svelte';
 
   export let nfc;
 </script>

@@ -1,5 +1,5 @@
 <script>
-  import TimeTag from './TimeTag.svelte';
+  import TimeTag from '../Common/TimeTag.svelte';
 
   export let reg;
 </script>

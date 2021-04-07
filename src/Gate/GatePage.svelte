@@ -1,9 +1,7 @@
 <script>
   import { Col } from 'sveltestrap';
   import NFC from './NFC.svelte';
-
-  import Clock from './Clock.svelte';
-
+  import Clock from '../Common/Clock.svelte';
   import { person } from './../services/store';
 
   let reg_list;

@@ -2,10 +2,10 @@
   import { db_person, db_reg } from '../services/db';
   import { Button, Badge } from 'sveltestrap';
   import { onMount } from 'svelte';
-  import { person } from './../services/store';
+  import { person } from '../services/store';
   import RegTimeTag from './RegTimeTag.svelte';
-  import PersonPhone from './PersonPhone.svelte';
-  import PersonTag from './PersonTag.svelte';
+  import PersonPhone from '../Person/PersonPhone.svelte';
+  import PersonTag from '../Person/PersonTag.svelte';
 
   export let reg_index;
   export let reg;
@@ -43,13 +43,13 @@
   const handle_remove_reg = (event) => {
     deleted = true;
     setTimeout(() => {
-        console.log(event);
-        db_reg.remove(reg).then((res) => {
-            console.log(res);
-            $person = undefined;
-        }).catch((err) => {
-            console.log(err);
-        });
+      console.log(event);
+      db_reg.remove(reg).then((res) => {
+        console.log(res);
+        $person = undefined;
+      }).catch((err) => {
+        console.log(err);
+      });
     }, 500);
   };
 
@@ -87,8 +87,8 @@
 </script>
 
 <li bind:this={reg_item} class="list-group-item{blocked ? ' bg-warning' : ''}{newly_add ? ' bg-success' : ''}{deleted ? ' bg-danger' : ''}{selected ? ' bg-primary' : ''}">
-<div class="d-flex w-100 justify-content-between">
-    <dvi>
+  <div class="d-flex w-100 justify-content-between">
+    <div>
       <div>
         {#if reg_index}
           <Badge color=info title="teller">
@@ -113,7 +113,7 @@
           <PersonPhone person={person_data} />
         </div>
       </div>
-    </dvi>
+    </div>
     <div>
       {#if !blocked}
         <Button color=primary class=mr-1 on:click={handle_select_reg}>
@@ -137,5 +137,4 @@
   <Button color=info>Reg-Info</Button>
   </div>
   {/if}
-
 </li>

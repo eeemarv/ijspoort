@@ -1,15 +1,15 @@
 <script>
   import { Card, CardBody, Col } from 'sveltestrap';
-  import ManualInput from './ManualInput.svelte';
-  import Person from './Person.svelte';
-  import RegList from './RegList.svelte';
-  import Stats from './Stats.svelte';
-  import Clock from './Clock.svelte';
-  import DbSync from './DbSync.svelte';
-  import Reg from './Reg.svelte';
+  import ManualInput from '../ManualInput/ManualInput.svelte';
+  import Person from '../Person/Person.svelte';
+  import RegList from '../Reg/RegList.svelte';
+  import Stats from '../Common/Stats.svelte';
+  import Clock from '../Common/Clock.svelte';
+  import DbSync from '../Db/DbSync.svelte';
+  import Reg from '../Reg/Reg.svelte';
   import { onMount } from 'svelte';
   import MainPageLinks from './MainPageLinks.svelte';
-  import NfcCard from './NfcCard.svelte';
+  import NfcCard from '../Nfc/NfcCard.svelte';
 
   let reg;
   let reg_list;

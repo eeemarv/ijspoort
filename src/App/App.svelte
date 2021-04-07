@@ -1,9 +1,9 @@
 <script>
   const env = window.require('electron').remote.process.env;
-  import { modals } from './../services/store';
-  import DbInit from './DbInit.svelte';
-  import GateContainer from './GateContainer.svelte';
-  import MainContainer from './MainContainer.svelte';
+  import { modals } from '../services/store';
+  import DbInit from '../Db/DbInit.svelte';
+  import GateContainer from '../Gate/GateContainer.svelte';
+  import MainContainer from '../Main/MainContainer.svelte';
 
   const gate_enabled = env.GATE === '1';
 

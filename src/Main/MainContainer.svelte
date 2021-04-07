@@ -1,7 +1,7 @@
 <script>
   import { Container, Row } from 'sveltestrap';
-  import RegCSVExport from './RegCSVExport.svelte';
-  import DbJSONExport from './DbJSONExport.svelte';
+  import RegCSVExport from '../Reg/RegCSVExport.svelte';
+  import DbJSONExport from '../Db/DbJSONExport.svelte';
   import MainPage from './MainPage.svelte';
 
   let y;

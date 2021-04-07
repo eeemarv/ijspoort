@@ -2,10 +2,10 @@
     import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Row, Col, Badge } from 'sveltestrap';
     import { db_reg } from '../services/db';
     import { person } from './../services/store';
-    import LocaleDateString from './LocaleDateString.svelte';
+    import LocaleDateString from '../Common/LocaleDateString.svelte';
     import PersonMemberId from './PersonMemberId.svelte';
     import PersonName from './PersonName.svelte';
-    import RegTimeTag from './RegTimeTag.svelte';
+    import RegTimeTag from '../Reg/RegTimeTag.svelte';
 
     let open = false;
     const toggle = () => (open = !open);
