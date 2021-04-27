@@ -49,7 +49,7 @@ Run app (dev mode):
 yarn start
 ```
 
-Zie [./dot_env_info] voor informatie over alle omgevingsvariabelen waarmee de applicatie opgestart wordt.
+Zie [dot_env_info](./dot_env_info) voor informatie over alle omgevingsvariabelen waarmee de applicatie opgestart wordt.
 
 ## MIT license
 
