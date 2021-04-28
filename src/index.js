@@ -105,14 +105,14 @@ const createWindow = () => {
   });
 
   if (debug_enabled){
-	win.webContents.openDevTools({
-		'mode': 'bottom'
-	  });
+		win.webContents.openDevTools({
+			'mode': 'bottom'
+		});
   }
 
   win.once('ready-to-show', () => {
-	console.log('win event ready-to-show');
-	win.show();
+		console.log('win event ready-to-show');
+		win.show();
   });
 
   //return win;
@@ -336,8 +336,16 @@ const listen_pcsc = (win) => {
 };
 
 const listen_gpio = (win) => {
-	gpio.setup(3, gpio.DIR_IN, gpio.EDGE_FALLING);
-	gpio.setup(5, gpio.DIR_IN, gpio.EDGE_FALLING);
+	console.log('listen_gpio');
+
+	gpio.setup(3, gpio.DIR_IN, gpio.EDGE_FALLING, (err) => {
+		console.log('err pin 3');
+		console.log(err);
+	});
+	gpio.setup(5, gpio.DIR_IN, gpio.EDGE_FALLING, (err) => {
+		console.log('err pin 5');
+		console.log(err);
+	});
 
 	gpio.on('change', (channel, value) => {
 
