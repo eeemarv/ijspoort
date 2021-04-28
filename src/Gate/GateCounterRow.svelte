@@ -1,9 +1,9 @@
 <script>
   import { Col } from 'sveltestrap';
-import GateCounter from './GateCounter.svelte';
-import GateCounterMax from './GateCounterMax.svelte';
-import GateCounterOutLimit from './GateCounterOutLimit.svelte';
-import GateCounterStatus from './GateCounterStatus.svelte';
+  import GateCounter from './GateCounter.svelte';
+  import GateCounterMax from './GateCounterMax.svelte';
+  import GateCounterOutLimit from './GateCounterOutLimit.svelte';
+  import GateCounterStatus from './GateCounterStatus.svelte';
 
 </script>
 

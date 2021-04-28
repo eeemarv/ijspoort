@@ -4,6 +4,7 @@ const { NFC, TAG_ISO_14443_3, KEY_TYPE_A, KEY_TYPE_B } = require('nfc-pcsc');
 const crypto = require('crypto');
 const path = require('path');
 const cron = require('node-cron');
+const gpio = require('rpi-gpio');
 
 let assist_import = {
 	enabled: false,
@@ -73,7 +74,7 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 const createWindow = () => {
   win = new BrowserWindow({
     width: 1400,
-		height: 800,
+		height: 768,
 		show: false,
 		darkTheme: true,
 		backgroundColor: '#000000',
@@ -87,18 +88,20 @@ const createWindow = () => {
 
 	if (!gate_enabled){
 		win.setMinimumSize(1400, 768);
+		win.maximize();
 	}
 
-  win.maximize();
-
   if (gate_enabled){
-		win.setFullScreen(true);
+		win.setKiosk(true);
   }
 
   win.loadFile(path.join(__dirname, '../public/index.html'))
   .then(() => {
-	console.log('win then');
-	listenPcsc(win);
+		console.log('win then');
+		listen_pcsc(win);
+		if (gate_enabled){
+			listen_gpio(win);
+		}
   });
 
   if (debug_enabled){
@@ -124,7 +127,7 @@ const remove_nfc_listeners = () => {
 	ipcMain.removeAllListeners('nfc.reset');
 };
 
-const listenPcsc = (win) => {
+const listen_pcsc = (win) => {
 	const pcsc = new NFC();
 	let reader_ready = true;
 
@@ -329,6 +332,26 @@ const listenPcsc = (win) => {
 			console.log(reader.reader.name, 'dev.nfc.off');
 			win.webContents.send('dev.nfc.off');
 		});
+	});
+};
+
+const listen_gpio = (win) => {
+	gpio.setup(3, gpio.DIR_IN, gpio.EDGE_FALLING);
+	gpio.setup(5, gpio.DIR_IN, gpio.EDGE_FALLING);
+
+	gpio.on('change', (channel, value) => {
+
+		console.log('GPIO', channel, value);
+
+		if (channel === 3 && !value){
+			console.log('gpio.sens.gate_in');
+			win.webContents.send('gpio.sens.gate_in');
+		}
+
+		if (channel === 5 && !value){
+			console.log('gpio.sens.gate_out');
+			win.webContents.send('gpio.sens.gate_out');
+		}
 	});
 };
 

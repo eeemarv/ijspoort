@@ -13,11 +13,6 @@
   });
 </script>
 
-<!--
-<span>
-  {ts_date.toLocaleDateString('nl-BE', {weekday: 'short', month: 'short', day:'numeric'})}
-</span>
--->
 <span>
 <span>
   {ts_date.toLocaleDateString('nl-BE', {weekday: 'short'})}

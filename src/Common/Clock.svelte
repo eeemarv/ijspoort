@@ -4,9 +4,10 @@
 	export let font_size = '1.3em';
 
 	let time = new Date();
+
 	$: hours = time.getHours().toString().padStart(2, '0');
 	$: minutes = time.getMinutes().toString().padStart(2, '0');
-    $: seconds = time.getSeconds();
+  $: seconds = time.getSeconds();
 
 	onMount(() => {
 		const timer_interval = setInterval(() => {
