@@ -34,7 +34,15 @@
     </Col>
     <Col class="h-100 p-3 d-flex flex-column">
       <div class="h-50">
-        <span class="badge badge-dark">Oufti</span>
+        <span class="badge badge-dark">
+          Poort
+        </span>
+        <span class="badge badge-dark">
+          In
+        </span>
+        <span class="badge badge-dark">
+          Uit
+        </span>
       </div>
       <div class="h-50 d-flex justify-content-right">
         <div class=mr-2>

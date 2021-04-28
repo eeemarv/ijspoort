@@ -17,8 +17,9 @@ const env_assist_remove_non_members = process.env?.ASSIST_REMOVE_NON_MEMBERS;
 
 let win;
 let debug_enabled = true;
-const env_debug = process.env?.DEBUG;
+const env_debug = process.env?.DEBUG === '1';
 const gate_enabled = process.env?.GATE === '1';
+const pi_enabled = process.env?.PI === '1';
 const feed_A = process.env?.FEED_A;
 const feed_B = process.env?.FEED_B;
 const read_a_write_b_access = '78778800';
@@ -72,22 +73,26 @@ if (require('electron-squirrel-startup')) { // eslint-disable-line global-requir
 const createWindow = () => {
   win = new BrowserWindow({
     width: 1400,
-	height: 800,
-	show: false,
-	darkTheme: true,
-	backgroundColor: '#000000',
-	icon: path.join(__dirname, '/../icon/512x512.png'),
+		height: 800,
+		show: false,
+		darkTheme: true,
+		backgroundColor: '#000000',
+		icon: path.join(__dirname, '/../icon/512x512.png'),
     webPreferences: {
       nodeIntegration: true,
-	  nodeIntegrationInWorker: true,
-	  enableRemoteModule: true
+			nodeIntegrationInWorker: true,
+			enableRemoteModule: true
     }
   });
-  win.setMinimumSize(1400, 768);
+
+	if (!gate_enabled){
+		win.setMinimumSize(1400, 768);
+	}
+
   win.maximize();
 
   if (gate_enabled){
-	win.setFullScreen(true);
+		win.setFullScreen(true);
   }
 
   win.loadFile(path.join(__dirname, '../public/index.html'))
