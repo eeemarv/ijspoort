@@ -4,7 +4,7 @@ const { NFC, TAG_ISO_14443_3, KEY_TYPE_A, KEY_TYPE_B } = require('nfc-pcsc');
 const crypto = require('crypto');
 const path = require('path');
 const cron = require('node-cron');
-const gpio = require('rpi-gpio');
+const { Gpio } = require('onoff');
 
 let assist_import = {
 	enabled: false,
@@ -338,29 +338,38 @@ const listen_pcsc = (win) => {
 const listen_gpio = (win) => {
 	console.log('listen_gpio');
 
-	gpio.setup(3, gpio.DIR_IN, gpio.EDGE_FALLING, (err) => {
-		console.log('err pin 3');
-		console.log(err);
-	});
-	gpio.setup(5, gpio.DIR_IN, gpio.EDGE_FALLING, (err) => {
-		console.log('err pin 5');
-		console.log(err);
+	const gpio_sens_in = new Gpio(2, 'in', 'both', {
+		debounceTimeout: 50,
+		activeLow: true
 	});
 
-	gpio.on('change', (channel, value) => {
+	const gpio_sens_out = new Gpio(3, 'in', 'both', {
+		debounceTimeout: 50,
+		activeLow: true
+	});
+4
+	const gpio_gate = new Gpio(14, 'low', {
+		activeLow: true
+	});
 
-		console.log('GPIO', channel, value);
-
-		if (channel === 3 && !value){
-			console.log('gpio.sens.gate_in');
-			win.webContents.send('gpio.sens.gate_in');
+	gpio_sens_in.watch((err, value) => {
+		if (err){
+			console.log('err gpio_sens_in');
+			console.log(err);
 		}
-
-		if (channel === 5 && !value){
-			console.log('gpio.sens.gate_out');
-			win.webContents.send('gpio.sens.gate_out');
-		}
+		console.log('gpio_sens_in', value);
 	});
+
+	gpio_sens_out.watch((err, value) => {
+		if (err){
+			console.log('err gpio_sens_out');
+			console.log(err);
+		}
+		console.log('gpio_sens_out', value);
+		gpio_gate.writeSync(value);
+	});
+
+
 };
 
 app.on('ready', () => {
