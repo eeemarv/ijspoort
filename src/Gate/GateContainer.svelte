@@ -8,15 +8,26 @@
   import GateStatus from './GateStatus.svelte';
   import GateSensIn from './GateSensIn.svelte';
   import GateSensOut from './GateSensOut.svelte';
+  import { gate_count_enabled } from '../services/store';
 
 </script>
 
 <Container fluid class=vh-100>
-  <GateCounterRow />
+  {#if $gate_count_enabled}
+    <GateCounterRow />
+  {:else}
+    <div class="row h-75">
+      <Col class="h-100 d-flex justify-content-center align-items-center" >
+        <Clock font_size=10em />
+      </Col>
+    </div>
+  {/if}
 
   <Row class="h-25 bg-primary">
     <Col md=6 class="h-100 d-flex justify-content-center align-items-center">
-      <Clock font_size=5em />
+      {#if $gate_count_enabled}
+        <Clock font_size=5em />
+      {/if}
     </Col>
     <Col class="h-100 p-3 d-flex flex-column">
       <div class="h-50">
