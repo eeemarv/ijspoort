@@ -5,9 +5,9 @@
   import GateCounterRow from './GateCounterRow.svelte';
   import NfcCountBadge from '../Nfc/NfcCountBadge.svelte';
   import NfcDeviceBadge from '../Nfc/NfcDeviceBadge.svelte';
-import GateStatus from './GateStatus.svelte';
-import GateSensIn from './GateSensIn.svelte';
-import GateSensOut from './GateSensOut.svelte';
+  import GateStatus from './GateStatus.svelte';
+  import GateSensIn from './GateSensIn.svelte';
+  import GateSensOut from './GateSensOut.svelte';
 
 </script>
 
@@ -21,10 +21,8 @@ import GateSensOut from './GateSensOut.svelte';
     <Col class="h-100 p-3 d-flex flex-column">
       <div class="h-50">
         <GateStatus />
-        <!--
         <GateSensIn />
         <GateSensOut />
-        -->
       </div>
       <div class="h-50 d-flex justify-content-right">
         <div class=mr-2>
@@ -41,6 +39,6 @@ import GateSensOut from './GateSensOut.svelte';
 :global(body) {
   user-zoom: none;
   user-select: none;
-  overflow: hidden;
+/*  overflow: hidden; */
 }
 </style>

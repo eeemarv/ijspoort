@@ -339,35 +339,55 @@ const listen_pcsc = (win) => {
 const listen_gpio = (win) => {
 	console.log('listen_gpio');
 
-	const gpio_sens_in = new Gpio(gpio_pin.sens_in, 'in', 'both', {
+	const gpio_sens_in = new Gpio(gpio_pin.sens_in, 'in', 'rising', {
 		debounceTimeout: 200,
 		activeLow: true
 	});
 
-	const gpio_sens_out = new Gpio(gpio_pin.sens_out, 'in', 'both', {
+	const gpio_sens_out = new Gpio(gpio_pin.sens_out, 'in', 'rising', {
 		debounceTimeout: 200,
 		activeLow: true
 	});
 
-	const gpio_gate = new Gpio(gpio_pin.gate, 'out');
+	const gpio_gate = new Gpio(gpio_pin.gate, 'high');
 
 	gpio_sens_in.watch((err, value) => {
 		if (err){
-			console.log('err gpio_sens_in');
+			console.log('err gpio.sens.in');
 			console.log(err);
 			return;
 		}
-		console.log('gpio_sens_in', value);
+		console.log('gpio.sens.in', value);
+		win.webContents.send('gpio.sens.in');
 	});
 
 	gpio_sens_out.watch((err, value) => {
 		if (err){
-			console.log('err gpio_sens_out');
+			console.log('err gpio.sens.out');
 			console.log(err);
 			return;
 		}
-		console.log('gpio_sens_out', value);
+		console.log('gpio.sens.out', value);
+		win.webContents.send('gpio.sens.out');
 		gpio_gate.writeSync(value);
+	});
+
+	ipcMain.on('gpio.gate.open', (event) => {
+		console.log('gpio.gate.open');
+		gpio_gate.writeSync(false);
+		event.reply('gpio.gate.is_open');
+	});
+
+	ipcMain.on('gpio.gate.close', (event) => {
+		console.log('gpio.gate.close');
+		gpio_gate.writeSync(true);
+		event.reply('gpio.gate.is_closed');
+	});
+
+	ipcMain.on('gpio.gate.get', (event) => {
+		let open = !gpio_gate.readSync();
+		console.log('gpio.gate.get', open);
+		event.returnValue(open);
 	});
 
 	process.on('SIGINT', () => {
