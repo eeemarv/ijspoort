@@ -365,7 +365,7 @@ const listen_gpio = (win) => {
 		block_sens_in = true;
 		setTimeout(() => {
 			block_sens_in = false;
-		}, 3000);
+		}, 1000);
 		console.log('gpio.sens.in', value);
 		win.webContents.send('gpio.sens.in');
 	});
@@ -383,7 +383,7 @@ const listen_gpio = (win) => {
 		block_sens_out = true;
 		setTimeout(() => {
 			block_sens_out = false;
-		}, 3000);
+		}, 1000);
 		console.log('gpio.sens.out', value);
 		win.webContents.send('gpio.sens.out');
 		gpio_gate.writeSync(value);
