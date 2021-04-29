@@ -12,14 +12,12 @@ let assist_import = {
 	only_member_on_even_balance: false,
 	remove_non_members: false
 };
+
 const env_assist_import_year = process.env?.ASSIST_IMPORT_YEAR;
 const env_assist_only_member_on_even_balance = process.env?.ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE;
 const env_assist_remove_non_members = process.env?.ASSIST_REMOVE_NON_MEMBERS;
 
 let win;
-let gpio_sens_in;
-let gpio_sens_out;
-let gpio_gate;
 
 const debug_enabled = process.env?.DEBUG === '1';
 const gate_enabled = process.env?.GATE === '1';
@@ -28,6 +26,12 @@ const feed_B = process.env?.FEED_B;
 const read_a_write_b_access = '78778800';
 const transport_access = 'FF078000';
 const transport_key = 'ffffffffffff';
+
+const gpio_pin = {
+	sens_in: 23,
+	sens_out: 24,
+	gate: 14
+};
 
 if (typeof feed_A === 'undefined' || !feed_A){
 	throw 'No FEED_A set!';
@@ -335,17 +339,17 @@ const listen_pcsc = (win) => {
 const listen_gpio = (win) => {
 	console.log('listen_gpio');
 
-	gpio_sens_in = new Gpio(2, 'in', 'both', {
+	const gpio_sens_in = new Gpio(gpio_pin.sens_in, 'in', 'both', {
 		debounceTimeout: 200,
 		activeLow: true
 	});
 
-	gpio_sens_out = new Gpio(3, 'in', 'both', {
+	const gpio_sens_out = new Gpio(gpio_pin.sens_out, 'in', 'both', {
 		debounceTimeout: 200,
 		activeLow: true
 	});
-4
-	gpio_gate = new Gpio(14, 'out');
+
+	const gpio_gate = new Gpio(gpio_pin.gate, 'out');
 
 	gpio_sens_in.watch((err, value) => {
 		if (err){
@@ -366,7 +370,11 @@ const listen_gpio = (win) => {
 		gpio_gate.writeSync(value);
 	});
 
-
+	process.on('SIGINT', () => {
+		gpio_sens_in.unexport();
+		gpio_sens_out.unexport();
+		gpio_gate.unexport();
+	});
 };
 
 app.on('ready', () => {
@@ -378,15 +386,6 @@ app.on('window-all-closed', () => {
     app.quit();
   }
   console.log('all windows closed');
-	if (typeof gpio_sens_in !== 'undefined'){
-		gpio_sens_in.unexpose();
-	}
-	if (typeof gpio_sens_out !== 'undefined'){
-		gpio_sens_out.unexpose();
-	}
-	if (typeof gpio_gate !== 'undefined'){
-		gpio_sens_in.unexpose();
-	}
 });
 
 app.on('activate', () => {
