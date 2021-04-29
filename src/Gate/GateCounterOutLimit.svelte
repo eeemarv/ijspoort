@@ -2,13 +2,13 @@
 
 </script>
 
-<div>
+<span>
   -10
-</div>
+</span>
 
 <style>
-div {
-  font-size: 2.5em;
+span {
+  font-size: 3em;
   font-weight: bold;
   line-height: 1.05;
 }

@@ -29,9 +29,9 @@ import GateSensOut from './GateSensOut.svelte';
       <div class="h-50 d-flex justify-content-right">
         <div class=mr-2>
           <NfcDeviceBadge />
-          <NfcCountBadge font_size=1.5em />
+          <NfcCountBadge font_size=1.3em />
         </div>
-        <DbSync font_size=1.5em />
+        <DbSync font_size=1.3em />
       </div>
     </Col>
   </Row>
