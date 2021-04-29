@@ -339,13 +339,14 @@ const listen_pcsc = (win) => {
 const listen_gpio = (win) => {
 	console.log('listen_gpio');
 
+	let block_sens_in = false;
+	let block_sens_out = false;
+
 	const gpio_sens_in = new Gpio(gpio_pin.sens_in, 'in', 'rising', {
-		debounceTimeout: 200,
 		activeLow: true
 	});
 
 	const gpio_sens_out = new Gpio(gpio_pin.sens_out, 'in', 'rising', {
-		debounceTimeout: 200,
 		activeLow: true
 	});
 
@@ -357,6 +358,14 @@ const listen_gpio = (win) => {
 			console.log(err);
 			return;
 		}
+		if (block_sens_in){
+			console.log('gpio sens in debounced');
+			return;
+		}
+		block_sens_in = true;
+		setTimeout(() => {
+			block_sens_in = false;
+		}, 3000);
 		console.log('gpio.sens.in', value);
 		win.webContents.send('gpio.sens.in');
 	});
@@ -367,6 +376,14 @@ const listen_gpio = (win) => {
 			console.log(err);
 			return;
 		}
+		if (block_sens_out){
+			console.log('gpio sens out debounced');
+			return;
+		}
+		block_sens_out = true;
+		setTimeout(() => {
+			block_sens_out = false;
+		}, 3000);
 		console.log('gpio.sens.out', value);
 		win.webContents.send('gpio.sens.out');
 		gpio_gate.writeSync(value);

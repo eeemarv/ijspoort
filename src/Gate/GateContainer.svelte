@@ -39,6 +39,6 @@
 :global(body) {
   user-zoom: none;
   user-select: none;
-/*  overflow: hidden; */
+  overflow: hidden;
 }
 </style>
