@@ -401,10 +401,8 @@ const listen_gpio = (win) => {
 		event.reply('gpio.gate.is_closed');
 	});
 
-	ipcMain.on('gpio.gate.get', (event) => {
-		let open = !gpio_gate.readSync();
-		console.log('gpio.gate.get', open);
-		event.returnValue(open);
+	ipcMain.handle('gpio.gate.sync', async (event) => {
+		return await !gpio_gate.readSync();
 	});
 
 	process.on('SIGINT', () => {

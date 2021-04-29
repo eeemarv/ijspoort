@@ -16,7 +16,7 @@
 		return () => {
 			clearInterval(timer_interval);
 		};
-    });
+  });
 </script>
 
 <div title="klok" class=m-0 style="--font-size: {font_size};">

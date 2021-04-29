@@ -1,7 +1,7 @@
 <script>
   const env = window.require('electron').remote.process.env;
-  import { createEventDispatcher } from 'svelte';
   const { ipcRenderer } = window.require('electron');
+  import { createEventDispatcher } from 'svelte';
   import GateSens from './GateSens.svelte';
 
   const debug = env.DEBUG === '1';
