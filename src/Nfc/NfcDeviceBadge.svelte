@@ -18,6 +18,6 @@
 
 <style>
 span {
-  font-size: 1.5em;
+  font-size: 1.3em;
 }
 </style>
