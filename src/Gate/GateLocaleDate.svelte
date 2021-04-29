@@ -25,7 +25,7 @@
 
 <style>
 span {
- font-size: 1.8em;
+ font-size: 1em;
  line-height: 1;
 }
 </style>

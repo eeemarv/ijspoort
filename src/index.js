@@ -17,10 +17,12 @@ const env_assist_only_member_on_even_balance = process.env?.ASSIST_ONLY_MEMBER_O
 const env_assist_remove_non_members = process.env?.ASSIST_REMOVE_NON_MEMBERS;
 
 let win;
-let debug_enabled = true;
-const env_debug = process.env?.DEBUG === '1';
+let gpio_sens_in;
+let gpio_sens_out;
+let gpio_gate;
+
+const debug_enabled = process.env?.DEBUG === '1';
 const gate_enabled = process.env?.GATE === '1';
-const pi_enabled = process.env?.PI === '1';
 const feed_A = process.env?.FEED_A;
 const feed_B = process.env?.FEED_B;
 const read_a_write_b_access = '78778800';
@@ -30,11 +32,9 @@ const transport_key = 'ffffffffffff';
 if (typeof feed_A === 'undefined' || !feed_A){
 	throw 'No FEED_A set!';
 }
+
 if (typeof feed_B === 'undefined' || !feed_B){
 	throw 'No FEED_B set!';
-}
-if (typeof env_debug === 'undefined' || !env_debug || env_debug === '0'){
-	debug_enabled = false;
 }
 
 if (typeof env_assist_import_year !== 'undefined'
@@ -42,6 +42,7 @@ if (typeof env_assist_import_year !== 'undefined'
 	&& env_assist_import_year !== '0'){
 	assist_import.enabled = true;
 }
+
 if (assist_import.enabled){
 	if (!(Number.isInteger(Number(env_assist_import_year)) && (Number(env_assist_import_year) >= 2000))){
 		throw 'ASSIST_IMPORT_YEAR not valid';
@@ -99,9 +100,7 @@ const createWindow = () => {
   .then(() => {
 		console.log('win then');
 		listen_pcsc(win);
-		if (gate_enabled){
-			listen_gpio(win);
-		}
+		listen_gpio(win);
   });
 
   if (debug_enabled){
@@ -114,8 +113,6 @@ const createWindow = () => {
 		console.log('win event ready-to-show');
 		win.show();
   });
-
-  //return win;
 };
 
 const remove_nfc_listeners = () => {
@@ -338,24 +335,23 @@ const listen_pcsc = (win) => {
 const listen_gpio = (win) => {
 	console.log('listen_gpio');
 
-	const gpio_sens_in = new Gpio(2, 'in', 'both', {
-		debounceTimeout: 50,
+	gpio_sens_in = new Gpio(2, 'in', 'both', {
+		debounceTimeout: 200,
 		activeLow: true
 	});
 
-	const gpio_sens_out = new Gpio(3, 'in', 'both', {
-		debounceTimeout: 50,
+	gpio_sens_out = new Gpio(3, 'in', 'both', {
+		debounceTimeout: 200,
 		activeLow: true
 	});
 4
-	const gpio_gate = new Gpio(14, 'low', {
-		activeLow: true
-	});
+	gpio_gate = new Gpio(14, 'out');
 
 	gpio_sens_in.watch((err, value) => {
 		if (err){
 			console.log('err gpio_sens_in');
 			console.log(err);
+			return;
 		}
 		console.log('gpio_sens_in', value);
 	});
@@ -364,6 +360,7 @@ const listen_gpio = (win) => {
 		if (err){
 			console.log('err gpio_sens_out');
 			console.log(err);
+			return;
 		}
 		console.log('gpio_sens_out', value);
 		gpio_gate.writeSync(value);
@@ -381,6 +378,15 @@ app.on('window-all-closed', () => {
     app.quit();
   }
   console.log('all windows closed');
+	if (typeof gpio_sens_in !== 'undefined'){
+		gpio_sens_in.unexpose();
+	}
+	if (typeof gpio_sens_out !== 'undefined'){
+		gpio_sens_out.unexpose();
+	}
+	if (typeof gpio_gate !== 'undefined'){
+		gpio_sens_in.unexpose();
+	}
 });
 
 app.on('activate', () => {
@@ -400,9 +406,9 @@ const import_assist_xlsx = () => {
         filters: {name: 'MS Excell', extensions: ['xls', 'xlsx']},
         message: 'Import xlsx leden uit Assist, LIDJAAR ' + assist_import.year
 	});
-    if (!files){
-        return;
-    }
+	if (!files){
+			return;
+	}
 	win.webContents.send('xls.assist.import', files[0], assist_import);
 };
 

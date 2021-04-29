@@ -11,6 +11,6 @@ span {
   font-family: Courier;
   line-height: 1.05;
   font-weight: bold;
-  font-size: 24em;
+  font-size: 18em;
 }
 </style>

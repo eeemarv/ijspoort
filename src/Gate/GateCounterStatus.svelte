@@ -8,7 +8,7 @@
 
 <style>
 span {
-  font-size: 7em;
+  font-size: 5em;
   font-weight: bold;
   line-height: 1.05;
 }

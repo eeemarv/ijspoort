@@ -8,7 +8,7 @@
 
 <style>
 div {
-  font-size: 3.5em;
+  font-size: 2.5em;
   font-weight: bold;
   line-height: 1.05;
 }

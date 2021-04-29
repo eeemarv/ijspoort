@@ -16,7 +16,7 @@ import GateSensOut from './GateSensOut.svelte';
 
   <Row class="h-25 bg-primary">
     <Col md=6 class="h-100 d-flex justify-content-center align-items-center">
-      <Clock font_size=8em />
+      <Clock font_size=6em />
     </Col>
     <Col class="h-100 p-3 d-flex flex-column">
       <div class="h-50">
