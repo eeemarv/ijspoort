@@ -41,5 +41,6 @@ import GateSensOut from './GateSensOut.svelte';
 :global(body) {
   user-zoom: none;
   user-select: none;
+  overflow: hidden;
 }
 </style>
