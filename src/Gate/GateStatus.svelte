@@ -74,10 +74,10 @@
   $: if (!$gate_count_enabled){
     handle_open_trigger();
   }
-  $: if ($gate_count){
+  $: if ($gate_count > 0){
     handle_open_trigger();
   }
-  $: if (!$gate_count){
+  $: if ($gate_count <= 0){
     handle_close_trigger();
   }
 
@@ -96,9 +96,10 @@
     if ($gate_nfc_enabled){
       return;
     }
-    if ($gate_count_enabled && ($gate_count > 0)){
-      set_open();
+    if ($gate_count_enabled && ($gate_count <= 0)){
+      return;
     }
+    set_open();
   };
 </script>
 
