@@ -1,43 +1,24 @@
 <script>
-  import { onMount } from "svelte";
-  import { gate_count_enabled, gate_nfc_enabled } from "../services/store";
+  import { gate_count_enabled, gate_count, gate_nfc_enabled } from "../services/store";
   const { ipcRenderer } = window.require('electron');
 
-  let normally_closed = false;
   let open = true;
-  $: normally_closed = $gate_count_enabled || $gate_nfc_enabled;
 
-  /*
-  onMount(() => {
-    const sync_status_interval = setInterval(() => {
-      ipcRenderer.invoke('gpio.gate.sync')
-      .then((res) => {
-        open = res;
-      });
-    }, 200);
-    return () => {
-      clearInterval(sync_status_interval);
-    }
-  });
-
-  const close_gate = () => {
-    ipcRenderer.send('gpio.gate.close');
-
+  $: if ($gate_count_enabled && $gate_count <= 0){
+    open = false;
   }
 
+  $: if (!$gate_count_enabled || $gate_count > 0){
+    open = true;
+  }
 
-  const open_gate = () => {
+  $: if (open){
     ipcRenderer.send('gpio.gate.open');
-    if (normally_closed){
-      const close_time_out = setTimeout(() => {
-        close_gate();
-      });
-    }
-
   }
-  */
 
-
+  $: if (!open){
+    ipcRenderer.send('gpio.gate.close');
+  }
 </script>
 
 <span class="badge mr-2"

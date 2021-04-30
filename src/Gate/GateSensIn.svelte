@@ -2,6 +2,7 @@
   const env = window.require('electron').remote.process.env;
   const { ipcRenderer } = window.require('electron');
   import { createEventDispatcher } from 'svelte';
+  import { gate_count, gate_count_enabled } from '../services/store';
   import GateSens from './GateSens.svelte';
 
   const debug = env.DEBUG === '1';
@@ -15,6 +16,9 @@
     setTimeout(() => {
         triggered = false;
     }, 1000);
+    if ($gate_count_enabled){
+      gate_count.dec();
+    }
   }
 
   const handle_click = () => {

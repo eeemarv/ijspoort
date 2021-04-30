@@ -146,4 +146,7 @@ button {
   font-weight: bold;
   min-width: 3em;
 }
+input {
+  font-weight: bold;
+}
 </style>

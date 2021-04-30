@@ -10,7 +10,7 @@
 
 <style>
 span {
-  font-size: 1.5em;
+  font-size: 2em;
   font-weight: bold;
   line-height: 1.05;
 }

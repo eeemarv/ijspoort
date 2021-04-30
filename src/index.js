@@ -386,7 +386,6 @@ const listen_gpio = (win) => {
 		}, 1000);
 		console.log('gpio.sens.out', value);
 		win.webContents.send('gpio.sens.out');
-		gpio_gate.writeSync(value);
 	});
 
 	ipcMain.on('gpio.gate.open', (event) => {
