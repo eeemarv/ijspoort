@@ -391,7 +391,7 @@ const listen_gpio = (win) => {
 	ipcMain.on('gate.open', async (event) => {
 		console.log('gate.open');
 		try {
-			await gpio_gate.writeSync(0);
+			await gpio_gate.writeSync(1);
 			event.reply('gate.is_open');
 			console.log('gate.is_open');
 		} catch (err) {
@@ -404,7 +404,7 @@ const listen_gpio = (win) => {
 	ipcMain.on('gate.close', async (event) => {
 		console.log('gate.close');
 		try {
-			await gpio_gate.writeSync(1);
+			await gpio_gate.writeSync(0);
 			event.reply('gate.is_closed');
 			console.log('gate.is_closed');
 		} catch (err) {
