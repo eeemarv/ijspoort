@@ -5,24 +5,36 @@
   import GateSensIn from "./GateSensIn.svelte";
   import GateSensOut from "./GateSensOut.svelte";
 
-  const nfc_open_time = 100;
+  const nfc_open_time = 1000;
   let nfc_open_timer = -1;
   let open = true;
 
   const set_open = () => {
-    ipcRenderer.send('gate.open');
+    console.log('send -> gate.open');
+    ipcRenderer.send('gate.open', {});
   };
 
   const set_close = () => {
+    console.log('send -> gate.close');
     nfc_open_timer = -1;
-    ipcRenderer.send('gate.close');
+    ipcRenderer.send('gate.close', {});
   }
 
   ipcRenderer.on('gate.is_open', (ev) => {
     open = true;
   });
 
+  ipcRenderer.on('gate.open.err', (ev) => {
+    console.log('GATE.OPEN.ERR');
+    open = true;
+  });
+
   ipcRenderer.on('gate.is_closed', (ev) => {
+    open = false;
+  });
+
+  ipcRenderer.on('gate.close.err', (ev) => {
+    console.log('GATE.CLOSE.ERR');
     open = false;
   });
 

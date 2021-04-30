@@ -395,7 +395,7 @@ const listen_gpio = (win) => {
 			event.reply('gate.is_open');
 			console.log('gate.is_open');
 		} catch (err) {
-			console.log('err gate.open');
+			console.log('gate.open.err');
 			console.log(err);
 			event.reply('gate.open.err', err);
 		}
@@ -413,18 +413,6 @@ const listen_gpio = (win) => {
 			event.reply('gate.close.err', err);
 		}
 	});
-
-	/*
-	ipcMain.on('gpio.gate.close', (event) => {
-		console.log('gpio.gate.close');
-		gpio_gate.writeSync(true);
-		event.reply('gpio.gate.is_closed');
-	});
-
-	ipcMain.handle('gpio.gate.sync', async (event) => {
-		return await !gpio_gate.readSync();
-	});
-	*/
 
 	process.on('SIGINT', () => {
 		gpio_sens_in.unexport();

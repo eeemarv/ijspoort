@@ -64,7 +64,7 @@
       reg.add_by_nfc(event.detail.person);
       person = event.detail.person;
       blocked_reg = false;
-      if ($gate_count_enabled && ($gate_count <=0)){
+      if ($gate_count_enabled && ($gate_count <= 0)){
         modal_class = 'bg-warning';
         title = 'Volzet';
       } else {
