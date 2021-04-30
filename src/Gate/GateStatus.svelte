@@ -5,7 +5,7 @@
   import GateSensIn from "./GateSensIn.svelte";
   import GateSensOut from "./GateSensOut.svelte";
 
-  const nfc_open_time = 1000;
+  const nfc_open_time = 100;
   let nfc_open_timer = -1;
   let open = true;
 
@@ -110,13 +110,9 @@
 >
   Poort
 </span>
-<GateSensIn />
-<GateSensOut />
 
-<!--
 <GateSensIn on:triggered={handle_close_trigger} />
 <GateSensOut on:triggered={handle_open_trigger} />
--->
 
 <style>
 span {
