@@ -3,7 +3,7 @@
   import { db_reg } from '../services/db';
   import { nfc_uid, person } from './../services/store';
 
-  export const block_time = 900000; // 15 minutes
+  export const block_time = 3600000; // 1 hour
   const dispatch = createEventDispatcher();
 
   export const add_by_nfc = (prsn) => {

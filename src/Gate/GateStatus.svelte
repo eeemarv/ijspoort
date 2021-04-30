@@ -1,8 +1,13 @@
 <script>
   import { onMount } from "svelte";
+  import { gate_count_enabled, gate_nfc_enabled } from "../services/store";
   const { ipcRenderer } = window.require('electron');
-  let open = true;
 
+  let normally_closed = false;
+  let open = true;
+  $: normally_closed = $gate_count_enabled || $gate_nfc_enabled;
+
+  /*
   onMount(() => {
     const sync_status_interval = setInterval(() => {
       ipcRenderer.invoke('gpio.gate.sync')
@@ -14,6 +19,24 @@
       clearInterval(sync_status_interval);
     }
   });
+
+  const close_gate = () => {
+    ipcRenderer.send('gpio.gate.close');
+
+  }
+
+
+  const open_gate = () => {
+    ipcRenderer.send('gpio.gate.open');
+    if (normally_closed){
+      const close_time_out = setTimeout(() => {
+        close_gate();
+      });
+    }
+
+  }
+  */
+
 
 </script>
 

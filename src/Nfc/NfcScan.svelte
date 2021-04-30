@@ -19,6 +19,9 @@
             return res.person_id;
         }).catch((err) => {
             if (err.name === 'not_found'){
+                dispatch('uid_not_found', {
+                    uid: card.uid
+                }); // Gate
                 ipcRenderer.send('nfc.test_transport_key');
                 throw 'nfc uid not found in database (check if transport key is set)';
             }
@@ -28,6 +31,9 @@
         }).catch((err) => {
             console.log(err);
             if (err.name === 'not_found'){
+                dispatch('person_not_found', {
+                    uid: card.uid
+                }); // for gate
                 console.log('person linked to this nfc not found');
                 ipcRenderer.send('nfc.test_transport_key');
                 throw 'person was not found';
@@ -45,6 +51,9 @@
                 });
                 return;
             }
+            dispatch('not_member', {
+                person: res
+            }); // for gate
             $person = res;
         }).catch((err) => {
             console.log(err);

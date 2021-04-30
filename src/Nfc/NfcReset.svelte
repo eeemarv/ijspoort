@@ -11,30 +11,6 @@
         modals.title('nfc_reset', 'Wis NFC tag');
     });
 
-    ipcRenderer.on('nfc.test_transport_key.ok', (ev, card) => {
-        console.log('nfc.test_transport_key.ok', card);
-        nfc_status = 'transport_key';
-    });
-    ipcRenderer.on('nfc.test_transport_key.fail', (ev, card) => {
-        console.log('nfc.test_transport_key.fail', card);
-        console.log('test for B key, nfc.test_b_key');
-        ipcRenderer.send('nfc.test_b_key');
-    });
-    ipcRenderer.on('nfc.test_a_key.ok', (ev) => {
-        console.log('A key OK');
-    });
-    ipcRenderer.on('nfc.test_a_key.fail', (ev) => {
-        console.log('A key FAIL');
-    });
-    ipcRenderer.on('nfc.test_b_key.ok', (ev) => {
-        console.log('nfc.test_b_key.ok');
-        nfc_status = 'writable';
-    });
-    ipcRenderer.on('nfc.test_b_key.fail', (ev) => {
-        console.log('nfc.test_b_key.fail');
-        nfc_status = 'not_writable';
-    });
-
     /**** RESET ****/
 
     const handle_nfc_reset = () => {

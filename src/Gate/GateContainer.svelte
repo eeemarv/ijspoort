@@ -9,8 +9,22 @@
   import GateSensIn from './GateSensIn.svelte';
   import GateSensOut from './GateSensOut.svelte';
   import { gate_count_enabled } from '../services/store';
+  import NfcGate from '../Nfc/NfcGate.svelte';
+  import GateConfig from './GateConfig.svelte';
+  import { onMount } from 'svelte';
 
+  let gate_config;
+  let handle_launch_gate_config;
+
+  onMount(() => {
+    handle_launch_gate_config = (event) => {
+      gate_config.launch(event.detail.person);
+    };
+  });
 </script>
+
+<NfcGate on:launch_gate_config={handle_launch_gate_config} />
+<GateConfig bind:this={gate_config} />
 
 <Container fluid class=vh-100>
   {#if $gate_count_enabled}
@@ -18,7 +32,7 @@
   {:else}
     <div class="row h-75">
       <Col class="h-100 d-flex justify-content-center align-items-center" >
-        <Clock font_size=10em />
+        <Clock font_size=8em />
       </Col>
     </div>
   {/if}
@@ -50,6 +64,6 @@
 :global(body) {
   user-zoom: none;
   user-select: none;
-  overflow: hidden;
+  overflow: auto;
 }
 </style>
