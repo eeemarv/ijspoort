@@ -354,46 +354,67 @@ const listen_gpio = (win) => {
 
 	gpio_sens_in.watch((err, value) => {
 		if (err){
-			console.log('err gpio.sens.in');
+			console.log('err sens.in');
 			console.log(err);
 			return;
 		}
 		if (block_sens_in){
-			console.log('gpio sens in debounced');
+			console.log('sens.in debounced');
 			return;
 		}
 		block_sens_in = true;
 		setTimeout(() => {
 			block_sens_in = false;
 		}, 1000);
-		console.log('gpio.sens.in', value);
-		win.webContents.send('gpio.sens.in');
+		console.log('sens.in', value);
+		win.webContents.send('sens.in');
 	});
 
 	gpio_sens_out.watch((err, value) => {
 		if (err){
-			console.log('err gpio.sens.out');
+			console.log('err sens.out');
 			console.log(err);
 			return;
 		}
 		if (block_sens_out){
-			console.log('gpio sens out debounced');
+			console.log('sens.out debounced');
 			return;
 		}
 		block_sens_out = true;
 		setTimeout(() => {
 			block_sens_out = false;
 		}, 1000);
-		console.log('gpio.sens.out', value);
-		win.webContents.send('gpio.sens.out');
+		console.log('sens.out', value);
+		win.webContents.send('sens.out');
 	});
 
-	ipcMain.on('gpio.gate.open', (event) => {
-		console.log('gpio.gate.open');
-		gpio_gate.writeSync(false);
-		event.reply('gpio.gate.is_open');
+	ipcMain.on('gate.open', async (event) => {
+		console.log('gate.open');
+		try {
+			await gpio_gate.writeSync(false);
+			event.reply('gate.is_open');
+			console.log('gate.is_open');
+		} catch (err) {
+			console.log('err gate.open');
+			console.log(err);
+			event.reply('gate.open.err', err);
+		}
 	});
 
+	ipcMain.on('gate.close', async (event) => {
+		console.log('gate.close');
+		try {
+			await gpio_gate.writeSync(true);
+			event.reply('gate.is_closed');
+			console.log('gate.is_closed');
+		} catch (err) {
+			console.log('err gate.close');
+			console.log(err);
+			event.reply('gate.close.err', err);
+		}
+	});
+
+	/*
 	ipcMain.on('gpio.gate.close', (event) => {
 		console.log('gpio.gate.close');
 		gpio_gate.writeSync(true);
@@ -403,6 +424,7 @@ const listen_gpio = (win) => {
 	ipcMain.handle('gpio.gate.sync', async (event) => {
 		return await !gpio_gate.readSync();
 	});
+	*/
 
 	process.on('SIGINT', () => {
 		gpio_sens_in.unexport();

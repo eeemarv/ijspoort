@@ -4,6 +4,7 @@
   import PersonMemberId from '../Person/PersonMemberId.svelte';
   import PersonName from '../Person/PersonName.svelte';
   import Reg from '../Reg/Reg.svelte';
+  import { gate_count_enabled, gate_count } from '../services/store';
   import NfcScan from './NfcScan.svelte';
 
   const dispatch = createEventDispatcher();
@@ -62,9 +63,17 @@
     handle_reg_by_nfc = (event) => {
       reg.add_by_nfc(event.detail.person);
       person = event.detail.person;
-      title = 'Ok';
       blocked_reg = false;
-      modal_class='bg-success';
+      if ($gate_count_enabled && ($gate_count <=0)){
+        modal_class = 'bg-warning';
+        title = 'Volzet';
+      } else {
+        modal_class = 'bg-success';
+        title = 'Ok';
+        dispatch('trigger_open_gate', {
+          person: person
+        });
+      }
       show();
     };
 

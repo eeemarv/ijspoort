@@ -1,7 +1,5 @@
 <script>
-  import { Button, CustomInput, FormGroup, Input, Label, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
-  import PersonMemberId from '../Person/PersonMemberId.svelte';
-  import PersonName from '../Person/PersonName.svelte';
+  import { Button, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
   import { gate_count, gate_count_enabled, gate_nfc_enabled } from '../services/store';
 
   let open = false;
@@ -40,7 +38,7 @@
       id=nfc_switch
       type=switch
       label="Toegang enkel voor leden"
-      value={$gate_nfc_enabled}
+      bind:checked={$gate_nfc_enabled}
     />
   </ModalBody>
   <ModalBody>

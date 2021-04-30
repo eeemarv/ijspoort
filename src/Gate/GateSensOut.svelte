@@ -11,14 +11,14 @@
   let triggered = false;
 
   const trigger = () => {
-    triggered = true;
-    dispatch('triggered');
-    setTimeout(() => {
-        triggered = false;
-    }, 1000);
     if ($gate_count_enabled){
       gate_count.inc();
     }
+    dispatch('triggered');
+    triggered = true;
+    setTimeout(() => {
+        triggered = false;
+    }, 1000);
   }
 
   const handle_click = () => {
@@ -27,7 +27,7 @@
     }
   };
 
-  ipcRenderer.on('gpio.sens.out', (ev) => {
+  ipcRenderer.on('sens.out', (ev) => {
     trigger();
   });
 </script>

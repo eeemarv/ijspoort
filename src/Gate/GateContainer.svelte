@@ -6,24 +6,31 @@
   import NfcCountBadge from '../Nfc/NfcCountBadge.svelte';
   import NfcDeviceBadge from '../Nfc/NfcDeviceBadge.svelte';
   import GateStatus from './GateStatus.svelte';
-  import GateSensIn from './GateSensIn.svelte';
-  import GateSensOut from './GateSensOut.svelte';
   import { gate_count_enabled } from '../services/store';
   import NfcGate from '../Nfc/NfcGate.svelte';
   import GateConfig from './GateConfig.svelte';
   import { onMount } from 'svelte';
 
   let gate_config;
+  let gate_status;
   let handle_launch_gate_config;
+  let handle_open_gate_by_nfc;
 
   onMount(() => {
     handle_launch_gate_config = (event) => {
       gate_config.launch(event.detail.person);
     };
+
+    handle_open_gate_by_nfc = (event) => {
+      gate_status.open_gate_by_nfc(event.detail.person);
+    };
   });
 </script>
 
-<NfcGate on:launch_gate_config={handle_launch_gate_config} />
+<NfcGate
+  on:launch_gate_config={handle_launch_gate_config}
+  on:trigger_open_gate={handle_open_gate_by_nfc}
+/>
 <GateConfig bind:this={gate_config} />
 
 <Container fluid class=vh-100>
@@ -45,9 +52,7 @@
     </Col>
     <Col class="h-100 p-3 d-flex flex-column">
       <div class="h-50">
-        <GateStatus />
-        <GateSensIn />
-        <GateSensOut />
+        <GateStatus bind:this={gate_status} />
       </div>
       <div class="h-50 d-flex justify-content-right">
         <div class=mr-2>
