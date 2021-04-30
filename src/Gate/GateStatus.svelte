@@ -5,7 +5,7 @@
   import GateSensIn from "./GateSensIn.svelte";
   import GateSensOut from "./GateSensOut.svelte";
 
-  const nfc_open_time = 100;
+  const nfc_open_time = 150;
   let nfc_open_timer = -1;
   let open = true;
 
