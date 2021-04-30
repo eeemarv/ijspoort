@@ -4,7 +4,7 @@
 
 <span>
   {#if $gate_count < 0}
-    $gate_count
+    {$gate_count}
   {/if}
 </span>
 

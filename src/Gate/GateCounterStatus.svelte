@@ -5,8 +5,6 @@
 <span>
   {#if $gate_count <= 0}
     VOL
-  {:else}
-    &nbsp;
   {/if}
 </span>
 

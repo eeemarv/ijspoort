@@ -54,17 +54,84 @@
       <label for=gate_count>
         Aantal personen nog toegelaten
       </label>
-      <input
-        type=number
-        id=gate_count
-        tabindex=0
-        class=form-control
-        bind:value={$gate_count}
-        min=0
-        max=999
-        disabled={!$gate_count_enabled}
-        on:keypress={handle_enter_on_gate_count}
-      />
+      <div class="input-group input-group-lg">
+        <input
+          type=number
+          id=gate_count
+          tabindex=0
+          class="form-control input-lg"
+          bind:value={$gate_count}
+          min=0
+          max=999
+          disabled={!$gate_count_enabled}
+          on:keypress={handle_enter_on_gate_count}
+        />
+
+        <div class="input-group-append">
+          <button
+            class="btn btn-info btn-lg"
+            type="button"
+            on:click={gate_count.dec}
+            disabled={!$gate_count_enabled}
+          >
+            -
+          </button>
+        </div>
+
+        <div class="input-group-append">
+          <button
+            class="btn btn-info btn-lg"
+            type="button"
+            on:click={gate_count.inc}
+            disabled={!$gate_count_enabled}
+          >
+            +
+          </button>
+        </div>
+
+        <div class="input-group-append">
+          <button
+            class="btn btn-info btn-lg"
+            type="button"
+            on:click={() => $gate_count = 0}
+            disabled={!$gate_count_enabled}
+          >
+            0
+          </button>
+        </div>
+        <div class="input-group-append">
+          <button
+            class="btn btn-info btn-lg"
+            type="button"
+            on:click={() => $gate_count = 20}
+            disabled={!$gate_count_enabled}
+          >
+            20
+          </button>
+        </div>
+
+        <div class="input-group-append">
+          <button
+            class="btn btn-info btn-lg"
+            type="button"
+            on:click={() => $gate_count = 40}
+            disabled={!$gate_count_enabled}
+          >
+            40
+          </button>
+        </div>
+
+        <div class="input-group-append">
+          <button
+              class="btn btn-info btn-lg"
+              type="button"
+              on:click={() => $gate_count = 80}
+              disabled={!$gate_count_enabled}
+            >
+              80
+            </button>
+          </div>
+      </div>
     </div>
   </ModalBody>
   <ModalFooter>
@@ -73,3 +140,10 @@
     </Button>
   </ModalFooter>
 </Modal>
+
+<style>
+button {
+  font-weight: bold;
+  min-width: 3em;
+}
+</style>
