@@ -1,9 +1,13 @@
 <script>
-
+  import { gate_count } from "../services/store";
 </script>
 
 <span>
-  VOL
+  {#if $gate_count <= 0}
+    VOL
+  {:else}
+    &nbsp;
+  {/if}
 </span>
 
 <style>

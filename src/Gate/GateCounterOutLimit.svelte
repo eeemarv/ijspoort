@@ -1,9 +1,11 @@
 <script>
-
+  import { gate_count } from "../services/store";
 </script>
 
 <span>
-  -10
+  {#if $gate_count < 0}
+    $gate_count
+  {/if}
 </span>
 
 <style>

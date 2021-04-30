@@ -66,13 +66,24 @@ const create_modals = () => {
     }
 }
 
+const create_gate_count = () => {
+	const { subscribe, set, update } = writable(32);
+
+	return {
+		subscribe,
+		inc: () => update(n => n + 1),
+		dec: () => update(n => n - 1),
+		reset: () => set(0),
+        set: (n) => set(n ? n : 0)
+	};
+};
+
 export const person = writable();
 export const person_nfc_list = writable([]);
 export const nfc_uid = writable();
 export const nfc_auto_reg = writable(true);
 export const sync_monitor = create_sync_monitor();
 export const modals = create_modals();
-export const gate_count = writable(32);
-export const gate_count_max = writable(32);
+export const gate_count = create_gate_count(32);
 export const gate_count_enabled = writable(false);
 export const gate_nfc_enabled = writable(false);

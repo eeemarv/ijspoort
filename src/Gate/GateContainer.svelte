@@ -62,8 +62,8 @@
 
 <style>
 :global(body) {
-  user-zoom: none;
-  user-select: none;
+  /* user-zoom: none; */
+  /* user-select: none; */
   overflow: auto;
 }
 </style>

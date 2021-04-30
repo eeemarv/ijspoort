@@ -111,6 +111,7 @@
   {toggle}
   size=xl
   backdropClassName={modal_class}
+  fade={false}
 >
   <ModalHeader
     class={modal_class}
