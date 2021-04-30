@@ -40,7 +40,7 @@
   <Row class="h-25 bg-primary">
     <Col md=6 class="h-100 d-flex justify-content-center align-items-center">
       {#if $gate_count_enabled}
-        <Clock font_size=5em />
+        <Clock font_size=3em />
       {/if}
     </Col>
     <Col class="h-100 p-3 d-flex flex-column">
@@ -62,8 +62,6 @@
 
 <style>
 :global(body) {
-  /* user-zoom: none; */
-  /* user-select: none; */
   overflow: auto;
 }
 </style>

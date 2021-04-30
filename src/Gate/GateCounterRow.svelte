@@ -10,7 +10,7 @@
 {#if $gate_count > 0}
   <div class="row h-75">
     <Col class="h-100 d-flex justify-content-center align-items-center" >
-      <GateCounter font_size=18em />
+      <GateCounter font_size=16em />
     </Col>
   </div>
 {:else}

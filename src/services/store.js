@@ -74,7 +74,12 @@ const create_gate_count = () => {
 		inc: () => update(n => n + 1),
 		dec: () => update(n => n - 1),
 		reset: () => set(0),
-        set: (n) => set(n ? n : 0)
+        set: (n) => {
+            n = n ? n : 0;
+            n = n > 999 ? 999 : n;
+            n = n > -99 ? -99 : n;
+            set(n);
+        }
 	};
 };
 
