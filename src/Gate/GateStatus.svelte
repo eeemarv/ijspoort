@@ -65,9 +65,20 @@
   $: if ($gate_nfc_enabled){
     handle_close_trigger();
   }
-
+  $: if (!$gate_nfc_enabled){
+    handle_open_trigger();
+  }
+  $: if ($gate_count_enabled){
+    handle_close_trigger();
+  }
   $: if (!$gate_count_enabled){
     handle_open_trigger();
+  }
+  $: if ($gate_count){
+    handle_open_trigger();
+  }
+  $: if (!$gate_count){
+    handle_close_trigger();
   }
 
   const handle_close_trigger = () => {
@@ -98,8 +109,13 @@
 >
   Poort
 </span>
+<GateSensIn />
+<GateSensOut />
+
+<!--
 <GateSensIn on:triggered={handle_close_trigger} />
 <GateSensOut on:triggered={handle_open_trigger} />
+-->
 
 <style>
 span {
