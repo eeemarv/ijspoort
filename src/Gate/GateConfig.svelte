@@ -36,7 +36,7 @@
   <ModalBody>
     <CustomInput
       id=nfc_switch
-      type=switch
+      type=checkbox
       label="Toegang enkel voor leden"
       bind:checked={$gate_nfc_enabled}
     />
@@ -44,14 +44,17 @@
   <ModalBody>
     <CustomInput
       id=count_switch
-      type=switch
+      type=checkbox
       label="Maximum aantal (teller)"
       bind:checked={$gate_count_enabled}
     />
+  </ModalBody>
+  <ModalBody>
     <div class=form-group>
       <label for=gate_count>
         Aantal personen nog toegelaten
       </label>
+
       <div class="input-group input-group-lg">
         <input
           type=number
@@ -97,6 +100,7 @@
             0
           </button>
         </div>
+
         <div class="input-group-append">
           <button
             class="btn btn-info btn-lg"
