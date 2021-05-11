@@ -1,45 +1,33 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { Button, CardFooter } from 'sveltestrap';
   import { db_nfc } from '../services/db';
   import { person, person_nfc_list } from '../services/store';
-  import { nfc_uid, modals } from '../services/store';
-  import NfcProgress from './NfcProgress.svelte';
+  import { nfc_uid } from '../services/store';
+  import NfcModal from './NfcModal.svelte';
 
   export let nfc_status;
+  let nfc_modal;
 
   const dispatch = createEventDispatcher();
-
-  onMount(() => {
-    modals.add('nfc_activate', NfcProgress);
-    modals.title('nfc_activate', 'Activeer NFC tag');
-  });
 
   $: can_activate = $person && $nfc_uid && nfc_status === 'transport_key';
 
   const handle_activate_nfc = () => {
     console.log('handle_activate_nfc');
-    modals.open('nfc_activate');
-    modals.progress('nfc_activate', 0);
-    modals.message('nfc_activate', 'Schrijf sleutels');
+    nfc_modal.start('Schrijf sleutels');
     console.log('send nfc.init');
     ipcRenderer.send('nfc.init', $person);
   };
 
   ipcRenderer.on('nfc.init.ok', (ev, card) => {
     add_nfc();
-    modals.open('nfc_activate');
-    modals.progress('nfc_activate', 100);
-    modals.message('nfc_activate', 'Initialisatie ok.');
-    modals.close_after('nfc_activate', 1000);
+    nfc_modal.stop_timeout('Initialisatie ok.', 100, 1000);
   });
 
   ipcRenderer.on('nfc.init.fail', (ev, card) => {
-    modals.open('nfc_activate');
-    modals.progress('nfc_activate', 20);
-    modals.message('nfc_activate', 'Initialisatie niet gelukt.');
-    modals.close_after('nfc_activate', 5000);
+    nfc_modal.stop_timeout('Initialisatie niet gelukt.', 20, 5000);
   });
 
   const add_nfc = () => {
@@ -60,6 +48,8 @@
     });
   };
 </script>
+
+<NfcModal bind:this={nfc_modal} title="Activeer NFC tag" />
 
 <CardFooter class="d-flex w-100 justify-content-end">
   <Button

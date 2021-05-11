@@ -1,41 +1,40 @@
 <script>
-    const { ipcRenderer } = window.require('electron');
-    import { onMount } from 'svelte';
-    import { Button } from 'sveltestrap';
-    import { modals } from '../services/store';
-    import NfcProgress from './NfcProgress.svelte';
+  const { ipcRenderer } = window.require('electron');
+  import { Button } from 'sveltestrap';
+  import { nfc_auto_reg, nfc_uid } from '../services/store';
+  import NfcModal from './NfcModal.svelte';
 
-    onMount(() => {
-        modals.add('nfc_read_test', NfcProgress);
-        modals.title('nfc_read_test', 'Lees NFC tag');
-    });
+  export let nfc_status;
+  let nfc_modal;
 
-    const handle_nfc_read = (ev) => {
-        console.log('handle_nfc_read');
-        modals.open('nfc_read_test');
-        modals.progress('nfc_read_test', 0);
-        ipcRenderer.send('nfc.read');
-    };
+  const handle_nfc_read = (ev) => {
+    console.log('handle_nfc_read');
+    nfc_modal.start('Start');
+    ipcRenderer.send('nfc.read');
+  };
 
-    ipcRenderer.on('nfc.read.ok', (event, card, date_of_birth, member_id) => {
-        console.log('nfc.read.ok');
-        console.log('date_of_birth', date_of_birth);
-        console.log('member_id', member_id);
-        modals.open('nfc_read_test');
-        modals.progress('nfc_read_test', 100);
-        modals.message('nfc_read_test', date_of_birth + ' ' + member_id);
-    });
+  ipcRenderer.on('nfc.read.ok', (event, card, date_of_birth, member_id) => {
+    console.log('nfc.read.ok');
+    console.log('date_of_birth', date_of_birth);
+    console.log('member_id', member_id);
+    nfc_modal.stop(date_of_birth + ' ' + member_id, 100);
+  });
 
-    ipcRenderer.on('nfc.read.fail', (event, card, str) => {
-        modals.open('nfc_read_test');
-        modals.progress('nfc_read_test', 50);
-        modals.message('nfc_read_test', 'Lees test niet geslaagd.');
-    });
+  ipcRenderer.on('nfc.read.fail', (event, card, str) => {
+    nfc_modal.stop('Test niet geslaagd.', 50);
+  });
 </script>
 
-<Button color=info
+<NfcModal bind:this={nfc_modal} title="Lees NFC tag" />
+
+{#if !$nfc_auto_reg
+  && $nfc_uid
+  && (nfc_status === 'writable' || nfc_status === 'ok')
+}
+  <Button color=info
     title="Lees inhoud van NFC tag"
     on:click={handle_nfc_read}
->
+  >
     Lees
-</Button>
+  </Button>
+{/if}

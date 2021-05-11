@@ -15,46 +15,46 @@
   export const toggle = () => (open = !open);
 
   const update_nfcs = () => {
-      const ts_epoch = new Date();
+    const ts_epoch = new Date();
 
-      db_nfc.query('search/count_by_ts_epoch', {
-          startkey: ts_epoch.getTime() + 86400000,
-          descending: true,
-          include_docs: true,
-          limit: 10,
-          reduce: false
-      }).then((res) => {
-          console.log('RES ---- +++++ ----');
-          console.log(res);
-          nfc_count = res.total_rows;
-          nfcs = res.rows;
-          console.log('nfcs', nfcs);
-          let person_keys = [];
-          nfcs.forEach((v) => {
-              person_keys.push(v.doc.person_id);
-          });
-          console.log('person_keys', person_keys);
-          return db_person.allDocs({
-              keys: person_keys,
-              include_docs: true
-          });
-      }).then((res) => {
-          console.log('persons (nfcs)');
-          console.log(res);
-          res.rows.forEach((p) => {
-              persons[p.id] = {...p.doc};
-          });
-      }).catch((err) => {
-          console.log(err);
+    db_nfc.query('search/count_by_ts_epoch', {
+      startkey: ts_epoch.getTime() + 86400000,
+      descending: true,
+      include_docs: true,
+      limit: 10,
+      reduce: false
+    }).then((res) => {
+      console.log('RES ---- +++++ ----');
+      console.log(res);
+      nfc_count = res.total_rows;
+      nfcs = res.rows;
+      console.log('nfcs', nfcs);
+      let person_keys = [];
+      nfcs.forEach((v) => {
+        person_keys.push(v.doc.person_id);
       });
+      console.log('person_keys', person_keys);
+      return db_person.allDocs({
+        keys: person_keys,
+        include_docs: true
+      });
+    }).then((res) => {
+      console.log('persons (nfcs)');
+      console.log(res);
+      res.rows.forEach((p) => {
+        persons[p.id] = {...p.doc};
+      });
+    }).catch((err) => {
+      console.log(err);
+    });
   };
 
   $: if (open){
-      update_nfcs();
+    update_nfcs();
   }
 
   $: if ($nfc_uid || $person){
-      open = false;
+    open = false;
   }
 </script>
 
