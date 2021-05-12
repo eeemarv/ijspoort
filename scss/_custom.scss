@@ -1,26 +1,9 @@
-
 $theme-colors: (
   warning: darken($yellow, 10%),
   success: darken($success, 10%),
   danger: darken($danger, 20%),
   accent: darken($purple, 10%)
 );
-
-.list-group-item-info {
-  background-color: $info;
-}
-
-.list-scroll {
-  max-height: max-content;
-  overflow:scroll;
-  -webkit-overflow-scrolling: touch;
-}
-.list-group-striped .list-group-item:nth-child(even) {
-  background-color: black;
-}
-.list-group-border-bottom .list-group-item {
-  border-bottom:  1px solid darkgrey;
-}
 
 .autocomplete {
   font-size: 1.0em;

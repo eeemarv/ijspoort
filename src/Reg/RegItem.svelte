@@ -40,10 +40,9 @@
     });
   };
 
-  const handle_remove_reg = (event) => {
+  const handle_remove_reg = (e) => {
     deleted = true;
     setTimeout(() => {
-      console.log(event);
       db_reg.remove(reg).then((res) => {
         console.log(res);
         $person = undefined;
@@ -86,7 +85,16 @@
   });
 </script>
 
-<li bind:this={reg_item} class="list-group-item{blocked ? ' bg-warning' : ''}{newly_add ? ' bg-success' : ''}{deleted ? ' bg-danger' : ''}{selected ? ' bg-primary' : ''}">
+<li
+  bind:this={reg_item}
+  on:click={handle_select_reg}
+  class=list-group-item
+  class:bg-warning={blocked}
+  class:bg-success={newly_add}
+  class:bg-danger={deleted}
+  class:bg-primary={selected}
+  class:selectable={!blocked && !newly_add && !deleted && !selected}
+>
   <div class="d-flex w-100 justify-content-between">
     <div>
       <div>
@@ -116,12 +124,14 @@
     </div>
     <div>
       {#if !blocked}
-        <Button color=primary class=mr-1 on:click={handle_select_reg}>
-          Selecteer
-        </Button>
-        <Button color=danger on:click={handle_remove_reg}>
+        <button
+          type=button
+          color=danger
+          class="btn btn-danger"
+          on:click|stopPropagation={handle_remove_reg}
+        >
           Verwijder
-        </Button>
+        </button>
       {/if}
     </div>
   </div>
@@ -138,3 +148,16 @@
   </div>
   {/if}
 </li>
+
+<style>
+li:nth-child(even) {
+  background-color: black;
+}
+li {
+  border-bottom:  1px solid darkgrey;
+}
+li.selectable:hover{
+  background-color: darkblue;
+  cursor: pointer;
+}
+</style>

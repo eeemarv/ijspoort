@@ -68,7 +68,7 @@
 
 <Row>
   <Col class=h-100>
-    <ListGroup class="list-group-scroll list-group-striped list-group-border-bottom" id="reg_list">
+    <ListGroup>
       <ListGroupItem>
           <p><br></p>
       </ListGroupItem>
