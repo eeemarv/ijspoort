@@ -3,6 +3,6 @@
   export let member_id;
 </script>
 
-<Badge color=light title="lidnummer">
+<Badge color=secondary title="lidnummer">
   {member_id}
 </Badge>

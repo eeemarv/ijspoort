@@ -55,7 +55,7 @@
         <GateStatus bind:this={gate_status} />
       </div>
       <div class="h-50 d-flex justify-content-right">
-        <div class=mr-2>
+        <div class=me-2>
           <NfcDeviceBadge />
           <NfcCountBadge font_size=1.3em />
         </div>

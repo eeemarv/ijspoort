@@ -3,9 +3,9 @@
   export let title;
 </script>
 
-<span class="badge mr-2"
-  class:badge-success={triggered}
-  class:badge-dark={!triggered}
+<span class="badge me-2"
+  class:bg-success={triggered}
+  class:bg-dark={!triggered}
   {title}
   on:click
 >

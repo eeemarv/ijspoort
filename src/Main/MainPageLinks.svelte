@@ -1,6 +1,6 @@
 <script>
   const { shell } = require('electron');
-  import { Button, Card, CardBody, CardHeader } from 'sveltestrap';
+  import { Card, CardBody, CardHeader } from 'sveltestrap';
   import { onMount } from 'svelte';
 
   let handle_open_assist;
@@ -22,17 +22,22 @@
     Externe links
   </CardHeader>
   <CardBody>
-    <Button block
-      color=primary
-      on:click={handle_open_assist}
+    <div class="d-grid gap-2">
+      <button
+        type=button
+        class="btn btn-primary"
+        on:click={handle_open_assist}
       >
         Assist online
-    </Button>
-    <Button block
-      on:click={handle_open_repo}
-      color=primary
-    >
-      IJspoort code
-    </Button>
+      </button>
+      <button
+        type=button
+        class="btn btn-primary"
+        on:click={handle_open_repo}
+        color=primary
+      >
+        IJspoort code
+      </button>
+    </div>
   </CardBody>
 </Card>

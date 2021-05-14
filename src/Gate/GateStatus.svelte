@@ -103,9 +103,9 @@
   };
 </script>
 
-<span class="badge mr-2"
-  class:badge-success={open}
-  class:badge-dark={!open}
+<span class="badge me-2"
+  class:bg-success={open}
+  class:bg-dark={!open}
   title="Poort status"
 >
   Poort

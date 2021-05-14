@@ -1,5 +1,10 @@
 $theme-colors: (
-  warning: darken($yellow, 10%),
+  primary: $primary,
+  secondary: lighten($secondary, 10%),
+  light: $light,
+  dark: $dark,
+  warning: darken($yellow, 10),
+  info: $info,
   success: darken($success, 10%),
   danger: darken($danger, 20%),
   accent: darken($purple, 10%)

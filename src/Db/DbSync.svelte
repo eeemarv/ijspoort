@@ -33,10 +33,10 @@
 </script>
 
 <div style="--font-size: {font_size};">
-    <span class="badge badge-{sync_color} mr-1" title="synchronisatie met remote database">
+    <span class="badge bg-{sync_color} me-1" title="synchronisatie met remote database">
         Sync
     </span>
-    <span class="badge badge-{probe_db_color}" title="remote database verbinding">
+    <span class="badge bg-{probe_db_color}" title="remote database verbinding">
         DB
     </span>
 </div>

@@ -1,5 +1,5 @@
 <script>
-  import { Button, CustomInput, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
+  import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
   import { gate_count, gate_count_enabled, gate_nfc_enabled } from '../services/store';
 
   let open = false;
@@ -33,7 +33,7 @@
     </h1>
   </ModalHeader>
   <ModalBody>
-    <CustomInput
+    <Input
       id=nfc_switch
       type=checkbox
       label="Toegang enkel voor leden"
@@ -41,7 +41,7 @@
     />
   </ModalBody>
   <ModalBody>
-    <CustomInput
+    <Input
       id=count_switch
       type=checkbox
       label="Maximum aantal (teller)"

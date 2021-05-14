@@ -7,10 +7,10 @@
 
 <NfcDevice bind:on bind:error />
 
-<span class="badge mr-2"
-  class:badge-success={on && !error}
-  class:badge-danger={error}
-  class:badge-dark={!on && !error}
+<span class="badge me-2"
+  class:bg-success={on && !error}
+  class:bg-danger={error}
+  class:bg-dark={!on && !error}
   title="Status NFC tag scanner"
 >
   NFC

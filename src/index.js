@@ -104,7 +104,14 @@ const createWindow = () => {
   .then(() => {
 		console.log('win then');
 		listen_pcsc(win);
-		listen_gpio(win);
+		if (gate_enabled){
+			try {
+				listen_gpio(win);
+			} catch (err) {
+				console.log('gpio fail.')
+				console.log(err);
+			}
+		}
   });
 
   if (debug_enabled){

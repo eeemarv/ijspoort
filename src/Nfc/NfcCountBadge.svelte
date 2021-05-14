@@ -9,7 +9,7 @@
 <NfcCount bind:nfc_count />
 
 <span
-  class="badge badge-accent"
+  class="badge bg-accent"
   title="Totaal aantal NFC-tags geregistreerd"
   style="--font-size: {font_size};"
 >

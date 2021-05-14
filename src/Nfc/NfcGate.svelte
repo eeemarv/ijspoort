@@ -153,7 +153,7 @@
             <Badge
               color={item.is_member ? 'success' : 'dark'}
               title="{item.is_member ? 'Lid in' : 'Geen lid in'} {item.year}"
-              class=mr-2
+              class=me-2
             >
               {item.year}
             </Badge>

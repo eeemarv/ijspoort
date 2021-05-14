@@ -64,11 +64,15 @@
         <ListGroupItem class="d-flex w-100 justify-content-between py-2">
           <div>
           {#if $person.gender === 'm'}
-            <Badge color=info title=man>M</Badge>
+            <span class="badge bg-info" title="man">
+              M
+            </span>
             &nbsp;
           {/if}
           {#if $person.gender === 'f'}
-            <Badge color=danger title=vrouw>V</Badge>
+            <span class="badge bg-danger" title="vrouw">
+              V
+            </span>
             &nbsp;
           {/if}
           {#if $person.date_of_birth}
@@ -186,7 +190,6 @@
     <div class="card-footer d-flex w-100 justify-content-end">
       <Button
         color=warning
-        class=ml-3
         on:click={handle_register}
         title="Registratie zonder tag!"
       >
@@ -194,7 +197,7 @@
       </Button>
       <Button
         color=primary
-        class=ml-3
+        class=ms-3
         on:click={() => $person = undefined}
       >
         Sluiten
