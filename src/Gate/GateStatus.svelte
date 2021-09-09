@@ -5,7 +5,7 @@
   import GateSensIn from "./GateSensIn.svelte";
   import GateSensOut from "./GateSensOut.svelte";
 
-  const nfc_open_time = 150;
+  const nfc_open_time = 100;
   let nfc_open_timer = -1;
   let open = true;
 
@@ -65,18 +65,23 @@
   $: if ($gate_nfc_enabled){
     handle_close_trigger();
   }
+
   $: if (!$gate_nfc_enabled){
     handle_open_trigger();
   }
+
   $: if ($gate_count_enabled){
     handle_close_trigger();
   }
+
   $: if (!$gate_count_enabled){
     handle_open_trigger();
   }
+
   $: if ($gate_count > 0){
     handle_open_trigger();
   }
+
   $: if ($gate_count <= 0){
     handle_close_trigger();
   }

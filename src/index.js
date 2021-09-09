@@ -372,7 +372,7 @@ const listen_gpio = (win) => {
 		block_sens_in = true;
 		setTimeout(() => {
 			block_sens_in = false;
-		}, 1000);
+		}, 2000);
 		console.log('sens.in', value);
 		win.webContents.send('sens.in');
 	});
@@ -390,7 +390,7 @@ const listen_gpio = (win) => {
 		block_sens_out = true;
 		setTimeout(() => {
 			block_sens_out = false;
-		}, 1000);
+		}, 2000);
 		console.log('sens.out', value);
 		win.webContents.send('sens.out');
 	});

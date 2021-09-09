@@ -105,5 +105,6 @@
   ipcRenderer.on('nfc.off', (ev) => {
     $nfc_uid = undefined;
     nfc_status = 'off';
+    dispatch('nfc_off');
   });
 </script>

@@ -17,6 +17,7 @@
   let handle_person_not_found;
   let handle_not_member;
   let handle_launch_gate_config;
+  let handle_nfc_off;
   let open = false;
   let person;
   let blocked_reg = false;
@@ -52,18 +53,26 @@
 
   const show = () => {
     open = true;
+    /*
     setTimeout(() => {
       open = false;
       person = undefined;
       blocked_reg = false;
     }, 3000);
+    */
+  };
+
+  const hide = () => {
+    open = false;
+    person = undefined;
+    blocked_reg = false;
   };
 
   onMount(() => {
     handle_reg_by_nfc = (event) => {
+      blocked_reg = false;
       reg.add_by_nfc(event.detail.person);
       person = event.detail.person;
-      blocked_reg = false;
       if ($gate_count_enabled && ($gate_count <= 0)){
         modal_class = 'bg-warning';
         title = 'Volzet';
@@ -111,6 +120,10 @@
         person: person
       });
     };
+
+    handle_nfc_off = () => {
+      hide();
+    }
   });
 
 </script>
@@ -175,9 +188,11 @@
 </Modal>
 
 <Reg bind:this={reg} on:blocked_reg={handle_blocked_reg} />
+
 <NfcScan bind:nfc_status
   on:register={handle_reg_by_nfc}
   on:uid_not_found={handle_uid_not_found}
   on:person_not_found={handle_person_not_found}
   on:not_member={handle_not_member}
+  on:nfc_off={handle_nfc_off}
 />

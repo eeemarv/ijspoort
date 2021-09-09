@@ -118,7 +118,7 @@
             on:click={() => $gate_count = 40}
             disabled={!$gate_count_enabled}
           >
-            40
+            50
           </button>
         </div>
 
