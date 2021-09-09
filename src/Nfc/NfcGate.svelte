@@ -25,6 +25,7 @@
   let modal_class = 'bg-default';
   let member_year_list = [];
   let year = new Date().getFullYear();
+  let show_time = 5;
 
   const toggle = () => {
     open = !open;
@@ -51,21 +52,23 @@
     update_member_year_list();
   }
 
+  setInterval(() => {
+    if (show_time > -1){
+      show_time--;
+    }
+  }, 100);
+
   const show = () => {
     open = true;
-    /*
+    show_time = 5;
+  };
+
+  const hide = () => {
     setTimeout(() => {
       open = false;
       person = undefined;
       blocked_reg = false;
-    }, 3000);
-    */
-  };
-
-  const hide = () => {
-    open = false;
-    person = undefined;
-    blocked_reg = false;
+    }, show_time * 100);
   };
 
   onMount(() => {
