@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher, onMount } from 'svelte';
-  import { Badge, Button, Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'sveltestrap';
+  import { Modal, ModalBody, ModalFooter, ModalHeader, Row } from 'sveltestrap';
   import PersonMemberId from '../Person/PersonMemberId.svelte';
   import PersonName from '../Person/PersonName.svelte';
   import Reg from '../Reg/Reg.svelte';
@@ -25,7 +25,8 @@
   let modal_class = 'bg-default';
   let member_year_list = [];
   let year = new Date().getFullYear();
-  let show_time = 5;
+  let show_time = 15;
+  let show_timeout = 0;
 
   const toggle = () => {
     open = !open;
@@ -60,11 +61,13 @@
 
   const show = () => {
     open = true;
-    show_time = 5;
+    show_time = 15;
+    clearTimeout(show_timeout);
+    dispatch('close_gate_config');
   };
 
   const hide = () => {
-    setTimeout(() => {
+    show_timeout = setTimeout(() => {
       open = false;
       person = undefined;
       blocked_reg = false;
@@ -166,23 +169,20 @@
       <div class="d-flex w-100 justify-content-between">
         <div class="bg-dark p-2">
           {#each member_year_list as item(item.year)}
-            <Badge
-              color={item.is_member ? 'success' : 'dark'}
+            <span class="me-2 badge bg-{item.is_member ? 'success' : 'dark'}"
               title="{item.is_member ? 'Lid in' : 'Geen lid in'} {item.year}"
-              class=me-2
             >
               {item.year}
-            </Badge>
+            </span>
           {/each}
         </div>
         <div>
           {#if person.group && person.group.trim() !== ''}
-            <Button
-              color=primary
+            <button type=button class="btn btn-primary btn-lg"
               on:click={handle_launch_gate_config}
             >
               Poort instelling
-            </Button>
+            </button>
           {/if}
         </div>
       </div>
@@ -199,3 +199,21 @@
   on:not_member={handle_not_member}
   on:nfc_off={handle_nfc_off}
 />
+
+<style>
+h1 {
+  font-size: 3em;
+}
+h2 {
+  font-size: 1.8em;
+}
+p {
+  font-size: 1.5em;
+}
+span {
+  font-size: 1.3em;
+}
+button {
+  font-size: 1.6em;
+}
+</style>

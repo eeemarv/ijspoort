@@ -1,6 +1,5 @@
 <script>
-    import { onMount } from 'svelte';
-
+  import { onMount } from 'svelte';
 	export let font_size = '1.3em';
 
 	let time = new Date();

@@ -14,11 +14,16 @@
   let gate_config;
   let gate_status;
   let handle_launch_gate_config;
+  let handle_close_gate_config;
   let handle_open_gate_by_nfc;
 
   onMount(() => {
     handle_launch_gate_config = (event) => {
       gate_config.launch(event.detail.person);
+    };
+
+    handle_close_gate_config = (event) => {
+      gate_config.close();
     };
 
     handle_open_gate_by_nfc = (event) => {
@@ -29,6 +34,7 @@
 
 <NfcGate
   on:launch_gate_config={handle_launch_gate_config}
+  on:close_gate_config={handle_close_gate_config}
   on:trigger_open_gate={handle_open_gate_by_nfc}
 />
 <GateConfig bind:this={gate_config} />

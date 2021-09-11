@@ -1,8 +1,13 @@
 <script>
-  import { Badge } from 'sveltestrap';
   export let member_id;
 </script>
 
-<Badge color=secondary title="lidnummer">
+<span class="badge bg-secondary" title="lidnummer">
   {member_id}
-</Badge>
+</span>
+
+<style>
+span {
+ font-size: 1em;
+}
+</style>

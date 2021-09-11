@@ -20,7 +20,7 @@ const create_sync_monitor = () => {
 };
 
 const create_gate_count = () => {
-	const { subscribe, set, update } = writable(32);
+	const { subscribe, set, update } = writable(50);
 	return {
 		subscribe,
 		inc: () => update(n => n + 1),
@@ -40,6 +40,6 @@ export const person_nfc_list = writable([]);
 export const nfc_uid = writable();
 export const nfc_auto_reg = writable(true);
 export const sync_monitor = create_sync_monitor();
-export const gate_count = create_gate_count(50);
+export const gate_count = create_gate_count();
 export const gate_count_enabled = writable(false);
 export const gate_nfc_enabled = writable(false);

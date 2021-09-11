@@ -6,7 +6,11 @@
 
   export const launch = () => {
     open = true;
-  }
+  };
+
+  export const close = () => {
+    open = false;
+  };
 
   const toggle = () => {
     open = !open;
@@ -33,20 +37,20 @@
     </h1>
   </ModalHeader>
   <ModalBody>
-    <Input
-      id=nfc_switch
-      type=checkbox
-      label="Toegang enkel voor leden"
-      bind:checked={$gate_nfc_enabled}
-    />
+    <div class=form-check>
+      <input class=form-check-input type=checkbox id=nfc_switch bind:checked={$gate_nfc_enabled}>
+      <label class=form-check-label for=nfc_switch>
+        Toegang enkel voor leden
+      </label>
+    </div>
   </ModalBody>
   <ModalBody>
-    <Input
-      id=count_switch
-      type=checkbox
-      label="Maximum aantal (teller)"
-      bind:checked={$gate_count_enabled}
-    />
+    <div class=form-check>
+      <input class=form-check-input type=checkbox id=count_switch bind:checked={$gate_count_enabled}>
+      <label class=form-check-label for=count_switch>
+        Maximum aantal (teller)
+      </label>
+    </div>
   </ModalBody>
   <ModalBody>
     <div class=form-group>
@@ -115,7 +119,7 @@
           <button
             class="btn btn-info btn-lg"
             type="button"
-            on:click={() => $gate_count = 40}
+            on:click={() => $gate_count = 50}
             disabled={!$gate_count_enabled}
           >
             50
@@ -136,7 +140,7 @@
     </div>
   </ModalBody>
   <ModalFooter>
-    <Button color=primary on:click={toggle}>
+    <Button color=primary on:click={toggle} size=lg>
       Sluiten
     </Button>
   </ModalFooter>
@@ -145,9 +149,14 @@
 <style>
 button {
   font-weight: bold;
+  font-size: 1.4em;
   min-width: 3em;
 }
 input {
   font-weight: bold;
+  font-size: 1.4em;
+}
+label {
+  font-size: 1.4em;
 }
 </style>
