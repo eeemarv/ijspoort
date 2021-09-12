@@ -10,6 +10,7 @@
 
   const count_hours = 5;
   const release_gate_block_time_sec = 3600;
+  const refresh_gate_count_interval = 20000;
   let gate_block_timeout;
   let triggered_in = false;
   let trigger_in;
@@ -139,6 +140,11 @@
     update_count_in();
     update_count_out();
     reset_gate_block_timeout();
+
+    setInterval(() => {
+      update_count_in();
+      update_count_out();
+    }, refresh_gate_count_interval);
 
     db_gate.changes({
       since: 'now',
