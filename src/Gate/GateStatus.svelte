@@ -118,12 +118,13 @@
 </span>
 
 <GateSens
+  font_size=1.3em
   on:triggered_in={handle_close_trigger}
   on:triggered_out={handle_open_trigger}
 />
 
 <style>
 span {
-  font-size: 1.2em;
+  font-size: 1.3em;
 }
 </style>

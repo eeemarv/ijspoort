@@ -5,6 +5,8 @@
   import { gate_count, gate_count_enabled, gate_nfc_enabled, cache_nfc_person } from '../services/store';
   import { db_gate } from '../services/db';
 
+  export let font_size = '1em';
+
   const debug = env.DEBUG === '1';
   const dispatch = createEventDispatcher();
 
@@ -173,6 +175,7 @@
 </script>
 
 <span class="badge me-1"
+  style="--font-size: {font_size};"
   class:bg-success={triggered_in}
   class:bg-dark={!triggered_in}
   title="Ingangssensor"
@@ -182,6 +185,7 @@
 </span>
 
 <span class="badge me-1"
+  style="--font-size: {font_size};"
   class:bg-success={triggered_out}
   class:bg-dark={!triggered_out}
   title="Uitgangssensor"
@@ -192,6 +196,6 @@
 
 <style>
 span {
-  font-size: 1.2em;
+  font-size: var(--font-size);
 }
 </style>

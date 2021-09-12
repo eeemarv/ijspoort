@@ -1,5 +1,5 @@
 <script>
-  import { Card, CardBody, Col } from 'sveltestrap';
+  import { Card, CardBody, CardHeader, CardFooter, Col } from 'sveltestrap';
   import ManualInput from '../ManualInput/ManualInput.svelte';
   import Person from '../Person/Person.svelte';
   import RegList from '../Reg/RegList.svelte';
@@ -10,6 +10,7 @@
   import { onMount } from 'svelte';
   import MainPageLinks from './MainPageLinks.svelte';
   import NfcCard from '../Nfc/NfcCard.svelte';
+  import GateSens from '../Gate/GateSens.svelte';
 
   let reg;
   let reg_list;
@@ -45,6 +46,16 @@
 
 <Col class="bg-primary min-vh-100">
   <NfcCard on:register={handle_reg_by_nfc} />
+
+  <Card class=m-3>
+    <CardHeader>
+      Poort
+    </CardHeader>
+    <CardFooter>
+      <GateSens />
+    </CardFooter>
+  </Card>
+
   <div class=m-3>
     <Stats />
     <Card>
@@ -54,6 +65,7 @@
       </CardBody>
     </Card>
   </div>
+
   <div class=m-3>
     <MainPageLinks />
   </div>
