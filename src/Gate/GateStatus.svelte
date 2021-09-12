@@ -2,8 +2,7 @@
   const { ipcRenderer } = window.require('electron');
   import { onMount } from "svelte";
   import { gate_count_enabled, gate_count, gate_nfc_enabled } from "../services/store";
-  import GateSensIn from "./GateSensIn.svelte";
-  import GateSensOut from "./GateSensOut.svelte";
+  import GateSens from "./GateSens.svelte";
 
   const nfc_open_time = 100;
   let nfc_open_timer = -1;
@@ -101,14 +100,16 @@
     if ($gate_nfc_enabled){
       return;
     }
+
     if ($gate_count_enabled && ($gate_count <= 0)){
       return;
     }
+
     set_open();
   };
 </script>
 
-<span class="badge me-2"
+<span class="badge me-1"
   class:bg-success={open}
   class:bg-dark={!open}
   title="Poort status"
@@ -116,11 +117,13 @@
   Poort
 </span>
 
-<GateSensIn on:triggered={handle_close_trigger} />
-<GateSensOut on:triggered={handle_open_trigger} />
+<GateSens
+  on:triggered_in={handle_close_trigger}
+  on:triggered_out={handle_open_trigger}
+/>
 
 <style>
 span {
-  font-size: 1.3em;
+  font-size: 1.2em;
 }
 </style>

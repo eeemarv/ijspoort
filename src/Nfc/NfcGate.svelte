@@ -4,7 +4,7 @@
   import PersonMemberId from '../Person/PersonMemberId.svelte';
   import PersonName from '../Person/PersonName.svelte';
   import Reg from '../Reg/Reg.svelte';
-  import { gate_count_enabled, gate_count } from '../services/store';
+  import { gate_count_enabled, gate_count, nfc_uid, cache_nfc_person } from '../services/store';
   import NfcScan from './NfcScan.svelte';
 
   const dispatch = createEventDispatcher();
@@ -79,6 +79,7 @@
       blocked_reg = false;
       reg.add_by_nfc(event.detail.person);
       person = event.detail.person;
+      $cache_nfc_person = {...person, nfc_uid: $nfc_uid};
       if ($gate_count_enabled && ($gate_count <= 0)){
         modal_class = 'bg-warning';
         title = 'Volzet';
@@ -101,6 +102,7 @@
       person = undefined;
       blocked_reg = false;
       modal_class = 'bg-danger';
+      $cache_nfc_person = undefined;
       show();
     };
 
@@ -109,6 +111,7 @@
       person = undefined;
       blocked_reg = false;
       modal_class = 'bg-danger';
+      $cache_nfc_person = undefined;
       show();
     };
 
@@ -117,14 +120,13 @@
       person = event.detail.person;
       blocked_reg = false;
       modal_class = 'bg-warning';
+      $cache_nfc_person = undefined;
       show();
     };
 
     handle_launch_gate_config = (event) => {
       open = false;
-      dispatch('launch_gate_config', {
-        person: person
-      });
+      dispatch('launch_gate_config');
     };
 
     handle_nfc_off = () => {

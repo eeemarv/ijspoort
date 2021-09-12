@@ -1,10 +1,13 @@
 <script>
-  import { Button, Input, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
-  import { gate_count, gate_count_enabled, gate_nfc_enabled } from '../services/store';
-
+  import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
+  import { gate_count, gate_count_enabled, gate_nfc_enabled, cache_nfc_person } from '../services/store';
   let open = false;
 
   export const launch = () => {
+    if (!$cache_nfc_person){
+      console.log('-- cache_nfc_person not set --');
+      return;
+    }
     open = true;
   };
 

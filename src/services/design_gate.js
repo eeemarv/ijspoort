@@ -4,22 +4,18 @@ import lodash from 'lodash';
 const design_gate_search_doc = {
     _id: '_design/search',
     views: {
-        count_by_nfc_and_ts_epoch: {
+        count_in_by_ts_epoch: {
             map: ((doc) => {
-                emit(doc.nfc_uid + '_' + doc.ts_epoch.toString());
+                if (doc.in){
+                    emit(doc.ts_epoch);
+                }
             }).toString(),
             reduce: '_count'
         },
-        count_by_type_and_ts_epoch: {
+        count_out_by_ts_epoch: {
             map: ((doc) => {
-                if (doc.in){
-                    emit('in_' . doc.ts_epoch.toString());
-                } else if (doc.out){
-                    emit('out_' . doc.ts_epoch.toString());
-                } else if (doc.count_enabled){
-                    emit('count_enabled_' . doc.ts_epoch.toString());
-                } else if (doc.nfc_enabled){
-                    emit('nfc_enabled_' . doc.ts_epoch.toString());
+                if (doc.out){
+                    emit(doc.ts_epoch);
                 }
             }).toString(),
             reduce: '_count'

@@ -26,12 +26,12 @@ const create_gate_count = () => {
 		inc: () => update(n => n + 1),
 		dec: () => update(n => n - 1),
 		reset: () => set(0),
-      set: (n) => {
-        n = n ? n : 0;
-        n = n > 999 ? 999 : n;
-        n = n < -99 ? -99 : n;
-        set(n);
-      }
+    set: (n) => {
+      n = n ? n : 0;
+      n = n > 999 ? 999 : n;
+      n = n < -99 ? -99 : n;
+      set(n);
+    }
 	};
 };
 
@@ -43,3 +43,4 @@ export const sync_monitor = create_sync_monitor();
 export const gate_count = create_gate_count();
 export const gate_count_enabled = writable(false);
 export const gate_nfc_enabled = writable(false);
+export const cache_nfc_person = writable();

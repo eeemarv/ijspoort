@@ -1,19 +1,176 @@
 <script>
-  export let triggered = false;
-  export let title;
+  const env = window.require('electron').remote.process.env;
+  const { ipcRenderer } = window.require('electron');
+  import { createEventDispatcher, onMount } from 'svelte';
+  import { gate_count, gate_count_enabled, cache_nfc_person } from '../services/store';
+  import { db_gate } from '../services/db';
+
+  const debug = env.DEBUG === '1';
+  const dispatch = createEventDispatcher();
+
+  const count_hours = 5;
+  let triggered_in = false;
+  let trigger_in;
+  let handle_click_in;
+  let count_in = 0;
+  let triggered_out = false;
+  let trigger_out;
+  let handle_click_out;
+  let count_out = 0;
+
+  const update_count_in = () => {
+    let ts_date = new Date(Date.now() - (3600000 * count_hours));
+    db_gate.query('search/count_in_by_ts_epoch', {
+      startkey: ts_date.getTime(),
+      reduce: true
+    }).then((res) => {
+      console.log('count_in');
+      console.log(res);
+      count_in = res.rows[0].value;
+    }).catch((err) => {
+      console.log(err);
+    });
+  };
+
+  const update_count_out = () => {
+    let ts_date = new Date(Date.now() - (3600000 * count_hours));
+    db_gate.query('search/count_out_by_ts_epoch', {
+      startkey: ts_date.getTime(),
+      reduce: true
+    }).then((res) => {
+      console.log('count_out');
+      console.log(res);
+      count_out = res.rows[0].value;
+    }).catch((err) => {
+      console.log(err);
+    });
+  };
+
+  const db_gate_put = (op) => {
+    const now = new Date();
+    let gt = {
+        _id: 'g' + now.getTime().toString(),
+        ts_epoch: now.getTime()
+    };
+
+    switch (op) {
+      case 'out':
+        gt.out = true;
+        break;
+      case 'in':
+        gt.in = true;
+        if ($cache_nfc_person){
+          gt.person_id = $cache_nfc_person._id;
+          gt.nfc_uid = $cache_nfc_person.nfc_uid;
+        }
+        $cache_nfc_person = undefined;
+        break;
+      default:
+        throw 'wrong operation';
+        break;
+    }
+
+    if ($gate_count_enabled){
+      gt.count = $gate_count;
+    }
+
+    db_gate.put(gt).then((res) => {
+      console.log('put db_gate');
+      console.log(res);
+      console.log('-- GT --');
+      console.log(gt);
+    }).catch((err) => {
+      console.log('ERR put db_gate');
+      console.log(err);
+    });
+  };
+
+  onMount(() => {
+    trigger_in = () => {
+      if ($gate_count_enabled){
+        gate_count.dec();
+      }
+      db_gate_put('in');
+      dispatch('triggered_in');
+    }
+
+    trigger_out = () => {
+      if ($gate_count_enabled){
+        gate_count.inc();
+      }
+      db_gate_put('out');
+      dispatch('triggered_out');
+    }
+
+    handle_click_in = () => {
+      if (debug){
+        trigger_in();
+      }
+    };
+
+    handle_click_out = () => {
+      if (debug){
+        trigger_out();
+      }
+    };
+
+    ipcRenderer.on('sens.in', (ev) => {
+      trigger_in();
+    });
+
+    ipcRenderer.on('sens.out', (ev) => {
+      trigger_out();
+    });
+
+    update_count_in();
+    update_count_out();
+
+    db_gate.changes({
+      since: 'now',
+      live: true,
+      include_docs: true
+    }).on('change', (change) => {
+      console.log('db_gate change');
+      console.log(change);
+      if (change.doc.in){
+        triggered_in = true;
+        setTimeout(() => {
+            triggered_in = false;
+        }, 1000);
+        update_count_in();
+      } else if (change.doc.out){
+        update_count_out();
+          triggered_out = true;
+        setTimeout(() => {
+            triggered_out = false;
+        }, 1000);
+      }
+    }).on('error', (err) => {
+      console.log(err);
+    });
+  });
 </script>
 
-<span class="badge me-2"
-  class:bg-success={triggered}
-  class:bg-dark={!triggered}
-  {title}
-  on:click
+<span class="badge me-1"
+  class:bg-success={triggered_in}
+  class:bg-dark={!triggered_in}
+  title="Ingangssensor"
+  on:click={() => handle_click_in()}
 >
-  <slot></slot>
+  In: {count_in}
+</span>
+
+<span class="badge me-1"
+  class:bg-success={triggered_out}
+  class:bg-dark={!triggered_out}
+  title="Uitgangssensor"
+  on:click={() => handle_click_out()}
+>
+  Uit: {count_out}
 </span>
 
 <style>
 span {
-  font-size: 1.3em;
+  font-size: 1.2em;
 }
 </style>

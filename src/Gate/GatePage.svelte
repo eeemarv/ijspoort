@@ -19,7 +19,7 @@
 
   onMount(() => {
     handle_launch_gate_config = (event) => {
-      gate_config.launch(event.detail.person);
+      gate_config.launch();
     };
 
     handle_close_gate_config = (event) => {
@@ -37,6 +37,7 @@
   on:close_gate_config={handle_close_gate_config}
   on:trigger_open_gate={handle_open_gate_by_nfc}
 />
+
 <GateConfig bind:this={gate_config} />
 
 <Container fluid class=vh-100>
