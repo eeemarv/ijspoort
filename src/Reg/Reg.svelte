@@ -27,6 +27,7 @@
         ts_epoch: now.getTime(),
         person_id: person._id
     };
+
     return reg;
   }
 
