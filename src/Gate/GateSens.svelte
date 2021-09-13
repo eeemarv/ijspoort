@@ -41,7 +41,11 @@
     }).then((res) => {
       console.log('count_in');
       console.log(res);
-      count_in = res.rows[0].value;
+      if (res.rows.length){
+        count_in = res.rows[0].value;
+      } else {
+        count_in = 0;
+      }
     }).catch((err) => {
       console.log(err);
     });
@@ -55,7 +59,11 @@
     }).then((res) => {
       console.log('count_out');
       console.log(res);
-      count_out = res.rows[0].value;
+      if (res.rows.length){
+        count_out = res.rows[0].value;
+      } else {
+        count_out = 0;
+      }
     }).catch((err) => {
       console.log(err);
     });
