@@ -4,10 +4,12 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { gate_count, gate_count_enabled, gate_nfc_enabled, cache_nfc_person } from '../services/store';
   import { db_gate } from '../services/db';
+  import GateGraphCountModal from './GateCountGraphModal.svelte';
 
   export let font_size = '1em';
 
   const debug = env.DEBUG === '1';
+  const debug_sens_click = env.DEBUG_SENS_CLICK === '1';
   const dispatch = createEventDispatcher();
 
   const count_hours = 5;
@@ -22,6 +24,7 @@
   let trigger_out;
   let handle_click_out;
   let count_out = 0;
+  let graph_open = false;
 
   const reset_gate_block_timeout = () => {
     if (gate_block_timeout){
@@ -128,14 +131,18 @@
     }
 
     handle_click_in = () => {
-      if (debug){
+      if (debug && debug_sens_click){
         trigger_in();
+      } else {
+        graph_open = true;
       }
     };
 
     handle_click_out = () => {
-      if (debug){
+      if (debug && debug_sens_click){
         trigger_out();
+      } else {
+        graph_open = true;
       }
     };
 
@@ -181,6 +188,8 @@
     });
   });
 </script>
+
+<GateGraphCountModal bind:open={graph_open} />
 
 <span class="badge me-1"
   style="--font-size: {font_size};"

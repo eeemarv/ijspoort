@@ -12,10 +12,26 @@ const design_gate_search_doc = {
             }).toString(),
             reduce: '_count'
         },
+        count_in_by_ts_epoch_per_5_min: {
+            map: ((doc) => {
+                if (doc.in){
+                    emit(Math.floor(doc.ts_epoch / 300000) * 300000);
+                }
+            }).toString(),
+            reduce: '_count'
+        },
         count_out_by_ts_epoch: {
             map: ((doc) => {
                 if (doc.out){
                     emit(doc.ts_epoch);
+                }
+            }).toString(),
+            reduce: '_count'
+        },
+        count_out_by_ts_epoch_per_5_min: {
+            map: ((doc) => {
+                if (doc.out){
+                    emit(Math.floor(doc.ts_epoch / 300000) * 300000);
                 }
             }).toString(),
             reduce: '_count'

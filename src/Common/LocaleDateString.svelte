@@ -1,6 +1,6 @@
 <script>
   export let ts;
-  export let title;
+  export let title = 'datum';
 
   let ts_date = new Date(ts);
 </script>
