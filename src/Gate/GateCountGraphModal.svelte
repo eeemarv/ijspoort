@@ -23,6 +23,7 @@
     let dt_out;
     let current_count;
     let dt_x;
+    let ts_date;
 
     let current_ts = undefined;
 
@@ -75,14 +76,26 @@
 
           while (current_ts < (ts - 400000)) {
             current_ts += 300000;
+            ts_date = new Date(current_ts);
             dt_x = (current_ts - add_graph.ts) / 60000;
             add_graph.max_x = dt_x;
             add_graph.count_data.push({x: dt_x, y: current_count});
             add_graph.in_data.push({x: dt_x, y: 0});
             add_graph.out_data.push({x: dt_x, y: 0});
+
+            add_graph.p_data.push({x: dt_x, y: current_count, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'count'});
+
+            if (current_count !== 0){
+              add_graph.p_data.push({x: dt_x, y: 0, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'in'});
+            }
+
+            if (ts_date.getMinutes() === 0){
+              add_graph.x_grid.push(dt_x);
+            }
           }
 
           current_ts = ts * 1;
+          ts_date = new Date(current_ts);
           dt_in = d.in ? d.in : 0;
           add_graph.total_count += dt_in;
           dt_out = d.out ? d.out : 0;
@@ -98,6 +111,19 @@
           add_graph.max_y = Math.max(add_graph.max_y, dt_in, current_count);
           add_graph.max_x = dt_x;
 
+          add_graph.p_data.push({x: dt_x, y: current_count, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'count'});
+
+          if (current_count !== dt_in){
+            add_graph.p_data.push({x: dt_x, y: dt_in, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'in'});
+          }
+
+          if (current_count !== -dt_out && dt_in !== -dt_out){
+            add_graph.p_data.push({x: dt_x, y: -dt_out, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'out'});
+          }
+
+          if (ts_date.getMinutes() === 0){
+            add_graph.x_grid.push(dt_x);
+          }
         } else {
 
           // store previous
@@ -114,6 +140,10 @@
           add_graph.count_data = [];
           add_graph.in_data = [];
           add_graph.out_data = [];
+          add_graph.x_grid = [];
+          add_graph.closest = [];
+          add_graph.p_data = [];
+          ts_date = new Date(current_ts);
 
           dt_in = d.in ? d.in : 0;
           add_graph.total_count = dt_in;
@@ -126,6 +156,20 @@
           add_graph.min_y = -dt_out
           add_graph.max_y = current_count;
           add_graph.max_x = 0;
+
+          add_graph.p_data.push({x: 0, y: current_count, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'count'});
+
+          if (current_count !== dt_in){
+            add_graph.p_data.push({x: dt_x, y: dt_in, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'in'});
+          }
+
+          if (current_count !== -dt_out && dt_in !== -dt_out){
+            add_graph.p_data.push({x: dt_x, y: -dt_out, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'out'});
+          }
+
+          if (ts_date.getMinutes() === 0){
+            add_graph.x_grid.push(0);
+          }
         }
       });
 
@@ -171,6 +215,11 @@
                   </span>
                 </Pancake.Grid>
                 <Pancake.Svg>
+                  {#each gr.x_grid as gx}
+                    <Pancake.SvgLine data={[{x:gx, y: gr.min_y}, {x: gx, y:gr.max_y}]} let:d>
+                      <path class="x-hour" {d} />
+                    </Pancake.SvgLine>
+                  {/each}
                   <Pancake.SvgLine data={[{x:0, y:0}, {x: gr.max_x, y:0}]} let:d>
                     <path class="zero" {d} />
                   </Pancake.SvgLine>
@@ -184,6 +233,23 @@
                     <path class="data" {d} />
                   </Pancake.SvgLine>
                 </Pancake.Svg>
+
+                {#if gr.closest}
+                  <Pancake.Point x={gr.closest.x} y={gr.closest.y}>
+                    <span class="annotation-point {gr.closest.type}-point"></span>
+                    <div class="annotation {gr.closest.type}-ann" style="transform: translate(-{100 * ((gr.closest.x - 0) / (gr.max_x))}%,0)">
+                      <strong title="aantal">{gr.closest.type === 'in' ? '+' : ''}{gr.closest.y}</strong>
+                      {#if gr.closest.hour !== undefined && gr.closest.min !== undefined}
+                        <span title="tijdstip">
+                          {gr.closest.hour.toString().padStart(2, '0')}:
+                          {gr.closest.min.toString().padStart(2, '0')}
+                        </span>
+                      {/if}
+                    </div>
+                  </Pancake.Point>
+                {/if}
+
+                <Pancake.Quadtree data={gr.p_data} bind:closest={gr.closest} />
               </Pancake.Chart>
             </div>
           </Col>
@@ -240,36 +306,80 @@
 		text-align: center;
 	}
 
-	path.data {
-		stroke: white;
+  path {
 		stroke-linejoin: round;
 		stroke-linecap: round;
-		stroke-width: 2px;
 		fill: none;
+  }
+
+	path.data {
+		stroke: white;
+		stroke-width: 2px;
 	}
 
 	path.zero {
 		stroke: white;
     stroke-dasharray: 15, 5, 5, 5;
-		stroke-linejoin: round;
-		stroke-linecap: round;
 		stroke-width: 1px;
-		fill: none;
+	}
+
+	path.x-hour {
+		stroke: white;
+    stroke-dasharray: 10, 5, 3, 5;
+		stroke-width: 1px;
 	}
 
 	path.in-data, path.out-data {
     stroke-dasharray: 10, 10;
-		stroke-linejoin: round;
-		stroke-linecap: round;
 		stroke-width: 2px;
-		fill: none;
 	}
 
   path.in-data {
     stroke: lightgreen;
   }
-
   path.out-data {
     stroke: lightseagreen;
+  }
+
+	.annotation {
+		position: absolute;
+		white-space: nowrap;
+		bottom: 1em;
+		line-height: 1.2;
+		background-color: rgba(0, 0, 0, 0.3);
+		padding: 0.2em 0.4em;
+		border-radius: 4px;
+	}
+
+	.annotation-point {
+		position: absolute;
+		width: 12px;
+		height: 12px;
+		background-color: white;
+		border-radius: 50%;
+		transform: translate(-50%,-50%);
+	}
+
+	.annotation strong {
+		display: block;
+		font-size: 30px;
+	}
+
+	.annotation span {
+		display: block;
+		font-size: 20px;
+	}
+
+  .in-point {
+    background-color: lightgreen;
+  }
+  .out-point {
+    background-color: lightseagreen;
+  }
+  .in-ann {
+    color: lightgreen;
+  }
+  .out-ann {
+    color: lightseagreen;
   }
 </style>
