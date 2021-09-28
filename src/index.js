@@ -4,6 +4,7 @@ const { NFC, TAG_ISO_14443_3, KEY_TYPE_A, KEY_TYPE_B } = require('nfc-pcsc');
 const crypto = require('crypto');
 const path = require('path');
 const cron = require('node-cron');
+const axios = require('axios');
 const { Gpio } = require('onoff');
 
 let assist_import = {
@@ -481,6 +482,26 @@ menu.append(new MenuItem({role: 'windowMenu'}));
 
 Menu.setApplicationMenu(menu);
 
-cron.schedule('0 * * * *', () => {
-	console.log('running a task every hour');
-});
+if (process.env.OPENWEATHERMAP_APIKEY && process.env.OPENWEATHERMAP_LOCATION){
+	const apikey = process.env.OPENWEATHERMAP_APIKEY;
+	const location = process.env.OPENWEATHERMAP_LOCATION;
+
+	console.log('Cron for apenweathermap enabled.');
+
+	cron.schedule('*/15 * * * *', () => {
+		console.log('fetch from openweathermap api every 15 min');
+
+		axios.get('http://api.openweathermap.org/data/2.5/weather?units=metric&lang=nl&q=' + location + '&appid=' + apikey)
+		.then(resp => {
+			console.log('OPENWEATHERMAP --- ');
+			console.log(resp.data);
+			console.log(resp.data.weather);
+		})
+		.catch(err => {
+			console.log('OpenWeatherMap Err Axios');
+			console.log(err);
+		});
+	});
+} else {
+	console.log('No OpenWeatherMap ENV set');
+}

@@ -25,3 +25,10 @@ GATE=0
 
 # Set DEBUG to "1" to open developer tools
 DEBUG=0
+
+# Specify this only on one computer that's
+# always on to continuously fetch hourly
+# local weather data
+# See https://openweathermap.org/current
+OPENWEATHERMAP_APIKEY=abcdefghijk
+OPENWEATHERMAP_LOCATION=deurne,be
