@@ -29,7 +29,7 @@
 
     (async () => {
       await db_gate.query('search/count_in_by_ts_epoch_per_5_min', {
-        startkey: ts_epoch - (10 * 86400000),
+        startkey: ts_epoch - (14 * 86400000),
         endkey: ts_epoch,
         reduce: true,
         group: true
@@ -44,7 +44,7 @@
       });
 
       await db_gate.query('search/count_out_by_ts_epoch_per_5_min', {
-        startkey: ts_epoch - (24 * 86400000),
+        startkey: ts_epoch - (14 * 86400000),
         endkey: ts_epoch,
         reduce: true,
         group: true
