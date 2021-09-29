@@ -1173,6 +1173,16 @@
   resolved "https://registry.yarnpkg.com/@gar/promisify/-/promisify-1.1.2.tgz#30aa825f11d438671d585bd44e7fd564535fc210"
   integrity sha512-82cpyJyKRoQoRi+14ibCeGPu0CwypgtBAdBhq1WfvagpCZNKqwXbKwXllYSMG91DhmG4jt9gN8eP6lGOtozuaw==
 
+"@iconify/icons-fa@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@iconify/icons-fa/-/icons-fa-1.1.0.tgz#771edfcb0614cffcdc44e64b555bd6dc8f018e0d"
+  integrity sha512-SQoU30Zgk0pOZw2Pxu1vSyq05RcPBF2/HczpS+u9yBaTAlOsnsTi5uSfMgsWuNq0fhnJpD9VF7780OGNHJgnGg==
+
+"@iconify/svelte@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@iconify/svelte/-/svelte-2.0.0.tgz#5a40de1bd3b009c25eda02770d7d8cd60b0c7d72"
+  integrity sha512-zhuX8Rf0F8Xwv4xfZRt5s80hqFCSMtY9kZonqKpc9bPVNMDKBp6WFfu7VsJaSNI3mQAClY1Ff9zdRBxUVtt28Q==
+
 "@malept/cross-spawn-promise@^1.0.0", "@malept/cross-spawn-promise@^1.1.0", "@malept/cross-spawn-promise@^1.1.1":
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/@malept/cross-spawn-promise/-/cross-spawn-promise-1.1.1.tgz#504af200af6b98e198bce768bc1730c6936ae01d"

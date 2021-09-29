@@ -10,6 +10,10 @@ $theme-colors: (
   accent: darken($purple, 10%)
 );
 
+$input-bg: #446;
+$input-border-color: #ddd;
+$input-color: white;
+
 .autocomplete {
   font-size: 1.0em;
   background-color: black;
