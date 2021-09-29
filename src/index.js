@@ -347,6 +347,8 @@ const listen_pcsc = (win) => {
 const listen_gpio = (win) => {
 	console.log('listen_gpio');
 
+	const fake_gpio = process.env.FAKE_GPIO === '1';
+
 	let block_sens_in = false;
 	let block_sens_out = false;
 
@@ -403,9 +405,14 @@ const listen_gpio = (win) => {
 			event.reply('gate.is_open');
 			console.log('gate.is_open');
 		} catch (err) {
-			console.log('gate.open.err');
-			console.log(err);
-			event.reply('gate.open.err', err);
+			if (fake_gpio){
+				event.reply('gate.is_open');
+				console.log('FAKE_GPIO gate.is_open');
+			} else {
+				console.log('gate.open.err');
+				console.log(err);
+				event.reply('gate.open.err', err);
+			}
 		}
 	});
 
@@ -416,9 +423,14 @@ const listen_gpio = (win) => {
 			event.reply('gate.is_closed');
 			console.log('gate.is_closed');
 		} catch (err) {
-			console.log('err gate.close');
-			console.log(err);
-			event.reply('gate.close.err', err);
+			if (fake_gpio){
+				event.reply('gate.is_closed');
+				console.log('FAKE_GPIO gate.is_closed');
+			} else {
+				console.log('err gate.close');
+				console.log(err);
+				event.reply('gate.close.err', err);
+			}
 		}
 	});
 
