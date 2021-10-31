@@ -6,7 +6,6 @@
   import { nfc_uid, nfc_auto_reg } from '../services/store';
   import NfcModal from './NfcModal.svelte';
 
-  const nfc_reset_writable_enabled = env.NFC_RESET_WRITABLE_ENABLED === '1';
   const nfc_reset_enabled = env.NFC_RESET_ENABLED === '1';
 
   export let nfc_status;
@@ -59,7 +58,7 @@
 {#if !$nfc_auto_reg
   && nfc_reset_enabled
   && $nfc_uid
-  && (nfc_status === 'ok' || (nfc_status === 'writable' && nfc_reset_writable_enabled))
+  && (nfc_status === 'ok' || nfc_status === 'writable')
 }
   <Button color=danger on:click={handle_nfc_reset} title="Wis deze NFC tag">
     Wis

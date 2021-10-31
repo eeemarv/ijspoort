@@ -8,7 +8,6 @@ FEED_A=swimming..in..cold..wAter
 FEED_B=iS_.._reFreshinggg_
 
 # Enable resets of Mifare tags (set to "1")
-NFC_RESET_WRITABLE_ENABLED=0
 NFC_RESET_ENABLED=1
 
 # Assist import year must match the export from Assist (leden > per lid > export)
