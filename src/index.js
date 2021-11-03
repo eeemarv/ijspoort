@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const path = require('path');
 const cron = require('node-cron');
 const axios = require('axios');
+const flatten = require('flat');
 const { Gpio } = require('onoff');
 
 let assist_import = {
@@ -13,6 +14,11 @@ let assist_import = {
 	only_member_on_even_balance: false,
 	remove_non_members: false
 };
+
+const temp_sensor_ip = process.env.TEMPERATURE_SENSOR_IP;
+const owm_apikey = process.env.OPENWEATHERMAP_APIKEY;
+const owm_location = process.env.OPENWEATHERMAP_LOCATION;
+const thingspeak_apikey = process.env.THINGSPEAK_APIKEY;
 
 const env_assist_import_year = process.env?.ASSIST_IMPORT_YEAR;
 const env_assist_only_member_on_even_balance = process.env?.ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE;
@@ -494,26 +500,106 @@ menu.append(new MenuItem({role: 'windowMenu'}));
 
 Menu.setApplicationMenu(menu);
 
-if (process.env.OPENWEATHERMAP_APIKEY && process.env.OPENWEATHERMAP_LOCATION){
-	const apikey = process.env.OPENWEATHERMAP_APIKEY;
-	const location = process.env.OPENWEATHERMAP_LOCATION;
+/**
+ * fetch and store sensor data
+ */
 
-	console.log('Cron for apenweathermap enabled.');
+const sensor_field_map = {
+	water_temp: {
+		sensor: "avg",
+		field: 1
+	},
+	air_temp: {
+		owm: "main.temp",
+		field: 2
+	},
+	pressure: {
+		owm: "main.pressure",
+		field: 3
+	},
+	humidity: {
+		owm: "main.humidity",
+		field: 4
+	},
+	wind_speed: {
+		owm: "wind.speed",
+		field: 5
+	},
+	rain_1h: {
+		owm: "rain.1h",
+		field: 6
+	},
+	clouds: {
+		owm: "clouds.all",
+		field: 7
+	},
+	gate_count: {
+		gate_sens: "gate_count",
+		field: 8
+	}
+};
 
-	cron.schedule('*/15 * * * *', () => {
-		console.log('fetch from openweathermap api every 15 min');
+if (owm_apikey && owm_location && thingspeak_apikey && temp_sensor_ip){
+	console.log('Cron sensor.log enabled.');
 
-		axios.get('http://api.openweathermap.org/data/2.5/weather?units=metric&lang=nl&q=' + location + '&appid=' + apikey)
-		.then(resp => {
-			console.log('OPENWEATHERMAP --- ');
-			console.log(resp.data);
-			console.log(resp.data.weather);
-		})
-		.catch(err => {
-			console.log('OpenWeatherMap Err Axios');
-			console.log(err);
-		});
+	cron.schedule('*/5 * * * *', () => {
+		win.webContents.send('sensor_log.gate_count.get');
+		console.log('sensor_log.gate_count.get');
 	});
+
+	ipcMain.on('sensor_log.gate_count.fail', () => {
+		console.log('sensor_log.gate_count.fail');
+	});
+
+	ipcMain.on('sensor_log.gate_count.ok', async (event, gate_count) => {
+		console.log('sensor_log.gate_count.ok');
+
+		const sensor_item = {};
+		const thingspeak_item = {};
+
+		sensor_item.gate_count = gate_count;
+
+		try {
+			let sens_resp = await axios.get('http://' + temp_sensor_ip + '/as');
+			if (sens_resp && sens_resp.data && sens_resp.data.hasOwnProperty('avg')){
+				sensor_item.water_temp = sens_resp.data.avg;
+			}
+
+			let owm_resp = await axios.get('http://api.openweathermap.org/data/2.5/weather?units=metric&lang=nl&q=' + owm_location + '&appid=' + owm_apikey);
+			if (owm_resp && owm_resp.data){
+				console.log('-- owm data --');
+				console.log(owm_resp.data);
+				let owm_data = flatten(owm_resp.data);
+				for(const prp in sensor_field_map){
+					if (sensor_field_map[prp].hasOwnProperty('owm')){
+						if (owm_data.hasOwnProperty(sensor_field_map[prp].owm)){
+							sensor_item[prp] = owm_data[sensor_field_map[prp].owm];
+						} else if (prp == 'rain_1h'){
+							sensor_item[prp] = 0;
+						}
+					}
+				}
+			}
+
+			thingspeak_item.api_key = thingspeak_apikey;
+			for (const k in sensor_item){
+				let tp_key = sensor_field_map[k].field;
+				thingspeak_item['field' + tp_key] = sensor_item[k];
+			}
+			await axios.post('https://api.thingspeak.com/update.json', thingspeak_item);
+
+			if (Object.keys(sensor_item).length){
+				console.log('sensor_log.new_item', sensor_item);
+				win.webContents.send('sensor_log.new_item', sensor_item);
+			} else {
+				console.log('sensor_item empty');
+			}
+		} catch (err) {
+			console.log('-- error --');
+			console.log(err);
+		}
+	});
+
 } else {
-	console.log('No OpenWeatherMap ENV set');
+	console.log('Cron sensor.log not enabled.');
 }

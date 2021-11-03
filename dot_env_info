@@ -24,6 +24,10 @@ GATE=0
 
 # Set DEBUG to "1" to open developer tools
 DEBUG=0
+# Emulate Gate in and out triggers (set to "1")
+DEBUG_SENS_CLICK=0
+# Emulate GPIO pins for testing (set to "1")
+FAKE_GPIO=0
 
 # Specify this only on one computer that's
 # always on to continuously fetch hourly
@@ -31,3 +35,9 @@ DEBUG=0
 # See https://openweathermap.org/current
 OPENWEATHERMAP_APIKEY=abcdefghijk
 OPENWEATHERMAP_LOCATION=deurne,be
+
+# Water temperature sensor in local network
+TEMPERATURE_SENSOR_IP=192.168.1.180
+
+# Thingspeak apikey to post sensor data
+THINGSPEAK_APIKEY=AbCdEfGhIjKlMnO

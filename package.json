@@ -86,6 +86,7 @@
     "dotenv": "^8.2.0",
     "electron-reload": "^1.5.0",
     "electron-squirrel-startup": "^1.0.0",
+    "flat": "^5.0.2",
     "git": "^0.1.5",
     "lodash": "^4.17.20",
     "nfc-pcsc": "^0.8.0",

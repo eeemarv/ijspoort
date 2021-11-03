@@ -8,6 +8,7 @@
   export let open = false;
   export let toggle = () => (open = !open);
 
+  const days = 14;
   let d_graphs = [];
   let ready = false;
 
@@ -29,7 +30,7 @@
 
     (async () => {
       await db_gate.query('search/count_in_by_ts_epoch_per_5_min', {
-        startkey: ts_epoch - (14 * 86400000),
+        startkey: ts_epoch - (days * 86400000),
         endkey: ts_epoch,
         reduce: true,
         group: true
@@ -44,7 +45,7 @@
       });
 
       await db_gate.query('search/count_out_by_ts_epoch_per_5_min', {
-        startkey: ts_epoch - (14 * 86400000),
+        startkey: ts_epoch - (days * 86400000),
         endkey: ts_epoch,
         reduce: true,
         group: true

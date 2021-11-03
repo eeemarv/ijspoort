@@ -4,7 +4,8 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { gate_count, gate_count_enabled, gate_nfc_enabled, cache_nfc_person } from '../services/store';
   import { db_gate } from '../services/db';
-  import GateGraphCountModal from './GateCountGraphModal.svelte';
+  import GateCountGraphModal from './GateCountGraphModal.svelte';
+  import GateCountLog from './GateCountLog.svelte';
 
   export let font_size = '1em';
 
@@ -189,7 +190,8 @@
   });
 </script>
 
-<GateGraphCountModal bind:open={graph_open} />
+<GateCountGraphModal bind:open={graph_open} />
+<GateCountLog />
 
 <span class="badge me-1"
   style="--font-size: {font_size};"

@@ -4,7 +4,6 @@
   import { onMount } from 'svelte';
   import { person } from '../services/store';
   import RegTimeTag from './RegTimeTag.svelte';
-  import PersonPhone from '../Person/PersonPhone.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
 
   export let reg_index;
@@ -115,11 +114,6 @@
             Reeds geregistreerd in laatste {Math.floor(block_time / 60000)} minuten.
           </Badge>
         {/if}
-      </div>
-      <div class="d-flex w-100 justify-content-between mb-0">
-        <div>
-          <PersonPhone person={person_data} />
-        </div>
       </div>
     </div>
     <div>
