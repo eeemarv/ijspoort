@@ -5,7 +5,7 @@
   import { gate_count, gate_count_enabled, gate_nfc_enabled, cache_nfc_person } from '../services/store';
   import { db_gate } from '../services/db';
   import GateCountGraphModal from './GateCountGraphModal.svelte';
-  import GateCountLog from './GateCountLog.svelte';
+  import GateDbSensorLog from './GateDbSensorLog.svelte';
 
   export let font_size = '1em';
 
@@ -191,7 +191,7 @@
 </script>
 
 <GateCountGraphModal bind:open={graph_open} />
-<GateCountLog />
+<GateDbSensorLog />
 
 <span class="badge me-1"
   style="--font-size: {font_size};"

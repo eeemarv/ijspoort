@@ -15,14 +15,16 @@ let assist_import = {
 	remove_non_members: false
 };
 
-const temp_sensor_ip = process.env.TEMPERATURE_SENSOR_IP;
-const owm_apikey = process.env.OPENWEATHERMAP_APIKEY;
-const owm_location = process.env.OPENWEATHERMAP_LOCATION;
-const thingspeak_apikey = process.env.THINGSPEAK_APIKEY;
+const env_temp_sensor_ip = process.env.TEMPERATURE_SENSOR_IP;
+const env_owm_apikey = process.env.OPENWEATHERMAP_APIKEY;
+const env_owm_location = process.env.OPENWEATHERMAP_LOCATION;
+const env_thingspeak_apikey = process.env.env_thingspeak_apikey;
+const env_db_sensor_prefix = process.env.DB_SENSOR_PREFIX;
+const env_db_prefix = process.env.DB_PREFIX;
 
-const env_assist_import_year = process.env?.ASSIST_IMPORT_YEAR;
-const env_assist_only_member_on_even_balance = process.env?.ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE;
-const env_assist_remove_non_members = process.env?.ASSIST_REMOVE_NON_MEMBERS;
+const env_assist_import_year = process.env.ASSIST_IMPORT_YEAR;
+const env_assist_only_member_on_even_balance = process.env.ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE;
+const env_assist_remove_non_members = process.env.ASSIST_REMOVE_NON_MEMBERS;
 
 let win;
 
@@ -539,7 +541,15 @@ const sensor_field_map = {
 	}
 };
 
-if (owm_apikey && owm_location && thingspeak_apikey && temp_sensor_ip){
+if (gate_enabled
+	&& env_owm_apikey
+	&& env_owm_location
+	&& env_thingspeak_apikey
+	&& env_temp_sensor_ip
+	&& env_db_prefix
+	&& env_db_sensor_prefix
+	&& (env_db_prefix === env_db_sensor_prefix)
+){
 	console.log('Cron sensor.log enabled.');
 
 	cron.schedule('*/5 * * * *', () => {
@@ -560,12 +570,12 @@ if (owm_apikey && owm_location && thingspeak_apikey && temp_sensor_ip){
 		sensor_item.gate_count = gate_count;
 
 		try {
-			let sens_resp = await axios.get('http://' + temp_sensor_ip + '/as');
+			let sens_resp = await axios.get('http://' + env_temp_sensor_ip + '/as');
 			if (sens_resp && sens_resp.data && sens_resp.data.hasOwnProperty('avg')){
 				sensor_item.water_temp = sens_resp.data.avg;
 			}
 
-			let owm_resp = await axios.get('http://api.openweathermap.org/data/2.5/weather?units=metric&lang=nl&q=' + owm_location + '&appid=' + owm_apikey);
+			let owm_resp = await axios.get('http://api.openweathermap.org/data/2.5/weather?units=metric&lang=nl&q=' + env_owm_location + '&appid=' + env_owm_apikey);
 			if (owm_resp && owm_resp.data){
 				console.log('-- owm data --');
 				console.log(owm_resp.data);
@@ -581,7 +591,7 @@ if (owm_apikey && owm_location && thingspeak_apikey && temp_sensor_ip){
 				}
 			}
 
-			thingspeak_item.api_key = thingspeak_apikey;
+			thingspeak_item.api_key = env_thingspeak_apikey;
 			for (const k in sensor_item){
 				let tp_key = sensor_field_map[k].field;
 				thingspeak_item['field' + tp_key] = sensor_item[k];
@@ -599,7 +609,6 @@ if (owm_apikey && owm_location && thingspeak_apikey && temp_sensor_ip){
 			console.log(err);
 		}
 	});
-
 } else {
 	console.log('Cron sensor.log not enabled.');
 }
