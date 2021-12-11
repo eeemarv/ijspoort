@@ -1,7 +1,7 @@
 <script>
   const { ipcRenderer } = window.require('electron');
   import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
-  import { db_reg, db_nfc, db_person } from '../services/db';
+  import { db_reg, db_nfc, db_person, db_gate, db_tag, db_sensor } from '../services/db';
   import { download } from './../services/download';
 
   let open = false;
@@ -31,6 +31,24 @@
       });
     }).then((res) => {
       dbs.db_person = res;
+      return db_gate.allDocs({
+        include_docs: true,
+        include_attachments: true
+      });
+    }).then((res) => {
+      dbs.db_gate = res;
+      return db_tag.allDocs({
+        include_docs: true,
+        include_attachments: true
+      });
+    }).then((res) => {
+      dbs.db_tag = res;
+      return db_sensor.allDocs({
+        include_docs: true,
+        include_attachments: true
+      });
+    }).then((res) => {
+      dbs.db_sensor = res;
       return true;
     }).then(() => {
       let time_str = (new Date()).getTime().toString();

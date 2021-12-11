@@ -7,7 +7,17 @@ $theme-colors: (
   info: $info,
   success: darken($success, 10%),
   danger: darken($danger, 20%),
-  accent: darken($purple, 10%)
+  accent: darken($purple, 10%),
+  blue: $blue,
+  indigo: $indigo,
+  purple: $purple,
+  pink: $pink,
+  red: $red,
+  orange: $orange,
+  yellow: $yellow,
+  green: $green,
+  teal: $teal,
+  cyan: $cyan
 );
 
 $input-bg: #446;
