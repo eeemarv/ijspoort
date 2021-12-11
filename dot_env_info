@@ -11,11 +11,13 @@ FEED_B=iS_.._reFreshinggg_
 NFC_RESET_ENABLED=1
 
 # Assist import year must match the export from Assist (leden > per lid > export)
-ASSIST_IMPORT_YEAR=2021
+ASSIST_IMPORT_YEAR=2022
 ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE=1
 ASSIST_REMOVE_NON_MEMBERS=1
 
 # Prefixes of remote and local database names.
+# These must be the same in normal operation.
+# Only use different for copying
 DB_REMOTE_PREFIX=ijspoort_
 DB_LOCAL_PREFIX=ijspoort_
 
@@ -33,11 +35,14 @@ FAKE_GPIO=0
 # always on to continuously fetch hourly
 # local weather data
 # See https://openweathermap.org/current
-OPENWEATHERMAP_APIKEY=abcdefghijk
-OPENWEATHERMAP_LOCATION=deurne,be
+OWM_APIKEY=abcdefghijk
+OWM_LOCATION=deurne,be
 
 # Water temperature sensor in local network
-TEMPERATURE_SENSOR_IP=192.168.1.180
+TEMP_SENSOR_IP=192.168.1.180
+
+# Comma separated temperature displays in local network
+TEMP_DISPLAY_IPS=192.168.1.181,192.168.1.182
 
 # Thingspeak apikey to post sensor data
 THINGSPEAK_APIKEY=AbCdEfGhIjKlMnO

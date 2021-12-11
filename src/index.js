@@ -7,6 +7,8 @@ const cron = require('node-cron');
 const axios = require('axios');
 const flatten = require('flat');
 const { Gpio } = require('onoff');
+const ping = require('ping');
+const { forEach } = require('lodash');
 
 let assist_import = {
 	enabled: false,
@@ -15,12 +17,13 @@ let assist_import = {
 	remove_non_members: false
 };
 
-const env_temp_sensor_ip = process.env.TEMPERATURE_SENSOR_IP;
-const env_owm_apikey = process.env.OPENWEATHERMAP_APIKEY;
-const env_owm_location = process.env.OPENWEATHERMAP_LOCATION;
-const env_thingspeak_apikey = process.env.env_thingspeak_apikey;
+const env_temp_sensor_ip = process.env.TEMP_SENSOR_IP;
+const env_owm_apikey = process.env.OWM_APIKEY;
+const env_owm_location = process.env.OWM_LOCATION;
+const env_thingspeak_apikey = process.env.THINGSPEAK_APIKEY;
 const env_db_sensor_prefix = process.env.DB_SENSOR_PREFIX;
-const env_db_prefix = process.env.DB_PREFIX;
+const env_db_local_prefix = process.env.DB_LOCAL_PREFIX;
+const env_temp_display_ips = process.env.TEMP_DISPLAY_IPS;
 
 const env_assist_import_year = process.env.ASSIST_IMPORT_YEAR;
 const env_assist_only_member_on_even_balance = process.env.ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE;
@@ -546,10 +549,24 @@ if (gate_enabled
 	&& env_owm_location
 	&& env_thingspeak_apikey
 	&& env_temp_sensor_ip
-	&& env_db_prefix
+	&& env_db_local_prefix
 	&& env_db_sensor_prefix
-	&& (env_db_prefix === env_db_sensor_prefix)
+	&& (env_db_local_prefix === env_db_sensor_prefix)
 ){
+	let display_ip_ary = [];
+	let display_update_ary = [];
+	let water_temp;
+	let water_temp_updated_at;
+	let air_temp;
+	let air_temp_updated_at;
+
+	if (env_temp_display_ips){
+		display_ip_ary = env_temp_display_ips.split(',');
+		display_ip_ary.forEach(() => {
+			display_update_ary.push(false);
+		});
+	}
+
 	console.log('Cron sensor.log enabled.');
 
 	cron.schedule('*/5 * * * *', () => {
@@ -608,7 +625,76 @@ if (gate_enabled
 			console.log('-- error --');
 			console.log(err);
 		}
+
+		if ('water_temp' in sensor_item){
+			water_temp = sensor_item.water_temp;
+			water_temp_updated_at = (new Date()).getTime();
+			display_ip_ary.forEach((ip, index) => {
+				display_update_ary[index] = true;
+			});
+		}
+		if ('air_temp' in sensor_item){
+			air_temp = sensor_item.air_temp;
+			air_temp_updated_at = (new Date()).getTime();
+			display_ip_ary.forEach((ip, index) => {
+				display_update_ary[index] = true;
+			});
+		}
+	});
+
+	// update temp displays
+	display_ip_ary.forEach((ip, index) => {
+		setInterval(() => {
+			ping.sys.probe(ip, (isAlive) => {
+				if (isAlive){
+					console.log('display ' + ip + ' alive');
+					if (display_update_ary[index]){
+						let display_water_str = water_temp.toLocaleString('nl-NL', {
+							minimumFractionDigits: 1,
+							maximumFractionDigits: 1
+						});
+						let display_air_str = air_temp.toLocaleString('nl-NL', {
+							minimumFractionDigits: 1,
+							maximumFractionDigits: 1
+						});
+						console.log('display ' + ip + ' post update');
+						console.log('water: ' + display_water_str + ' air: ' + display_air_str);
+						axios.post(ip, {
+							w: display_water_str,
+							a: display_air_str
+						}).then((res) => {
+							console.log('post to display ' + ip);
+							console.log(res);
+							display_update_ary[index] = false;
+						}).catch((err) => {
+							console.log('error posting to display ' + ip);
+							console.log(err);
+						});
+					}
+				} else {
+
+					if ((typeof water_temp === 'number')
+						&& (typeof air_temp === 'number')){
+						let display_water_str = water_temp.toLocaleString('nl-NL', {
+							minimumFractionDigits: 1,
+							maximumFractionDigits: 1
+						});
+						let display_air_str = air_temp.toLocaleString('nl-NL', {
+							minimumFractionDigits: 1,
+							maximumFractionDigits: 1
+						});
+						console.log('water: ' + display_water_str + ' air: ' + display_air_str);
+					}
+
+					console.log('display ' + ip + ' not alive');
+					display_update_ary[index] = true;
+				}
+			}, {
+				timeout: 1
+			});
+		}, 5000);
 	});
 } else {
 	console.log('Cron sensor.log not enabled.');
+	console.log(gate_enabled, env_owm_apikey, env_owm_apikey, env_thingspeak_apikey, env_temp_sensor_ip, env_db_sensor_prefix, env_db_local_prefix);
 }
