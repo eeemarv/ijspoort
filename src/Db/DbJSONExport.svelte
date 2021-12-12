@@ -1,9 +1,11 @@
 <script>
+  const env = window.require('electron').remote.process.env;
   const { ipcRenderer } = window.require('electron');
   import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
   import { db_reg, db_nfc, db_person, db_gate, db_tag, db_sensor } from '../services/db';
   import { download } from './../services/download';
 
+  const db_local_prefix = env.DB_LOCAL_PREFIX;
   let open = false;
 
   const toggle = () => (open = !open);
@@ -53,7 +55,7 @@
     }).then(() => {
       let time_str = (new Date()).getTime().toString();
       download(JSON.stringify(dbs),
-        'db_nfc_reg_person_'+time_str+'.json',
+        'db_' + db_local_prefix + time_str+'.json',
         'application/json');
       open = false;
     }).catch((err) => {
@@ -71,7 +73,7 @@
       Export Db JSON
     </Button>
     <p>
-      db_nfc, db_reg, db_person
+      db_nfc, db_reg, db_person, db_gate, db_tag, db_sensor
     </p>
   </ModalBody>
   <ModalFooter>
