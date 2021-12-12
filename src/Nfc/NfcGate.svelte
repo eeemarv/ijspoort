@@ -183,7 +183,7 @@
             <button type=button class="btn btn-primary btn-lg"
               on:click={handle_launch_gate_config}
             >
-              Poort instelling
+              Instellingen
             </button>
           {/if}
         </div>

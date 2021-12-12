@@ -6,9 +6,10 @@
   import NfcCountBadge from '../Nfc/NfcCountBadge.svelte';
   import NfcDeviceBadge from '../Nfc/NfcDeviceBadge.svelte';
   import GateStatus from './GateStatus.svelte';
-  import { gate_count_enabled } from '../services/store';
+  import { gate_count_enabled, temp_display_enabled } from '../services/store';
   import NfcGate from '../Nfc/NfcGate.svelte';
   import GateConfig from './GateConfig.svelte';
+  import Temperature from '../Common/Temperature.svelte';
   import { onMount } from 'svelte';
 
   let gate_config;
@@ -52,11 +53,22 @@
   {/if}
 
   <Row class="h-25 bg-primary">
-    <Col md=6 class="h-100 d-flex justify-content-center align-items-center">
-      {#if $gate_count_enabled}
-        <Clock font_size=3em />
-      {/if}
-    </Col>
+    {#if $temp_display_enabled}
+      <Col md=3 class="h-100 d-flex justify-content-center align-items-center">
+        <Temperature />
+      </Col>
+      <Col md=3 class="h-100 d-flex justify-content-center align-items-center">
+        {#if $gate_count_enabled}
+          <Clock font_size=3em />
+        {/if}
+      </Col>
+    {:else}
+      <Col md=6 class="h-100 d-flex justify-content-center align-items-center">
+        {#if $gate_count_enabled}
+          <Clock font_size=3em />
+        {/if}
+      </Col>
+    {/if}
     <Col class="h-100 p-3 d-flex flex-column">
       <div class="h-50">
         <GateStatus bind:this={gate_status} />

@@ -1,3 +1,4 @@
+const EStore = require('electron-store');
 import { writable } from 'svelte/store';
 
 const create_sync_monitor = () => {
@@ -35,6 +36,21 @@ const create_gate_count = () => {
 	};
 };
 
+const create_temp_display_enabled = () => {
+  const eStore = new EStore();
+  let enabled = eStore.get('temp_display_enabled', false);
+	const { subscribe, set } = writable(enabled);
+	return {
+		subscribe,
+    set: (b) => {
+      console.log('SET eStore temp_display_enabled');
+      eStore.set('temp_display_enabled', b);
+      set(b);
+    }
+	};
+};
+
+
 export const person = writable();
 export const person_nfc_list = writable([]);
 export const nfc_uid = writable();
@@ -44,3 +60,4 @@ export const gate_count = create_gate_count();
 export const gate_count_enabled = writable(false);
 export const gate_nfc_enabled = writable(false);
 export const cache_nfc_person = writable();
+export const temp_display_enabled = create_temp_display_enabled();

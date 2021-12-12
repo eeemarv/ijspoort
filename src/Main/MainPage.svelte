@@ -3,6 +3,7 @@
   import ManualInput from '../ManualInput/ManualInput.svelte';
   import Person from '../Person/Person.svelte';
   import RegList from '../Reg/RegList.svelte';
+  import Temperature from '../Common/Temperature.svelte';
   import Stats from '../Common/Stats.svelte';
   import Clock from '../Common/Clock.svelte';
   import DbSync from '../Db/DbSync.svelte';
@@ -11,6 +12,7 @@
   import MainPageLinks from './MainPageLinks.svelte';
   import NfcCard from '../Nfc/NfcCard.svelte';
   import GateSens from '../Gate/GateSens.svelte';
+  import { temp_display_enabled } from '../services/store';
 
   let reg;
   let reg_list;
@@ -58,6 +60,9 @@
 
   <div class=m-3>
     <Stats />
+    {#if $temp_display_enabled}
+      <Temperature />
+    {/if}
     <Card>
       <CardBody class="d-flex w-100 justify-content-between">
         <DbSync />

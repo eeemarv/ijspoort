@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { app, BrowserWindow, ipcMain, Menu, MenuItem, dialog } = require('electron');
+const EStore = require('electron-store');
 const { NFC, TAG_ISO_14443_3, KEY_TYPE_A, KEY_TYPE_B } = require('nfc-pcsc');
 const crypto = require('crypto');
 const path = require('path');
@@ -9,6 +10,8 @@ const flatten = require('flat');
 const { Gpio } = require('onoff');
 const ping = require('ping');
 const { forEach } = require('lodash');
+
+const eStore = new EStore();
 
 let assist_import = {
 	enabled: false,
