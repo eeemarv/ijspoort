@@ -1,6 +1,6 @@
 <script>
   import { db_person } from '../services/db';
-  import { person } from '../services/store';
+  import { person, focus_year } from '../services/store';
   import { Button } from 'sveltestrap';
   import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
   import { Row, Col } from 'sveltestrap';
@@ -13,7 +13,7 @@
     open = !open;
   };
 
-  let year = new Date().getFullYear();
+  let year;
   let member_short_list = [];
   let member_long_list = [];
   let long_list_cols = [];
@@ -25,7 +25,7 @@
       return;
     }
 
-    year = new Date().getFullYear();
+    year = Math.max($focus_year, new Date().getFullYear()).toString();
     member_year_list = [];
     member_short_list = [];
     member_long_list = [];
@@ -52,6 +52,10 @@
   };
 
   $: if ($person) {
+    update_member_year_list();
+  }
+  $: {
+    $focus_year;
     update_member_year_list();
   }
 

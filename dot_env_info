@@ -7,13 +7,8 @@ DB_USERNAME=
 FEED_A=swimming..in..cold..wAter
 FEED_B=iS_.._reFreshinggg_
 
-# Enable resets of Mifare tags (set to "1")
-NFC_RESET_ENABLED=1
-
 # Assist import year must match the export from Assist (leden > per lid > export)
 ASSIST_IMPORT_YEAR=2022
-ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE=1
-ASSIST_REMOVE_NON_MEMBERS=1
 
 # Prefixes of remote and local database names.
 # These must be the same in normal operation.

@@ -1,12 +1,9 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  const env = window.require('electron').remote.process.env;
   import { Button } from 'sveltestrap';
   import { db_nfc } from '../services/db';
   import { nfc_uid, nfc_auto_reg } from '../services/store';
   import NfcModal from './NfcModal.svelte';
-
-  const nfc_reset_enabled = env.NFC_RESET_ENABLED === '1';
 
   export let nfc_status;
   let nfc_modal;
@@ -56,7 +53,6 @@
 <NfcModal bind:this={nfc_modal} title="Wis NFC tag" />
 
 {#if !$nfc_auto_reg
-  && nfc_reset_enabled
   && $nfc_uid
   && (nfc_status === 'ok' || nfc_status === 'writable')
 }

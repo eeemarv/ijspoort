@@ -2,6 +2,7 @@
   import { Container, Row } from 'sveltestrap';
   import RegCSVExport from '../Reg/RegCSVExport.svelte';
   import DbJSONExport from '../Db/DbJSONExport.svelte';
+  import ConfigModal from '../Config/ConfigModal.svelte';
   import MainPage from './MainPage.svelte';
 
   let y;
@@ -28,6 +29,7 @@
 
 <RegCSVExport />
 <DbJSONExport />
+<ConfigModal />
 
 <Container fluid>
   <Row class=min-vh-100>

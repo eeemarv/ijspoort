@@ -13,13 +13,6 @@ const { forEach } = require('lodash');
 
 const eStore = new EStore();
 
-let assist_import = {
-	enabled: false,
-	year: '',
-	only_member_on_even_balance: false,
-	remove_non_members: false
-};
-
 const env_temp_sensor_ip = process.env.TEMP_SENSOR_IP;
 const env_owm_apikey = process.env.OWM_APIKEY;
 const env_owm_location = process.env.OWM_LOCATION;
@@ -27,10 +20,6 @@ const env_thingspeak_apikey = process.env.THINGSPEAK_APIKEY;
 const env_db_sensor_prefix = process.env.DB_SENSOR_PREFIX;
 const env_db_local_prefix = process.env.DB_LOCAL_PREFIX;
 const env_temp_display_ips = process.env.TEMP_DISPLAY_IPS;
-
-const env_assist_import_year = process.env.ASSIST_IMPORT_YEAR;
-const env_assist_only_member_on_even_balance = process.env.ASSIST_ONLY_MEMBER_ON_EVEN_BALANCE;
-const env_assist_remove_non_members = process.env.ASSIST_REMOVE_NON_MEMBERS;
 
 let win;
 
@@ -54,30 +43,6 @@ if (typeof feed_A === 'undefined' || !feed_A){
 
 if (typeof feed_B === 'undefined' || !feed_B){
 	throw 'No FEED_B set!';
-}
-
-if (typeof env_assist_import_year !== 'undefined'
-	&& env_assist_import_year
-	&& env_assist_import_year !== '0'){
-	assist_import.enabled = true;
-}
-
-if (assist_import.enabled){
-	if (!(Number.isInteger(Number(env_assist_import_year)) && (Number(env_assist_import_year) >= 2000))){
-		throw 'ASSIST_IMPORT_YEAR not valid';
-	}
-
-	assist_import.year = env_assist_import_year;
-
-	if (typeof env_assist_only_member_on_even_balance !== 'undefined'
-		&& env_assist_only_member_on_even_balance === '1'){
-			assist_import.only_member_on_even_balance = true;
-	}
-
-	if (typeof env_assist_remove_non_members !== 'undefined'
-		&& env_assist_remove_non_members === '1'){
-			assist_import.remove_non_members = true;
-	}
 }
 
 // Live Reload
@@ -475,38 +440,49 @@ app.on('activate', () => {
 });
 
 const import_assist_xlsx = () => {
-	if (!assist_import.enabled){
+	const assist_import_year = eStore.get('assist_import_year');
+	if (!assist_import_year){
 		return;
 	}
 	const files = dialog.showOpenDialogSync(win, {
 		properties: ['openFile'],
-        filters: {name: 'MS Excell', extensions: ['xls', 'xlsx']},
-        message: 'Import xlsx leden uit Assist, LIDJAAR ' + assist_import.year
+      filters: {name: 'MS Excell', extensions: ['xls', 'xlsx']},
+      message: 'Import xlsx leden uit Assist, LIDJAAR ' + assist_import_year
 	});
 	if (!files){
 			return;
 	}
-	win.webContents.send('xls.assist.import', files[0], assist_import);
+	win.webContents.send('xls.assist.import', files[0]);
 };
 
-const menu = new Menu();
+const build_menu = () => {
+	const menu = new Menu();
 
-if(assist_import.enabled){
-	const importMenu = new Menu();
-	importMenu.append(new MenuItem({ label: 'leden Assist Xlsx', click: import_assist_xlsx }));
-	menu.append(new MenuItem({ label: 'Import', submenu: importMenu }));
-}
+	const assist_import_year = eStore.get('assist_import_year');
 
-const exportMenu = new Menu();
-exportMenu.append(new MenuItem({ label: 'Registraties CSV (covid-19 tracing)', click: () => { win.webContents.send('reg.csv.export'); }}));
-exportMenu.append(new MenuItem({ label: 'Database JSON', click: () => { win.webContents.send('db.json.export'); }}));
+	if(assist_import_year){
+		const importMenu = new Menu();
+		importMenu.append(new MenuItem({ label: 'leden Assist Xlsx ' + assist_import_year, click: import_assist_xlsx }));
+		menu.append(new MenuItem({ label: 'Import', submenu: importMenu }));
+	}
 
-menu.append(new MenuItem({ label: 'Export', submenu: exportMenu }));
-menu.append(new MenuItem({ label: 'Instellingen', click: () => console.log('meuh')} ));
-menu.append(new MenuItem({role: 'viewMenu'}));
-menu.append(new MenuItem({role: 'windowMenu'}));
+	const exportMenu = new Menu();
+	exportMenu.append(new MenuItem({ label: 'Registraties CSV (covid-19 tracing)', click: () => { win.webContents.send('reg.csv.export'); }}));
+	exportMenu.append(new MenuItem({ label: 'Database JSON', click: () => { win.webContents.send('db.json.export'); }}));
 
-Menu.setApplicationMenu(menu);
+	menu.append(new MenuItem({ label: 'Export', submenu: exportMenu }));
+	menu.append(new MenuItem({ label: 'Instellingen', click: () => { win.webContents.send('open_config'); }} ));
+	menu.append(new MenuItem({role: 'viewMenu'}));
+	menu.append(new MenuItem({role: 'windowMenu'}));
+
+	Menu.setApplicationMenu(menu);
+};
+
+build_menu();
+
+ipcMain.on('rebuild_menu', () => {
+	build_menu();
+});
 
 /**
  * fetch and store sensor data

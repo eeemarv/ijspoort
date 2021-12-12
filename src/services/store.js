@@ -36,20 +36,23 @@ const create_gate_count = () => {
 	};
 };
 
-const create_temp_display_enabled = () => {
+const create_coupled_estore = (key, default_value, is_year = false) => {
   const eStore = new EStore();
-  let enabled = eStore.get('temp_display_enabled', false);
-	const { subscribe, set } = writable(enabled);
+  let val = eStore.get(key, default_value);
+	const { subscribe, set } = writable(val);
 	return {
 		subscribe,
-    set: (b) => {
-      console.log('SET eStore temp_display_enabled');
-      eStore.set('temp_display_enabled', b);
-      set(b);
+    set: (n) => {
+      if (is_year){
+        n = n ?? 2020;
+        n = n > 2030 ? 2030 : n;
+        n = n < 2010 ? 2010 : n;
+      }
+      eStore.set(key, n);
+      set(n);
     }
 	};
 };
-
 
 export const person = writable();
 export const person_nfc_list = writable([]);
@@ -60,4 +63,6 @@ export const gate_count = create_gate_count();
 export const gate_count_enabled = writable(false);
 export const gate_nfc_enabled = writable(false);
 export const cache_nfc_person = writable();
-export const temp_display_enabled = create_temp_display_enabled();
+export const temp_display_enabled = create_coupled_estore('temp_display_enabled', false);
+export const assist_import_year = create_coupled_estore('assist_import_year', 2022, true);
+export const focus_year = create_coupled_estore('focus_year', 2022, true);

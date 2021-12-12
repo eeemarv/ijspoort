@@ -1,4 +1,4 @@
-import { db_gate } from './db';
+import { db_tag } from './db';
 import lodash from 'lodash';
 
 const design_tag_search_doc = {
@@ -40,7 +40,7 @@ const design_tag_search_doc = {
 };
 
 const put_design_tag_search = () => {
-  db_gate.get(design_gate_search_doc._id).catch((err) => {
+  db_tag.get(design_tag_search_doc._id).catch((err) => {
     if (err.name === 'not_found'){
       return 'put';
     }
@@ -57,7 +57,7 @@ const put_design_tag_search = () => {
     design_gate_search_doc._rev = res._rev;
     return design_gate_search_doc;
   }).then((res) => {
-    return db_gate.put(res);
+    return db_tag.put(res);
   }).then((res) => {
     console.log('design_gate_search_doc updated');
     console.log(res);

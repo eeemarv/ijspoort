@@ -2,10 +2,12 @@
   import { Badge } from 'sveltestrap';
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
+  import { focus_year } from '../services/store';
 
   export let person;
   export let show_member_year = false;
-  const year_str = new Date().getFullYear().toString();
+
+  $: year_str = $focus_year.toString();
 </script>
 
 <PersonMemberId member_id={person.member_id} />
