@@ -1,6 +1,6 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { TabContent, TabPane, Card } from 'sveltestrap';
   import { cache_nfc_person } from '../services/store';
   import { focus_year, assist_import_year } from '../services/store';
@@ -8,6 +8,7 @@
   import { gate_display_enabled } from '../services/store';
   import { tag_display_enabled } from '../services/store';
   import Temperature from '../Common/Temperature.svelte';
+  import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
   let open = false;
   let tab = 'year';
@@ -116,11 +117,7 @@
       </TabPane>
     </TabContent>
   </ModalBody>
-  <ModalFooter>
-    <Button color=primary on:click={toggle} size=lg>
-      Sluiten
-    </Button>
-  </ModalFooter>
+  <ModalFooterClose on:click={toggle} />
 </Modal>
 
 <style>

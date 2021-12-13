@@ -2,7 +2,7 @@
   import { Card, CardFooter } from 'sveltestrap';
   import NfcActivate from './NfcActivate.svelte';
   import NfcAutoReg from './NfcAutoReg.svelte';
-  import NfcDeviceCardHeading from './NfcDeviceCardHeading.svelte';
+  import NfcDeviceCardHeader from './NfcDeviceCardHeader.svelte';
   import NfcCardBody from './NfcCardBody.svelte';
   import NfcScan from './NfcScan.svelte';
   import NfcReadTest from './NfcReadTest.svelte';
@@ -14,7 +14,7 @@
 <NfcScan bind:nfc_status on:register />
 
 <Card class=m-3>
-  <NfcDeviceCardHeading />
+  <NfcDeviceCardHeader />
   <NfcCardBody {nfc_status} />
   <NfcActivate {nfc_status} on:activated={() => { nfc_status = 'ok'; }} />
   <NfcAutoReg />

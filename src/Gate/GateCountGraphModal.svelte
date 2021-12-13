@@ -1,9 +1,10 @@
 <script>
-  import { Button, Modal, ModalBody, ModalFooter, ModalHeader, Row, Col } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader, Row, Col } from 'sveltestrap';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import TimeTag from '../Common/TimeTag.svelte';
   import * as Pancake from '@sveltejs/pancake';
   import { db_gate } from '../services/db';
+  import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
   export let open = false;
   export let toggle = () => (open = !open);
@@ -258,15 +259,7 @@
       {/each}
     {/if}
   </ModalBody>
-  <ModalFooter>
-    <div class="d-flex w-100 justify-content-end">
-      <Button
-        color=primary on:click={toggle}
-      >
-        Sluiten
-      </Button>
-    </div>
-  </ModalFooter>
+  <ModalFooterClose on:click={toggle} />
 </Modal>
 
 <style>

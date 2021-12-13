@@ -4,34 +4,32 @@ import lodash from 'lodash';
 const design_tag_search_doc = {
   _id: '_design/search',
   views: {
-    count_in_by_ts_epoch: {
+    count_by_person_id_and_ts_epoch: {
       map: ((doc) => {
-        if (doc.in){
-          emit(doc.ts_epoch);
+        emit(doc.person_id + '_' + doc.ts_epoch.toString());
+      }).toString(),
+      reduce: '_count'
+    },
+    count_by_type: {
+      map: ((doc) => {
+        if (doc.type){
+          emit(doc.type);
         }
       }).toString(),
       reduce: '_count'
     },
-    count_in_by_ts_epoch_per_5_min: {
+    count_total: {
       map: ((doc) => {
-        if (doc.in){
-          emit(Math.floor(doc.ts_epoch / 300000) * 300000);
+        if(doc._id.startsWith('n')){
+          emit(true);
         }
       }).toString(),
       reduce: '_count'
     },
-    count_out_by_ts_epoch: {
+    count_by_ts_epoch: {
       map: ((doc) => {
         if (doc.out){
           emit(doc.ts_epoch);
-        }
-      }).toString(),
-      reduce: '_count'
-    },
-    count_out_by_ts_epoch_per_5_min: {
-      map: ((doc) => {
-        if (doc.out){
-          emit(Math.floor(doc.ts_epoch / 300000) * 300000);
         }
       }).toString(),
       reduce: '_count'

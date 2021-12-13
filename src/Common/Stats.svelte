@@ -1,8 +1,9 @@
 <script>
   import { onMount } from 'svelte';
   import { Button, Card, CardGroup, Progress } from 'sveltestrap';
-  import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
+  import { Modal, ModalHeader, ModalBody } from 'sveltestrap';
   import { db_person } from '../services/db';
+  import ModalFooterClose from './ModalFooterClose.svelte';
 
   let open = false;
   const toggle = () => {
@@ -65,11 +66,7 @@
       </Progress>
     {/each}
   </ModalBody>
-  <ModalFooter>
-    <Button color=primary on:click={toggle}>
-      Sluiten
-    </Button>
-  </ModalFooter>
+  <ModalFooterClose on:click={toggle} />
 </Modal>
 
 <CardGroup>

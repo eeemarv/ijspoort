@@ -3,7 +3,7 @@
   import userIcon from '@iconify/icons-fa/user';
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { Row, Col } from 'sveltestrap';
-  import { ListGroup } from 'sveltestrap';
+  import { Button, ListGroup, ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
   import { TabContent, TabPane } from 'sveltestrap';
   import { FormGroup, Label } from 'sveltestrap';
@@ -178,18 +178,9 @@
 
 <Modal isOpen={open} {toggle} size=xl>
   <ModalHeader {toggle}>
-    Geactiveerde NFC tags
+    Tags
   </ModalHeader>
   <ModalBody>
-    {#if nfc_count }
-      <FormGroup>
-        <Label for=list_length>Toon aantal in lijst (maximum)</Label>
-        <select id=list_length bind:value={list_length} class=form-control name=list_length on:change={() => update_nfcs()}>
-          {#each list_length_options as l (l)}
-            <option>{l}</option>
-          {/each}
-        </select>
-      </FormGroup>
       <TabContent pills on:tab={(e) => tab = e.detail}>
         <TabPane tabId=nfc_count active={tab === 'nfc_count'}>
           <span slot=tab>
@@ -243,11 +234,6 @@
         </TabPane>
         {/each}
       </TabContent>
-    {:else}
-      <p>
-        Nog geen NFC tags geactiveerd.
-      </p>
-    {/if}
   </ModalBody>
   <ModalFooterClose on:click={toggle} />
 </Modal>

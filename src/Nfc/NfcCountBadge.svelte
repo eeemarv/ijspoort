@@ -10,7 +10,7 @@
 
 <span
   class="badge bg-accent"
-  title="Totaal aantal NFC-tags geregistreerd"
+  title="Totaal NFC-tags"
   style="--font-size: {font_size};"
 >
   {nfc_count}

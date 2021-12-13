@@ -1,7 +1,7 @@
 <script>
   import { Progress } from 'sveltestrap';
-  import { Button } from 'sveltestrap';
-  import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
+  import { Modal, ModalHeader, ModalBody } from 'sveltestrap';
+  import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
   export let title = '';
   let open = false;
@@ -49,12 +49,5 @@
     <Progress value={progress} color=light/>
     {message}
   </ModalBody>
-  <ModalFooter>
-    <Button
-      color=primary
-      on:click={toggle}
-    >
-      Sluiten
-    </Button>
-  </ModalFooter>
+  <ModalFooterClose on:click={toggle} />
 </Modal>

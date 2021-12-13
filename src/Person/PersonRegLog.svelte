@@ -1,11 +1,12 @@
 <script>
-  import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Row, Col, Badge } from 'sveltestrap';
+  import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader, Row, Col, Badge } from 'sveltestrap';
   import { db_reg } from '../services/db';
   import { person } from './../services/store';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonName from './PersonName.svelte';
   import RegTimeTag from '../Reg/RegTimeTag.svelte';
+  import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
   let open = false;
   const toggle = () => (open = !open);
@@ -108,26 +109,18 @@
       </p>
     {/if}
   </ModalBody>
-  <ModalFooter>
-    <div class="d-flex w-100 justify-content-between">
-      <div>
-        <span>Legende </span>
-        <Badge color=accent>
-          NFC
-        </Badge>
-        &nbsp;
-        <Badge color=warning>
-          Manueel
-        </Badge>
-      </div>
-
-      <Button
-        color=primary on:click={toggle}
-      >
-        Sluiten
-      </Button>
+  <ModalFooterClose on:click={toggle} >
+    <div slot=left>
+      <span>Legende </span>
+      <Badge color=accent>
+        NFC
+      </Badge>
+      &nbsp;
+      <Badge color=warning>
+        Manueel
+      </Badge>
     </div>
-  </ModalFooter>
+  </ModalFooterClose>
 </Modal>
 
 <Button

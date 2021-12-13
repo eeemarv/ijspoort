@@ -1,10 +1,11 @@
 <script>
-  import { Badge, Button, ListGroup, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
+  import { Badge, Button, ListGroup, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { person } from './../services/store';
   import { db_person } from './../services/db';
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonName from './PersonName.svelte';
   import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
+  import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
   let open = false;
   const toggle = () => {
@@ -101,14 +102,7 @@
       {/each}
     </ListGroup>
   </ModalBody>
-  <ModalFooter>
-    <Button
-      color=primary
-      on:click={toggle}
-    >
-      Sluiten
-    </Button>
-  </ModalFooter>
+  <ModalFooterClose on:click={toggle} />
 </Modal>
 
 {#if result_persons.length > 1}

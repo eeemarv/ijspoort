@@ -2,11 +2,12 @@
   import { db_person } from '../services/db';
   import { person, focus_year } from '../services/store';
   import { Button } from 'sveltestrap';
-  import { Modal, ModalHeader, ModalBody, ModalFooter } from 'sveltestrap';
+  import { Modal, ModalHeader, ModalBody } from 'sveltestrap';
   import { Row, Col } from 'sveltestrap';
   import { ListGroup, ListGroupItem } from 'sveltestrap';
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonName from './PersonName.svelte';
+  import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
   let open = false;
   const toggle = () => {
@@ -96,14 +97,7 @@
       {/each}
     </Row>
   </ModalBody>
-  <ModalFooter>
-    <Button
-      color=primary
-      on:click={toggle}
-    >
-      Sluiten
-    </Button>
-  </ModalFooter>
+  <ModalFooterClose on:click={toggle} />
 </Modal>
 
 {#each member_short_list as item(item.year)}

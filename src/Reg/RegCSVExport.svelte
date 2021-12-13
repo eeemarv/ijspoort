@@ -5,6 +5,7 @@
   import { db_reg, db_person } from '../services/db';
   import { download } from '../services/download';
   import Papa from 'papaparse';
+  import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
   const period_in_days = 30;
   let btn_cols = [];

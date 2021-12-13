@@ -1,9 +1,11 @@
 <script>
-  import { Button, Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { TabContent, TabPane, Card } from 'sveltestrap';
   import { gate_count, gate_count_enabled, gate_nfc_enabled, cache_nfc_person } from '../services/store';
   import { temp_display_enabled } from '../services/store';
   import Temperature from '../Common/Temperature.svelte';
+  import ModalFooterClose from '../Common/ModalFooterClose.svelte';
+
   let open = false;
   let tab = 'nfc_access';
 
@@ -176,11 +178,7 @@
       </TabPane>
     </TabContent>
   </ModalBody>
-  <ModalFooter>
-    <Button color=primary on:click={toggle} size=lg>
-      Sluiten
-    </Button>
-  </ModalFooter>
+  <ModalFooterClose on:click={toggle} />
 </Modal>
 
 <style>
