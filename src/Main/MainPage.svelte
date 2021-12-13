@@ -11,8 +11,11 @@
   import { onMount } from 'svelte';
   import MainPageLinks from './MainPageLinks.svelte';
   import NfcCard from '../Nfc/NfcCard.svelte';
-  import GateSens from '../Gate/GateSens.svelte';
+  import TagCard from '../Tag/TagCard.svelte';
+  import GateCard from '../Gate/GateCard.svelte';
   import { temp_display_enabled } from '../services/store';
+  import { gate_display_enabled } from '../services/store';
+  import { tag_display_enabled } from '../services/store';
 
   let reg;
   let reg_list;
@@ -49,14 +52,13 @@
 <Col class="bg-primary min-vh-100">
   <NfcCard on:register={handle_reg_by_nfc} />
 
-  <Card class=m-3>
-    <CardHeader>
-      Poort
-    </CardHeader>
-    <CardFooter>
-      <GateSens />
-    </CardFooter>
-  </Card>
+  {#if $tag_display_enabled}
+    <TagCard />
+  {/if}
+
+  {#if $gate_display_enabled}
+    <GateCard />
+  {/if}
 
   <div class=m-3>
     <Stats />
