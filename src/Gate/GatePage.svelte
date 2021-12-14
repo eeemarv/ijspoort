@@ -2,7 +2,7 @@
   import { Col, Container, Row } from 'sveltestrap';
   import Clock from '../Common/Clock.svelte';
   import DbSync from '../Db/DbSync.svelte';
-  import GateCounterRow from './GateCounterRow.svelte';
+  import GateCounterRow from '../GateCounter/GateCounterRow.svelte';
   import NfcCountBadge from '../Nfc/NfcCountBadge.svelte';
   import NfcDeviceBadge from '../Nfc/NfcDeviceBadge.svelte';
   import GateStatus from './GateStatus.svelte';

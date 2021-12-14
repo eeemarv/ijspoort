@@ -326,19 +326,21 @@ const listen_pcsc = (win) => {
 const listen_gpio = (win) => {
 	console.log('listen_gpio');
 
-	const fake_gpio = process.env.FAKE_GPIO === '1';
+	const emulate_gpio = process.env.EMULATE_GPIO === '1';
 
-	if (fake_gpio){
+	if (emulate_gpio){
+		console.log('emulate_gpio enabled.');
+
 		ipcMain.on('gate.open', async (event) => {
 			console.log('gate.open');
 			event.reply('gate.is_open');
-			console.log('FAKE_GPIO gate.is_open');
+			console.log('EMULATE_GPIO gate.is_open');
 		});
 
 		ipcMain.on('gate.close', async (event) => {
 			console.log('gate.close');
 			event.reply('gate.is_closed');
-			console.log('FAKE_GPIO gate.is_closed');
+			console.log('EMULATE_GPIO gate.is_closed');
 		});
 
 		return;
@@ -420,16 +422,15 @@ const listen_gpio = (win) => {
 			}
 		});
 
+		process.on('SIGINT', () => {
+			gpio_sens_in.unexport();
+			gpio_sens_out.unexport();
+			gpio_gate.unexport();
+		});
 	} catch (e){
-		console.log('gpio init fail');
+		console.log('gpio fail');
 		console.log(e);
 	}
-
-	process.on('SIGINT', () => {
-		gpio_sens_in.unexport();
-		gpio_sens_out.unexport();
-		gpio_gate.unexport();
-	});
 };
 
 app.on('ready', () => {

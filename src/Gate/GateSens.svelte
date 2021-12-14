@@ -11,7 +11,7 @@
 
   const debug_enabled = env.DEBUG === '1';
   const gate_enabled = env.GATE === '1';
-  const debug_sens_click = env.DEBUG_SENS_CLICK === '1';
+  const emulate_sens_in_out = env.EMULATE_SENS_IN_OUT === '1';
   const dispatch = createEventDispatcher();
 
   const count_hours = 5;
@@ -133,7 +133,7 @@
     }
 
     handle_click_in = () => {
-      if (debug_enabled && debug_sens_click){
+      if (debug_enabled && emulate_sens_in_out){
         trigger_in();
       } else if (!gate_enabled){
         graph_open = true;
@@ -141,7 +141,7 @@
     };
 
     handle_click_out = () => {
-      if (debug_enabled && debug_sens_click){
+      if (debug_enabled && emulate_sens_in_out){
         trigger_out();
       } else if (!gate_enabled){
         graph_open = true;

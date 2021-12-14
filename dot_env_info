@@ -19,9 +19,9 @@ GATE=0
 # Set DEBUG to "1" to open developer tools
 DEBUG=0
 # Emulate Gate in and out triggers (set to "1")
-DEBUG_SENS_CLICK=0
+EMULATE_SENS_IN_OUT=0
 # Emulate GPIO pins for testing (set to "1")
-FAKE_GPIO=0
+EMULATE_GPIO=0
 
 # Specify this only on one computer that's
 # always on to continuously fetch hourly
