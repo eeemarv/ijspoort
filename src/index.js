@@ -328,90 +328,102 @@ const listen_gpio = (win) => {
 
 	const fake_gpio = process.env.FAKE_GPIO === '1';
 
+	if (fake_gpio){
+		ipcMain.on('gate.open', async (event) => {
+			console.log('gate.open');
+			event.reply('gate.is_open');
+			console.log('FAKE_GPIO gate.is_open');
+		});
+
+		ipcMain.on('gate.close', async (event) => {
+			console.log('gate.close');
+			event.reply('gate.is_closed');
+			console.log('FAKE_GPIO gate.is_closed');
+		});
+
+		return;
+	}
+
 	let block_sens_in = false;
 	let block_sens_out = false;
 
-	const gpio_sens_in = new Gpio(gpio_pin.sens_in, 'in', 'rising', {
-		activeLow: true
-	});
+	try {
+		const gpio_sens_in = new Gpio(gpio_pin.sens_in, 'in', 'rising', {
+			activeLow: true
+		});
 
-	const gpio_sens_out = new Gpio(gpio_pin.sens_out, 'in', 'rising', {
-		activeLow: true
-	});
+		const gpio_sens_out = new Gpio(gpio_pin.sens_out, 'in', 'rising', {
+			activeLow: true
+		});
 
-	const gpio_gate = new Gpio(gpio_pin.gate, 'high');
+		const gpio_gate = new Gpio(gpio_pin.gate, 'high');
 
-	gpio_sens_in.watch((err, value) => {
-		if (err){
-			console.log('err sens.in');
-			console.log(err);
-			return;
-		}
-		if (block_sens_in){
-			console.log('sens.in debounced');
-			return;
-		}
-		block_sens_in = true;
-		setTimeout(() => {
-			block_sens_in = false;
-		}, 2000);
-		console.log('sens.in', value);
-		win.webContents.send('sens.in');
-	});
+		gpio_sens_in.watch((err, value) => {
+			if (err){
+				console.log('err sens.in');
+				console.log(err);
+				return;
+			}
+			if (block_sens_in){
+				console.log('sens.in debounced');
+				return;
+			}
+			setTimeout(() => {
+				block_sens_in = false;
+			}, 2000);
+			block_sens_in = true;
+			console.log('sens.in', value);
+			win.webContents.send('sens.in');
+		});
 
-	gpio_sens_out.watch((err, value) => {
-		if (err){
-			console.log('err sens.out');
-			console.log(err);
-			return;
-		}
-		if (block_sens_out){
-			console.log('sens.out debounced');
-			return;
-		}
-		block_sens_out = true;
-		setTimeout(() => {
-			block_sens_out = false;
-		}, 2000);
-		console.log('sens.out', value);
-		win.webContents.send('sens.out');
-	});
+		gpio_sens_out.watch((err, value) => {
+			if (err){
+				console.log('err sens.out');
+				console.log(err);
+				return;
+			}
+			if (block_sens_out){
+				console.log('sens.out debounced');
+				return;
+			}
+			setTimeout(() => {
+				block_sens_out = false;
+			}, 2000);
+			block_sens_out = true;
+			console.log('sens.out', value);
+			win.webContents.send('sens.out');
+		});
 
-	ipcMain.on('gate.open', async (event) => {
-		console.log('gate.open');
-		try {
-			await gpio_gate.writeSync(1);
-			event.reply('gate.is_open');
-			console.log('gate.is_open');
-		} catch (err) {
-			if (fake_gpio){
+		ipcMain.on('gate.open', async (event) => {
+			console.log('gate.open');
+			try {
+				await gpio_gate.writeSync(1);
 				event.reply('gate.is_open');
-				console.log('FAKE_GPIO gate.is_open');
-			} else {
+				console.log('gate.is_open');
+			} catch (err) {
 				console.log('gate.open.err');
 				console.log(err);
 				event.reply('gate.open.err', err);
 			}
-		}
-	});
+		});
 
-	ipcMain.on('gate.close', async (event) => {
-		console.log('gate.close');
-		try {
-			await gpio_gate.writeSync(0);
-			event.reply('gate.is_closed');
-			console.log('gate.is_closed');
-		} catch (err) {
-			if (fake_gpio){
+		ipcMain.on('gate.close', async (event) => {
+			console.log('gate.close');
+			try {
+				await gpio_gate.writeSync(0);
 				event.reply('gate.is_closed');
-				console.log('FAKE_GPIO gate.is_closed');
-			} else {
+				console.log('gate.is_closed');
+			} catch (err) {
 				console.log('err gate.close');
 				console.log(err);
 				event.reply('gate.close.err', err);
 			}
-		}
-	});
+		});
+
+	} catch (e){
+		console.log('gpio init fail');
+		console.log(e);
+	}
 
 	process.on('SIGINT', () => {
 		gpio_sens_in.unexport();

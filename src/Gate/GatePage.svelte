@@ -8,7 +8,7 @@
   import GateStatus from './GateStatus.svelte';
   import { gate_count_enabled, temp_display_enabled } from '../services/store';
   import NfcGate from '../Nfc/NfcGate.svelte';
-  import GateConfig from './GateConfig.svelte';
+  import GateConfig from '../GateConfig/GateConfig.svelte';
   import Temperature from '../Common/Temperature.svelte';
   import { onMount } from 'svelte';
 
@@ -59,7 +59,7 @@
       </Col>
       <Col md=3 class="h-100 d-flex justify-content-center align-items-center">
         {#if $gate_count_enabled}
-          <Clock font_size=3em />
+          <Clock font_size=2em />
         {/if}
       </Col>
     {:else}

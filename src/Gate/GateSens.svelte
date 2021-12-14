@@ -9,7 +9,8 @@
 
   export let font_size = '1em';
 
-  const debug = env.DEBUG === '1';
+  const debug_enabled = env.DEBUG === '1';
+  const gate_enabled = env.GATE === '1';
   const debug_sens_click = env.DEBUG_SENS_CLICK === '1';
   const dispatch = createEventDispatcher();
 
@@ -132,17 +133,17 @@
     }
 
     handle_click_in = () => {
-      if (debug && debug_sens_click){
+      if (debug_enabled && debug_sens_click){
         trigger_in();
-      } else {
+      } else if (!gate_enabled){
         graph_open = true;
       }
     };
 
     handle_click_out = () => {
-      if (debug && debug_sens_click){
+      if (debug_enabled && debug_sens_click){
         trigger_out();
-      } else {
+      } else if (!gate_enabled){
         graph_open = true;
       }
     };
