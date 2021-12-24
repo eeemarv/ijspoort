@@ -21,7 +21,7 @@ const design_person_search_doc = {
     },
     count_by_member_year: {
       map: ((doc) => {
-        if (doc.member_year !== undefined){
+        if (typeof doc.member_year === 'object'){
           Object.keys(doc.member_year).forEach((yk) => {
             emit(yk.substring(1));
           });

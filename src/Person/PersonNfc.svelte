@@ -4,7 +4,7 @@
   import PersonNfcItem from './PersonNfcItem.svelte';
 
   const update_person_nfc_list = (person_id) => {
-    if (person_id === undefined){
+    if (typeof person_id === 'undefined'){
       $person_nfc_list = [];
       return;
     }

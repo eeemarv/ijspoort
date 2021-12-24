@@ -2,7 +2,6 @@
   const { ipcRenderer } = window.require('electron');
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { TabContent } from 'sveltestrap';
-  import { cache_nfc_person } from '../services/store';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
   import ConfigYear from './ConfigYear.svelte';
   import ConfigDisplay from './ConfigDisplay.svelte';
@@ -17,14 +16,6 @@
   ipcRenderer.on('open_config', () => {
     open = true;
   });
-
-  export const launch = () => {
-    if (!$cache_nfc_person){
-      console.log('-- cache_nfc_person not set --');
-      return;
-    }
-    open = true;
-  };
 
   export const close = () => {
     open = false;

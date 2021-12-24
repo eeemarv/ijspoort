@@ -43,6 +43,6 @@
 
 <style>
 span {
- font-size: var(--font-size);
+  font-size: var(--font-size);
 }
 </style>

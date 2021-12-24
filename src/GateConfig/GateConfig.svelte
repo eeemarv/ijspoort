@@ -1,24 +1,31 @@
 <script>
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { TabContent } from 'sveltestrap';
-  import { cache_nfc_person } from '../services/store';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
   import GateConfigMembers from './GateConfigMembers.svelte';
   import GateConfigMax from './GateConfigMax.svelte';
   import GateConfigTemp from './GateConfigTemp.svelte';
 
-  let open = false;
-  let tab = 'members';
+  export let open;
+  export let tab = 'members';
+  let gate_person;
+  let gate_nfc_uid;
 
   $: if (open) {
     tab = 'members';
   }
 
-  export const launch = () => {
-    if (!$cache_nfc_person){
-      console.log('-- cache_nfc_person not set --');
+  $: if (!open){
+    gate_person = undefined;
+    gate_nfc_uid = undefined;
+  }
+
+  export const click_open = (person, nfc_uid) => {
+    if (!person || !nfc_uid){
       return;
     }
+    gate_person = data.person;
+    gate_nfc_uid = data.nfc_uid;
     open = true;
   };
 
@@ -58,5 +65,9 @@
       <GateConfigTemp {tab} />
     </TabContent>
   </ModalBody>
-  <ModalFooterClose on:click={toggle} />
+  <ModalFooterClose
+    on:click={toggle}
+    font_size=1.2em
+    btn_lg={true}
+  />
 </Modal>

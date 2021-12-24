@@ -34,7 +34,7 @@
   };
 
   const search_func = () => {
-    if ($person === undefined){
+    if (typeof $person === 'undefined'){
       result_persons = [];
       return;
     }

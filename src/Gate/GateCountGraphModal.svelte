@@ -5,6 +5,7 @@
   import * as Pancake from '@sveltejs/pancake';
   import { db_gate } from '../services/db';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
+  import GateCountUnique from './GateCountUnique.svelte';
 
   export let open = false;
   export let toggle = () => (open = !open);
@@ -193,13 +194,19 @@
 
 <Modal isOpen={open} {toggle} size=xl>
   <ModalHeader {toggle}>
+    Zwembeurten en aantal personen
+  </ModalHeader>
+  <ModalBody>
+    <GateCountUnique />
+  </ModalBody>
+  <ModalHeader {toggle}>
     In/uit historiek
   </ModalHeader>
   <ModalBody>
     {#if ready}
       {#each d_graphs as gr}
         <Row>
-          <Col class=bg-blue>
+          <Col class=bg-black>
             <LocaleDateString ts={gr.ts * 1} />,
             <TimeTag ts={gr.ts * 1} color=nn />
             Totaal aantal: {gr.total_count},

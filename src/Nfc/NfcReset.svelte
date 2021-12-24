@@ -2,9 +2,10 @@
   const { ipcRenderer } = window.require('electron');
   import { Button } from 'sveltestrap';
   import { db_nfc } from '../services/db';
-  import { nfc_uid, nfc_auto_reg } from '../services/store';
+  import { nfc_uid } from '../services/store';
   import NfcModal from './NfcModal.svelte';
 
+  export let reg_auto_enabled;
   export let nfc_status;
   let nfc_modal;
 
@@ -52,7 +53,7 @@
 
 <NfcModal bind:this={nfc_modal} title="Wis NFC tag" />
 
-{#if !$nfc_auto_reg
+{#if !reg_auto_enabled
   && $nfc_uid
   && (nfc_status === 'ok' || nfc_status === 'writable')
 }

@@ -16,6 +16,14 @@ DB_LOCAL_PREFIX=ijspoort_
 # Set GATE to "1" for gate modus
 GATE=0
 
+# Limit gate configuration to users
+# from a certain group in Assist
+# (or groups comma separated)
+# When left open, all users of any
+# group have access (users without
+# group don't have access)
+GATE_ADMIN=Bestuur,Poortconfig
+
 # Set DEBUG to "1" to open developer tools
 DEBUG=0
 # Emulate Gate in and out triggers (set to "1")

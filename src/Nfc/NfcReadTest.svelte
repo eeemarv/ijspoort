@@ -1,9 +1,10 @@
 <script>
   const { ipcRenderer } = window.require('electron');
   import { Button } from 'sveltestrap';
-  import { nfc_auto_reg, nfc_uid } from '../services/store';
+  import { nfc_uid } from '../services/store';
   import NfcModal from './NfcModal.svelte';
 
+  export let reg_auto_enabled;
   export let nfc_status;
   let nfc_modal;
 
@@ -27,7 +28,7 @@
 
 <NfcModal bind:this={nfc_modal} title="Lees NFC tag" />
 
-{#if !$nfc_auto_reg
+{#if !reg_auto_enabled
   && $nfc_uid
   && (nfc_status === 'writable' || nfc_status === 'ok')
 }

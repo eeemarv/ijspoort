@@ -37,11 +37,11 @@ const gpio_pin = {
 	gate: 14
 };
 
-if (typeof feed_A === 'undefined' || !feed_A){
+if (typeof feed_A !== 'string' || !feed_A){
 	throw 'No FEED_A set!';
 }
 
-if (typeof feed_B === 'undefined' || !feed_B){
+if (typeof feed_B !== 'string' || !feed_B){
 	throw 'No FEED_B set!';
 }
 
@@ -76,7 +76,7 @@ const createWindow = () => {
 		win.maximize();
 	}
 
-  if (gate_enabled){
+  if (gate_enabled && !debug_enabled){
 		win.setKiosk(true);
   }
 
@@ -139,8 +139,8 @@ const listen_pcsc = (win) => {
 				return;
 			}
 
-			if (typeof card.uid === 'undefined'){
-				console.log('UID is undefined');
+			if (typeof card.uid !== 'string'){
+				console.log('UID not set');
 				return;
 			}
 

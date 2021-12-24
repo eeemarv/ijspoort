@@ -1,5 +1,7 @@
 <script>
-  import { ModalFooter, Button } from 'sveltestrap';
+  import { ModalFooter } from 'sveltestrap';
+	export let font_size = '1em';
+  export let btn_lg = false;
 </script>
 
 <ModalFooter>
@@ -10,10 +12,22 @@
     <div>
       <slot name=right></slot>
       <slot name=close>
-        <Button color=primary on:click>
+        <button
+          type=button
+          class="btn btn-primary"
+          class:btn-lg={btn_lg}
+          style="--font-size: {font_size};"
+          on:click
+        >
           Sluiten
-        </Button>
+        </button>
       </slot>
     </div>
   </div>
 </ModalFooter>
+
+<style>
+button {
+ font-size: var(--font-size);
+}
+</style>

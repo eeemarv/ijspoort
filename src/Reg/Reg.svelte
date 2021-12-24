@@ -1,23 +1,21 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { db_reg } from '../services/db';
-  import { nfc_uid, person } from './../services/store';
+  import { nfc_uid } from './../services/store';
 
   export const block_time = 3600000; // 1 hour
   const dispatch = createEventDispatcher();
 
-  export const add_by_nfc = (prsn) => {
-    $person = undefined;
-    let reg = get_base_reg_object(prsn);
-    reg.nfc_uid = $nfc_uid;
+  export const add_by_manual = (person) => {
+    let reg = get_base_reg_object(person);
+    reg.manual = true;
     add(reg);
   };
 
-  export const add_by_manual = () => {
-    let reg = get_base_reg_object($person);
-    reg.manual = true;
+  export const add_by_nfc = (person) => {
+    let reg = get_base_reg_object(person);
+    reg.nfc_uid = $nfc_uid;
     add(reg);
-    $person = undefined;
   };
 
   const get_base_reg_object = (person) => {
@@ -41,10 +39,10 @@
       console.log('search/count_by_person_id_and_ts_epoch (no reduce)');
       console.log(res);
       if (res.rows.length > 0){
-        dispatch('blocked_reg', {
+        dispatch('person_already_registered', {
           reg: reg
         });
-        throw 'event blocked_reg: person_already_registered';
+        throw 'event: person_already_registered';
       }
       return db_reg.put(reg);
     }).then((res) => {

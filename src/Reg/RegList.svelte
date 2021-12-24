@@ -13,7 +13,7 @@
 
   export let block_time = 300000;
 
-  export const add_blocked_reg = (reg) => {
+  export const add_person_already_registered = (reg) => {
     blocked_regs = [reg, ...blocked_regs];
   };
 

@@ -1,12 +1,50 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { onMount } from "svelte";
-  import { gate_count_enabled, gate_count, gate_nfc_enabled } from "../services/store";
+  import { onMount, createEventDispatcher } from "svelte";
+  import { gate_count_enabled, gate_count } from "../services/store";
+  import { gate_nfc_enabled, gate_nfc_open_time } from "../services/store";
   import GateSens from "./GateSens.svelte";
 
-  const nfc_open_time = 100;
+  const dispatch = createEventDispatcher();
+
+  export let open = true;
+
+  // to hold person and nfc_uid data until gate closes
+  let gate_person;
+  let gate_nfc_uid;
+
+  export const open_trigger = () => {
+    if ($gate_nfc_enabled){
+        return;
+      }
+
+      if ($gate_count_enabled && ($gate_count <= 0)){
+        return;
+      }
+
+      set_open();
+  };
+
+  export const close_trigger = () => {
+    if ($gate_nfc_enabled){
+        set_close();
+        return;
+      }
+    if ($gate_count_enabled && ($gate_count <= 0)){
+      set_close();
+      return;
+    }
+  };
+
+  export const open_gate_by_nfc = (person, nfc_uid) => {
+    // gate_count underflow already prevented in GateModal
+    gate_person = person;
+    gate_nfc_uid = nfc_uid;
+    nfc_open_timer = $gate_nfc_open_time * 1000;
+    set_open();
+  };
+
   let nfc_open_timer = -1;
-  let open = true;
 
   const set_open = () => {
     console.log('send -> gate.open');
@@ -19,8 +57,17 @@
     ipcRenderer.send('gate.close', {});
   }
 
+  const handle_close_trigger = () => {
+    close_trigger();
+  };
+
+  const handle_open_trigger = () => {
+    open_trigger();
+  };
+
   ipcRenderer.on('gate.is_open', (ev) => {
     open = true;
+    dispatch('gate_is_open');
   });
 
   ipcRenderer.on('gate.open.err', (ev) => {
@@ -30,6 +77,7 @@
 
   ipcRenderer.on('gate.is_closed', (ev) => {
     open = false;
+    dispatch('gate_is_closed');
   });
 
   ipcRenderer.on('gate.close.err', (ev) => {
@@ -40,7 +88,7 @@
 	onMount(() => {
 		const nfc_down_timer = setInterval(() => {
       if (nfc_open_timer >= 0){
-        nfc_open_timer--;
+        nfc_open_timer -= 100;
       }
       if (nfc_open_timer === 0
         && $gate_nfc_enabled
@@ -48,18 +96,11 @@
         set_close();
       }
     }, 100);
+
 		return () => {
 			clearInterval(nfc_down_timer);
 		};
   });
-
-  export const open_gate_by_nfc = (person) => {
-    if ($gate_count_enabled && ($gate_count <= 0)){
-      return;
-    }
-    nfc_open_timer = nfc_open_time;
-    set_open();
-  };
 
   $: if ($gate_nfc_enabled){
     handle_close_trigger();
@@ -84,29 +125,6 @@
   $: if ($gate_count <= 0){
     handle_close_trigger();
   }
-
-  const handle_close_trigger = () => {
-    if ($gate_nfc_enabled){
-      set_close();
-      return;
-    }
-    if ($gate_count_enabled && ($gate_count <= 0)){
-      set_close();
-      return;
-    }
-  };
-
-  const handle_open_trigger = () => {
-    if ($gate_nfc_enabled){
-      return;
-    }
-
-    if ($gate_count_enabled && ($gate_count <= 0)){
-      return;
-    }
-
-    set_open();
-  };
 </script>
 
 <span class="badge me-1"
@@ -121,6 +139,8 @@
   font_size=1.2em
   on:triggered_in={handle_close_trigger}
   on:triggered_out={handle_open_trigger}
+  bind:gate_person
+  bind:gate_nfc_uid
 />
 
 <style>

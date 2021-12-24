@@ -20,36 +20,32 @@ const create_sync_monitor = () => {
   }
 };
 
-const create_gate_count = () => {
-	const { subscribe, set, update } = writable(50);
-	return {
-		subscribe,
-		inc: () => update(n => n + 1),
-		dec: () => update(n => n - 1),
-		reset: () => set(0),
-    set: (n) => {
-      n = n ? n : 0;
-      n = n > 999 ? 999 : n;
-      n = n < -99 ? -99 : n;
-      set(n);
-    }
-	};
-};
-
-const create_coupled_estore = (key, default_value, is_year = false) => {
+const create_coupled_estore = (key, default_value, min_value, max_value) => {
   const eStore = new EStore();
   let val = eStore.get(key, default_value);
-	const { subscribe, set } = writable(val);
+	const { subscribe, set, update } = writable(val);
+  const store = (n) => {
+    if (max_value){
+      n = n > max_value ? max_value : n;
+    }
+    if (min_value){
+      n = n < min_value ? min_value : n;
+    }
+    eStore.set(key, n);
+    return n;
+  };
 	return {
 		subscribe,
+    inc: () => update((n) => {
+      n++;
+      return store(n);
+    }),
+    dec: () => update((n) => {
+      n--;
+      return store(n);
+    }),
     set: (n) => {
-      if (is_year){
-        n = n ?? 2020;
-        n = n > 2030 ? 2030 : n;
-        n = n < 2010 ? 2010 : n;
-      }
-      eStore.set(key, n);
-      set(n);
+      set(store(n));
     }
 	};
 };
@@ -57,14 +53,13 @@ const create_coupled_estore = (key, default_value, is_year = false) => {
 export const person = writable();
 export const person_nfc_list = writable([]);
 export const nfc_uid = writable();
-export const nfc_auto_reg = writable(true);
 export const sync_monitor = create_sync_monitor();
-export const gate_count = create_gate_count();
+export const gate_count = create_coupled_estore('gate_count', 50, -99, 999);
 export const gate_count_enabled = writable(false);
 export const gate_nfc_enabled = writable(false);
-export const cache_nfc_person = writable();
+export const gate_nfc_open_time = create_coupled_estore('gate_nfc_open_time', 12, 6, 20);
 export const temp_display_enabled = create_coupled_estore('temp_display_enabled', false);
-export const assist_import_year = create_coupled_estore('assist_import_year', 2022, true);
-export const focus_year = create_coupled_estore('focus_year', 2022, true);
+export const assist_import_year = create_coupled_estore('assist_import_year', 2022, 2016, 2030);
+export const focus_year = create_coupled_estore('focus_year', 2022, 2016, 2030);
 export const gate_display_enabled = create_coupled_estore('gate_display_enabled', true);
 export const tag_display_enabled = create_coupled_estore('tag_display_enabled', true);

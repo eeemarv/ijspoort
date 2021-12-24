@@ -36,15 +36,15 @@
   const dispatch = createEventDispatcher();
 
   $: {
-    if ($person === undefined){
+    if (typeof $person === 'undefined'){
       $person_nfc_list = [];
     } else {
       console.log($person);
     }
   }
 
-  const handle_register = (() => {
-    dispatch('register');
+  const handle_click_manual_reg = (() => {
+    dispatch('click_manual_reg');
   });
 </script>
 
@@ -202,7 +202,7 @@
     <div class="card-footer d-flex w-100 justify-content-end">
       <Button
         color=warning
-        on:click={handle_register}
+        on:click={handle_click_manual_reg}
         title="Registratie zonder tag!"
       >
         Registreer Manueel &#9888;

@@ -2,8 +2,7 @@
   const { ipcRenderer } = window.require('electron');
   import { createEventDispatcher } from 'svelte';
   import { db_nfc, db_person } from '../services/db';
-  import { person } from '../services/store';
-  import { nfc_uid, nfc_auto_reg } from '../services/store';
+  import { nfc_uid } from '../services/store';
 
   const dispatch = createEventDispatcher();
 
@@ -11,55 +10,98 @@
 
   ipcRenderer.on('nfc.on', (ev, card) => {
     $nfc_uid = card.uid;
-    let year_key = 'y' + new Date().getFullYear().toString();
+    let blocked = false;
+    let year_key = 'y' + (new Date()).getFullYear().toString();
+
+    dispatch('nfc_on', {
+      nfc_uid: $nfc_uid
+    });
 
     db_nfc.get('uid_'+ card.uid).then((res) => {
+      console.log('db_nfc.get');
       console.log(res);
       nfc_status = 'ok';
-      return res.person_id;
+
+      console.log('dispatch scanned_uid_found');
+      dispatch('scanned_uid_found', {
+        nfc: res,
+        nfc_uid: $nfc_uid
+      });
+
+      return res;
     }).catch((err) => {
       if (err.name === 'not_found'){
-        dispatch('uid_not_found', {
-          uid: card.uid
-        }); // Gate
+
+        console.log('dispatch scanned_uid_not_found');
+        dispatch('scanned_uid_not_found', {
+          nfc_uid: $nfc_uid
+        });
+
         ipcRenderer.send('nfc.test_transport_key');
         throw 'nfc uid not found in database (check if transport key is set)';
       }
       throw err;
     }).then((res) => {
-      return db_person.get(res);
+      if (typeof res.blocked === 'object'){
+        let last_block_item = res.blocked[res.blocked.length - 1];
+        if (last_block_item.blocked){
+          blocked = true;
+        }
+      }
+      return db_person.get(res.person_id);
     }).catch((err) => {
       console.log(err);
       if (err.name === 'not_found'){
-        dispatch('person_not_found', {
-          uid: card.uid
-        }); // for gate
-        console.log('person linked to this nfc not found');
+
+        console.log('dispatch scanned_person_not_found');
+        dispatch('scanned_person_not_found', {
+          nfc_uid: $nfc_uid
+        });
+
         ipcRenderer.send('nfc.test_transport_key');
         throw 'person was not found';
       }
       throw err;
     }).then((res) => {
+
+      console.log('dispatch scanned_person_found');
+      dispatch('scanned_person_found', {
+        person: res,
+        nfc_uid: $nfc_uid
+      });
+
       let is_member = false;
-      if (res.member_year !== undefined && res.member_year[year_key]){
+      if (typeof res.member_year === 'object'
+        && res.member_year[year_key]){
         is_member = true;
       }
-      if ($nfc_auto_reg && is_member){
-        console.log('register_by_nfc event');
-        dispatch('register', {
-          person: res
+
+      if (!is_member){
+        console.log('dispatch scanned_person_not_member');
+        dispatch('scanned_person_not_member', {
+          person: res,
+          nfc_uid: $nfc_uid
         });
         return;
       }
-      dispatch('not_member', {
-        person: res
-      }); // for gate
-      $person = res;
+
+      if (blocked){
+        console.log('dispatch scanned_uid_blocked');
+        dispatch('scanned_uid_blocked', {
+          person: res,
+          nfc_uid: $nfc_uid
+        });
+        return;
+      }
+
+      console.log('dispatch scanned_person_valid_member');
+      dispatch('scanned_person_valid_member', {
+        person: res,
+        nfc_uid: $nfc_uid
+      });
+
     }).catch((err) => {
       console.log(err);
-      if (err.name === 'not_found'){
-        $person = res;
-      }
     });
 
     window.scroll({

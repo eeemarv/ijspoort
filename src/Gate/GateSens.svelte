@@ -2,11 +2,13 @@
   const env = window.require('electron').remote.process.env;
   const { ipcRenderer } = window.require('electron');
   import { createEventDispatcher, onMount } from 'svelte';
-  import { gate_count, gate_count_enabled, gate_nfc_enabled, cache_nfc_person } from '../services/store';
+  import { gate_count, gate_count_enabled, gate_nfc_enabled } from '../services/store';
   import { db_gate } from '../services/db';
   import GateCountGraphModal from './GateCountGraphModal.svelte';
-  import GateDbSensorLog from './GateDbSensorLog.svelte';
 
+  // hold person and nfc_uid data until gate closes
+  export let gate_person;
+  export let gate_nfc_uid;
   export let font_size = '1em';
 
   const debug_enabled = env.DEBUG === '1';
@@ -87,11 +89,14 @@
         break;
       case 'in':
         gt.in = true;
-        if ($cache_nfc_person){
-          gt.person_id = $cache_nfc_person._id;
-          gt.nfc_uid = $cache_nfc_person.nfc_uid;
+        if (gate_person){
+          gt.person_id = gate_person._id;
         }
-        $cache_nfc_person = undefined;
+        if (gate_nfc_uid){
+          gt.nfc_uid = gate_nfc_uid;
+        }
+        gate_person = undefined;
+        gate_nfc_uid = undefined;
         break;
       default:
         throw 'wrong operation';
@@ -192,7 +197,6 @@
 </script>
 
 <GateCountGraphModal bind:open={graph_open} />
-<GateDbSensorLog />
 
 <span class="badge me-1"
   style="--font-size: {font_size};"
