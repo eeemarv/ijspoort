@@ -22,6 +22,7 @@
   let handle_open_gate_by_nfc;
   let handle_close_gate;
   let handle_click_open_gate_config;
+  let handle_trigger_close_gate_config;
 
   onMount(() => {
     handle_open_gate_by_nfc = (event) => {
@@ -36,6 +37,10 @@
       cmp_gate_status.close_trigger();
       cmp_gate_config.click_open(event.detail.person, event.detail.nfc_uid);
     }
+
+    handle_trigger_close_gate_config = () => {
+      cmp_gate_config.close();
+    }
   });
 </script>
 
@@ -45,6 +50,7 @@
   on:trigger_open_gate={handle_open_gate_by_nfc}
   {open_gate}
   on:click_open_gate_config={handle_click_open_gate_config}
+  on:trigger_close_gate_config={handle_trigger_close_gate_config}
 />
 
 <GateConfig bind:this={cmp_gate_config} />

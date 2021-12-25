@@ -12,9 +12,9 @@
     add(reg);
   };
 
-  export const add_by_nfc = (person) => {
+  export const add_by_nfc = (person, nfc_uid) => {
     let reg = get_base_reg_object(person);
-    reg.nfc_uid = $nfc_uid;
+    reg.nfc_uid = nfc_uid;
     add(reg);
   };
 

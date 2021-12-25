@@ -24,8 +24,8 @@
     if (!person || !nfc_uid){
       return;
     }
-    gate_person = data.person;
-    gate_nfc_uid = data.nfc_uid;
+    gate_person = person;
+    gate_nfc_uid = nfc_uid;
     open = true;
   };
 

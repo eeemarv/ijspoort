@@ -42,7 +42,7 @@
 
     handle_scanned_person_valid_member = (event) => {
       if (reg_auto_enabled){
-        reg.add_by_nfc(event.detail.person);
+        reg.add_by_nfc(event.detail.person, event.detail.nfc_uid);
         return;
       }
       $person = event.detail.person;

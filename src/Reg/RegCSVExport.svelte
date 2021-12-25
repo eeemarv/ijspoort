@@ -1,7 +1,7 @@
 <script>
   const env = window.require('electron').remote.process.env;
   const { ipcRenderer } = window.require('electron');
-  import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, ModalHeader, Row, Col } from 'sveltestrap';
+  import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader, Row, Col } from 'sveltestrap';
   import { db_reg, db_person } from '../services/db';
   import { download } from '../services/download';
   import Papa from 'papaparse';
@@ -117,9 +117,5 @@
     </p>
     {/if}
   </ModalBody>
-  <ModalFooter>
-    <Button color=primary on:click={toggle}>
-      Sluiten
-    </Button>
-  </ModalFooter>
+  <ModalFooterClose on:click={toggle} />
 </Modal>
