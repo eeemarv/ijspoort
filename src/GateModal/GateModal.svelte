@@ -2,8 +2,7 @@
   import lodash from 'lodash';
   import { createEventDispatcher, onMount } from 'svelte';
   import { Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
-  import PersonMemberId from '../Person/PersonMemberId.svelte';
-  import PersonName from '../Person/PersonName.svelte';
+  import PersonTag from '../Person/PersonTag.svelte';
   import Reg from '../Reg/Reg.svelte';
   import { gate_count_enabled } from '../services/store';
   import { gate_count } from '../services/store';
@@ -213,8 +212,7 @@
     <ModalBody class={modal_class}>
       {#if reg_person}
         <h2>
-          <PersonMemberId member_id={reg_person.member_id} />
-          <PersonName person={reg_person} />
+          <PersonTag person={reg_person} />
         </h2>
       {/if}
       {#if reg_person && already_registered}

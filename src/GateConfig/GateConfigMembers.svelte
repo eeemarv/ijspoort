@@ -1,4 +1,7 @@
 <script>
+  import Icon from '@iconify/svelte';
+  import plusIcon from '@iconify/icons-fa/plus';
+  import minusIcon from '@iconify/icons-fa/minus';
   import { TabPane, Card } from 'sveltestrap';
   import { gate_nfc_enabled, gate_nfc_open_time } from '../services/store';
 
@@ -42,7 +45,7 @@
           on:click={gate_nfc_open_time.dec}
           disabled={!$gate_nfc_enabled}
         >
-          -
+          <Icon icon={minusIcon} />
         </button>
       </div>
 
@@ -53,7 +56,7 @@
           on:click={gate_nfc_open_time.inc}
           disabled={!$gate_nfc_enabled}
         >
-          +
+          <Icon icon={plusIcon} />
         </button>
       </div>
 

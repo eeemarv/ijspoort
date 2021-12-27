@@ -6,14 +6,8 @@ const design_tag_search_doc = {
   views: {
     count_by_person_id_and_ts_epoch: {
       map: ((doc) => {
-        emit(doc.person_id + '_' + doc.ts_epoch.toString());
-      }).toString(),
-      reduce: '_count'
-    },
-    count_by_type: {
-      map: ((doc) => {
-        if (doc.type){
-          emit(doc.type);
+        if (doc.person_id){
+          emit(doc.person_id + '_' + doc.ts_epoch.toString());
         }
       }).toString(),
       reduce: '_count'
@@ -21,7 +15,9 @@ const design_tag_search_doc = {
     count_total: {
       map: ((doc) => {
         if(doc._id.startsWith('n')){
-          emit(true);
+          emit('tag');
+        } else if (doc._id.startsWith('0_')){
+          emit('type');
         }
       }).toString(),
       reduce: '_count'
@@ -45,19 +41,19 @@ const put_design_tag_search = () => {
     throw err;
   }).then((res) => {
     if (res === 'put'){
-      return design_gate_search_doc;
+      return design_tag_search_doc;
     }
     let compare_design_doc = {...res};
     delete compare_design_doc._rev;
-    if (lodash.isEqual(compare_design_doc, design_gate_search_doc)){
-      throw 'no change for design_gate_search_doc';
+    if (lodash.isEqual(compare_design_doc, design_tag_search_doc)){
+      throw 'no change for design_tag_search_doc';
     }
-    design_gate_search_doc._rev = res._rev;
-    return design_gate_search_doc;
+    design_tag_search_doc._rev = res._rev;
+    return design_tag_search_doc;
   }).then((res) => {
     return db_tag.put(res);
   }).then((res) => {
-    console.log('design_gate_search_doc updated');
+    console.log('design_tag_search_doc updated');
     console.log(res);
   }).catch((err) => {
     console.log(err);

@@ -107,7 +107,7 @@
           <RegTimeTag {reg} />
           &nbsp;
         {/if}
-        <PersonTag person={person_data} />
+        <PersonTag person={person_data} show_member_year />
         {#if blocked}
           &nbsp;
           <Badge color=dark>

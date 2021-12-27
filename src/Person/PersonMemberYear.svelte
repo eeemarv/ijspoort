@@ -5,8 +5,7 @@
   import { Modal, ModalHeader, ModalBody } from 'sveltestrap';
   import { Row, Col } from 'sveltestrap';
   import { ListGroup, ListGroupItem } from 'sveltestrap';
-  import PersonMemberId from './PersonMemberId.svelte';
-  import PersonName from './PersonName.svelte';
+  import PersonTag from './PersonTag.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
   let open = false;
@@ -74,8 +73,7 @@
 <Modal isOpen={open} {toggle} size=lg>
   <ModalHeader {toggle}>
     Lidjaren
-    <PersonMemberId member_id={$person.member_id} />
-    <PersonName person={$person} />,
+    <PersonTag person={$person} />
   </ModalHeader>
   <ModalBody>
     <Row>

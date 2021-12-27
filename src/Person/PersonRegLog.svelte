@@ -3,8 +3,7 @@
   import { db_reg } from '../services/db';
   import { person } from './../services/store';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
-  import PersonMemberId from './PersonMemberId.svelte';
-  import PersonName from './PersonName.svelte';
+  import PersonTag from './PersonTag.svelte';
   import RegTimeTag from '../Reg/RegTimeTag.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
@@ -76,8 +75,7 @@
   <ModalHeader {toggle}>
     {#if $person}
       Registraties&nbsp;
-      <PersonMemberId member_id={$person.member_id}/>&nbsp;
-      <PersonName person={$person}/>
+      <PersonTag person={$person} />
     {/if}
   </ModalHeader>
   <ModalBody>

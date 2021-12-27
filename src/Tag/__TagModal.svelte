@@ -1,15 +1,14 @@
 <script>
-  import Icon from '@iconify/svelte';
-  import userIcon from '@iconify/icons-fa/user';
+
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { Row, Col } from 'sveltestrap';
-  import { ListGroup } from 'sveltestrap';
+  import { Button, ListGroup, ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
   import { TabContent, TabPane } from 'sveltestrap';
   import { FormGroup, Label } from 'sveltestrap';
   import { db_nfc, db_person } from '../services/db';
   import { nfc_uid, person } from '../services/store';
-  import NfcTag from './NfcTag.svelte';
+  import NfcTag from './Tag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
   import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
@@ -149,20 +148,14 @@
       console.log('persons (n-count)');
       console.log(res);
       let person_ary = [];
-      if (typeof res === 'object'
-        && typeof res.rows === 'object'
-      ){
-        res.rows.forEach((p) => {
-          person_ary.push({...p.doc});
-        });
-      }
+      res.rows.forEach((p) => {
+        person_ary.push({...p.doc});
+      });
       console.log('-- PERSON_ARY -- n-count');
       console.log(person_ary);
       let index = nfc_person_count_ary.findIndex((el) => el.count_nfcs === tab_nfc_count);
       console.log('index', index);
-      if (typeof nfc_person_count_ary[index] === 'object'){
-        nfc_person_count_ary[index].person_ary = person_ary;
-      }
+      nfc_person_count_ary[index].person_ary = person_ary;
     }).catch((err) => {
         console.log(err);
     });
@@ -171,31 +164,13 @@
   $: if (open){
     update_nfcs();
   }
-
-  $: {
-    console.log(tab);
-    update_nfcs();
-  }
-
-  $: if ($nfc_uid || $person){
-    open = false;
-  }
 </script>
 
 <Modal isOpen={open} {toggle} size=xl>
   <ModalHeader {toggle}>
-    Geactiveerde NFC tags
+    Tags
   </ModalHeader>
   <ModalBody>
-    {#if nfc_count }
-      <FormGroup>
-        <Label for=list_length>Toon aantal in lijst (maximum)</Label>
-        <select id=list_length bind:value={list_length} class=form-control name=list_length on:change={() => update_nfcs()}>
-          {#each list_length_options as l (l)}
-            <option>{l}</option>
-          {/each}
-        </select>
-      </FormGroup>
       <TabContent pills on:tab={(e) => tab = e.detail}>
         <TabPane tabId=nfc_count active={tab === 'nfc_count'}>
           <span slot=tab>
@@ -249,11 +224,6 @@
         </TabPane>
         {/each}
       </TabContent>
-    {:else}
-      <p>
-        Nog geen NFC tags geactiveerd.
-      </p>
-    {/if}
   </ModalBody>
   <ModalFooterClose on:click={toggle} />
 </Modal>

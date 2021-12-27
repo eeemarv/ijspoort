@@ -1,5 +1,5 @@
 <script>
-  import NfcCountButton from './TagCountButton.svelte';
+  import TagCountButton from './TagCountButton.svelte';
 </script>
 
 <div class="card-header py-2 d-flex w-100 justify-content-between">
@@ -7,6 +7,6 @@
     Tags
   </div>
   <div>
-    <NfcCountButton />
+    <TagCountButton />
   </div>
 </div>

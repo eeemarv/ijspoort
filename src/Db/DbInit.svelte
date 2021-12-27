@@ -9,6 +9,7 @@
     import { put_design_reg_search } from './../services/design_reg';
     import { put_design_nfc_search } from './../services/design_nfc';
     import { put_design_gate_search } from './../services/design_gate';
+    import { put_design_tag_search } from './../services/design_tag';
     import { onMount } from 'svelte';
 
     onMount(() => {
@@ -16,6 +17,7 @@
         put_design_reg_search();
         put_design_nfc_search();
         put_design_gate_search();
+        put_design_tag_search();
 
         db_remote_nfc.info().then((info) => {
             console.log(info);

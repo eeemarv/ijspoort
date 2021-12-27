@@ -1,9 +1,9 @@
 <script>
-  import { Badge, Button, ListGroup, Modal, ModalBody, ModalHeader } from 'sveltestrap';
+  import { Button, ListGroup, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { person } from './../services/store';
   import { db_person } from './../services/db';
-  import PersonMemberId from './PersonMemberId.svelte';
   import PersonName from './PersonName.svelte';
+  import PersonTag from './PersonTag.svelte';
   import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
@@ -15,7 +15,6 @@
   export let type;
   let search_key;
   let result_persons = [];
-  let year_str = new Date().getFullYear().toString();
 
   const lang = {
     name: 'Gelijke naam',
@@ -86,18 +85,7 @@
             active={prs._id === $person._id}
             on:click={handle_select(prs)}
           >
-            <PersonMemberId member_id={prs.member_id} />
-            &nbsp;
-            <PersonName person={prs} />
-            {#if prs.member_year['y' + year_str]}
-              &nbsp;
-              <Badge
-                color=success
-                title="lid in {year_str}"
-              >
-                {year_str}
-              </Badge>
-            {/if}
+            <PersonTag person={prs} show_member_year />
           </SelectableListGroupItem>
       {/each}
     </ListGroup>

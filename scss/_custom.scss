@@ -3,21 +3,22 @@ $theme-colors: (
   secondary: lighten($secondary, 10%),
   light: $light,
   dark: $dark,
-  warning: darken($yellow, 10),
+  warning: darken($yellow, 10%),
   info: $info,
   success: darken($success, 10%),
   danger: darken($danger, 20%),
   accent: darken($purple, 10%),
-  blue: $blue,
-  indigo: $indigo,
+  blue: lighten($blue, 5%),
+  indigo: lighten($indigo, 5%),
   purple: $purple,
-  pink: $pink,
-  red: $red,
-  orange: $orange,
-  yellow: $yellow,
-  green: $green,
-  teal: $teal,
-  cyan: $cyan
+  pink: darken($pink, 5%),
+  red: darken($red, 5%),
+  orange: darken($orange, 5%),
+  yellow: darken($yellow, 10%),
+  green: darken($green, 10%),
+  teal: darken($teal, 10%),
+  cyan: darken($cyan, 10%),
+  grey: $gray-600
 );
 
 $input-bg: #446;

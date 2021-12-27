@@ -18,7 +18,7 @@
   import { tag_display_enabled } from '../services/store';
   import { person } from '../services/store';
 
-  let reg_auto_enabled;
+  let reg_auto_enabled = true;
   let reg;
   let reg_list;
   let block_time;

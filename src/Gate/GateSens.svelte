@@ -7,8 +7,8 @@
   import GateCountGraphModal from './GateCountGraphModal.svelte';
 
   // hold person and nfc_uid data until gate closes
-  export let gate_person;
-  export let gate_nfc_uid;
+  export let gate_person = undefined;
+  export let gate_nfc_uid = undefined;
   export let font_size = '1em';
 
   const debug_enabled = env.DEBUG === '1';
