@@ -1,9 +1,14 @@
 <script>
+  import { setContext } from 'svelte';
+  import { ck_new_tag_id } from '../services/context_keys';
+  import { ck_new_tag_type_id } from '../services/context_keys';
+  import { ck_updated_tag_type_id } from '../services/context_keys';
+  import { writable } from 'svelte/store';
   import { Card, CardBody, Col } from 'sveltestrap';
   import ManualInput from '../ManualInput/ManualInput.svelte';
   import Person from '../Person/Person.svelte';
   import RegList from '../Reg/RegList.svelte';
-  import Temperature from '../Common/Temperature.svelte';
+  import TemperatureCard from '../Common/TemperatureCard.svelte';
   import Stats from '../Common/Stats.svelte';
   import Clock from '../Common/Clock.svelte';
   import DbSync from '../Db/DbSync.svelte';
@@ -18,9 +23,16 @@
   import { tag_display_enabled } from '../services/store';
   import { person } from '../services/store';
 
+  const new_tag_id = writable();
+  setContext(ck_new_tag_id, new_tag_id);
+  const new_tag_type_id = writable();
+  setContext(ck_new_tag_type_id, new_tag_type_id);
+  const updated_tag_type_id = writable();
+  setContext(ck_updated_tag_type_id, updated_tag_type_id);
+
   let reg_auto_enabled = true;
-  let reg;
-  let reg_list;
+  let cmp_reg;
+  let cmp_reg_list;
   let block_time;
   let handle_click_manual_reg;
   let handle_person_already_registered;
@@ -29,46 +41,48 @@
   let handle_scanned_uid_blocked;
 
   onMount(() => {
-    block_time = reg.block_time;
+    block_time = cmp_reg.block_time;
 
     handle_click_manual_reg = () => {
-      reg.add_by_manual($person);
+      cmp_reg.add_by_manual($person);
       $person = undefined;
     };
 
-    handle_person_already_registered = (event) => {
-      reg_list.add_person_already_registered(event.detail.reg);
+    handle_person_already_registered = (e) => {
+      cmp_reg_list.add_person_already_registered(e.detail.reg);
     };
 
-    handle_scanned_person_valid_member = (event) => {
+    handle_scanned_person_valid_member = (e) => {
       if (reg_auto_enabled){
-        reg.add_by_nfc(event.detail.person, event.detail.nfc_uid);
+        cmp_reg.add_by_nfc(e.detail.person, e.detail.nfc_uid);
         return;
       }
-      $person = event.detail.person;
+      $person = e.detail.person;
     };
 
-    handle_scanned_person_not_member = (event) => {
-      $person = event.detail.person;
+    handle_scanned_person_not_member = (e) => {
+      $person = e.detail.person;
     };
 
-    handle_scanned_uid_blocked = (event) => {
-      $person = event.detail.person;
+    handle_scanned_uid_blocked = (e) => {
+      $person = e.detail.person;
     };
   });
 </script>
 
 <Reg
-  bind:this={reg}
+  bind:this={cmp_reg}
   bind:block_time
   on:person_already_registered={handle_person_already_registered}
 />
 
 <Col md=9 class=min-vh-100>
   <ManualInput />
+
   <Person on:click_manual_reg={handle_click_manual_reg} />
+
   <RegList
-    bind:this={reg_list}
+    bind:this={cmp_reg_list}
     {block_time}
   />
 </Col>
@@ -89,18 +103,23 @@
   />
 
   {#if $tag_display_enabled}
-    <TagCard />
+    <TagCard
+      on:new_tag={(e) => $new_tag_id = e.detail}
+      on:new_tag_type={(e) => $new_tag_type_id = e.detail}
+      on:updated_tag_type={(e) => $updated_tag_type_id = e.detail}
+    />
   {/if}
 
   {#if $gate_display_enabled}
     <GateCard />
   {/if}
 
-  <div class=m-3>
+  {#if $temp_display_enabled}
+    <TemperatureCard horizontal />
+  {/if}
+
+  <div class=my-2>
     <Stats />
-    {#if $temp_display_enabled}
-      <Temperature />
-    {/if}
     <Card>
       <CardBody class="d-flex w-100 justify-content-between">
         <DbSync />
@@ -109,7 +128,7 @@
     </Card>
   </div>
 
-  <div class=m-3>
+  <div class=my-2>
     <MainPageLinks />
   </div>
 </Col>

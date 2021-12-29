@@ -1,14 +1,17 @@
 <script>
   const { ipcRenderer } = window.require('electron');
   import { createEventDispatcher } from 'svelte';
-  import { Button, CardFooter } from 'sveltestrap';
+  import { Button } from 'sveltestrap';
   import { db_nfc } from '../services/db';
   import { person, person_nfc_list } from '../services/store';
   import { nfc_uid } from '../services/store';
-  import NfcModal from './NfcModal.svelte';
+  import NfcInfoModal from './NfcInfoModal.svelte';
 
   export let nfc_status;
-  let nfc_modal;
+  let open = false;
+  let progress = 0;
+  let message = '';
+  let contentClassName = 'bg-default';
 
   const dispatch = createEventDispatcher();
 
@@ -16,18 +19,31 @@
 
   const handle_activate_nfc = () => {
     console.log('handle_activate_nfc');
-    nfc_modal.start('Schrijf sleutels');
+    progress = 0;
+    message = 'Schrijf sleutels';
+    contentClassName = 'bg-default';
+    open = true;
     console.log('send nfc.init');
     ipcRenderer.send('nfc.init', $person);
   };
 
   ipcRenderer.on('nfc.init.ok', (ev, card) => {
     add_nfc();
-    nfc_modal.stop_timeout('Initialisatie ok.', 100, 1000);
+    setTimeout(() => {
+      open = false;
+    }, 1000);
+    message = 'Initialisatie ok.';
+    contentClassName = 'bg-success';
+    progress = 100;
   });
 
   ipcRenderer.on('nfc.init.fail', (ev, card) => {
-    nfc_modal.stop_timeout('Initialisatie niet gelukt.', 20, 5000);
+    setTimeout(() => {
+      open = false;
+    }, 5000);
+    message = 'Initialisatie niet gelukt.';
+    contentClassName = 'bg-danger';
+    progress = 20;
   });
 
   const add_nfc = () => {
@@ -49,17 +65,21 @@
   };
 </script>
 
-<NfcModal bind:this={nfc_modal} title="Activeer NFC tag" />
+<NfcInfoModal {open} {progress} {contentClassName}>
+  <h1 slot=title>Activeer NFC tag</h1>
+  <p slot=message>
+    {message}
+  </p>
+</NfcInfoModal>
 
-<CardFooter class="d-flex w-100 justify-content-end">
-  <Button
-    color={$person_nfc_list.length > 0 ? 'danger' : 'success'}
-    title="Activeer deze NFC-tag voor deze persoon"
-    disabled={!can_activate}
-    on:click={handle_activate_nfc}>
-    Activeer
-    {#if $person_nfc_list.length > 0}
-      extra tag
-    {/if}
-  </Button>
-</CardFooter>
+
+<Button
+  color={$person_nfc_list.length > 0 ? 'warning' : 'success'}
+  title="Activeer deze NFC-tag voor deze persoon"
+  disabled={!can_activate}
+  on:click={handle_activate_nfc}>
+  Activeer
+  {#if $person_nfc_list.length > 0}
+    extra
+  {/if}
+</Button>

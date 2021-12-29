@@ -1,4 +1,5 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
   import { getContext } from 'svelte';
   import Icon from '@iconify/svelte';
   import plusIcon from '@iconify/icons-fa/plus';
@@ -15,6 +16,7 @@
   import { tag_types_enabled } from '../services/store';
   import { tag_types } from '../services/store';
 
+  const dispatch = createEventDispatcher();
   const { setActiveTab } = getContext('tabContent');
 
   export let tab;
@@ -76,7 +78,8 @@
       db_tag.put(tag).then((res) => {
         console.log('-- db_tag.put --');
         console.log(res);
-        tag_types_enabled.enable(tag._id);
+        $tag_types_enabled[tag._id] = true;
+        //dispatch('new_add', tag._id);
       }).catch((err) => {
         console.log('ERR db_tag.put');
         console.log(err);
@@ -99,7 +102,8 @@
       console.log(tag);
       return db_tag.put(tag);
     }).then((res) => {
-      console.log('tag ' + res._id + ' updated');
+      console.log('tag ' + res.id + ' updated');
+      //dispatch('new_edit', res.id);
       console.log(res);
     }).catch((err) => {
       console.log(err);
@@ -123,7 +127,7 @@
     {#if typeof edit_tag_id === 'string'}
       Tag type aanpassen
     {:else}
-      Tag type aanmaken
+      Nieuw tag type aanmaken
     {/if}
   </h3>
 

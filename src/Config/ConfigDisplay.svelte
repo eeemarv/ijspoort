@@ -3,7 +3,9 @@
   import { temp_display_enabled } from '../services/store';
   import { gate_display_enabled } from '../services/store';
   import { tag_display_enabled } from '../services/store';
-  import Temperature from '../Common/Temperature.svelte';
+  import { nfc_reset_enabled } from '../services/store';
+  import { nfc_read_test_enabled } from '../services/store';
+  import TemperatureCard from '../Common/TemperatureCard.svelte';
 
   export let tab;
 </script>
@@ -13,6 +15,18 @@
     Weergave
   </span>
   <Card body>
+    <div class=form-check>
+      <input class=form-check-input type=checkbox id=nfc_read_test_enabled bind:checked={$nfc_read_test_enabled}>
+      <label class=form-check-label for=nfc_read_test_enabled>
+        Leesknop voor NFC tags
+      </label>
+    </div>
+    <div class=form-check>
+      <input class=form-check-input type=checkbox id=nfc_reset_enabled bind:checked={$nfc_reset_enabled}>
+      <label class=form-check-label for=nfc_reset_enabled>
+        Wisknop voor NFC tags
+      </label>
+    </div>
     <div class=form-check>
       <input class=form-check-input type=checkbox id=tag_display_enabled bind:checked={$tag_display_enabled}>
       <label class=form-check-label for=tag_display_enabled>
@@ -31,7 +45,7 @@
         Water- en luchttemperatuur
       </label>
     </div>
-    <Temperature />
+    <TemperatureCard />
   </Card>
 </TabPane>
 

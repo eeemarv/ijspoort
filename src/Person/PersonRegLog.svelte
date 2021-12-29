@@ -93,8 +93,8 @@
           <ListGroup>
             {#each col as reg}
               <ListGroupItem>
-              <RegTimeTag reg={reg.doc} />
-              <LocaleDateString ts={reg.doc.ts_epoch} title="datum" />
+                <RegTimeTag reg={reg.doc} />
+                <LocaleDateString ts={reg.doc.ts_epoch} title="datum" />
               </ListGroupItem>
             {/each}
           </ListGroup>
@@ -121,11 +121,13 @@
   </ModalFooterClose>
 </Modal>
 
-<Button
-  disabled={person_reg_count === 0}
-  color={contains_manual_entry ? 'warning' : 'accent'}
-  on:click={toggle}
-  title="Bekijk registraties{contains_manual_entry ? ', bevat manuele in laatste 30' : ''}"
->
-  Registraties {person_reg_count}
-</Button>
+<ListGroupItem>
+  <Button
+    disabled={person_reg_count === 0}
+    color={contains_manual_entry ? 'warning' : 'accent'}
+    on:click={toggle}
+    title="Bekijk registraties{contains_manual_entry ? ', bevat manuele in laatste 30' : ''}"
+  >
+    Registraties {person_reg_count}
+  </Button>
+</ListGroupItem>

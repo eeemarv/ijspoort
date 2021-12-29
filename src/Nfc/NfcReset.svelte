@@ -3,14 +3,20 @@
   import { Button } from 'sveltestrap';
   import { db_nfc } from '../services/db';
   import { nfc_uid } from '../services/store';
-  import NfcModal from './NfcModal.svelte';
+  import { nfc_reset_enabled } from '../services/store';
+  import NfcInfoModal from './NfcInfoModal.svelte';
 
-  export let reg_auto_enabled;
-  export let nfc_status;
-  let nfc_modal;
+  let open = false;
+  let progress = 0;
+  let message = '';
+  let contentClassName = 'bg-default';
 
   const handle_nfc_reset = () => {
-    nfc_modal.start('Wis uit database');
+    message = 'Wis uit database';
+    contentClassName = 'bg-default';
+    progress = 0;
+    open = true;
+
     console.log($nfc_uid);
     db_nfc.get('uid_' + $nfc_uid).catch((err) => {
       console.log(err);
@@ -27,36 +33,50 @@
       console.log(res);
       console.log('nfc.reset', $nfc_uid);
       if (res === 'not_from_database'){
-        nfc_modal.stop('Tag is niet aanwezig in database.', 50);
+        message = 'Tag is niet aanwezig in database.';
+        progress = 50;
       } else {
-        nfc_modal.stop('Tag gewist uit database.');
+        message = 'Tag gewist uit database.';
+        progress = 100;
       }
       ipcRenderer.send('nfc.reset');
     }).catch((err) => {
       console.log(err);
-      nfc_modal.stop('Fout: ' + err, 0);
+      progress = 50;
+      contentClassName = 'bg-danger';
+      message = 'Fout: ' + err;
     });
   };
 
   ipcRenderer.on('nfc.reset.ok', (ev, card) => {
-    nfc_modal.stop_timeout('Wissen voltooid, test transport sleutel.', 100, 1000);
+    setTimeout(() => {
+      open = false;
+    }, 1000);
+    progress = 100;
+    message = 'Wissen voltooid, test transport sleutel.';
+    contentClassName = 'bg-success';
+
     ipcRenderer.send('nfc.test_transport_key');
     console.log('nfc.reset.ok');
   });
 
   ipcRenderer.on('nfc.reset.fail', (ev, card) => {
-    nfc_modal.stop('Gewist uit database, doch fout bij wissen NFC tag.', 50);
+    message = 'Gewist uit database, doch fout bij wissen NFC tag.';
+    contentClassName = 'bg-danger';
+    progress = 50;
     console.log('nfc.reset.fail');
   });
 
 </script>
 
-<NfcModal bind:this={nfc_modal} title="Wis NFC tag" />
+<NfcInfoModal {open} {progress} {contentClassName}>
+  <h1 slot=title>Wis NFC tag</h1>
+  <p slot=message>
+    {message}
+  </p>
+</NfcInfoModal>
 
-{#if !reg_auto_enabled
-  && $nfc_uid
-  && (nfc_status === 'ok' || nfc_status === 'writable')
-}
+{#if $nfc_reset_enabled}
   <Button color=danger on:click={handle_nfc_reset} title="Wis deze NFC tag">
     Wis
   </Button>

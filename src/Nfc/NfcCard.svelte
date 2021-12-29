@@ -7,6 +7,9 @@
   import NfcScan from './NfcScan.svelte';
   import NfcReadTest from './NfcReadTest.svelte';
   import NfcReset from './NfcReset.svelte';
+  import { nfc_uid } from '../services/store';
+  import { nfc_read_test_enabled } from '../services/store';
+  import { nfc_reset_enabled } from '../services/store';
 
   let nfc_status;
   export let reg_auto_enabled;
@@ -26,15 +29,33 @@
   on:nfc_off
 />
 
-<Card class=m-3>
+<Card class=my-2>
   <NfcDeviceCardHeader />
   <NfcCardBody {nfc_status} />
-  <NfcActivate {nfc_status} on:activated={() => { nfc_status = 'ok'; }} />
-  <NfcRegAuto bind:reg_auto_enabled />
   <CardFooter>
     <div class="d-flex w-100 justify-content-between">
-      <NfcReadTest {nfc_status} {reg_auto_enabled} />
-      <NfcReset {nfc_status} {reg_auto_enabled} />
+      <div>
+        <NfcRegAuto bind:reg_auto_enabled />
+      </div>
+      <div>
+        <NfcActivate {nfc_status} on:activated={() => { nfc_status = 'ok'; }} />
+      </div>
     </div>
   </CardFooter>
+  {#if !reg_auto_enabled
+    && $nfc_uid
+    && (nfc_status === 'writable' || nfc_status === 'ok')
+    && ($nfc_read_test_enabled || $nfc_reset_enabled)
+  }
+    <CardFooter>
+      <div class="d-flex w-100 justify-content-between">
+        <div>
+          <NfcReadTest />
+        </div>
+        <div>
+          <NfcReset />
+        </div>
+      </div>
+    </CardFooter>
+  {/if}
 </Card>

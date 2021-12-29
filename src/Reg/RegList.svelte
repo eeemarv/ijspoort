@@ -87,7 +87,7 @@
       {/each}
       {#if registrations.length === 0}
         <ListGroupItem class=bg-primary>
-            <p>Nog geen registraties</p>
+          <p>Nog geen registraties</p>
         </ListGroupItem>
       {/if}
     </ListGroup>

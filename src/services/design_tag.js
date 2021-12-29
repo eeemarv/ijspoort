@@ -12,10 +12,10 @@ const design_tag_search_doc = {
       }).toString(),
       reduce: '_count'
     },
-    count_total: {
+    count_by_type: {
       map: ((doc) => {
-        if(doc._id.startsWith('n')){
-          emit('tag');
+        if(doc._id.startsWith('t0')){
+          emit(doc.type_id);
         } else if (doc._id.startsWith('0_')){
           emit('type');
         }

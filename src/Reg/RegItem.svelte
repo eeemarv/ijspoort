@@ -48,7 +48,7 @@
       }).catch((err) => {
         console.log(err);
       });
-    }, 500);
+    }, 700);
   };
 
   onMount(() => {

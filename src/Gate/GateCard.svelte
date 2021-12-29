@@ -1,13 +1,17 @@
 <script>
-  import { Card, CardHeader, CardFooter } from 'sveltestrap';
+  import { Card, CardHeader } from 'sveltestrap';
   import GateSens from './GateSens.svelte';
 </script>
 
-<Card class=m-3>
+<Card class=my-2>
   <CardHeader>
-    Poort
+    <div class="d-flex w-100 justify-content-between">
+      <div>
+        Poort
+      </div>
+      <div>
+        <GateSens />
+      </div>
+    </div>
   </CardHeader>
-  <CardFooter>
-    <GateSens />
-  </CardFooter>
 </Card>

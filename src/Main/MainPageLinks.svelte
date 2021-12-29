@@ -1,5 +1,7 @@
 <script>
   const { shell } = require('electron');
+  import Icon from '@iconify/svelte';
+  import githubIcon from '@iconify/icons-fa/github';
   import { Card, CardBody, CardHeader } from 'sveltestrap';
   import { onMount } from 'svelte';
 
@@ -17,27 +19,25 @@
   });
 </script>
 
-<Card>
-  <CardHeader>
-    Externe links
-  </CardHeader>
-  <CardBody>
-    <div class="d-grid gap-2">
+<Card body>
+    <div class="gap-1 p-0 d-flex w-100 justify-content-between">
       <button
         type=button
-        class="btn btn-primary"
+        class="btn btn-primary w-100"
         on:click={handle_open_assist}
+        title="link naar Assist online"
       >
-        Assist online
+        Assist
       </button>
       <button
         type=button
-        class="btn btn-primary"
+        class="btn btn-primary w-100"
         on:click={handle_open_repo}
         color=primary
+        title="link naar de open source code van ijspoort op github.com"
       >
-        IJspoort code
+        <Icon icon={githubIcon} />
+        IJspoort
       </button>
     </div>
-  </CardBody>
 </Card>

@@ -1,14 +1,22 @@
 <script>
   import { Card, CardBody } from 'sveltestrap';
   import TagCardHeader from './TagCardHeader.svelte';
-  import TagTypesFetch from './TagTypesFetch.svelte';
+  import TagListen from './TagListen.svelte';
+  import TagCardList from './TagCardList.svelte';
+
 </script>
 
-<TagTypesFetch />
+<TagListen
+  on:new_tag
+  on:deleted_tag
+  on:new_tag_type
+  on:updated_tag_type
+  on:deleted_tag_type
+/>
 
-<Card class=m-3>
+<Card class=my-2>
   <TagCardHeader />
-  <CardBody>
-    ---
+  <CardBody class=p-0>
+    <TagCardList />
   </CardBody>
 </Card>

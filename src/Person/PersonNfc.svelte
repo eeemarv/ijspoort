@@ -9,28 +9,28 @@
       return;
     }
     db_nfc.query('search/count_by_person_id', {
-        key: person_id,
-        include_docs: true,
-        reduce: false
+      key: person_id,
+      include_docs: true,
+      reduce: false
     }).then((res) => {
-        console.log(res);
-        $person_nfc_list = res.rows.sort((a, b) => a.doc.ts_epoch < b.doc.ts_epoch ? -1 : 1);
+      console.log(res);
+      $person_nfc_list = res.rows.sort((a, b) => a.doc.ts_epoch < b.doc.ts_epoch ? -1 : 1);
     }).catch((err) => {
-        console.log(err);
+      console.log(err);
     });
   };
 
   $: update_person_nfc_list($person?._id);
 
   db_nfc.changes({
-      since: 'now',
-      live: true
+    since: 'now',
+    live: true
   }).on('change', (change) => {
-      console.log('nfc changes (PersonNfc component)');
-      console.log(change);
-      update_person_nfc_list($person?._id);
+    console.log('nfc changes (PersonNfc component)');
+    console.log(change);
+    update_person_nfc_list($person?._id);
   }).on('error', (err) => {
-      console.log(err);
+    console.log(err);
   });
 
 </script>

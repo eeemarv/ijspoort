@@ -1,7 +1,7 @@
 <script>
   import { TabPane, Card } from 'sveltestrap';
   import { temp_display_enabled } from '../services/store';
-  import Temperature from '../Common/Temperature.svelte';
+  import TemperatureCard from '../Common/TemperatureCard.svelte';
 
   export let tab;
 </script>
@@ -18,7 +18,7 @@
       </label>
     </div>
   </Card>
-  <Temperature />
+  <TemperatureCard />
 </TabPane>
 
 <style>

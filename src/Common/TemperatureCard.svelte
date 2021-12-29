@@ -3,6 +3,8 @@
   import { db_sensor } from '../services/db';
   import { onMount } from 'svelte';
 
+  export let horizontal = false;
+
   let to;
   let water_temp;
   let air_temp;
@@ -67,33 +69,38 @@
   });
 </script>
 
-<Card body>
-  <div>
-    Water:&nbsp;
-    <span class="fw-bold">
-      {#if water_temp}
-        {water_temp.toLocaleString('nl-NL', {
-          minimumFractionDigits: 1,
-          maximumFractionDigits: 1
-        })}
-      {:else}
-        --,-
-      {/if}
-    </span>
-    °C
-  </div>
-  <div>
-    Lucht:&nbsp;
-    <span class="fw-bold">
-      {#if air_temp}
-        {air_temp.toLocaleString('nl-NL', {
-          minimumFractionDigits: 1,
-          maximumFractionDigits: 1
-        })}
-      {:else}
-        --,--
-      {/if}
-    </span>
-    °C
+<Card body class=my-2>
+  <div
+    class="w-100 justify-content-between"
+    class:d-flex={horizontal}
+  >
+    <div>
+      Water:&nbsp;
+      <span class="fw-bold">
+        {#if water_temp}
+          {water_temp.toLocaleString('nl-NL', {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+          })}
+        {:else}
+          --,-
+        {/if}
+      </span>
+      °C
+    </div>
+    <div>
+      Lucht:&nbsp;
+      <span class="fw-bold">
+        {#if air_temp}
+          {air_temp.toLocaleString('nl-NL', {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 1
+          })}
+        {:else}
+          --,--
+        {/if}
+      </span>
+      °C
+    </div>
   </div>
 </Card>

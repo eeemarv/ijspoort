@@ -8,12 +8,14 @@
   import { xls_assist_import } from './../services/person';
   import { person, person_nfc_list } from './../services/store';
   import { assist_import_year } from './../services/store';
+  import { tag_display_enabled } from './../services/store';
   import PersonNfc from './PersonNfc.svelte';
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonRegLog from './PersonRegLog.svelte';
   import PersonMemberYear from './PersonMemberYear.svelte';
   import PersonSearchSimular from './PersonSearchSimular.svelte';
+  import PersonTagList from './PersonTagList.svelte';
 
   $: {
     $assist_import_year;
@@ -196,8 +198,11 @@
       Gelinkte data
     </CardHeader>
     <PersonNfc />
+    <PersonRegLog />
+    {#if $tag_display_enabled}
+      <PersonTagList />
+    {/if}
     <CardBody>
-      <PersonRegLog />
     </CardBody>
     <div class="card-footer d-flex w-100 justify-content-end">
       <Button

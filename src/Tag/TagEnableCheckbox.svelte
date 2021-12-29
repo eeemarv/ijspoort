@@ -16,7 +16,15 @@
     }
 
     handle_change = () => {
-      tag_types_enabled.set_tag(tag_id, tag_enabled);
+      setTimeout(() => {
+        let t_enabled = $tag_types_enabled;
+        if (tag_enabled){
+          t_enabled[tag_id] = true;
+        } else {
+          delete t_enabled[tag_id];
+        }
+        $tag_types_enabled = t_enabled;
+      }, 50);
     };
   });
 </script>

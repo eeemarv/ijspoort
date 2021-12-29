@@ -11,7 +11,7 @@
   import { gate_nfc_enabled } from '../services/store';
   import GateModal from '../GateModal/GateModal.svelte';
   import GateConfig from '../GateConfig/GateConfig.svelte';
-  import Temperature from '../Common/Temperature.svelte';
+  import TemperatureCard from '../Common/TemperatureCard.svelte';
   import GateDbSensorLog from './GateDbSensorLog.svelte';
   import { onMount } from 'svelte';
 
@@ -69,7 +69,7 @@
   <Row class="h-25 bg-primary">
     {#if $temp_display_enabled}
       <Col md=3 class="h-100 d-flex justify-content-center align-items-center">
-        <Temperature />
+        <TemperatureCard />
       </Col>
       <Col md=3 class="h-100 d-flex justify-content-center align-items-center">
         {#if $gate_count_enabled}

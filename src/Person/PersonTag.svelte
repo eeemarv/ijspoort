@@ -14,8 +14,8 @@
 &nbsp;
 <PersonName {person} />
 {#if show_member_year && person.member_year && person.member_year['y' + year_str]}
-    &nbsp;
-    <Badge color=success title="lid in {year_str}">
-        {year_str}
-    </Badge>
+  &nbsp;
+  <Badge color=success title="lid in {year_str}">
+    {year_str}
+  </Badge>
 {/if}
