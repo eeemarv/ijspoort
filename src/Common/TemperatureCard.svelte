@@ -85,8 +85,7 @@
         {:else}
           --,-
         {/if}
-      </span>
-      °C
+      </span>°C
     </div>
     <div>
       Lucht:&nbsp;
@@ -97,10 +96,9 @@
             maximumFractionDigits: 1
           })}
         {:else}
-          --,--
+          --,-
         {/if}
-      </span>
-      °C
+      </span>°C
     </div>
   </div>
 </Card>

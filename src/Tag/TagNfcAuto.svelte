@@ -73,7 +73,7 @@
   };
 
   $: if (!$reg_nfc_auto_enabled){
-    $tag_nfc_auto_enabled;
+    $tag_nfc_auto_enabled = false;
   }
 
   $: if ($person){
@@ -87,7 +87,7 @@
       name=tag_nfc_auto_enabled
       bind:checked={$tag_nfc_auto_enabled}
     >
-      Auto creatie voor
+      Auto creatie
       <Badge color=success title="lid in {$focus_year.toString()}">
         {$focus_year.toString()}
       </Badge>
