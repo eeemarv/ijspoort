@@ -3,6 +3,7 @@
   import TagCardHeader from './TagCardHeader.svelte';
   import TagListen from './TagListen.svelte';
   import TagCardList from './TagCardList.svelte';
+  import TagNfcAuto from './TagNfcAuto.svelte';
 
 </script>
 
@@ -19,4 +20,6 @@
   <CardBody class=p-0>
     <TagCardList />
   </CardBody>
+
+  <TagNfcAuto />
 </Card>

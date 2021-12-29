@@ -10,9 +10,9 @@
   import { nfc_uid } from '../services/store';
   import { nfc_read_test_enabled } from '../services/store';
   import { nfc_reset_enabled } from '../services/store';
+  import { reg_nfc_auto_enabled } from '../services/store';
 
   let nfc_status;
-  export let reg_auto_enabled;
 </script>
 
 <NfcScan
@@ -35,14 +35,14 @@
   <CardFooter>
     <div class="d-flex w-100 justify-content-between">
       <div>
-        <NfcRegAuto bind:reg_auto_enabled />
+        <NfcRegAuto />
       </div>
       <div>
         <NfcActivate {nfc_status} on:activated={() => { nfc_status = 'ok'; }} />
       </div>
     </div>
   </CardFooter>
-  {#if !reg_auto_enabled
+  {#if !$reg_nfc_auto_enabled
     && $nfc_uid
     && (nfc_status === 'writable' || nfc_status === 'ok')
     && ($nfc_read_test_enabled || $nfc_reset_enabled)

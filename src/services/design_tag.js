@@ -4,17 +4,17 @@ import lodash from 'lodash';
 const design_tag_search_doc = {
   _id: '_design/search',
   views: {
-    count_by_person_id_and_ts_epoch: {
+    count_by_type_and_ts_epoch: {
       map: ((doc) => {
-        if (doc.person_id){
-          emit(doc.person_id + '_' + doc.ts_epoch.toString());
+        if (doc._id.startsWith('t0_')){
+          emit(doc.type_id + '_' + doc.ts_epoch);
         }
       }).toString(),
       reduce: '_count'
     },
     count_by_type: {
       map: ((doc) => {
-        if(doc._id.startsWith('t0')){
+        if(doc._id.startsWith('t0_')){
           emit(doc.type_id);
         } else if (doc._id.startsWith('0_')){
           emit('type');

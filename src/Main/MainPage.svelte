@@ -21,6 +21,7 @@
   import { temp_display_enabled } from '../services/store';
   import { gate_display_enabled } from '../services/store';
   import { tag_display_enabled } from '../services/store';
+  import { reg_nfc_auto_enabled } from '../services/store';
   import { person } from '../services/store';
 
   const new_tag_id = writable();
@@ -30,7 +31,6 @@
   const updated_tag_type_id = writable();
   setContext(ck_updated_tag_type_id, updated_tag_type_id);
 
-  let reg_auto_enabled = true;
   let cmp_reg;
   let cmp_reg_list;
   let block_time;
@@ -53,7 +53,7 @@
     };
 
     handle_scanned_person_valid_member = (e) => {
-      if (reg_auto_enabled){
+      if ($reg_nfc_auto_enabled){
         cmp_reg.add_by_nfc(e.detail.person, e.detail.nfc_uid);
         return;
       }
@@ -89,7 +89,6 @@
 
 <Col class="bg-primary min-vh-100">
   <NfcCard
-    bind:reg_auto_enabled
     on:scanned_person_valid_member={handle_scanned_person_valid_member}
     on:scanned_person_not_member={handle_scanned_person_not_member}
     on:scanned_person_found

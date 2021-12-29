@@ -1,11 +1,12 @@
 <script>
   import { Input } from 'sveltestrap';
-  export let reg_auto_enabled = true;
+  import { reg_nfc_auto_enabled } from '../services/store';
+
 </script>
 
 <Input
-  id=reg_auto_enabled
+  id=reg_nfc_auto_enabled
   type=checkbox
-  label="Registreer automatisch"
-  bind:checked={reg_auto_enabled}
+  label="Auto registratie"
+  bind:checked={$reg_nfc_auto_enabled}
 />

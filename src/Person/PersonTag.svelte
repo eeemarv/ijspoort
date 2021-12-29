@@ -6,16 +6,14 @@
 
   export let person;
   export let show_member_year = false;
-
-  $: year_str = $focus_year.toString();
 </script>
 
 <PersonMemberId member_id={person.member_id} />
 &nbsp;
 <PersonName {person} />
-{#if show_member_year && person.member_year && person.member_year['y' + year_str]}
+{#if show_member_year && person.member_year && person.member_year['y' + $focus_year]}
   &nbsp;
-  <Badge color=success title="lid in {year_str}">
-    {year_str}
+  <Badge color=success title="lid in {$focus_year.toString()}">
+    {$focus_year.toString()}
   </Badge>
 {/if}

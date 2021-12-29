@@ -1,31 +1,69 @@
 <script>
-  import Icon from '@iconify/svelte';
-  import timesIcon from '@iconify/icons-fa/times';
-  import pencilIcon from '@iconify/icons-fa/pencil';
   import { onMount } from 'svelte';
-  import { getContext } from 'svelte';
-  import { createEventDispatcher } from 'svelte';
-  import { Table } from 'sveltestrap';
-  import { Button } from 'sveltestrap';
-  import { TabPane } from 'sveltestrap';
+  import { TabPane, Row, Col } from 'sveltestrap';
+  import { ListGroup } from 'sveltestrap';
+  import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import Tag from './Tag.svelte';
-  import TagEnable from './TagEnableCheckbox.svelte';
-  import { tag_types, tag_types_enabled } from '../services/store';
-
-  const { setActiveTab } = getContext('tabContent');
-  const dispatch = createEventDispatcher();
+  import PersonTag from '../Person/PersonTag.svelte';
+  import { tag_types } from '../services/store';
+  import { tag_count_by_type } from '../services/store';
+  import { person } from '../services/store';
+  import { db_tag, db_person } from '../services/db';
 
   export let tab;
   export let id;
 
-  let tag_type_ary = [];
-  let handle_edit;
+  let list_length = 30;
+  let tags = [];
+  let persons = {};
 
+  const update = () => {
+    let t_tags = [];
+    let t_persons = {};
+
+    db_tag.query('search/count_by_type_and_ts_epoch', {
+      startkey: id + '_\uffff',
+      endkey: id + '_',
+      descending: true,
+      include_docs: true,
+      limit: list_length,
+      reduce: false
+    }).then((res) => {
+      let person_ids = [];
+      console.log('tag limit ' + list_length);
+      console.log(res);
+      res.rows.forEach((v) => {
+        t_tags.push(v.doc);
+        person_ids.push(v.doc.person_id);
+      });
+      console.log('person_ids', person_ids);
+      return db_person.allDocs({
+        keys: person_ids,
+        include_docs: true
+      });
+    }).then((res) => {
+      console.log('persons (tag type tab)');
+      console.log(res);
+      res.rows.forEach((p) => {
+        t_persons[p.id] = {...p.doc};
+      });
+      persons = t_persons;
+      tags = t_tags;
+    }).catch((err) => {
+      console.log(err);
+    });
+  };
 
   onMount(() => {
-
+    update();
   });
+
+  $: {
+    $tag_count_by_type;
+    update();
+  }
+
 </script>
 
 <TabPane tabId={id} active={tab === id}>
@@ -33,44 +71,30 @@
     <Tag tag={$tag_types[id]} />
   </span>
 
-  <Table bordered striped hover dark>
-    <thead>
-      <tr>
-        <th>Aan/Uit</th>
-        <th>Aantal</th>
-        <th>Max/lid</th>
-        <th>Gecreëerd</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each tag_type_ary as t(t.ts_epoch)}
-        <tr>
-          <td>
-            <TagEnable tag_id={t._id}>
-              <Tag tag={t} />
-            </TagEnable>
-          </td>
-          <td>
-            0
-          </td>
-          <td>
-            {t.max_per_person}
-          </td>
-          <td>
-            <LocaleDateString ts={t.ts_epoch} title="datum van aanmaak" />
-          </td>
-          <td>
-            <Button
-              color=primary
-              title="tag type aanpassen"
-              on:click={() => handle_edit(t._id)}
-            >
-              <Icon icon={pencilIcon} />
-            </Button>
-          </td>
-        </tr>
-      {/each}
-    </tbody>
-  </Table>
+  <div>
+    Totaal: {$tag_count_by_type[id] ?? '-'}
+  </div>
+
+  <ListGroup>
+    {#each tags as t}
+      <SelectableListGroupItem
+        active={$person && $person._id === t.person_id}
+        on:click={() => $person = persons[t.person_id]}
+      >
+        <Row>
+          <Col md=2>
+            <Tag tag={$tag_types[id]} />
+          </Col>
+          <Col md=3>
+            <LocaleDateString ts={t.ts_epoch} />
+          </Col>
+          <Col>
+            {#if persons[t.person_id]}
+              <PersonTag person={persons[t.person_id]} show_member_year />
+            {/if}
+          </Col>
+        </Row>
+      </SelectableListGroupItem>
+    {/each}
+  </ListGroup>
 </TabPane>

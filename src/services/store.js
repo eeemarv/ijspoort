@@ -65,6 +65,8 @@ export const assist_import_year = create_coupled_estore('assist_import_year', 20
 export const focus_year = create_coupled_estore('focus_year', 2022, 2016, 2030);
 export const gate_display_enabled = create_coupled_estore('gate_display_enabled', true);
 
+export const reg_nfc_auto_enabled = writable(true);
+
 export const tag_display_enabled = create_coupled_estore('tag_display_enabled', true);
 export const tag_types_enabled = create_coupled_estore('tag_types_enabled', {});
 export const tag_types = writable({});
@@ -75,3 +77,4 @@ export const tag_type_enabled_sorted_id_ary = writable([]);
 export const tag_type_sorted_id_ary = writable([]);
 export const tag_person_sorted_ary = writable([]);
 export const tag_person_count_by_type = writable({});
+export const tag_nfc_auto_enabled = writable(false);
