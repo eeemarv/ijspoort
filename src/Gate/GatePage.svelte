@@ -25,17 +25,20 @@
   let handle_trigger_close_gate_config;
 
   onMount(() => {
-    handle_open_gate_by_nfc = (event) => {
-      cmp_gate_status.open_gate_by_nfc(event.detail.person, event.detail.nfc_uid);
+    handle_open_gate_by_nfc = (e) => {
+      cmp_gate_status.open_gate_by_nfc(e.detail.person, e.detail.nfc_uid);
     };
 
     handle_close_gate = (event) => {
       cmp_gate_status.close_trigger();
     };
 
-    handle_click_open_gate_config = (event) => {
+    handle_click_open_gate_config = (e) => {
       cmp_gate_status.close_trigger();
-      cmp_gate_config.click_open(event.detail.person, event.detail.nfc_uid);
+      cmp_gate_config.click_open(
+        e.detail.person, e.detail.nfc_uid,
+        e.detail.config_auth, e.detail.deblock_auth
+      );
     }
 
     handle_trigger_close_gate_config = () => {

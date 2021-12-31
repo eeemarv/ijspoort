@@ -178,12 +178,8 @@
       start_open_timer();
     };
 
-    handle_click_open_gate_config = (event) => {
+    handle_click_open_gate_config = () => {
       open = false;
-      dispatch('click_open_gate_config', {
-        person: event.detail.person,
-        nfc_uid: event.detail.nfc_uid
-      });
     };
 
     handle_nfc_off = () => {
@@ -239,6 +235,7 @@
             <GateConfigButton
               person={reg_person}
               nfc_uid={reg_nfc_uid}
+              on:click_open_gate_config
               on:click_open_gate_config={handle_click_open_gate_config}
             />
           </div>

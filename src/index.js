@@ -9,24 +9,24 @@ const axios = require('axios');
 const flatten = require('flat');
 const { Gpio } = require('onoff');
 const ping = require('ping');
-const { forEach } = require('lodash');
 
 const eStore = new EStore();
-
-const env_temp_sensor_ip = process.env.TEMP_SENSOR_IP;
-const env_owm_apikey = process.env.OWM_APIKEY;
-const env_owm_location = process.env.OWM_LOCATION;
-const env_thingspeak_apikey = process.env.THINGSPEAK_APIKEY;
-const env_db_sensor_prefix = process.env.DB_SENSOR_PREFIX;
-const env_db_local_prefix = process.env.DB_LOCAL_PREFIX;
-const env_temp_display_ips = process.env.TEMP_DISPLAY_IPS;
-
 let win;
 
-const debug_enabled = process.env?.DEBUG === '1';
-const gate_enabled = process.env?.GATE === '1';
-const feed_A = process.env?.FEED_A;
-const feed_B = process.env?.FEED_B;
+const env = process.env;
+const env_temp_sensor_ip = env.TEMP_SENSOR_IP;
+const env_owm_apikey = env.OWM_APIKEY;
+const env_owm_location = env.OWM_LOCATION;
+const env_thingspeak_apikey = env.THINGSPEAK_APIKEY;
+const env_db_sensor_prefix = env.DB_SENSOR_PREFIX;
+const env_db_local_prefix = env.DB_LOCAL_PREFIX;
+const env_temp_display_ips = env.TEMP_DISPLAY_IPS;
+const env_temp_sensor_cron_interval = env.TEMP_SENSOR_CRON_INTERVAL;
+
+const debug_enabled = env?.DEBUG === '1';
+const gate_enabled = env?.GATE === '1';
+const feed_A = env?.FEED_A;
+const feed_B = env?.FEED_B;
 const read_a_write_b_access = '78778800';
 const transport_access = 'FF078000';
 const transport_key = 'ffffffffffff';
@@ -545,23 +545,24 @@ if (gate_enabled
 	&& env_db_sensor_prefix
 	&& (env_db_local_prefix === env_db_sensor_prefix)
 ){
+	const sensor_unvalidate_time = 900000; // 15 minutes
+	const display_unvalidate_time = 60000; // 1 minute
+
 	let display_ip_ary = [];
-	let display_update_ary = [];
-	let water_temp;
-	let water_temp_updated_at;
-	let air_temp;
-	let air_temp_updated_at;
+	let display_data = {
+		water: { disp_ts: [] },
+		air: { disp_ts: [] }
+	};
 
 	if (env_temp_display_ips){
 		display_ip_ary = env_temp_display_ips.split(',');
-		display_ip_ary.forEach(() => {
-			display_update_ary.push(false);
-		});
 	}
 
-	console.log('Cron sensor.log enabled.');
+	const cron_interval = env_temp_sensor_cron_interval ?? '5';
 
-	cron.schedule('*/5 * * * *', () => {
+	console.log('Cron sensor.log enabled, interval ' + cron_interval + ' minutes');
+
+	cron.schedule('*/' + cron_interval + ' * * * *', () => {
 		win.webContents.send('sensor_log.gate_count.get');
 		console.log('sensor_log.gate_count.get');
 	});
@@ -601,10 +602,12 @@ if (gate_enabled
 			}
 
 			thingspeak_item.api_key = env_thingspeak_apikey;
+
 			for (const k in sensor_item){
 				let tp_key = sensor_field_map[k].field;
 				thingspeak_item['field' + tp_key] = sensor_item[k];
 			}
+
 			await axios.post('https://api.thingspeak.com/update.json', thingspeak_item);
 
 			if (Object.keys(sensor_item).length){
@@ -619,73 +622,97 @@ if (gate_enabled
 		}
 
 		if ('water_temp' in sensor_item){
-			water_temp = sensor_item.water_temp;
-			water_temp_updated_at = (new Date()).getTime();
-			display_ip_ary.forEach((ip, index) => {
-				display_update_ary[index] = true;
-			});
+			display_data.water.value = sensor_item.water_temp;
+			display_data.water.ts = (new Date()).getTime();
 		}
 		if ('air_temp' in sensor_item){
-			air_temp = sensor_item.air_temp;
-			air_temp_updated_at = (new Date()).getTime();
-			display_ip_ary.forEach((ip, index) => {
-				display_update_ary[index] = true;
-			});
+			display_data.air.value = sensor_item.air_temp;
+			display_data.air.ts = (new Date()).getTime();
 		}
 	});
 
-	// update temp displays
-	display_ip_ary.forEach((ip, index) => {
-		setInterval(() => {
-			ping.sys.probe(ip, (isAlive) => {
-				if (isAlive){
-					console.log('display ' + ip + ' alive');
-					if (display_update_ary[index]){
-						let display_water_str = water_temp.toLocaleString('nl-NL', {
-							minimumFractionDigits: 1,
-							maximumFractionDigits: 1
-						});
-						let display_air_str = air_temp.toLocaleString('nl-NL', {
-							minimumFractionDigits: 1,
-							maximumFractionDigits: 1
-						});
-						console.log('display ' + ip + ' post update');
-						console.log('water: ' + display_water_str + ' air: ' + display_air_str);
-						axios.post(ip, {
-							w: display_water_str,
-							a: display_air_str
-						}).then((res) => {
-							console.log('post to display ' + ip);
-							console.log(res);
-							display_update_ary[index] = false;
-						}).catch((err) => {
-							console.log('error posting to display ' + ip);
-							console.log(err);
-						});
-					}
-				} else {
+	let display_request_index = 0;
 
-					if ((typeof water_temp === 'number')
-						&& (typeof air_temp === 'number')){
-						let display_water_str = water_temp.toLocaleString('nl-NL', {
-							minimumFractionDigits: 1,
-							maximumFractionDigits: 1
-						});
-						let display_air_str = air_temp.toLocaleString('nl-NL', {
-							minimumFractionDigits: 1,
-							maximumFractionDigits: 1
-						});
-						console.log('water: ' + display_water_str + ' air: ' + display_air_str);
-					}
+	setInterval(() => {
+		if (!display_ip_ary.length){
+			return;
+		}
 
-					console.log('display ' + ip + ' not alive');
-					display_update_ary[index] = true;
+		if (display_request_index >= (display_ip_ary.length * 2)){
+			display_request_index = 0;
+		}
+
+		let sensor_key = ['water', 'air'][display_request_index % 2];
+		let display_index = Math.floor(display_request_index / 2);
+		let ip = display_ip_ary[display_index];
+		let ts = (new Date()).getTime();
+
+		let sensor_valid = false;
+
+		if (typeof display_data[sensor_key].ts === 'number'
+			&& ts < (sensor_unvalidate_time + display_data[sensor_key].ts)){
+			sensor_valid = true;
+		}
+
+		let display_valid = false;
+
+		if (typeof display_data[sensor_key].disp_ts[display_index] === 'number'
+			&& ts < (display_unvalidate_time + display_data[sensor_key].disp_ts[display_index])){
+			display_valid = true;
+		}
+
+		if (sensor_valid){
+			console.log('sensor valid ' + sensor_key + ' ' + display_data[sensor_key].value);
+		} else {
+			console.log('sensor not valid ' + sensor_key);
+		}
+
+		console.log('display ' + display_index + (display_valid ? '' : ' not') + ' valid');
+
+		ping.sys.probe(ip, (is_alive) => {
+			if (is_alive){
+				console.log('display ' + ip + ' alive');
+
+				if (display_valid){
+					return;
 				}
-			}, {
-				timeout: 1
-			});
-		}, 5000);
-	});
+
+				let display_str = '.';
+
+				if (sensor_valid){
+					display_str = display_data[sensor_key].value.toLocaleString('nl-NL', {
+						minimumFractionDigits: 1,
+						maximumFractionDigits: 1
+					});
+				}
+
+				let get = ip;
+				get += '/l';
+				get += sensor === 'water' ? '1' : '2';
+				get += '/';
+				get += display_str;
+
+				console.log('display ' + ip + ' (' + display_index + ') ' + sensor_key + ': ' + display_str);
+				axios.get(get).then((res) => {
+					console.log('GET request display ' + get);
+					console.log(res);
+					display_data[sensor_key].disp_ts[display_index] = (new Date().getTime());
+				}).catch((err) => {
+					console.log('error GET request display ' + get);
+					console.log(err);
+				});
+			} else {
+				console.log('ping ' + ip + ' not alive');
+				display_data.water.disp_ts[display_index] = undefined;
+				display_data.air.disp_ts[display_index] = undefined;
+			}
+		}, {
+			timeout: 1
+		});
+
+		display_request_index++;
+	}, 5000);
+
 } else {
 	console.log('Cron sensor.log not enabled.');
 	console.log(gate_enabled, env_owm_apikey, env_owm_apikey, env_thingspeak_apikey, env_temp_sensor_ip, env_db_sensor_prefix, env_db_local_prefix);

@@ -6,10 +6,12 @@
   import GateConfigMax from './GateConfigMax.svelte';
   import GateConfigTemp from './GateConfigTemp.svelte';
 
-  export let open;
+  let open = false;
   export let tab = 'members';
   let gate_person;
   let gate_nfc_uid;
+  let gate_config_auth = false;
+  let gate_deblock_auth = false;
 
   $: if (open) {
     tab = 'members';
@@ -18,14 +20,19 @@
   $: if (!open){
     gate_person = undefined;
     gate_nfc_uid = undefined;
+    gate_config_auth = false;
+    gate_deblock_auth = false;
   }
 
-  export const click_open = (person, nfc_uid) => {
+  export const click_open = (person, nfc_uid, config_auth, deblock_auth) => {
     if (!person || !nfc_uid){
       return;
     }
+
     gate_person = person;
     gate_nfc_uid = nfc_uid;
+    gate_config_auth = config_auth;
+    gate_deblock_auth = deblock_auth;
     open = true;
   };
 
@@ -60,9 +67,11 @@
   </ModalHeader>
   <ModalBody>
     <TabContent pills on:tab={(e) => tab = e.detail}>
-      <GateConfigMembers {tab} />
-      <GateConfigMax {tab} on:keypress={handle_enter} />
-      <GateConfigTemp {tab} />
+      {#if gate_config_auth}
+        <GateConfigMembers {tab} />
+        <GateConfigMax {tab} on:keypress={handle_enter} />
+        <GateConfigTemp {tab} />
+      {/if}
     </TabContent>
   </ModalBody>
   <ModalFooterClose
