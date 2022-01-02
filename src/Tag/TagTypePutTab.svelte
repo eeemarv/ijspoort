@@ -72,14 +72,17 @@
     if (typeof edit_tag_id === 'undefined'){
       let ts_epoch = (new Date()).getTime();
       tag.ts_epoch = ts_epoch;
-      let id = (Math.random() + 1).toString(36).substring(2,10);
+      let id = '';
+      while (id.length !== 8){
+        id = Math.random().toString(36).substring(2,10);
+      }
+
       tag._id = '0_' + id;
 
       db_tag.put(tag).then((res) => {
         console.log('-- db_tag.put --');
         console.log(res);
         $tag_types_enabled[tag._id] = true;
-        //dispatch('new_add', tag._id);
       }).catch((err) => {
         console.log('ERR db_tag.put');
         console.log(err);
@@ -103,7 +106,6 @@
       return db_tag.put(tag);
     }).then((res) => {
       console.log('tag ' + res.id + ' updated');
-      //dispatch('new_edit', res.id);
       console.log(res);
     }).catch((err) => {
       console.log(err);
