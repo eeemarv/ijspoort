@@ -1,16 +1,19 @@
 <script>
   import { db_person, db_reg } from '../services/db';
+  import { tag_types } from '../services/store';
   import { Button, Badge } from 'sveltestrap';
   import { onMount } from 'svelte';
   import { person } from '../services/store';
   import RegTimeTag from './RegTimeTag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
+  import Tag from '../Tag/Tag.svelte';
 
-  export let reg_index;
+  export let reg_index = 0;
   export let reg;
   export let newly_add = true;
   export let blocked = false;
   export let block_time = 300000;
+  export let tags = [];
 
   const scan_previous_hours = 5;
   let reg_item;
@@ -108,6 +111,9 @@
           &nbsp;
         {/if}
         <PersonTag person={person_data} show_member_year />
+        {#each tags as t, index (index)}
+          <Tag tag={$tag_types[t]} />
+        {/each}
         {#if blocked}
           &nbsp;
           <Badge color=dark>

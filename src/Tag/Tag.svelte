@@ -4,7 +4,7 @@
 </script>
 
 <span
-  class="badge bg-{tag?.color}"
+  class="badge bg-{tag?.color} me-2"
   title={tag?.description}
   style="cursor: {pointer ? 'pointer' : 'default'};"
 >

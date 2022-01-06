@@ -22,10 +22,10 @@ const design_tag_search_doc = {
       }).toString(),
       reduce: '_count'
     },
-    count_by_ts_epoch: {
+    count_by_type_id_and_person_id: {
       map: ((doc) => {
-        if (doc.out){
-          emit(doc.ts_epoch);
+        if (doc._id.startsWith('t0_')){
+          emit(doc.type_id + '_' + doc.person_id);
         }
       }).toString(),
       reduce: '_count'
