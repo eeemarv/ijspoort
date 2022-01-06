@@ -2,16 +2,18 @@
   const EventEmitter = require('events');
   import { onMount } from 'svelte';
   import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'sveltestrap';
-  import { db_person } from '../services/db';
+  import { db_person, db_tag } from '../services/db';
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
   import { person, focus_year } from './../services/store';
+  import { tag_type_enabled_sorted_id_ary } from './../services/store';
 
   let year_filter_enabled = false;
   let select_years = [];
   let el_manual;
   let el_group;
   let dropdown_open = false;
+  let person_tags = {};
 
   class SearchUpdateEmitter extends EventEmitter {};
   const searchUpdateEmitter = new SearchUpdateEmitter();
@@ -36,6 +38,7 @@
       reduce: false
     }).then((res) => {
       let docs = {};
+      let tag_search_keys = [];
       res.rows.forEach((v) => {
         if (docs[v.id] || Object.keys(docs).length > 10){
           return;
@@ -43,9 +46,34 @@
         if (year_filter_enabled && !v.doc.member_year['y' + $focus_year]){
           return;
         }
+        $tag_type_enabled_sorted_id_ary.forEach((tid) => {
+          tag_search_keys = [...tag_search_keys, tid + '_' + v.id];
+        })
         docs[v.id] = v.doc;
       });
       update(Object.values(docs));
+      return db_tag.query('search/count_by_type_id_and_person_id', {
+        keys: tag_search_keys,
+        reduce: true,
+        group: true,
+        include_docs: false
+      });
+    }).then((res) => {
+      let p_tag_types = {};
+      res.rows.forEach((r) => {
+        let rparts = r.key.split('_');
+        let tag_type_id = rparts[0] + '_' + rparts[1];
+        let p_id = rparts[2];
+        if (typeof p_tag_types[p_id] !== 'object'){
+          p_tag_types[p_id] = [];
+        }
+        for (let i = 0; i < r.value; i++){
+          p_tag_types[p_id] = [...p_tag_types[p_id], tag_type_id];
+        }
+      });
+      Object.keys(p_tag_types).forEach((prsn_id) => {
+        person_tags[prsn_id] = p_tag_types[prsn_id];
+      });
     }).catch((err) => {
       console.log(err);
     });
@@ -81,7 +109,8 @@
         new AutocompleteSuggestion({
           target: suggestion_div,
           props: {
-            person: item
+            person: item,
+            tags: person_tags[item._id] ?? []
           }
         });
         return suggestion_div;
