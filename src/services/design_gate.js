@@ -12,14 +12,6 @@ const design_gate_search_doc = {
       }).toString(),
       reduce: '_count'
     },
-    count_in_by_ts_epoch_per_5_min: {
-      map: ((doc) => {
-        if (doc.in){
-          emit(Math.floor(doc.ts_epoch / 300000) * 300000);
-        }
-      }).toString(),
-      reduce: '_count'
-    },
     count_out_by_ts_epoch: {
       map: ((doc) => {
         if (doc.out){
@@ -28,10 +20,13 @@ const design_gate_search_doc = {
       }).toString(),
       reduce: '_count'
     },
-    count_out_by_ts_epoch_per_5_min: {
+    count_per_5_min: {
       map: ((doc) => {
+        let ts_5_min = Math.floor(doc.ts_epoch / 300000) * 300000;
         if (doc.out){
-          emit(Math.floor(doc.ts_epoch / 300000) * 300000);
+          emit(ts_5_min.toString() + '_out');
+        } else if (doc.in){
+          emit(ts_5_min.toString() + '_in');
         }
       }).toString(),
       reduce: '_count'

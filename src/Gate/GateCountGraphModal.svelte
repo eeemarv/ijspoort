@@ -31,35 +31,21 @@
     let current_ts = undefined;
 
     (async () => {
-      await db_gate.query('search/count_in_by_ts_epoch_per_5_min', {
-        startkey: ts_epoch - (days * 86400000),
-        endkey: ts_epoch,
+      await db_gate.query('search/count_per_5_min', {
+        startkey: (ts_epoch - (days * 86400000)) + '_in',
+        endkey: ts_epoch + '_\uffff',
         reduce: true,
         group: true
       }).then((res) => {
-        console.log('res --- count_in_by_ts_epoch_per_5_min ---');
+        console.log('res --- count_per_5_min ---');
         console.log(res);
         res.rows.forEach((v) => {
-          d_count[v.key] = {in: v.value};
-        });
-      }).catch((err) => {
-        console.log(err);
-      });
-
-      await db_gate.query('search/count_out_by_ts_epoch_per_5_min', {
-        startkey: ts_epoch - (days * 86400000),
-        endkey: ts_epoch,
-        reduce: true,
-        group: true
-      }).then((res) => {
-        console.log('res --- count_out_by_ts_epoch_per_5_min ---');
-        console.log(res);
-        res.rows.forEach((v) => {
-          if (d_count[v.key]){
-            d_count[v.key].out = v.value;
-          } else {
-            d_count[v.key] = {out: v.value};
+          let skey = v.key.split('_');
+          if (typeof d_count[skey[0]] !== 'object'){
+            d_count[skey[0]] = {};
           }
+          // in/out
+          d_count[skey[0]][skey[1]] = v.value;
         });
       }).catch((err) => {
         console.log(err);
