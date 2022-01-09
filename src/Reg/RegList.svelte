@@ -26,7 +26,7 @@
 
   const get_tags_for_person_ids = (person_ids) => {
     let tag_search_keys = [];
-    person_ids.forEach((p_id) => {
+    Object.keys(person_ids).forEach((p_id) => {
       $tag_type_enabled_sorted_id_ary.forEach((tid) => {
         tag_search_keys = [...tag_search_keys, tid + '_' + p_id];
       });
@@ -72,10 +72,10 @@
       console.log('refresh reg_list');
       console.log(res);
       let regs = [];
-      let person_ids = [];
+      let person_ids = {};
       res.rows.forEach((v) => {
         regs = [...regs, v.doc];
-        person_ids = [...person_ids, v.doc.person_id];
+        person_ids[v.doc.person_id] = true;
       });
       get_tags_for_person_ids(person_ids);
       registrations = regs;
@@ -102,7 +102,9 @@
         console.log('change too old, do no display >', change.id);
         return;
       }
-      get_tags_for_person_ids([change.doc.person_id]);
+      let person_ids = {};
+      person_ids[change.doc.person_id] = true;
+      get_tags_for_person_ids(person_ids);
       registrations = [change.doc, ...registrations];
     }).on('error', (err) => {
       console.log(err);
