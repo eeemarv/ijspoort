@@ -104,18 +104,15 @@
           <Badge color=info title="teller">
             {reg_index}
           </Badge>
-          &nbsp;
         {/if}
         {#if !blocked}
           <RegTimeTag {reg} />
-          &nbsp;
         {/if}
         <PersonTag person={person_data} show_member_year />
         {#each tags as t, index (index)}
           <Tag tag={$tag_types[t]} />
         {/each}
         {#if blocked}
-          &nbsp;
           <Badge color=dark>
             Reeds geregistreerd in laatste {Math.floor(block_time / 60000)} minuten.
           </Badge>
@@ -138,11 +135,10 @@
   {#if false}
   <div>
     {#if previous_regs}
-    Ook om:&nbsp;
+    Ook om:
   {/if}
   {#each previous_regs as prev}
     <RegTimeTag reg={prev.doc} />
-    &nbsp;
   {/each}
   <Button color=info>Reg-Info</Button>
   </div>

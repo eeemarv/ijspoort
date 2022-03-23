@@ -6,6 +6,7 @@ const crypto = require('crypto');
 const path = require('path');
 const cron = require('node-cron');
 const axios = require('axios');
+const { curly } = require('node-libcurl');
 const flatten = require('flat');
 const { Gpio } = require('onoff');
 const ping = require('ping');
@@ -546,12 +547,11 @@ if (gate_enabled
 	&& (env_db_local_prefix === env_db_sensor_prefix)
 ){
 	const sensor_unvalidate_time = 900000; // 15 minutes
-	const display_unvalidate_time = 60000; // 1 minute
 
 	let display_ip_ary = [];
 	let display_data = {
-		water: { disp_ts: [] },
-		air: { disp_ts: [] }
+		water: {},
+		air: {}
 	};
 
 	if (env_temp_display_ips){
@@ -654,30 +654,17 @@ if (gate_enabled
 			sensor_valid = true;
 		}
 
-		let display_valid = false;
-
-		if (typeof display_data[sensor_key].disp_ts[display_index] === 'number'
-			&& ts < (display_unvalidate_time + display_data[sensor_key].disp_ts[display_index])){
-			display_valid = true;
-		}
-
 		if (sensor_valid){
 			console.log('sensor valid ' + sensor_key + ' ' + display_data[sensor_key].value);
 		} else {
 			console.log('sensor not valid ' + sensor_key);
 		}
 
-		console.log('display ' + display_index + (display_valid ? '' : ' not') + ' valid');
-
-		ping.sys.probe(ip, (is_alive) => {
+		ping.promise.probe(ip, {timeout: 1}).then((is_alive) => {
 			if (is_alive){
 				console.log('display ' + ip + ' alive');
 
-				if (display_valid){
-					return;
-				}
-
-				let display_str = '.';
+				let display_str = '-';
 
 				if (sensor_valid){
 					display_str = display_data[sensor_key].value.toLocaleString('nl-NL', {
@@ -688,26 +675,24 @@ if (gate_enabled
 
 				let get = ip;
 				get += '/l';
-				get += sensor === 'water' ? '1' : '2';
+				get += sensor_key === 'water' ? '1' : '2';
 				get += '/';
 				get += display_str;
 
 				console.log('display ' + ip + ' (' + display_index + ') ' + sensor_key + ': ' + display_str);
-				axios.get(get).then((res) => {
+
+				curly.get(get).then((res) => {
 					console.log('GET request display ' + get);
 					console.log(res);
-					display_data[sensor_key].disp_ts[display_index] = (new Date().getTime());
 				}).catch((err) => {
-					console.log('error GET request display ' + get);
 					console.log(err);
 				});
+
 			} else {
 				console.log('ping ' + ip + ' not alive');
-				display_data.water.disp_ts[display_index] = undefined;
-				display_data.air.disp_ts[display_index] = undefined;
 			}
-		}, {
-			timeout: 1
+		}).catch((err) => {
+			console.log('ping err ' + err);
 		});
 
 		display_request_index++;
