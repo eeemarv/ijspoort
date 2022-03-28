@@ -6,10 +6,10 @@ const crypto = require('crypto');
 const path = require('path');
 const cron = require('node-cron');
 const axios = require('axios');
-const { curly } = require('node-libcurl');
 const flatten = require('flat');
 const { Gpio } = require('onoff');
 const ping = require('ping');
+const needle = require('needle');
 
 const eStore = new EStore();
 let win;
@@ -23,6 +23,7 @@ const env_db_sensor_prefix = env.DB_SENSOR_PREFIX;
 const env_db_local_prefix = env.DB_LOCAL_PREFIX;
 const env_temp_display_ips = env.TEMP_DISPLAY_IPS;
 const env_temp_sensor_cron_interval = env.TEMP_SENSOR_CRON_INTERVAL;
+const env_temp_display_test = env.TEMP_DISPLAY_TEST && env.TEMP_DISPLAY_TEST === '1';
 
 const debug_enabled = env?.DEBUG === '1';
 const gate_enabled = env?.GATE === '1';
@@ -537,11 +538,12 @@ const sensor_field_map = {
 	}
 };
 
-if (gate_enabled
-	&& env_owm_apikey
+if (((env_owm_apikey
 	&& env_owm_location
 	&& env_thingspeak_apikey
-	&& env_temp_sensor_ip
+	&& env_temp_sensor_ip)
+		|| env_temp_display_test)
+	&& gate_enabled
 	&& env_db_local_prefix
 	&& env_db_sensor_prefix
 	&& (env_db_local_prefix === env_db_sensor_prefix)
@@ -573,6 +575,11 @@ if (gate_enabled
 
 	ipcMain.on('sensor_log.gate_count.ok', async (event, gate_count) => {
 		console.log('sensor_log.gate_count.ok');
+
+		if (env_temp_display_test){
+			console.log('sensor_log blocked by env_temp_display_test');
+			return;
+		}
 
 		const sensor_item = {};
 		const thingspeak_item = {};
@@ -647,6 +654,11 @@ if (gate_enabled
 		let ip = display_ip_ary[display_index];
 		let ts = (new Date()).getTime();
 
+		if (env_temp_display_test){
+			display_data[sensor_key].value = Math.random() * 100;
+			display_data[sensor_key].ts = (new Date()).getTime();
+		}
+
 		let sensor_valid = false;
 
 		if (typeof display_data[sensor_key].ts === 'number'
@@ -681,11 +693,10 @@ if (gate_enabled
 
 				console.log('display ' + ip + ' (' + display_index + ') ' + sensor_key + ': ' + display_str);
 
-				curly.get(get).then((res) => {
-					console.log('GET request display ' + get);
-					console.log(res);
+				needle('get', get).then((res) => {
+					console.log('display response ', res);
 				}).catch((err) => {
-					console.log(err);
+					console.log('display request err ', err);
 				});
 
 			} else {
