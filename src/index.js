@@ -707,7 +707,7 @@ if (((env_owm_apikey
 		});
 
 		display_request_index++;
-	}, 5000);
+	}, 10000);
 
 } else {
 	console.log('Cron sensor.log not enabled.');

@@ -3,7 +3,6 @@
   import { TabPane } from 'sveltestrap';
   import { FormGroup, Label } from 'sveltestrap';
   import { db_gate } from '../services/db';
-  import { DatePicker } from '@beyonk/svelte-datepicker';
 
   export let tab;
 
@@ -15,7 +14,6 @@
   let suppressed_count = 0;
   let filtered_visit_count = 0;
   let ready = false;
-
 
   const update_data = () => {
     ready = false;
@@ -93,7 +91,6 @@
     }
   }
 
-
 </script>
 
 <TabPane tabId=count_unique active={tab === 'count_unique'}>
@@ -126,10 +123,6 @@
           />
         </div>
        </FormGroup>
-    </Col>
-    <Col>
-
-      <DatePicker />
     </Col>
   </Row>
   <Row>

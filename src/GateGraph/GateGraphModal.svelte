@@ -3,6 +3,7 @@
   import { TabContent } from 'sveltestrap';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
   import GateCountUnique from './GateCountUnique.svelte';
+  import GateGraph from './GateGraph.svelte';
 
   export let open = false;
   export let tab = 'count_unique';
@@ -37,6 +38,7 @@
   <ModalBody>
     <TabContent pills on:tab={(e) => tab = e.detail}>
       <GateCountUnique {tab} />
+      <GateGraph {tab} />
     </TabContent>
   </ModalBody>
   <ModalFooterClose on:click={toggle} />

@@ -4,7 +4,6 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { gate_count, gate_count_enabled, gate_nfc_enabled } from '../services/store';
   import { db_gate } from '../services/db';
-  import GateCountGraphModal from './GateCountGraphModal.svelte';
   import GateGraphModal from '../GateGraph/GateGraphModal.svelte';
 
   // hold person and nfc_uid data until gate closes
@@ -198,9 +197,7 @@
 </script>
 
 <GateGraphModal bind:open={graph_open} />
-<!--
-<GateCountGraphModal bind:open={graph_open} />
--->
+
 <span class="badge me-1"
   style="--font-size: {font_size};"
   class:bg-success={triggered_in}

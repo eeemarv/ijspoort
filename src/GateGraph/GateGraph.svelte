@@ -1,16 +1,16 @@
 <script>
-  import { Modal, ModalBody, ModalHeader, Row, Col } from 'sveltestrap';
+  import { Row, Col } from 'sveltestrap';
+  import { FormGroup, Label } from 'sveltestrap';
+  import { TabPane } from 'sveltestrap';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import TimeTag from '../Common/TimeTag.svelte';
   import * as Pancake from '@sveltejs/pancake';
   import { db_gate } from '../services/db';
-  import ModalFooterClose from '../Common/ModalFooterClose.svelte';
-  import GateCountUnique from './GateCountUnique.svelte';
 
-  export let open = false;
-  export let toggle = () => (open = !open);
+  export let tab;
 
-  const days = 14;
+  let days = 7;
+  let days_offset = 0;
   let d_graphs = [];
   let ready = false;
 
@@ -20,6 +20,8 @@
 
     let now = new Date();
     let ts_epoch = now.getTime();
+    let ts_end = ts_epoch - (days_offset * 86400000);
+    let ts_start = ts_end - (days * 86400000);
     let d_count = {};
     let add_graph;
     let dt_in;
@@ -32,8 +34,11 @@
 
     (async () => {
       await db_gate.query('search/count_per_5_min', {
-        startkey: (ts_epoch - (days * 86400000)) + '_in',
-        endkey: ts_epoch + '_\uffff',
+
+        //startkey: (ts_epoch - (days * 86400000)) + '_in',
+        startkey: ts_start + '_in',
+        //endkey: ts_epoch + '_\uffff',
+        endkey: ts_end + '_\uffff',
         reduce: true,
         group: true
       }).then((res) => {
@@ -173,87 +178,110 @@
     })();
   };
 
-  $: if (open){
-    update_data();
+  $: {
+    days;
+    days_offset;
+    if (tab === 'graph'){
+      update_data();
+    }
   }
 </script>
 
-<Modal isOpen={open} {toggle} size=xl>
-  <ModalHeader {toggle}>
-    Zwembeurten en aantal personen
-  </ModalHeader>
-  <ModalBody>
-    <GateCountUnique />
-  </ModalBody>
-  <ModalHeader {toggle}>
+<TabPane tabId=graph active={tab === 'graph'}>
+  <span slot=tab>
     In/uit historiek
-  </ModalHeader>
-  <ModalBody>
-    {#if ready}
-      {#each d_graphs as gr}
-        <Row>
-          <Col class=bg-black>
-            <LocaleDateString ts={gr.ts * 1} />,
-            <TimeTag ts={gr.ts * 1} color=nn />
-            Totaal aantal: {gr.total_count},
-            Maximum binnen: {gr.max_y}
-            <div class="chart">
-              <Pancake.Chart x1=0 x2={gr.max_x} y1={gr.min_y} y2={gr.max_y}>
-                <Pancake.Grid horizontal count={5} let:value>
-                  <div class="grid-line horizontal">
-                    <span>{value}</span>
+  </span>
+  <Row>
+    <Col>
+      <FormGroup>
+        <Label for=days>Periode in dagen</Label>
+        <div class="input-group">
+          <input type=number
+            id=days class=form-control
+            bind:value={days}
+            min=1 max=3650
+            on:keypress={() => update_data()}
+          />
+        </div>
+       </FormGroup>
+    </Col>
+    <Col>
+      <FormGroup>
+        <Label for=days_offset>Dagen geleden</Label>
+        <div class="input-group">
+          <input type=number
+            id=days_offset class=form-control
+            bind:value={days_offset}
+            min=1 max=3650
+            on:keypress={() => update_data()}
+          />
+        </div>
+       </FormGroup>
+    </Col>
+  </Row>
+  {#if ready}
+    {#each d_graphs as gr(gr.ts)}
+      <Row>
+        <Col class=bg-black>
+          <LocaleDateString ts={gr.ts * 1} />,
+          <TimeTag ts={gr.ts * 1} color=nn />
+          Totaal aantal: {gr.total_count},
+          Maximum binnen: {gr.max_y}
+          <div class="chart">
+            <Pancake.Chart x1=0 x2={gr.max_x} y1={gr.min_y} y2={gr.max_y}>
+              <Pancake.Grid horizontal count={5} let:value>
+                <div class="grid-line horizontal">
+                  <span>{value}</span>
+                </div>
+              </Pancake.Grid>
+              <Pancake.Grid vertical count={gr.max_x > 100 ? gr.max_x / 10 : gr.max_x / 5} let:value>
+                <span class="x-label">
+                  {value}
+                </span>
+              </Pancake.Grid>
+              <Pancake.Svg>
+                {#each gr.x_grid as gx}
+                  <Pancake.SvgLine data={[{x:gx, y: gr.min_y}, {x: gx, y:gr.max_y}]} let:d>
+                    <path class="x-hour" {d} />
+                  </Pancake.SvgLine>
+                {/each}
+                <Pancake.SvgLine data={[{x:0, y:0}, {x: gr.max_x, y:0}]} let:d>
+                  <path class="zero" {d} />
+                </Pancake.SvgLine>
+                <Pancake.SvgLine data={gr.in_data} let:d>
+                  <path class="in-data" {d} />
+                </Pancake.SvgLine>
+                <Pancake.SvgLine data={gr.out_data} let:d>
+                  <path class="out-data" {d} />
+                </Pancake.SvgLine>
+                <Pancake.SvgLine data={gr.count_data} let:d>
+                  <path class="data" {d} />
+                </Pancake.SvgLine>
+              </Pancake.Svg>
+
+              {#if gr.closest}
+                <Pancake.Point x={gr.closest.x} y={gr.closest.y}>
+                  <span class="annotation-point {gr.closest.type}-point"></span>
+                  <div class="annotation {gr.closest.type}-ann" style="transform: translate(-{100 * ((gr.closest.x - 0) / (gr.max_x))}%,0)">
+                    <strong title="aantal">{gr.closest.type === 'in' ? '+' : ''}{gr.closest.y}</strong>
+                    {#if gr.closest.hour !== undefined && gr.closest.min !== undefined}
+                      <span title="tijdstip">
+                        {gr.closest.hour.toString().padStart(2, '0')}:
+                        {gr.closest.min.toString().padStart(2, '0')}
+                      </span>
+                    {/if}
                   </div>
-                </Pancake.Grid>
-                <Pancake.Grid vertical count={gr.max_x > 100 ? gr.max_x / 10 : gr.max_x / 5} let:value>
-                  <span class="x-label">
-                    {value}
-                  </span>
-                </Pancake.Grid>
-                <Pancake.Svg>
-                  {#each gr.x_grid as gx}
-                    <Pancake.SvgLine data={[{x:gx, y: gr.min_y}, {x: gx, y:gr.max_y}]} let:d>
-                      <path class="x-hour" {d} />
-                    </Pancake.SvgLine>
-                  {/each}
-                  <Pancake.SvgLine data={[{x:0, y:0}, {x: gr.max_x, y:0}]} let:d>
-                    <path class="zero" {d} />
-                  </Pancake.SvgLine>
-                  <Pancake.SvgLine data={gr.in_data} let:d>
-                    <path class="in-data" {d} />
-                  </Pancake.SvgLine>
-                  <Pancake.SvgLine data={gr.out_data} let:d>
-                    <path class="out-data" {d} />
-                  </Pancake.SvgLine>
-                  <Pancake.SvgLine data={gr.count_data} let:d>
-                    <path class="data" {d} />
-                  </Pancake.SvgLine>
-                </Pancake.Svg>
+                </Pancake.Point>
+              {/if}
 
-                {#if gr.closest}
-                  <Pancake.Point x={gr.closest.x} y={gr.closest.y}>
-                    <span class="annotation-point {gr.closest.type}-point"></span>
-                    <div class="annotation {gr.closest.type}-ann" style="transform: translate(-{100 * ((gr.closest.x - 0) / (gr.max_x))}%,0)">
-                      <strong title="aantal">{gr.closest.type === 'in' ? '+' : ''}{gr.closest.y}</strong>
-                      {#if gr.closest.hour !== undefined && gr.closest.min !== undefined}
-                        <span title="tijdstip">
-                          {gr.closest.hour.toString().padStart(2, '0')}:
-                          {gr.closest.min.toString().padStart(2, '0')}
-                        </span>
-                      {/if}
-                    </div>
-                  </Pancake.Point>
-                {/if}
-
-                <Pancake.Quadtree data={gr.p_data} bind:closest={gr.closest} />
-              </Pancake.Chart>
-            </div>
-          </Col>
-        </Row>
-      {/each}
-    {/if}
-  </ModalBody>
-  <ModalFooterClose on:click={toggle} />
-</Modal>
+              <Pancake.Quadtree data={gr.p_data} bind:closest={gr.closest} />
+            </Pancake.Chart>
+          </div>
+        </Col>
+      </Row>
+    {/each}
+  {/if}
+</TabPane>
 
 <style>
 	.chart {
