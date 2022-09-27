@@ -1824,7 +1824,7 @@ binary-extensions@^2.0.0:
   resolved "https://registry.yarnpkg.com/binary-extensions/-/binary-extensions-2.2.0.tgz#75f502eeaf9ffde42fc98829645be4ea76bd9e2d"
   integrity sha512-jDctJ/IVQbZoJykoeHbhXpOlNBqGNcwXJKJog42E5HDPUwQTSdjCHdihjj0DlnheQ7blbT6dHOafNAiS8ooQKA==
 
-bindings@^1.5.0:
+bindings@^1.5.0, bindings@~1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/bindings/-/bindings-1.5.0.tgz#10353c9e945334bc0511a6d90b38fbc7c9c504df"
   integrity sha512-p2q/t/mhvuOj/UeLlV6566GD/guowlr0hHxClI0W9m7MWYkL1F0hLo+0Aexs9HSPCtR1SXQ0TD3MMKrXZajbiQ==
@@ -4297,6 +4297,14 @@ merge-stream@^2.0.0:
   resolved "https://registry.yarnpkg.com/merge-stream/-/merge-stream-2.0.0.tgz#52823629a14dd00c9770fb6ad47dc6310f2c1f60"
   integrity sha512-abv/qOcuPfk3URPfDzmZU1LKmuw8kT+0nIHvKrKgFrwifol/doWcdA4ZqsWQ8ENrFKkd67Mfpo/LovbIUsbt3w==
 
+mfrc522-rpi@^2.1.3:
+  version "2.1.3"
+  resolved "https://registry.yarnpkg.com/mfrc522-rpi/-/mfrc522-rpi-2.1.3.tgz#af8c6c1f50af5e8f4293326f7b8f35ce1b148dff"
+  integrity sha512-V8EiGuZngdPYxSzwXRo/QjCFHF0zZPJvStINFnlAo1R19PBuHepwgDPSe6wbJDWWYImRmgFAWbCFUeDqUqsJZQ==
+  dependencies:
+    rpi-softspi "^1.0.5"
+    rpio "^1.3.0"
+
 mime-db@1.52.0:
   version "1.52.0"
   resolved "https://registry.yarnpkg.com/mime-db/-/mime-db-1.52.0.tgz#bbabcdc02859f4987301c856e3387ce5ec43bf70"
@@ -4478,10 +4486,15 @@ mute-stream@0.0.8:
   resolved "https://registry.yarnpkg.com/mute-stream/-/mute-stream-0.0.8.tgz#1630c42b2251ff81e2a283de96a5497ea92e5e0d"
   integrity sha512-nnbWWOkoWyUsTjKrhgD0dcz22mdkSnpYqbEjIm2nhwhuxlSkpywJmBo8h0ZqJdkp73mb90SssHkN4rsRaBAfAA==
 
-nan@^2.13.2, nan@^2.14.0, nan@^2.14.2:
+nan@^2.13.2, nan@^2.14.0, nan@^2.14.1, nan@^2.14.2:
   version "2.16.0"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.16.0.tgz#664f43e45460fb98faf00edca0bb0d7b8dce7916"
   integrity sha512-UdAqHyFngu7TfQKsCBgAA6pWDkT8MAO7d0jyOecVhN5354xbLqdn8mV9Tat9gepAupm0bt2DbeaSC8vS52MuFA==
+
+nan@~2.14.0:
+  version "2.14.2"
+  resolved "https://registry.yarnpkg.com/nan/-/nan-2.14.2.tgz#f5376400695168f4cc694ac9393d0c9585eeea19"
+  integrity sha512-M2ufzIiINKCuDfBSAUr1vWQ+vuVcA9kqx8JJUsbQi6yf1uGRyb7HfpdfUr5qLXf3B/t8dPvcjhKMmlfnP47EzQ==
 
 napi-macros@~2.0.0:
   version "2.0.0"
@@ -5668,6 +5681,29 @@ rollup@^2.32.1:
   integrity sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==
   optionalDependencies:
     fsevents "~2.3.2"
+
+rpi-softspi@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/rpi-softspi/-/rpi-softspi-1.0.5.tgz#f63bb7dd86358220dcdc2d90c546389ad6cb3f61"
+  integrity sha512-b9umzQUk7p6HRSmQV3U9+ooboBOaodzJwqvZjX993D88geQePNzLaZDDQkMW2Ny14FwSUB3IvpBP3KFzv2rdaA==
+  dependencies:
+    rpio "*"
+
+rpio@*:
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/rpio/-/rpio-2.4.2.tgz#e16d58f7937cc8b30083c3f8df051f5d9f14a1b3"
+  integrity sha512-SiWw2VorgUh+0hbu6eJkRGG+luvS9BboXz6PQl8Z49kJ+8Nn7R/b4ohybLIYSMbQqcW1WYqSooadDuv1VOAiFw==
+  dependencies:
+    bindings "~1.5.0"
+    nan "^2.14.1"
+
+rpio@^1.3.0:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/rpio/-/rpio-1.7.1.tgz#7be34fed34e93f34042d2c90bf20a771980d96a0"
+  integrity sha512-jjccmmNHDOK4jsKNQVZcXCa1fKPUlO4BOcYZk5pdU8cPWyjcCh6D1/tpNYq5fOjeyGuemE6o9AZSRx6q7ICPcw==
+  dependencies:
+    bindings "~1.5.0"
+    nan "~2.14.0"
 
 run-async@^2.4.0:
   version "2.4.1"
