@@ -342,7 +342,7 @@ const listen_mfrc = (win) => {
 
 	// GPIO 24 can be used for buzzer bin (PIN 18), Reset pin is (PIN 22).
 	// I believe that channing pattern is better for configuring pins which are optional methods to use.
-	const MFRC522 = new Mfrc522(softSPI).setResetPin(22).setBuzzerPin(18);
+	const mfrc522 = new MFRC522(softSPI).setResetPin(22).setBuzzerPin(18);
 
 	setInterval(function() {
 		//# reset card
