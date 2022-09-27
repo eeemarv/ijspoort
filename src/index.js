@@ -49,6 +49,7 @@ if (typeof feed_B !== 'string' || !feed_B){
 
 // https://stackoverflow.com/questions/68874940/gpu-process-isnt-usable-goodbye
 app.commandLine.appendSwitch('in-process-gpu');
+app.commandLine.appendSwitch('no-sandbox');
 
 // Live Reload
 require('electron-reload')(__dirname, {
