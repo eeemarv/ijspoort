@@ -390,7 +390,7 @@ const listen_mfrc = (win) => {
 		mfrc522.selectCard(resp1.data);
 
 		if (resp1.data[0] === 0x88){
-			res_uid = res_uid.slice(2);
+			res_uid = res_uid.slice(1);
 			const uid2 = [MFRC522_CMD.ANTICOL2, 0x20];
 			let resp2 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid2);
 			if (resp2.status) {
