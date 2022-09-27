@@ -369,7 +369,7 @@ const listen_mfrc = (win) => {
 
 		mfrc522.alert();
 		mfrc522.writeRegister(MFRC522_CMD.BitFramingReg, 0x00);
-		const uid1 = [MFRC522_CMD.ANTICOLL1, 0x20];
+		const uid1 = [MFRC522_CMD.ANTICOL1, 0x20];
 		let res_uid = '';
 		let resp1 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid1);
 		if (resp1.status) {
@@ -389,7 +389,7 @@ const listen_mfrc = (win) => {
 
 		if (resp1.data[0] === 0x88){
 			res_uid = res_uid.slice(2);
-			const uid2 = [MFRC522_CMD.ANTICOLL2, 0x20];
+			const uid2 = [MFRC522_CMD.ANTICOL2, 0x20];
 			let resp2 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid2);
 			if (resp2.status) {
 				let uidCheck = 0;
