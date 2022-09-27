@@ -10,7 +10,7 @@ const flatten = require('flat');
 const { Gpio } = require('onoff');
 const ping = require('ping');
 const needle = require('needle');
-const Mfrc522 = require('mfrc522-rpi');
+const MFRC522 = require('mfrc522-rpi');
 const SoftSPI = require("rpi-softspi");
 
 const eStore = new EStore();
@@ -342,7 +342,7 @@ const listen_mfrc = (win) => {
 
 	// GPIO 24 can be used for buzzer bin (PIN 18), Reset pin is (PIN 22).
 	// I believe that channing pattern is better for configuring pins which are optional methods to use.
-	const mfrc522 = new Mfrc522(softSPI).setResetPin(22).setBuzzerPin(18);
+	const MFRC522 = new Mfrc522(softSPI).setResetPin(22).setBuzzerPin(18);
 
 	setInterval(function() {
 		//# reset card
@@ -356,6 +356,65 @@ const listen_mfrc = (win) => {
 		}
 		console.log("Card detected, CardType: " + response.bitSize);
 
+		//////
+		//////
+		//////
+		const MFRC522_CMD = {
+			TRANSCEIVE: 0x0c,
+			ANTICOL1: 0x93,
+			ANTICOL2: 0x95,
+			ANTICOL3: 0x97,
+			BitFramingReg: 0x0d
+		}
+
+		mfrc522.alert();
+		mfrc522.writeRegister(MFRC522_CMD.BitFramingReg, 0x00);
+		const uid1 = [MFRC522_CMD.ANTICOLL1, 0x20];
+		let res_uid = '';
+		let resp1 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid1);
+		if (resp1.status) {
+			let uidCheck = 0;
+			for (let i = 0; i < 4; i++) {
+				uidCheck = uidCheck ^ resp1.data[i];
+				res_uid += resp1.data[i].toString('hex');
+			}
+			if (uidCheck != resp1.data[4]) {
+				console.log('MFRC522 error BCC1 read UID');
+				return;
+			}
+		} else {
+			console.log('MFRC522 error resp1 STATUS read UID');
+			return;
+		}
+
+		if (resp1.data[0] === 0x88){
+			res_uid = res_uid.slice(2);
+			const uid2 = [MFRC522_CMD.ANTICOLL2, 0x20];
+			let resp2 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid2);
+			if (resp2.status) {
+				let uidCheck = 0;
+				for (let i = 0; i < 4; i++) {
+					uidCheck = uidCheck ^ resp2.data[i];
+					res_uid += resp2.data[i].toString('hex');
+				}
+				if (uidCheck != resp2.data[4]) {
+					console.log('MFRC522 error BCC2 read UID');
+					return;
+				}
+			} else {
+				console.log('MFRC522 error resp2 STATUS read UID');
+				return;
+			}
+		}
+
+		console.log('uid:');
+		console.log(res_uid);
+		return;
+
+
+		/////
+		/////
+		/////
 		//# Get the UID of the card
 		response = mfrc522.getUid();
 		if (!response.status) {
