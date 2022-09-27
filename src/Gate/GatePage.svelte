@@ -72,7 +72,9 @@
   <Row class="h-25 bg-primary">
     {#if $temp_display_enabled}
       <Col md=3 class="h-100 d-flex justify-content-center align-items-center">
-        <TemperatureCard />
+        <TemperatureCard
+          font_size=.9em
+        />
       </Col>
       <Col md=3 class="h-100 d-flex justify-content-center align-items-center">
         {#if $gate_count_enabled}
@@ -93,14 +95,14 @@
           bind:open={open_gate}
           on:gate_is_open
           on:gate_is_closed
-        />
+          font_size=1em      />
       </div>
       <div class="h-50 d-flex justify-content-right">
         <div class=me-2>
-          <NfcDeviceBadge />
-          <NfcCountBadge font_size=1.3em />
+          <NfcDeviceBadge font_size=1em/>
+          <NfcCountBadge font_size=1em />
         </div>
-        <DbSync font_size=1.3em />
+        <DbSync font_size=1em />
       </div>
     </Col>
   </Row>

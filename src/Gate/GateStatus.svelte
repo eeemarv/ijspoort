@@ -8,6 +8,7 @@
   const dispatch = createEventDispatcher();
 
   export let open = true;
+  export let font_size = '1.2em';
 
   // to hold person and nfc_uid data until gate closes
   let gate_person;
@@ -131,12 +132,13 @@
   class:bg-success={open}
   class:bg-dark={!open}
   title="Poort status"
+  style="font-size: {font_size};"
 >
   Poort
 </span>
 
 <GateSens
-  font_size=1.2em
+  font_size={font_size}
   on:triggered_in={handle_close_trigger}
   on:triggered_out={handle_open_trigger}
   bind:gate_person
@@ -144,7 +146,7 @@
 />
 
 <style>
-span {
-  font-size: 1.2em;
-}
+  span {
+    font-size: var(--font-size);
+  }
 </style>

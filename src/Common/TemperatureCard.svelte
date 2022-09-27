@@ -4,6 +4,7 @@
   import { onMount } from 'svelte';
 
   export let horizontal = false;
+  export let font_size = '1em';
 
   let to;
   let water_temp;
@@ -73,6 +74,7 @@
   <div
     class="w-100 justify-content-between"
     class:d-flex={horizontal}
+    style="font-size: {font_size};"
   >
     <div>
       Water:&nbsp;
@@ -102,3 +104,9 @@
     </div>
   </div>
 </Card>
+
+<style>
+  span {
+    font-size: var(--font-size);
+  }
+</style>
