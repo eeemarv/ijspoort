@@ -94,13 +94,13 @@ const createWindow = () => {
 		listen_pcsc(win);
 		if (gate_enabled){
 			try {
-				listen_gpio(win);
+				// listen_gpio(win);
 			} catch (err) {
 				console.log('gpio fail.')
 				console.log(err);
 			}
+			listen_mfrc(win);
 		}
-		listen_mfrc(win);
   });
 
   if (debug_enabled){
