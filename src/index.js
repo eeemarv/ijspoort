@@ -47,6 +47,9 @@ if (typeof feed_B !== 'string' || !feed_B){
 	throw 'No FEED_B set!';
 }
 
+// https://stackoverflow.com/questions/68874940/gpu-process-isnt-usable-goodbye
+app.commandLine.appendSwitch('in-process-gpu');
+
 // Live Reload
 require('electron-reload')(__dirname, {
   electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
