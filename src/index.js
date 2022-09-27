@@ -365,11 +365,15 @@ const listen_mfrc = (win) => {
 		//# If we have the UID, continue
 		const uid = response.data;
 		console.log(
-			"Card read UID: %s %s %s %s",
+			"Card read UID: %s%s%s%s %s%s%s%s",
 			uid[0].toString(16),
 			uid[1].toString(16),
 			uid[2].toString(16),
-			uid[3].toString(16)
+			uid[3].toString(16),
+			uid[4].toString(16),
+			uid[5].toString(16),
+			uid[6].toString(16),
+			uid[7].toString(16)
 		);
 
 		//# Select the scanned card
