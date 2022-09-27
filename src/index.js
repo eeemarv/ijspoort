@@ -387,6 +387,8 @@ const listen_mfrc = (win) => {
 			return;
 		}
 
+		mfrc522.selectCard(resp1.data);
+
 		if (resp1.data[0] === 0x88){
 			res_uid = res_uid.slice(2);
 			const uid2 = [MFRC522_CMD.ANTICOL2, 0x20];
