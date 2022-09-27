@@ -376,7 +376,7 @@ const listen_mfrc = (win) => {
 			let uidCheck = 0;
 			for (let i = 0; i < 4; i++) {
 				uidCheck = uidCheck ^ resp1.data[i];
-				res_uid += resp1.data[i].toString('hex');
+				res_uid += resp1.data[i].toString(16);
 			}
 			if (uidCheck != resp1.data[4]) {
 				console.log('MFRC522 error BCC1 read UID');
@@ -395,7 +395,7 @@ const listen_mfrc = (win) => {
 				let uidCheck = 0;
 				for (let i = 0; i < 4; i++) {
 					uidCheck = uidCheck ^ resp2.data[i];
-					res_uid += resp2.data[i].toString('hex');
+					res_uid += resp2.data[i].toString(16);
 				}
 				if (uidCheck != resp2.data[4]) {
 					console.log('MFRC522 error BCC2 read UID');
