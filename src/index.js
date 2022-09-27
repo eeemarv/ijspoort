@@ -362,6 +362,8 @@ const listen_mfrc = (win) => {
 			console.log("UID Scan Error");
 			return;
 		}
+		console.log('RESPONSE');
+		console.log(response);
 		//# If we have the UID, continue
 		const uid = response.data;
 		console.log(
