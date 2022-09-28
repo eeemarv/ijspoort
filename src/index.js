@@ -386,8 +386,8 @@ const listen_mfrc = (win) => {
 					return;
 				}
 				uidCheck = uidCheck ^ resp1.data[i];
-				console.log(resp1.data[i].toString(16).padStart(1, '0'));
-				res_uid += resp1.data[i].toString(16).padStart(1, '0');
+				console.log(resp1.data[i].toString(16).padStart(2, '0'));
+				res_uid += resp1.data[i].toString(16).padStart(2, '0');
 			}
 			if (uidCheck != resp1.data[4]) {
 				console.log('MFRC522 error BCC1 read UID');
@@ -417,7 +417,7 @@ const listen_mfrc = (win) => {
 						return;
 					}
 					uidCheck = uidCheck ^ resp2.data[i];
-					res_uid += resp2.data[i].toString(16).padStart(1, '0');
+					res_uid += resp2.data[i].toString(16).padStart(2, '0');
 				}
 				if (uidCheck != resp2.data[4]) {
 					console.log('MFRC522 error BCC2 read UID');
