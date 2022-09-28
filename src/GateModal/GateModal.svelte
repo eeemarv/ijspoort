@@ -192,7 +192,8 @@
 <Modal
   isOpen={open}
   {toggle}
-  size=xl
+
+  fullscreen=xl
   backdropClassName={modal_class}
   fade={false}
 >

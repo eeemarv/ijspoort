@@ -489,9 +489,6 @@ const listen_mfrc = (win) => {
 
 		console.log('MFRC522 nfc.on uid: ', res_uid);
 		win.webContents.send('nfc.on', {uid: res_uid});
-
-		/////
-		////
 	}, 200);
 };
 

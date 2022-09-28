@@ -58,7 +58,7 @@
 <Modal
   isOpen={open}
   {toggle}
-  size=xl
+  fullscreen=xl
 >
   <ModalHeader {toggle} color=info>
     <h1>
