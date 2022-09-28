@@ -352,23 +352,37 @@ const listen_mfrc = (win) => {
 
 	const mfrc522 = new MFRC522(softSPI).setResetPin(22).setBuzzerPin(18);
 
+	console.log('MFRC522 send event dev.nfc.on');
+	win.webContents.send('dev.nfc.on');
+
+	let res_uid = '';
+	let empty_read_countdown = 0;
+
 	setInterval(function() {
+		if (empty_read_countdown){
+			empty_read_countdown--;
+		}
 		mfrc522.reset();
 
 		let resp0 = mfrc522.findCard();
-		if (!resp0.status) {
-			console.log("No Card");
+
+		if (!resp0.status){
+			if (res_uid !== '' && !empty_read_countdown){
+				console.log('MFRC522 send event nfc.off');
+				win.webContents.send('nfc.off');
+				res_uid = '';
+			}
 			return;
 		}
+
 		console.log("Card detected:");
 		console.log(resp0);
 
-		//////
-		//////
-		//////
+		//
+		let tmp_uid = res_uid;
 		mfrc522.writeRegister(MFRC522_CMD.BitFramingReg, 0x00);
 		const uid1 = [MFRC522_CMD.ANTICOL1, 0x20];
-		let res_uid = '';
+		res_uid = '';
 		let resp1 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid1);
 		if (resp1.status) {
 			if (typeof resp1.data === "undefined"){
@@ -463,8 +477,18 @@ const listen_mfrc = (win) => {
 			mfrc522.alert();
 		}
 
-		console.log('uid:');
-		console.log(res_uid);
+		if (res_uid === tmp_uid){
+			console.log('MFRC522 already sent uid: ' + res_uid);
+			empty_read_countdown = 5;
+			return;
+		}
+
+		if (tmp_uid !== ''){
+			// nfc.off
+		}
+
+		console.log('MFRC522 nfc.on uid: ', res_uid);
+		win.webContents.send('nfc.on', {uid: res_uid});
 
 		/////
 		////
