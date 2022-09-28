@@ -383,7 +383,6 @@ const listen_mfrc = (win) => {
 					return;
 				}
 				uidCheck = uidCheck ^ resp1.data[i];
-				console.log(resp1.data[i].toString(16).padStart(2, '0'));
 				res_uid += resp1.data[i].toString(16).padStart(2, '0');
 			}
 			if (uidCheck != resp1.data[4]) {
@@ -429,7 +428,7 @@ const listen_mfrc = (win) => {
 			if (resp1.data[0] === 0x88){
 				let buff2 = [MFRC522_CMD.SELECT2, 0x70];
 				for (let i = 0; i < 5; i++) {
-					buff2.push(resp1.data[i]);
+					buff2.push(resp2.data[i]);
 				}
 				buff2 = buff2.concat(mfrc522.calculateCRC(buff2));
 				let resp_a2 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, buff2);
