@@ -340,6 +340,16 @@ const listen_mfrc = (win) => {
 		client: 24 // pin number of CS
 	});
 
+	const MFRC522_CMD = {
+		TRANSCEIVE: 0x0c,
+		ANTICOL1: 0x93,
+		SELECT1: 0x93,
+		ANTICOL2: 0x95,
+		SELECT2: 0x95,
+		ANTICOL3: 0x97,
+		BitFramingReg: 0x0d
+	}
+
 	const mfrc522 = new MFRC522(softSPI).setResetPin(22).setBuzzerPin(18);
 
 	setInterval(function() {
@@ -356,17 +366,6 @@ const listen_mfrc = (win) => {
 		//////
 		//////
 		//////
-		const MFRC522_CMD = {
-			TRANSCEIVE: 0x0c,
-			ANTICOL1: 0x93,
-			SELECT1: 0x93,
-			ANTICOL2: 0x95,
-			SELECT2: 0x95,
-			ANTICOL3: 0x97,
-			BitFramingReg: 0x0d
-		}
-
-		mfrc522.alert();
 		mfrc522.writeRegister(MFRC522_CMD.BitFramingReg, 0x00);
 		const uid1 = [MFRC522_CMD.ANTICOL1, 0x20];
 		let res_uid = '';
@@ -395,7 +394,23 @@ const listen_mfrc = (win) => {
 		}
 
 		// select ACK1
-		mfrc522.selectCard(resp1.data);
+		// replaces mfrc522.selectCard(resp1.data);
+		let buff1 = [MFRC522_CMD.SELECT1, 0x70];
+		for (let i = 0; i < 5; i++) {
+			buff1.push(resp1.data[i]);
+		}
+		buff1 = buff1.concat(mfrc522.calculateCRC(buff1));
+		let resp_a1 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, buff1);
+		console.log('resp ack 1:');
+		console.log(resp_a1);
+		if (typeof resp_a1 === "undefined"){
+			console.log('MFRC522 error: resp_a1 is undefined');
+			return;
+		}
+		if (!resp_a1.status){
+			console.log('MFRC522 error ACK1 false status');
+			return;
+		}
 
 		if (resp1.data[0] === 0x88){
 			res_uid = res_uid.slice(2);
@@ -434,12 +449,18 @@ const listen_mfrc = (win) => {
 				let resp_a2 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, buff2);
 				console.log('resp ack 2:');
 				console.log(resp_a2);
+				if (typeof resp_a2 === "undefined"){
+					console.log('MFRC522 error: resp_a2 is undefined');
+					return;
+				}
+				if (!resp_a2.status){
+					console.log('MFRC522 error ACK2 false status');
+					return;
+				}
 			}
 
 			// beep
 			mfrc522.alert();
-
-
 		}
 
 		console.log('uid:');
