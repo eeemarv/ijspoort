@@ -362,7 +362,9 @@ const listen_mfrc = (win) => {
 		const MFRC522_CMD = {
 			TRANSCEIVE: 0x0c,
 			ANTICOL1: 0x93,
+			SELECT1: 0x93,
 			ANTICOL2: 0x95,
+			SELECT2: 0x95,
 			ANTICOL3: 0x97,
 			BitFramingReg: 0x0d
 		}
@@ -376,7 +378,7 @@ const listen_mfrc = (win) => {
 			let uidCheck = 0;
 			for (let i = 0; i < 4; i++) {
 				uidCheck = uidCheck ^ resp1.data[i];
-				res_uid += resp1.data[i].toString(16);
+				res_uid += resp1.data[i].toString(16).padStart(1, '0');
 			}
 			if (uidCheck != resp1.data[4]) {
 				console.log('MFRC522 error BCC1 read UID');
@@ -390,14 +392,14 @@ const listen_mfrc = (win) => {
 		mfrc522.selectCard(resp1.data);
 
 		if (resp1.data[0] === 0x88){
-			res_uid = res_uid.slice(1);
+			res_uid = res_uid.slice(2);
 			const uid2 = [MFRC522_CMD.ANTICOL2, 0x20];
 			let resp2 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid2);
 			if (resp2.status) {
 				let uidCheck = 0;
 				for (let i = 0; i < 4; i++) {
 					uidCheck = uidCheck ^ resp2.data[i];
-					res_uid += resp2.data[i].toString(16);
+					res_uid += resp2.data[i].toString(16).padStart(1, '0');
 				}
 				if (uidCheck != resp2.data[4]) {
 					console.log('MFRC522 error BCC2 read UID');
