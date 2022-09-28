@@ -386,6 +386,7 @@ const listen_mfrc = (win) => {
 					return;
 				}
 				uidCheck = uidCheck ^ resp1.data[i];
+				console.log(resp1.data[i].toString(16).padStart(1, '0'));
 				res_uid += resp1.data[i].toString(16).padStart(1, '0');
 			}
 			if (uidCheck != resp1.data[4]) {
