@@ -372,11 +372,19 @@ const listen_mfrc = (win) => {
 		mfrc522.alert();
 		mfrc522.writeRegister(MFRC522_CMD.BitFramingReg, 0x00);
 		const uid1 = [MFRC522_CMD.ANTICOL1, 0x20];
-		let res_uid = '';
+		let res_uid = '+';
 		let resp1 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid1);
 		if (resp1.status) {
+			if (typeof resp1.data === "undefined"){
+				console.log('MFRC522 error read cycle 1 prop data is undefined');
+				return;
+			}
 			let uidCheck = 0;
 			for (let i = 0; i < 4; i++) {
+				if (typeof resp1.data[i] === "undefined"){
+					console.log('MFRC522 error read cycle 1 data ' + i + ' is undefined');
+					return;
+				}
 				uidCheck = uidCheck ^ resp1.data[i];
 				res_uid += resp1.data[i].toString(16).padStart(1, '0');
 			}
@@ -389,6 +397,7 @@ const listen_mfrc = (win) => {
 			return;
 		}
 
+		res_uid = res_uid.slice(1);
 		mfrc522.selectCard(resp1.data);
 
 		if (resp1.data[0] === 0x88){
@@ -396,8 +405,16 @@ const listen_mfrc = (win) => {
 			const uid2 = [MFRC522_CMD.ANTICOL2, 0x20];
 			let resp2 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid2);
 			if (resp2.status) {
+				if (typeof resp2.data === "undefined"){
+					console.log('MFRC522 error read cycle 2 prop data is undefined');
+					return;
+				}
 				let uidCheck = 0;
 				for (let i = 0; i < 4; i++) {
+					if (typeof resp2.data[i] === "undefined"){
+						console.log('MFRC522 error read cycle 2 data ' + i + ' is undefined');
+						return;
+					}
 					uidCheck = uidCheck ^ resp2.data[i];
 					res_uid += resp2.data[i].toString(16).padStart(1, '0');
 				}
