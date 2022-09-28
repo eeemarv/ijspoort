@@ -340,21 +340,18 @@ const listen_mfrc = (win) => {
 		client: 24 // pin number of CS
 	});
 
-	// GPIO 24 can be used for buzzer bin (PIN 18), Reset pin is (PIN 22).
-	// I believe that channing pattern is better for configuring pins which are optional methods to use.
 	const mfrc522 = new MFRC522(softSPI).setResetPin(22).setBuzzerPin(18);
 
 	setInterval(function() {
-		//# reset card
 		mfrc522.reset();
 
-		//# Scan for cards
-		let response = mfrc522.findCard();
-		if (!response.status) {
+		let resp0 = mfrc522.findCard();
+		if (!resp0.status) {
 			console.log("No Card");
 			return;
 		}
-		console.log("Card detected, CardType: " + response.bitSize);
+		console.log("Card detected:");
+		console.log(resp0);
 
 		//////
 		//////
@@ -372,7 +369,7 @@ const listen_mfrc = (win) => {
 		mfrc522.alert();
 		mfrc522.writeRegister(MFRC522_CMD.BitFramingReg, 0x00);
 		const uid1 = [MFRC522_CMD.ANTICOL1, 0x20];
-		let res_uid = '+';
+		let res_uid = '';
 		let resp1 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid1);
 		if (resp1.status) {
 			if (typeof resp1.data === "undefined"){
@@ -398,7 +395,7 @@ const listen_mfrc = (win) => {
 			return;
 		}
 
-		res_uid = res_uid.slice(1);
+		// select ACK1
 		mfrc522.selectCard(resp1.data);
 
 		if (resp1.data[0] === 0x88){
@@ -427,42 +424,31 @@ const listen_mfrc = (win) => {
 				console.log('MFRC522 error resp2 STATUS read UID');
 				return;
 			}
+
+			// select ack 2
+			if (resp1.data[0] === 0x88){
+				let buff2 = [MFRC522_CMD.SELECT2, 0x70];
+				for (let i = 0; i < 5; i++) {
+					buff2.push(resp1.data[i]);
+				}
+				buff2 = buff2.concat(mfrc522.calculateCRC(buff2));
+				let resp_a2 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, buff2);
+				console.log('resp ack 2:');
+				console.log(resp_a2);
+			}
+
+			// beep
+			mfrc522.alert();
+
+
 		}
 
 		console.log('uid:');
 		console.log(res_uid);
-		return;
-
 
 		/////
-		/////
-		/////
-		//# Get the UID of the card
-		response = mfrc522.getUid();
-		if (!response.status) {
-			console.log("UID Scan Error");
-			return;
-		}
-		console.log('RESPONSE');
-		console.log(response);
-		//# If we have the UID, continue
-		const uid = response.data;
-		console.log(
-			"Card read UID: %s%s%s%s %s%s%s%s",
-			uid[0].toString(16),
-			uid[1].toString(16),
-			uid[2].toString(16),
-			uid[3].toString(16),
-			uid[4].toString(16),
-			uid[5].toString(16),
-			uid[6].toString(16),
-			uid[7].toString(16)
-		);
-
-		//# Select the scanned card
-		const memoryCapacity = mfrc522.selectCard(uid);
-		console.log("Card Memory Capacity: " + memoryCapacity);
-	}, 500);
+		////
+	}, 200);
 };
 
 const listen_gpio = (win) => {
