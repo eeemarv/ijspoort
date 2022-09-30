@@ -494,7 +494,7 @@ const listen_mfrc = (win) => {
 		rpio.write(buzzer_pin, rpio.LOW);
 		setTimeout(() => {
 			rpio.write(buzzer_pin, rpio.HIGH);
-		}, 500);
+		}, 300);
 
 		if (res_uid === tmp_uid){
 			console.log('MFRC522 already sent uid: ' + res_uid);
