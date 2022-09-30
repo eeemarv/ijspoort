@@ -488,13 +488,13 @@ const listen_mfrc = (win) => {
 					return;
 				}
 			}
-
-			// beep
-			rpio.write(buzzer_pin, rpio.LOW);
-			setTimeout(() => {
-				rpio.write(buzzer_pin, rpio.HIGH);
-			}, 500);
 		}
+
+		// beep
+		rpio.write(buzzer_pin, rpio.LOW);
+		setTimeout(() => {
+			rpio.write(buzzer_pin, rpio.HIGH);
+		}, 500);
 
 		if (res_uid === tmp_uid){
 			console.log('MFRC522 already sent uid: ' + res_uid);
