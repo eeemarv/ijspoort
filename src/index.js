@@ -12,6 +12,9 @@ const ping = require('ping');
 const needle = require('needle');
 const MFRC522 = require('mfrc522-rpi');
 const SoftSPI = require("rpi-softspi");
+const rpio = require('rpio');
+const mqtt = require('mqtt');
+const buzzer_pin = 18;
 
 const eStore = new EStore();
 let win;
@@ -26,6 +29,7 @@ const env_db_local_prefix = env.DB_LOCAL_PREFIX;
 const env_temp_display_ips = env.TEMP_DISPLAY_IPS;
 const env_temp_sensor_cron_interval = env.TEMP_SENSOR_CRON_INTERVAL;
 const env_temp_display_test = env.TEMP_DISPLAY_TEST && env.TEMP_DISPLAY_TEST === '1';
+const env_mqtt_host = env.MQTT_HOST;
 
 const debug_enabled = env?.DEBUG === '1';
 const gate_enabled = env?.GATE === '1';
@@ -40,6 +44,15 @@ const gpio_pin = {
 	sens_out: 24,
 	gate: 14
 };
+
+const mqtt_client_id = 'ijsp_' + Math.random().toString(16).slice(3);
+
+const mqtt_client = mqtt.connect('mqtt://' + env_mqtt_host + '1883', {
+  clientId: mqtt_client_id,
+  clean: true,
+  connectTimeout: 4000,
+  reconnectPeriod: 1000,
+})
 
 if (typeof feed_A !== 'string' || !feed_A){
 	throw 'No FEED_A set!';
@@ -350,24 +363,27 @@ const listen_mfrc = (win) => {
 		BitFramingReg: 0x0d
 	}
 
-	const mfrc522 = new MFRC522(softSPI).setResetPin(22).setBuzzerPin(18);
+	rpio.open(buzzer_pin, rpio.OUTPUT);
+	rpio.write(buzzer_pin, rpio.HIGH);
+
+	const mfrc522 = new MFRC522(softSPI).setResetPin(22);
 
 	console.log('MFRC522 send event dev.nfc.on');
 	win.webContents.send('dev.nfc.on');
 
 	let res_uid = '';
-	let empty_read_countdown = 0;
+	let no_find_countdown = 0;
 
 	setInterval(function() {
-		if (empty_read_countdown){
-			empty_read_countdown--;
+		if (no_find_countdown){
+			no_find_countdown--;
 		}
 		mfrc522.reset();
 
 		let resp0 = mfrc522.findCard();
 
 		if (!resp0.status){
-			if (res_uid !== '' && !empty_read_countdown){
+			if (res_uid !== '' && !no_find_countdown){
 				console.log('MFRC522 send event nfc.off');
 				win.webContents.send('nfc.off');
 				res_uid = '';
@@ -474,12 +490,15 @@ const listen_mfrc = (win) => {
 			}
 
 			// beep
-			mfrc522.alert();
+			rpio.write(buzzer_pin, rpio.LOW);
+			setTimeout(() => {
+				rpio.write(buzzer_pin, rpio.HIGH);
+			}, 500);
 		}
 
 		if (res_uid === tmp_uid){
 			console.log('MFRC522 already sent uid: ' + res_uid);
-			empty_read_countdown = 5;
+			no_find_countdown = 5;
 			return;
 		}
 
@@ -600,6 +619,37 @@ const listen_gpio = (win) => {
 		console.log('gpio fail');
 		console.log(e);
 	}
+};
+
+const mqtt_a = (win) => {
+	mqtt_client.on('connect', () => {
+		console.log('MQTT connected')
+		mqtt_client.subscribe([
+			'sens.in', 'sens.out',
+			'gate.is_open', 'gate.is_closed'], () => {
+			console.log('mqtt subscribed to topics');
+		});
+
+		ipcMain.on('gate.open', async (event) => {
+			console.log('gate.open');
+			mqtt_client.publish('gate.open', '1', {
+				qos: 0,
+				retain: true}, (err) => {
+					console.log('mqtt ERR on publish gate.open');
+					console.log(err);
+			});
+		});
+
+		ipcMain.on('gate.close', async (event) => {
+			console.log('gate.open');
+			mqtt_client.publish('gate.open', '0', {
+				qos: 0,
+				retain: true}, (err) => {
+					console.log('mqtt ERR on publish gate.close');
+					console.log(err);
+			});
+		});
+	});
 };
 
 app.on('ready', () => {
