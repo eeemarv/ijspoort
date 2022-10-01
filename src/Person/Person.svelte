@@ -197,11 +197,13 @@
     <CardHeader class=bg-info>
       Gelinkte data
     </CardHeader>
+    <ListGroup>
     <PersonNfc />
     <PersonRegLog />
     {#if $tag_display_enabled}
       <PersonTagList />
     {/if}
+    </ListGroup>
     <CardBody>
     </CardBody>
     <div class="card-footer d-flex w-100 justify-content-end">

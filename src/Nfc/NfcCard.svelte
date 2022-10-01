@@ -11,6 +11,7 @@
   import { nfc_read_test_enabled } from '../services/store';
   import { nfc_reset_enabled } from '../services/store';
   import { reg_nfc_auto_enabled } from '../services/store';
+  import NfcPersonAuto from './NfcPersonAuto.svelte';
 
   let nfc_status;
 </script>
@@ -33,6 +34,11 @@
   <NfcDeviceCardHeader />
   <NfcCardBody {nfc_status} />
   <CardFooter>
+    <div class="d-flex w100 justify-content-begin">
+      <div>
+        <NfcPersonAuto />
+      </div>
+    </div>
     <div class="d-flex w-100 justify-content-between">
       <div>
         <NfcRegAuto />

@@ -65,6 +65,7 @@ export const assist_import_year = create_coupled_estore('assist_import_year', 20
 export const focus_year = create_coupled_estore('focus_year', 2022, 2016, 2030);
 export const gate_display_enabled = create_coupled_estore('gate_display_enabled', true);
 
+export const person_nfc_auto_enabled = writable(false);
 export const reg_nfc_auto_enabled = writable(true);
 
 export const tag_display_enabled = create_coupled_estore('tag_display_enabled', true);

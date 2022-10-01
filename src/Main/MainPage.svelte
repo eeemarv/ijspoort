@@ -22,6 +22,7 @@
   import { gate_display_enabled } from '../services/store';
   import { tag_display_enabled } from '../services/store';
   import { reg_nfc_auto_enabled } from '../services/store';
+  import { person_nfc_auto_enabled } from '../services/store';
   import { person } from '../services/store';
 
   const new_tag_id = writable();
@@ -55,9 +56,10 @@
     handle_scanned_person_valid_member = (e) => {
       if ($reg_nfc_auto_enabled){
         cmp_reg.add_by_nfc(e.detail.person, e.detail.nfc_uid);
-        return;
       }
-      $person = e.detail.person;
+      if ($person_nfc_auto_enabled){
+        $person = e.detail.person;
+      }
     };
 
     handle_scanned_person_not_member = (e) => {

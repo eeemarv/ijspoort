@@ -2,6 +2,7 @@
   import { tag_add } from '../services/tag';
   import { tag_nfc_auto_enabled } from '../services/store';
   import { reg_nfc_auto_enabled } from '../services/store';
+  import { person_nfc_auto_enabled } from '../services/store';
   import { tag_type_enabled_sorted_id_ary } from '../services/store';
   import { tag_person_count_by_type } from '../services/store';
   import { tag_types } from '../services/store';
@@ -72,7 +73,7 @@
     }, 50);
   };
 
-  $: if (!$reg_nfc_auto_enabled){
+  $: if (!$person_nfc_auto_enabled){
     $tag_nfc_auto_enabled = false;
   }
 
@@ -81,7 +82,7 @@
   }
 </script>
 
-{#if !$reg_nfc_auto_enabled}
+{#if $person_nfc_auto_enabled}
   <CardFooter>
     <Checkbox
       name=tag_nfc_auto_enabled
