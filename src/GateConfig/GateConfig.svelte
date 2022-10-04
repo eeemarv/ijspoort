@@ -5,6 +5,7 @@
   import GateConfigMembers from './GateConfigMembers.svelte';
   import GateConfigMax from './GateConfigMax.svelte';
   import GateConfigTemp from './GateConfigTemp.svelte';
+  import GateConfigSound from './GateConfigSound.svelte';
 
   let open = false;
   export let tab = 'members';
@@ -58,7 +59,7 @@
 <Modal
   isOpen={open}
   {toggle}
-  fullscreen=xl
+  fullscreen=l
 >
   <ModalHeader {toggle} color=info>
     <h1>
@@ -71,6 +72,7 @@
         <GateConfigMembers {tab} />
         <GateConfigMax {tab} on:keypress={handle_enter} />
         <GateConfigTemp {tab} />
+        <GateConfigSound {tab} />
       {/if}
     </TabContent>
   </ModalBody>

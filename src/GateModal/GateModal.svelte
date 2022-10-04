@@ -9,6 +9,9 @@
   import { gate_nfc_enabled } from '../services/store';
   import NfcScan from '../Nfc/NfcScan.svelte';
   import GateConfigButton from '../GateConfig/GateConfigButton.svelte';
+  import * as Tone from 'tone';
+  import { sound_ok_enabled } from '../services/store';
+  import { sound_error_enabled } from '../services/store';
 
   const dispatch = createEventDispatcher();
 
@@ -29,6 +32,8 @@
   let handle_scanned_uid_blocked;
   let handle_nfc_off;
   let handle_click_open_gate_config;
+  let sound_ok;
+  let sound_error;
 
   let title;
   let modal_class = 'bg-default';
@@ -38,6 +43,8 @@
   const minimum_open_time = 2000;
   let open_time = 0;
   let open_timeout_ref = 0;
+
+  const synth = new Tone.Synth().toDestination();
 
   const toggle = () => {
     open = !open;
@@ -107,6 +114,20 @@
   }
 
   onMount(() => {
+    sound_ok = () => {
+      if (!$sound_ok_enabled){
+        return;
+      }
+      synth.triggerAttackRelease('G5', '32n');
+    };
+
+    sound_error = () => {
+      if (!$sound_error_enabled){
+        return;
+      }
+      synth.triggerAttackRelease('C3', '8n');
+    };
+
     handle_person_already_registered = () => {
       already_registered = true;
     };
@@ -123,6 +144,7 @@
         modal_class = 'bg-warning';
         title = 'Volzet';
         start_open_timer();
+        sound_error();
         return;
       }
       modal_class = 'bg-success';
@@ -132,6 +154,7 @@
         nfc_uid: event.detail.nfc_uid
       });
       start_open_timer();
+      sound_ok();
     };
 
     handle_scanned_person_not_member = (event) => {
@@ -143,6 +166,7 @@
       modal_class = 'bg-warning';
       title = 'Lidmaatschap niet in orde';
       start_open_timer();
+      sound_error();
     };
 
     handle_scanned_person_not_found = (event) => {
@@ -154,6 +178,7 @@
       modal_class = 'bg-danger';
       title = 'Persoon niet herkend';
       start_open_timer();
+      sound_error();
     };
 
     handle_scanned_uid_not_found = (event) => {
@@ -165,6 +190,7 @@
       modal_class = 'bg-danger';
       title = 'Tag niet herkend';
       start_open_timer();
+      sound_error();
     };
 
     handle_scanned_uid_blocked = (event) => {
@@ -176,6 +202,7 @@
       modal_class = 'bg-danger';
       title = 'Tag geblokkeerd';
       start_open_timer();
+      sound_error();
     };
 
     handle_click_open_gate_config = () => {
@@ -192,8 +219,7 @@
 <Modal
   isOpen={open}
   {toggle}
-
-  fullscreen=xl
+  fullscreen=l
   backdropClassName={modal_class}
   fade={false}
 >
