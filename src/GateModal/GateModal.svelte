@@ -9,7 +9,6 @@
   import { gate_nfc_enabled } from '../services/store';
   import NfcScan from '../Nfc/NfcScan.svelte';
   import GateConfigButton from '../GateConfig/GateConfigButton.svelte';
-  import * as Tone from 'tone';
   import { sound_ok_enabled } from '../services/store';
   import { sound_error_enabled } from '../services/store';
 
@@ -44,10 +43,11 @@
   let open_time = 0;
   let open_timeout_ref = 0;
 
-  const synth = new Tone.Synth().toDestination();
+  const ok_sound = new Audio('../audio/ok1.mp3');
+  const error_sound = new Audio('../audio/error1.mp3');
 
   const toggle = () => {
-    open = !open;
+    open = !open
   };
 
   const update_member_year_list = () => {
@@ -114,19 +114,23 @@
   }
 
   onMount(() => {
-    sound_ok = () => {
-      if (!$sound_ok_enabled){
-        return;
-      }
-      synth.triggerAttackRelease('G5', '32n');
-    };
+    ok_sound.addEventListener('canplaythrough', (ev) => {
+      sound_ok = () => {
+        if (!$sound_ok_enabled){
+          return;
+        }
+        ok_sound.play();
+      };
+    });
 
-    sound_error = () => {
-      if (!$sound_error_enabled){
-        return;
-      }
-      synth.triggerAttackRelease('C3', '8n');
-    };
+    error_sound.addEventListener('canplaythrough', (ev) => {
+      sound_error = () => {
+        if (!$sound_error_enabled){
+          return;
+        }
+        error_sound.play();
+      };
+    });
 
     handle_person_already_registered = () => {
       already_registered = true;
@@ -219,8 +223,7 @@
 <Modal
   isOpen={open}
   {toggle}
-  fullscreen=l
-  backdropClassName={modal_class}
+  fullscreen={true}
   fade={false}
 >
   <ModalHeader

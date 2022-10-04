@@ -59,7 +59,7 @@
 <Modal
   isOpen={open}
   {toggle}
-  fullscreen=l
+  fullscreen={true}
 >
   <ModalHeader {toggle} color=info>
     <h1>
