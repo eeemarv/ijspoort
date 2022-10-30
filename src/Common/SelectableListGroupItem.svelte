@@ -5,6 +5,7 @@
 <div
     class="list-group-item{active ? ' active' : ''}"
     on:click
+    on:keyup={() => {}}
 >
     <slot></slot>
 </div>

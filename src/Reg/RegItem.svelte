@@ -90,6 +90,7 @@
 <li
   bind:this={reg_item}
   on:click={handle_select_reg}
+  on:keyup={() => {}}
   class=list-group-item
   class:bg-warning={blocked}
   class:bg-success={newly_add}
