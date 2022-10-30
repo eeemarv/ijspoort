@@ -204,6 +204,7 @@
   class:bg-dark={!triggered_in}
   title="Ingangssensor"
   on:click={() => handle_click_in()}
+  on:keyup={() => {}}
 >
   In: {count_in}
 </span>
@@ -214,6 +215,7 @@
   class:bg-dark={!triggered_out}
   title="Uitgangssensor"
   on:click={() => handle_click_out()}
+  on:keyup={() => {}}
 >
   Uit: {count_out}
 </span>
