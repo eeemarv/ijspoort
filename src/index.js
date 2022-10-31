@@ -93,7 +93,7 @@ const createWindow = () => {
   });
 
 	if (!gate_enabled){
-		win.setMinimumSize(1400, 768);
+		win.setMinimumSize(1366, 768);
 		win.maximize();
 	}
 
