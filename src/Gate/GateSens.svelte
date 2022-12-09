@@ -17,9 +17,7 @@
   const dispatch = createEventDispatcher();
 
   const count_hours = 5;
-  const release_gate_block_time_sec = 3600;
   const refresh_gate_count_interval = 20000;
-  let gate_block_timeout;
   let triggered_in = false;
   let trigger_in;
   let handle_click_in;
@@ -29,16 +27,6 @@
   let handle_click_out;
   let count_out = 0;
   let graph_open = false;
-
-  const reset_gate_block_timeout = () => {
-    if (gate_block_timeout){
-      clearTimeout(gate_block_timeout);
-    }
-    gate_block_timeout = setTimeout(() => {
-      $gate_count_enabled = false;
-      $gate_nfc_enabled = false;
-    }, release_gate_block_time_sec * 1000);
-  };
 
   const update_count_in = () => {
     let ts_date = new Date(Date.now() - (3600000 * count_hours));
@@ -120,7 +108,6 @@
 
   onMount(() => {
     trigger_in = () => {
-      reset_gate_block_timeout();
       if ($gate_count_enabled){
         gate_count.dec();
       }
@@ -129,7 +116,6 @@
     }
 
     trigger_out = () => {
-      reset_gate_block_timeout();
       if ($gate_count_enabled){
         gate_count.inc();
       }
@@ -163,7 +149,6 @@
 
     update_count_in();
     update_count_out();
-    reset_gate_block_timeout();
 
     setInterval(() => {
       update_count_in();
