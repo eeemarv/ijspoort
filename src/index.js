@@ -661,7 +661,7 @@ const mqtt_terminal = (win) => {
 		setInterval(() => {
 			console.log('mqtt pub -t terminal/p -m ' + mqtt_client_id);
 			mqtt_client.publish('terminal/p', mqtt_client_id);
-		}, 1000);
+		}, 5000);
 	});
 };
 
