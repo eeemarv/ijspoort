@@ -43,8 +43,8 @@
   let open_time = 0;
   let open_timeout_ref = 0;
 
-  const ok_sound = new Audio('../audio/ok1.mp3');
-  const error_sound = new Audio('../audio/error1.mp3');
+  const ok_sound = new Audio('../audio/ok3.mp3');
+  const error_sound = new Audio('../audio/error2.mp3');
 
   const toggle = () => {
     open = !open

@@ -47,11 +47,11 @@ const gpio_pin = {
 
 const mqtt_client_id = 'ijsp_' + Math.random().toString(16).slice(3);
 
-const mqtt_client = mqtt.connect('mqtt://' + env_mqtt_host + '1883', {
+const mqtt_client = mqtt.connect('mqtt://' + env_mqtt_host + ':1883', {
   clientId: mqtt_client_id,
   clean: true,
   connectTimeout: 4000,
-  reconnectPeriod: 1000,
+  reconnectPeriod: 2000,
 })
 
 if (typeof feed_A !== 'string' || !feed_A){
@@ -108,11 +108,12 @@ const createWindow = () => {
 		if (gate_enabled){
 			try {
 				// listen_gpio(win);
+				listen_mfrc(win);
+				mqtt_a(win);
 			} catch (err) {
 				console.log('gpio fail.')
 				console.log(err);
 			}
-			listen_mfrc(win);
 		}
   });
 
@@ -491,10 +492,12 @@ const listen_mfrc = (win) => {
 		}
 
 		// beep
-		rpio.write(buzzer_pin, rpio.LOW);
-		setTimeout(() => {
-			rpio.write(buzzer_pin, rpio.HIGH);
-		}, 300);
+		if (eStore.get('beep_enabled')){
+			rpio.write(buzzer_pin, rpio.LOW);
+			setTimeout(() => {
+				rpio.write(buzzer_pin, rpio.HIGH);
+			}, 300);
+		}
 
 		if (res_uid === tmp_uid){
 			console.log('MFRC522 already sent uid: ' + res_uid);
@@ -513,26 +516,6 @@ const listen_mfrc = (win) => {
 
 const listen_gpio = (win) => {
 	console.log('listen_gpio');
-
-	const emulate_gpio = process.env.EMULATE_GPIO === '1';
-
-	if (emulate_gpio){
-		console.log('emulate_gpio enabled.');
-
-		ipcMain.on('gate.open', async (event) => {
-			console.log('gate.open');
-			event.reply('gate.is_open');
-			console.log('EMULATE_GPIO gate.is_open');
-		});
-
-		ipcMain.on('gate.close', async (event) => {
-			console.log('gate.close');
-			event.reply('gate.is_closed');
-			console.log('EMULATE_GPIO gate.is_closed');
-		});
-
-		return;
-	}
 
 	let block_sens_in = false;
 	let block_sens_out = false;
@@ -597,6 +580,17 @@ const listen_gpio = (win) => {
 			}
 		});
 
+		ipcMain.on('gate.open_once_with_timer', async (event) => {
+			console.log('gate.open_once_with_timer');
+			try {
+
+			} catch (err) {
+				console.log('gate.open_once_with_timer.err');
+				console.log(err);
+				event.reply('gate.open_once_with_timer.err', err);
+			}
+		})
+
 		ipcMain.on('gate.close', async (event) => {
 			console.log('gate.close');
 			try {
@@ -623,32 +617,72 @@ const listen_gpio = (win) => {
 
 const mqtt_a = (win) => {
 	mqtt_client.on('connect', () => {
-		console.log('MQTT connected')
+		console.log('MQTT CONNECTED');
 		mqtt_client.subscribe([
-			'sens.in', 'sens.out',
+			'g/s/in', 'g/t/in/p',
 			'gate.is_open', 'gate.is_closed'], () => {
 			console.log('mqtt subscribed to topics');
 		});
 
+		setInterval(() => {
+			mqtt_client.publish('scan/p', '');
+		}, 5000);
+
 		ipcMain.on('gate.open', async (event) => {
 			console.log('gate.open');
-			mqtt_client.publish('gate.open', '1', {
-				qos: 0,
-				retain: true}, (err) => {
-					console.log('mqtt ERR on publish gate.open');
+			mqtt_client.publish('g/open/in', '', {
+				qos: 0
+			}, (err) => {
+					console.log('mqtt ERR on publish g/open/in');
+					console.log(err);
+			});
+		});
+
+		ipcMain.on('gate.open_once_with_timer', async (event, time_sec) => {
+			console.log('pub g/once/in');
+			mqtt_client.publish('g/once/in', time_sec.toString(), {
+				qos: 0
+			}, (err) => {
+					console.log('mqtt ERR on publish g/once/in');
 					console.log(err);
 			});
 		});
 
 		ipcMain.on('gate.close', async (event) => {
-			console.log('gate.open');
-			mqtt_client.publish('gate.open', '0', {
-				qos: 0,
-				retain: true}, (err) => {
-					console.log('mqtt ERR on publish gate.close');
+			console.log('pub g/close/in');
+			mqtt_client.publish('g/close/in', '', {
+				qos: 0
+			}, (err) => {
+					console.log('mqtt ERR on publish g/close/in');
 					console.log(err);
 			});
 		});
+	});
+
+	mqtt_client.on('message', (topic, message_buff) => {
+		message = message_buff.toString();
+
+		if (topic === 'g/s/in'){
+			if (message === 'closed'){
+				win.webContents.send('gate.is_closed');
+			}
+			if (message === 'open'){
+				win.webContents.send('gate.is_open');
+			}
+			return;
+		}
+
+		if (topic == 'g/t/in/p'){
+			console.log('sub g/t/in/p  sens.in');
+			win.webContents.send('sens.in');
+			return;
+		}
+
+		if (topic == 'g/t/out/p'){
+			console.log('sub g/t/out/p  sens.out');
+			win.webContents.send('sens.out');
+			return;
+		}
 	});
 };
 
@@ -718,6 +752,7 @@ ipcMain.on('rebuild_menu', () => {
 
 /**
  * fetch and store sensor data
+ * (disabled, functionality will be moved to another device)
  */
 
 const sensor_field_map = {
@@ -755,7 +790,7 @@ const sensor_field_map = {
 	}
 };
 
-if (((env_owm_apikey
+if (false && ((env_owm_apikey
 	&& env_owm_location
 	&& env_thingspeak_apikey
 	&& env_temp_sensor_ip)
@@ -926,7 +961,4 @@ if (((env_owm_apikey
 		display_request_index++;
 	}, 10000);
 
-} else {
-	console.log('Cron sensor.log not enabled.');
-	console.log(gate_enabled, env_owm_apikey, env_owm_apikey, env_thingspeak_apikey, env_temp_sensor_ip, env_db_sensor_prefix, env_db_local_prefix);
 }

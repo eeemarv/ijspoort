@@ -1,6 +1,6 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { onMount, createEventDispatcher } from "svelte";
+  import { createEventDispatcher } from "svelte";
   import { gate_count_enabled, gate_count } from "../services/store";
   import { gate_nfc_enabled, gate_nfc_open_time } from "../services/store";
   import GateSens from "./GateSens.svelte";
@@ -16,21 +16,21 @@
 
   export const open_trigger = () => {
     if ($gate_nfc_enabled){
-        return;
-      }
+      return;
+    }
 
-      if ($gate_count_enabled && ($gate_count <= 0)){
-        return;
-      }
+    if ($gate_count_enabled && ($gate_count <= 0)){
+      return;
+    }
 
-      set_open();
+    set_open();
   };
 
   export const close_trigger = () => {
     if ($gate_nfc_enabled){
-        set_close();
-        return;
-      }
+      set_close();
+      return;
+    }
     if ($gate_count_enabled && ($gate_count <= 0)){
       set_close();
       return;
@@ -41,11 +41,13 @@
     // gate_count underflow already prevented in GateModal
     gate_person = person;
     gate_nfc_uid = nfc_uid;
-    nfc_open_timer = $gate_nfc_open_time * 1000;
-    set_open();
+    set_open_once_with_timer();
   };
 
-  let nfc_open_timer = -1;
+  const set_open_once_with_timer = () => {
+    console.log('send -> gate.open_once_with_timer');
+    ipcRenderer.send('gate.open_once_with_timer', $gate_nfc_open_time)
+  }
 
   const set_open = () => {
     console.log('send -> gate.open');
@@ -54,7 +56,6 @@
 
   const set_close = () => {
     console.log('send -> gate.close');
-    nfc_open_timer = -1;
     ipcRenderer.send('gate.close', {});
   }
 
@@ -84,23 +85,6 @@
   ipcRenderer.on('gate.close.err', (ev) => {
     console.log('GATE.CLOSE.ERR');
     open = false;
-  });
-
-	onMount(() => {
-		const nfc_down_timer = setInterval(() => {
-      if (nfc_open_timer >= 0){
-        nfc_open_timer -= 100;
-      }
-      if (nfc_open_timer === 0
-        && $gate_nfc_enabled
-      ){
-        set_close();
-      }
-    }, 100);
-
-		return () => {
-			clearInterval(nfc_down_timer);
-		};
   });
 
   $: if ($gate_nfc_enabled){
