@@ -41,7 +41,11 @@
     // gate_count underflow already prevented in GateModal
     gate_person = person;
     gate_nfc_uid = nfc_uid;
-    set_open_once_with_timer();
+    if ($gate_nfc_enabled){
+      set_open_once_with_timer();
+    } else {
+      set_open();
+    }
   };
 
   const set_open_once_with_timer = () => {
