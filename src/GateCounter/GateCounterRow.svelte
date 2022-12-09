@@ -17,7 +17,7 @@
 {:else}
   <div class="row h-75 bg-danger">
     <Col md=9 class="h-100 d-flex justify-content-center align-items-center" >
-      <GateCounter font_size=12em />
+      <GateCounter />
     </Col>
     <Col class="d-flex flex-column justify-content-between">
       <div class="h-50 d-flex align-items-center">
