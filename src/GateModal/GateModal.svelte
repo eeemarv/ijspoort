@@ -108,6 +108,7 @@
       title = 'Wacht even tot je voorganger door de poort is en probeer opnieuw.';
       show_reg_person = false;
       start_open_timer();
+      sound_error();
       return true;
     }
     return false;
