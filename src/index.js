@@ -498,7 +498,7 @@ const listen_mfrc = (win) => {
 			rpio.write(buzzer_pin, rpio.LOW);
 			setTimeout(() => {
 				rpio.write(buzzer_pin, rpio.HIGH);
-			}, 50);
+			}, 20);
 		}
 
 		if (res_uid === tmp_uid){
