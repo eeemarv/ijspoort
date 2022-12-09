@@ -18,6 +18,7 @@ const buzzer_pin = 18;
 
 const eStore = new EStore();
 let win;
+let mqtt_client;
 
 const env = process.env;
 const env_temp_sensor_ip = env.TEMP_SENSOR_IP;
@@ -45,14 +46,10 @@ const gpio_pin = {
 	gate: 14
 };
 
-const mqtt_client_id = 'ijsp_' + Math.random().toString(16).slice(3);
+const mqtt_client_type = gate_enabled ? 'scan' : 'terminal';
+const mqtt_client_id = mqtt_client_type + '_' + Math.random().toString(16).slice(3);
 
-const mqtt_client = mqtt.connect('mqtt://' + env_mqtt_host + ':1883', {
-  clientId: mqtt_client_id,
-  clean: true,
-  connectTimeout: 4000,
-  reconnectPeriod: 2000,
-})
+console.log()
 
 if (typeof feed_A !== 'string' || !feed_A){
 	throw 'No FEED_A set!';
@@ -109,9 +106,14 @@ const createWindow = () => {
 			try {
 				// listen_gpio(win);
 				listen_mfrc(win);
-				mqtt_a(win);
+				mqtt_gate(win);
 			} catch (err) {
-				console.log('gpio fail.')
+				console.log(err);
+			}
+		} else {
+			try {
+				mqtt_terminal();
+			} catch (err) {
 				console.log(err);
 			}
 		}
@@ -615,12 +617,65 @@ const listen_gpio = (win) => {
 	}
 };
 
-const mqtt_a = (win) => {
+const mqtt_init = (win) => {
+	console.log('mqtt_init, client_id: ' + mqtt_client_id);
+
+	mqtt_client = mqtt.connect('mqtt://' + env_mqtt_host, {
+		clientId: mqtt_client_id,
+		clean: true,
+		keepalive: 30,
+		connectTimeout: 10000,
+		reconnectPeriod: 3000,
+		protocolId: 'MQIsdp',
+		protocolVersion: 3,
+		username: "",
+		password: "",
+		debug: true
+	});
+
+	mqtt_client.on('connect', () => {
+		console.log('MQTT CONNECTED');
+	});
+
+	mqtt_client.on('error', (err) => {
+		console.log('MQTT ERR:');
+		console.log(err);
+	});
+
+	mqtt_client.on('reconnect', () => {
+		console.log('MQTT reconnecting...' + mqtt_client_id);
+	});
+};
+
+const mqtt_terminal = (win) => {
+	mqtt_init(win);
+	console.log('mqtt_terminal');
+
 	mqtt_client.on('connect', () => {
 		console.log('MQTT CONNECTED');
 		mqtt_client.subscribe([
-			'g/s/in', 'g/t/in/p',
-			'gate.is_open', 'gate.is_closed'], () => {
+			'g/s/in', 'g/p', 'scan/p'], () => {
+			console.log('mqtt subscribed to topics');
+		});
+
+		setInterval(() => {
+			console.log('mqtt pub -t terminal/p -m ' + mqtt_client_id);
+			mqtt_client.publish('terminal/p', mqtt_client_id);
+		}, 1000);
+	});
+};
+
+const mqtt_gate = (win) => {
+	mqtt_init(win);
+
+	console.log('mqtt_gate');
+
+	mqtt_client.on('connect', () => {
+		console.log('MQTT CONNECTED');
+		mqtt_client.subscribe([
+			'g/s/in',
+			'g/t/in/p',
+			'g/t/out/p'], () => {
 			console.log('mqtt subscribed to topics');
 		});
 
@@ -689,7 +744,7 @@ const mqtt_a = (win) => {
 		console.log('MQTT connection err: ');
 		console.log(err);
 	});
-}
+};
 
 app.on('ready', () => {
 	createWindow();
