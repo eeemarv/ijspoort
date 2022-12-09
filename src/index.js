@@ -684,7 +684,12 @@ const mqtt_a = (win) => {
 			return;
 		}
 	});
-};
+
+	mqtt_client.on('error', (err) => {
+		console.log('MQTT connection err: ');
+		console.log(err);
+	});
+}
 
 app.on('ready', () => {
 	createWindow();
