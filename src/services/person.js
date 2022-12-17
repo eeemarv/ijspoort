@@ -58,7 +58,7 @@ const assist_person_map = {
     ignore: true, // not applicable
     key: "place_of_birth"
   },
-  geslacht: {
+  gender: {
     key: "gender",
     process: (v) => { return v.toLowerCase().replace('v', 'f'); }
   },

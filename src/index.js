@@ -104,7 +104,6 @@ const createWindow = () => {
 		listen_pcsc(win);
 		if (gate_enabled){
 			try {
-				// listen_gpio(win);
 				listen_mfrc(win);
 				mqtt_gate(win);
 			} catch (err) {
@@ -514,107 +513,6 @@ const listen_mfrc = (win) => {
 		console.log('MFRC522 nfc.on uid: ', res_uid);
 		win.webContents.send('nfc.on', {uid: res_uid});
 	}, 200);
-};
-
-const listen_gpio = (win) => {
-	console.log('listen_gpio');
-
-	let block_sens_in = false;
-	let block_sens_out = false;
-
-	try {
-		const gpio_sens_in = new Gpio(gpio_pin.sens_in, 'in', 'rising', {
-			activeLow: true
-		});
-
-		const gpio_sens_out = new Gpio(gpio_pin.sens_out, 'in', 'rising', {
-			activeLow: true
-		});
-
-		const gpio_gate = new Gpio(gpio_pin.gate, 'high');
-
-		gpio_sens_in.watch((err, value) => {
-			if (err){
-				console.log('err sens.in');
-				console.log(err);
-				return;
-			}
-			if (block_sens_in){
-				console.log('sens.in debounced');
-				return;
-			}
-			setTimeout(() => {
-				block_sens_in = false;
-			}, 2000);
-			block_sens_in = true;
-			console.log('sens.in', value);
-			win.webContents.send('sens.in');
-		});
-
-		gpio_sens_out.watch((err, value) => {
-			if (err){
-				console.log('err sens.out');
-				console.log(err);
-				return;
-			}
-			if (block_sens_out){
-				console.log('sens.out debounced');
-				return;
-			}
-			setTimeout(() => {
-				block_sens_out = false;
-			}, 2000);
-			block_sens_out = true;
-			console.log('sens.out', value);
-			win.webContents.send('sens.out');
-		});
-
-		ipcMain.on('gate.open', async (event) => {
-			console.log('gate.open');
-			try {
-				await gpio_gate.writeSync(1);
-				event.reply('gate.is_open');
-				console.log('gate.is_open');
-			} catch (err) {
-				console.log('gate.open.err');
-				console.log(err);
-				event.reply('gate.open.err', err);
-			}
-		});
-
-		ipcMain.on('gate.open_once_with_timer', async (event) => {
-			console.log('gate.open_once_with_timer');
-			try {
-
-			} catch (err) {
-				console.log('gate.open_once_with_timer.err');
-				console.log(err);
-				event.reply('gate.open_once_with_timer.err', err);
-			}
-		})
-
-		ipcMain.on('gate.close', async (event) => {
-			console.log('gate.close');
-			try {
-				await gpio_gate.writeSync(0);
-				event.reply('gate.is_closed');
-				console.log('gate.is_closed');
-			} catch (err) {
-				console.log('err gate.close');
-				console.log(err);
-				event.reply('gate.close.err', err);
-			}
-		});
-
-		process.on('SIGINT', () => {
-			gpio_sens_in.unexport();
-			gpio_sens_out.unexport();
-			gpio_gate.unexport();
-		});
-	} catch (e){
-		console.log('gpio fail');
-		console.log(e);
-	}
 };
 
 const mqtt_init = (win) => {
