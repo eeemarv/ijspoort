@@ -2,7 +2,7 @@
   const env = window.require('electron').remote.process.env;
   const { ipcRenderer } = window.require('electron');
   import { Button, Modal, ModalBody, ModalHeader } from 'sveltestrap';
-  import { db_reg, db_nfc, db_person, db_gate, db_tag, db_sensor } from '../services/db';
+  import { db_reg, db_nfc, db_person, db_gate, db_tag } from '../services/db';
   import { download } from './../services/download';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
@@ -46,12 +46,6 @@
       });
     }).then((res) => {
       dbs.db_tag = res;
-      return db_sensor.allDocs({
-        include_docs: true,
-        include_attachments: true
-      });
-    }).then((res) => {
-      dbs.db_sensor = res;
       return true;
     }).then(() => {
       let time_str = (new Date()).getTime().toString();
@@ -74,7 +68,7 @@
       Export Db JSON
     </Button>
     <p>
-      db_nfc, db_reg, db_person, db_gate, db_tag, db_sensor
+      db_nfc, db_reg, db_person, db_gate, db_tag
     </p>
   </ModalBody>
   <ModalFooterClose on:click={toggle} />

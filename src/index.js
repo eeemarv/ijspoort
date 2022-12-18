@@ -4,12 +4,6 @@ const EStore = require('electron-store');
 const { NFC, TAG_ISO_14443_3, KEY_TYPE_A, KEY_TYPE_B } = require('nfc-pcsc');
 const crypto = require('crypto');
 const path = require('path');
-const cron = require('node-cron');
-const axios = require('axios');
-const flatten = require('flat');
-const { Gpio } = require('onoff');
-const ping = require('ping');
-const needle = require('needle');
 const MFRC522 = require('mfrc522-rpi');
 const SoftSPI = require("rpi-softspi");
 const rpio = require('rpio');
@@ -21,15 +15,6 @@ let win;
 let mqtt_client;
 
 const env = process.env;
-const env_temp_sensor_ip = env.TEMP_SENSOR_IP;
-const env_owm_apikey = env.OWM_APIKEY;
-const env_owm_location = env.OWM_LOCATION;
-const env_thingspeak_apikey = env.THINGSPEAK_APIKEY;
-const env_db_sensor_prefix = env.DB_SENSOR_PREFIX;
-const env_db_local_prefix = env.DB_LOCAL_PREFIX;
-const env_temp_display_ips = env.TEMP_DISPLAY_IPS;
-const env_temp_sensor_cron_interval = env.TEMP_SENSOR_CRON_INTERVAL;
-const env_temp_display_test = env.TEMP_DISPLAY_TEST && env.TEMP_DISPLAY_TEST === '1';
 const env_mqtt_host = env.MQTT_HOST;
 
 const debug_enabled = env?.DEBUG === '1';
@@ -40,16 +25,8 @@ const read_a_write_b_access = '78778800';
 const transport_access = 'FF078000';
 const transport_key = 'ffffffffffff';
 
-const gpio_pin = {
-	sens_in: 23,
-	sens_out: 24,
-	gate: 14
-};
-
 const mqtt_client_type = gate_enabled ? 'scan' : 'terminal';
 const mqtt_client_id = mqtt_client_type + '_' + Math.random().toString(16).slice(3);
-
-console.log()
 
 if (typeof feed_A !== 'string' || !feed_A){
 	throw 'No FEED_A set!';
@@ -515,7 +492,7 @@ const listen_mfrc = (win) => {
 	}, 200);
 };
 
-const mqtt_init = (win) => {
+const mqtt_init = () => {
 	console.log('mqtt_init, client_id: ' + mqtt_client_id);
 
 	mqtt_client = mqtt.connect('mqtt://' + env_mqtt_host, {
@@ -533,6 +510,12 @@ const mqtt_init = (win) => {
 
 	mqtt_client.on('connect', () => {
 		console.log('MQTT CONNECTED');
+
+		mqtt_client.subscribe([
+			'we/water_temp',
+			'we/air_temp'], () => {
+			console.log('mqtt subscribed to topics we/water_temp, we/air_temp');
+		});
 	});
 
 	mqtt_client.on('error', (err) => {
@@ -543,10 +526,23 @@ const mqtt_init = (win) => {
 	mqtt_client.on('reconnect', () => {
 		console.log('MQTT reconnecting...' + mqtt_client_id);
 	});
+
+	mqtt_client.on('message', (topic, message_buff) => {
+		let msg = message_buff.toString();
+
+		console.log('mqtt rx -t ' + topic + ' -m ' + msg);
+		if (topic === 'we/water_temp'){
+			win.webContents.send('water_temp', parseFloat(msg));
+			return;
+		}
+		if (topic === 'we/air_temp'){
+			win.webContents.send('air_temp', parseFloat(msg));
+		}
+	});
 };
 
 const mqtt_terminal = (win) => {
-	mqtt_init(win);
+	mqtt_init();
 	console.log('mqtt_terminal');
 
 	mqtt_client.on('connect', () => {
@@ -564,7 +560,7 @@ const mqtt_terminal = (win) => {
 };
 
 const mqtt_gate = (win) => {
-	mqtt_init(win);
+	mqtt_init();
 
 	console.log('mqtt_gate');
 
@@ -613,13 +609,13 @@ const mqtt_gate = (win) => {
 	});
 
 	mqtt_client.on('message', (topic, message_buff) => {
-		message = message_buff.toString();
+		let msg = message_buff.toString();
 
 		if (topic === 'g/s/in'){
-			if (message === 'closed'){
+			if (msg === 'closed'){
 				win.webContents.send('gate.is_closed');
 			}
-			if (message === 'open'){
+			if (msg === 'open'){
 				win.webContents.send('gate.is_open');
 			}
 			return;
@@ -707,216 +703,3 @@ build_menu();
 ipcMain.on('rebuild_menu', () => {
 	build_menu();
 });
-
-/**
- * fetch and store sensor data
- * (disabled, functionality will be moved to another device)
- */
-
-const sensor_field_map = {
-	water_temp: {
-		sensor: "avg",
-		field: 1
-	},
-	air_temp: {
-		owm: "main.temp",
-		field: 2
-	},
-	pressure: {
-		owm: "main.pressure",
-		field: 3
-	},
-	humidity: {
-		owm: "main.humidity",
-		field: 4
-	},
-	wind_speed: {
-		owm: "wind.speed",
-		field: 5
-	},
-	rain_1h: {
-		owm: "rain.1h",
-		field: 6
-	},
-	clouds: {
-		owm: "clouds.all",
-		field: 7
-	},
-	gate_count: {
-		gate_sens: "gate_count",
-		field: 8
-	}
-};
-
-if (false && ((env_owm_apikey
-	&& env_owm_location
-	&& env_thingspeak_apikey
-	&& env_temp_sensor_ip)
-		|| env_temp_display_test)
-	&& gate_enabled
-	&& env_db_local_prefix
-	&& env_db_sensor_prefix
-	&& (env_db_local_prefix === env_db_sensor_prefix)
-){
-	const sensor_unvalidate_time = 900000; // 15 minutes
-
-	let display_ip_ary = [];
-	let display_data = {
-		water: {},
-		air: {}
-	};
-
-	if (env_temp_display_ips){
-		display_ip_ary = env_temp_display_ips.split(',');
-	}
-
-	const cron_interval = env_temp_sensor_cron_interval ?? '5';
-
-	console.log('Cron sensor.log enabled, interval ' + cron_interval + ' minutes');
-
-	cron.schedule('*/' + cron_interval + ' * * * *', () => {
-		win.webContents.send('sensor_log.gate_count.get');
-		console.log('sensor_log.gate_count.get');
-	});
-
-	ipcMain.on('sensor_log.gate_count.fail', () => {
-		console.log('sensor_log.gate_count.fail');
-	});
-
-	ipcMain.on('sensor_log.gate_count.ok', async (event, gate_count) => {
-		console.log('sensor_log.gate_count.ok');
-
-		if (env_temp_display_test){
-			console.log('sensor_log blocked by env_temp_display_test');
-			return;
-		}
-
-		const sensor_item = {};
-		const thingspeak_item = {};
-
-		sensor_item.gate_count = gate_count;
-
-		try {
-			let sens_resp = await axios.get('http://' + env_temp_sensor_ip + '/as');
-			if (sens_resp && sens_resp.data && sens_resp.data.hasOwnProperty('avg')){
-				sensor_item.water_temp = sens_resp.data.avg;
-			}
-
-			let owm_resp = await axios.get('http://api.openweathermap.org/data/2.5/weather?units=metric&lang=nl&q=' + env_owm_location + '&appid=' + env_owm_apikey);
-			if (owm_resp && owm_resp.data){
-				console.log('-- owm data --');
-				console.log(owm_resp.data);
-				let owm_data = flatten(owm_resp.data);
-				for(const prp in sensor_field_map){
-					if (sensor_field_map[prp].hasOwnProperty('owm')){
-						if (owm_data.hasOwnProperty(sensor_field_map[prp].owm)){
-							sensor_item[prp] = owm_data[sensor_field_map[prp].owm];
-						} else if (prp == 'rain_1h'){
-							sensor_item[prp] = 0;
-						}
-					}
-				}
-			}
-
-			thingspeak_item.api_key = env_thingspeak_apikey;
-
-			for (const k in sensor_item){
-				let tp_key = sensor_field_map[k].field;
-				thingspeak_item['field' + tp_key] = sensor_item[k];
-			}
-
-			await axios.post('https://api.thingspeak.com/update.json', thingspeak_item);
-
-			if (Object.keys(sensor_item).length){
-				console.log('sensor_log.new_item', sensor_item);
-				win.webContents.send('sensor_log.new_item', sensor_item);
-			} else {
-				console.log('sensor_item empty');
-			}
-		} catch (err) {
-			console.log('-- error --');
-			console.log(err);
-		}
-
-		if ('water_temp' in sensor_item){
-			display_data.water.value = sensor_item.water_temp;
-			display_data.water.ts = (new Date()).getTime();
-		}
-		if ('air_temp' in sensor_item){
-			display_data.air.value = sensor_item.air_temp;
-			display_data.air.ts = (new Date()).getTime();
-		}
-	});
-
-	let display_request_index = 0;
-
-	setInterval(() => {
-		if (!display_ip_ary.length){
-			return;
-		}
-
-		if (display_request_index >= (display_ip_ary.length * 2)){
-			display_request_index = 0;
-		}
-
-		let sensor_key = ['water', 'air'][display_request_index % 2];
-		let display_index = Math.floor(display_request_index / 2);
-		let ip = display_ip_ary[display_index];
-		let ts = (new Date()).getTime();
-
-		if (env_temp_display_test){
-			display_data[sensor_key].value = Math.random() * 100;
-			display_data[sensor_key].ts = (new Date()).getTime();
-		}
-
-		let sensor_valid = false;
-
-		if (typeof display_data[sensor_key].ts === 'number'
-			&& ts < (sensor_unvalidate_time + display_data[sensor_key].ts)){
-			sensor_valid = true;
-		}
-
-		if (sensor_valid){
-			console.log('sensor valid ' + sensor_key + ' ' + display_data[sensor_key].value);
-		} else {
-			console.log('sensor not valid ' + sensor_key);
-		}
-
-		ping.promise.probe(ip, {timeout: 1}).then((is_alive) => {
-			if (is_alive){
-				console.log('display ' + ip + ' alive');
-
-				let display_str = '-';
-
-				if (sensor_valid){
-					display_str = display_data[sensor_key].value.toLocaleString('nl-NL', {
-						minimumFractionDigits: 1,
-						maximumFractionDigits: 1
-					});
-				}
-
-				let get = ip;
-				get += '/l';
-				get += sensor_key === 'water' ? '1' : '2';
-				get += '/';
-				get += display_str;
-
-				console.log('display ' + ip + ' (' + display_index + ') ' + sensor_key + ': ' + display_str);
-
-				needle('get', get).then((res) => {
-					console.log('display response ', res);
-				}).catch((err) => {
-					console.log('display request err ', err);
-				});
-
-			} else {
-				console.log('ping ' + ip + ' not alive');
-			}
-		}).catch((err) => {
-			console.log('ping err ' + err);
-		});
-
-		display_request_index++;
-	}, 10000);
-
-}

@@ -4,7 +4,6 @@
     import { db_remote_nfc } from '../services/db';
     import { db_remote_gate } from '../services/db';
     import { db_remote_tag } from '../services/db';
-    import { db_remote_sensor } from '../services/db';
     import { put_design_person_search } from './../services/design_person';
     import { put_design_reg_search } from './../services/design_reg';
     import { put_design_nfc_search } from './../services/design_nfc';
@@ -40,11 +39,6 @@
             console.log(err);
         });
         db_remote_tag.info().then((info) => {
-            console.log(info);
-        }).catch((err) => {
-            console.log(err);
-        });
-        db_remote_sensor.info().then((info) => {
             console.log(info);
         }).catch((err) => {
             console.log(err);

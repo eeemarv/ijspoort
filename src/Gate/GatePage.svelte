@@ -12,7 +12,6 @@
   import GateModal from '../GateModal/GateModal.svelte';
   import GateConfig from '../GateConfig/GateConfig.svelte';
   import TemperatureCard from '../Common/TemperatureCard.svelte';
-  import GateDbSensorLog from './GateDbSensorLog.svelte';
   import { onMount } from 'svelte';
 
   let cmp_gate_config;
@@ -46,8 +45,6 @@
     }
   });
 </script>
-
-<GateDbSensorLog />
 
 <GateModal
   on:trigger_open_gate={handle_open_gate_by_nfc}
