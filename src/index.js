@@ -25,8 +25,8 @@ const read_a_write_b_access = '78778800';
 const transport_access = 'FF078000';
 const transport_key = 'ffffffffffff';
 
-const mqtt_client_type = gate_enabled ? 'scan' : 'terminal';
-const mqtt_client_id = mqtt_client_type + '_' + Math.random().toString(16).slice(3);
+const mqtt_client_type = gate_enabled ? 'scan' : 'term';
+const mqtt_client_id = mqtt_client_type + '_' + Math.random().toString(16).slice(3).substring(0,4);
 
 if (typeof feed_A !== 'string' || !feed_A){
 	throw 'No FEED_A set!';
@@ -88,7 +88,7 @@ const createWindow = () => {
 			}
 		} else {
 			try {
-				mqtt_terminal();
+				mqtt_term();
 			} catch (err) {
 				console.log(err);
 			}
@@ -541,9 +541,9 @@ const mqtt_init = () => {
 	});
 };
 
-const mqtt_terminal = (win) => {
+const mqtt_term = (win) => {
 	mqtt_init();
-	console.log('mqtt_terminal');
+	console.log('mqtt_term');
 
 	mqtt_client.on('connect', () => {
 		console.log('MQTT CONNECTED');
@@ -553,8 +553,8 @@ const mqtt_terminal = (win) => {
 		});
 
 		setInterval(() => {
-			console.log('mqtt pub -t terminal/p -m ' + mqtt_client_id);
-			mqtt_client.publish('terminal/p', mqtt_client_id);
+			console.log('mqtt pub -t term/p -m ' + mqtt_client_id);
+			mqtt_client.publish('term/p', mqtt_client_id);
 		}, 5000);
 	});
 };
