@@ -1,5 +1,8 @@
 <script>
-  import { Button, ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader, Row, Col, Badge } from 'sveltestrap';
+  import { Button, ListGroup, ListGroupItem } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
+  import { Row, Col, Badge } from 'sveltestrap';
+  import { FormGroup, Label } from 'sveltestrap';
   import { db_reg } from '../services/db';
   import { person } from './../services/store';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
@@ -15,12 +18,13 @@
   let contains_manual_entry = false;
   let person_nfcs = {};
   let person_nfc_ary = [];
+  let list_length = 25;
 
+  const list_length_options = [10, 25, 50, 100, 250, 500, 1000, 2500, 5000];
   const nfc_colors = ['blue', 'pink', 'red', 'orange', 'yellow', 'green', 'cyan', 'grey'];
 
   const update_person_reg_cols = () => {
     person_reg_cols = [];
-    person_reg_count = 0;
     person_nfcs = {};
     person_nfc_ary = [];
 
@@ -46,7 +50,7 @@
       endkey: $person._id + '_',
       descending: true,
       include_docs: true,
-      limit: 40,
+      limit: list_length,
       reduce: false
     }).then((res) => {
       console.log('REG search/count_by_person_id_and_ts_epoch');
@@ -101,10 +105,17 @@
   <ModalBody>
     <Row>
       <Col>
+        <FormGroup>
+          <Label for=list_length>Toon maximaal aantal in lijst</Label>
+          <select id=list_length bind:value={list_length} class=form-control name=list_length on:change={() => update_person_reg_cols()}>
+            {#each list_length_options as l (l)}
+              <option>{l}</option>
+            {/each}
+          </select>
+        </FormGroup>
+      </Col>
+      <Col>
         Totaal: {person_reg_count}
-        {#if person_reg_count > 40}
-          (enkel de laatste 40 worden getoond)
-        {/if}
       </Col>
     </Row>
     <Row>
@@ -117,7 +128,7 @@
                 {#if reg.doc.nfc_uid}
                   <span
                     class="badge bg-{person_nfcs[reg.doc.nfc_uid].color} me-2"
-                    title={reg.doc.nfc_uid}
+                    title="NFC {reg.doc.nfc_uid}"
                   >
                     {person_nfcs[reg.doc.nfc_uid].label}
                   </span>
@@ -129,11 +140,6 @@
         </Col>
       {/each}
     </Row>
-    {#if person_reg_cols.length === 0}
-      <p>
-        Nog geen registraties.
-      </p>
-    {/if}
   </ModalBody>
   <ModalFooterClose on:click={toggle} >
     <div slot=left>
