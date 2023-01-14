@@ -13,10 +13,16 @@
   let person_reg_cols = [];
   let person_reg_count = 0;
   let contains_manual_entry = false;
+  let person_nfcs = {};
+  let person_nfc_ary = [];
+
+  const nfc_colors = ['blue', 'pink', 'red', 'orange', 'yellow', 'green', 'cyan', 'grey'];
 
   const update_person_reg_cols = () => {
     person_reg_cols = [];
     person_reg_count = 0;
+    person_nfcs = {};
+    person_nfc_ary = [];
 
     if (!$person){
       open = false;
@@ -40,9 +46,10 @@
       endkey: $person._id + '_',
       descending: true,
       include_docs: true,
-      limit: 30,
+      limit: 40,
       reduce: false
     }).then((res) => {
+      console.log('REG search/count_by_person_id_and_ts_epoch');
       console.log(res);
       let regs = res.rows;
       let col_size = Math.ceil(regs.length / 3);
@@ -51,7 +58,20 @@
       regs.forEach((r) => {
         if (r.doc.manual){
           contains_manual_entry = true;
-        };
+          return;
+        }
+        if (typeof r.doc.nfc_uid === 'undefined'){
+          return;
+        }
+        if (typeof person_nfcs[r.doc.nfc_uid] === 'undefined'){
+          let nfc_index = person_nfc_ary.length;
+          person_nfcs[r.doc.nfc_uid] = {
+            color: nfc_colors[nfc_index % nfc_colors.length],
+            label: String.fromCharCode(65 + nfc_index),
+            index: nfc_index
+          };
+          person_nfc_ary = [...person_nfc_ary, r.doc.nfc_uid];
+        }
       });
       while (regs.length){
         person_reg_cols = [...person_reg_cols, regs.splice(0, col_size)];
@@ -82,8 +102,8 @@
     <Row>
       <Col>
         Totaal: {person_reg_count}
-        {#if person_reg_count > 30}
-          (enkel de laatste 30 worden getoond)
+        {#if person_reg_count > 40}
+          (enkel de laatste 40 worden getoond)
         {/if}
       </Col>
     </Row>
@@ -94,6 +114,14 @@
             {#each col as reg}
               <ListGroupItem>
                 <RegTimeTag reg={reg.doc} />
+                {#if reg.doc.nfc_uid}
+                  <span
+                    class="badge bg-{person_nfcs[reg.doc.nfc_uid].color} me-2"
+                    title={reg.doc.nfc_uid}
+                  >
+                    {person_nfcs[reg.doc.nfc_uid].label}
+                  </span>
+                {/if}
                 <LocaleDateString ts={reg.doc.ts_epoch} title="datum" />
               </ListGroupItem>
             {/each}
@@ -126,7 +154,7 @@
     disabled={person_reg_count === 0}
     color={contains_manual_entry ? 'warning' : 'accent'}
     on:click={toggle}
-    title="Bekijk registraties{contains_manual_entry ? ', bevat manuele in laatste 30' : ''}"
+    title="Bekijk registraties{contains_manual_entry ? ', bevat manuele in laatste 40' : ''}"
   >
     Registraties {person_reg_count}
   </Button>

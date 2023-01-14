@@ -16,7 +16,6 @@
   import { tag_types_enabled } from '../services/store';
   import { tag_types } from '../services/store';
 
-  const dispatch = createEventDispatcher();
   const { setActiveTab } = getContext('tabContent');
 
   export let tab;

@@ -21,6 +21,11 @@ $theme-colors: (
   grey: $gray-600
 );
 
+$modal-sm:                          300px;
+$modal-md:                          500px;
+$modal-lg:                          800px;
+$modal-xl:    1300px;                      // 1140px;
+
 $input-bg: #446;
 $input-border-color: #ddd;
 $input-color: white;
