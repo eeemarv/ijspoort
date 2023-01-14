@@ -1,19 +1,15 @@
 <script>
-  import NfcCount from './NfcCount.svelte';
+  import { nfc_count } from '../services/store';
 
   export let font_size = '1em';
-
-  let nfc_count = 0;
 </script>
-
-<NfcCount bind:nfc_count />
 
 <span
   class="badge bg-accent"
   title="Totaal NFC-tags"
   style="--font-size: {font_size};"
 >
-  {nfc_count}
+  {$nfc_count}
 </span>
 
 <style>

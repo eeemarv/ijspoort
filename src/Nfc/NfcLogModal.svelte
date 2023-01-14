@@ -8,15 +8,17 @@
   import { TabContent, TabPane } from 'sveltestrap';
   import { FormGroup, Label } from 'sveltestrap';
   import { db_nfc, db_person } from '../services/db';
-  import { nfc_uid, person } from '../services/store';
+  import { nfc_uid } from '../services/store';
+  import { person } from '../services/store';
+  import { nfc_count } from '../services/store';
+  import { nfc_4b_count } from '../services/store';
+  import { nfc_7b_count } from '../services/store';
   import NfcTag from './NfcTag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
   import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
-  let nfc_count = 0;
-  let nfc_count_4b = 0;
-  let nfc_count_7b = 0;
+  let nfc_list_count = 0;
   let nfcs = [];
   let persons = {};
   let nfc_count_week = 0;
@@ -41,7 +43,7 @@
     person_ary = [];
 
     if (!c_4b && !c_7b){
-      nfc_count = 0;
+      nfc_list_count = 0;
       nfc_count_week = 0;
       nfc_count_month = 0;
       nfcs = [];
@@ -61,40 +63,40 @@
       tab_nfc_count = parseInt(tab.substring(10));
     }
 
-    db_nfc.query(search_prefix + 'by_ts_epoch', {
-      startkey: ts_epoch.getTime() + 86400000,
-      descending: true,
-      include_docs: true,
-      limit: tab === 'nfc_count' ? list_length : 0,
-      reduce: false
-    }).then((res) => {
-      console.log('nfc limit ' + list_length);
-      console.log(res);
-      nfc_count = res.total_rows;
-      if (tab !== 'nfc_count'){
-        nfcs = [];
-        throw 'escape from nfc_count fetch persons';
-      }
-      nfcs = res.rows;
-      console.log('nfcs', nfcs);
-      let person_keys = [];
-      nfcs.forEach((v) => {
-        person_keys.push(v.doc.person_id);
+    if (tab === 'nfc_count'){
+      db_nfc.query(search_prefix + 'by_ts_epoch', {
+        startkey: ts_epoch.getTime() + 86400000,
+        descending: true,
+        include_docs: true,
+        limit: list_length,
+        reduce: false
+      }).then((res) => {
+        console.log('nfc limit ' + list_length);
+        console.log(res);
+        nfc_list_count = res.total_rows;
+        nfcs = res.rows;
+        console.log('nfcs', nfcs);
+        let person_keys = [];
+        nfcs.forEach((v) => {
+          person_keys.push(v.doc.person_id);
+        });
+        console.log('person_keys', person_keys);
+        return db_person.allDocs({
+          keys: person_keys,
+          include_docs: true
+        });
+      }).then((res) => {
+        console.log('persons (nfcs)');
+        console.log(res);
+        res.rows.forEach((p) => {
+          persons[p.id] = {...p.doc};
+        });
+      }).catch((err) => {
+        console.log(err);
       });
-      console.log('person_keys', person_keys);
-      return db_person.allDocs({
-        keys: person_keys,
-        include_docs: true
-      });
-    }).then((res) => {
-      console.log('persons (nfcs)');
-      console.log(res);
-      res.rows.forEach((p) => {
-        persons[p.id] = {...p.doc};
-      });
-    }).catch((err) => {
-      console.log(err);
-    });
+    } else {
+      nfcs = [];
+    }
 
     if (tab === 'nfc_count'){
       db_nfc.query(search_prefix + 'by_ts_epoch', {
@@ -196,6 +198,7 @@
     c_7b;
     tab;
     open;
+    $nfc_count;
     update_nfcs();
   }
 
@@ -224,13 +227,13 @@
         <div class=form-check title="Filter op tags met 4 byte UID">
           <input class=form-check-input type=checkbox id=c_4b bind:checked={c_4b}>
           <label class=form-check-label for=c_4b>
-            4b uid: {nfc_count_4b}
+            4b uid: {$nfc_4b_count}
           </label>
         </div>
         <div class=form-check title="Filter op tags met 7 byte UID">
           <input class=form-check-input type=checkbox id=c_7b bind:checked={c_7b}>
           <label class=form-check-label for=c_7b>
-            7b uid: {nfc_count_7b}
+            7b uid: {$nfc_7b_count}
           </label>
         </div>
       </Col>
@@ -238,7 +241,7 @@
     <TabContent pills on:tab={(e) => tab = e.detail}>
       <TabPane tabId=nfc_count active={tab === 'nfc_count'}>
         <span slot=tab>
-          Totaal: {nfc_count}
+          Totaal: {nfc_list_count}
         </span>
         <div>
           Laatste week

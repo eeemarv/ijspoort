@@ -83,3 +83,7 @@ export const tag_type_sorted_id_ary = writable([]);
 export const tag_person_sorted_ary = writable([]);
 export const tag_person_count_by_type = writable({});
 export const tag_nfc_auto_enabled = writable(false);
+
+export const nfc_count = writable(0);
+export const nfc_4b_count = writable(0);
+export const nfc_7b_count = writable(0);
