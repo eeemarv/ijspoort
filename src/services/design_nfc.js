@@ -6,20 +6,99 @@ const design_nfc_search_doc = {
   views: {
     count_by_person_id: {
       map: ((doc) => {
+        if (!doc.uid){
+          return;
+        }
+        emit(doc.person_id);
+      }).toString(),
+      reduce: '_count'
+    },
+    count_4b_by_person_id: {
+      map: ((doc) => {
+        if (!doc.uid){
+          return;
+        }
+        if (doc.uid.length !== 8){
+          return;
+        }
+        emit(doc.person_id);
+      }).toString(),
+      reduce: '_count'
+    },
+    count_7b_by_person_id: {
+      map: ((doc) => {
+        if (!doc.uid){
+          return;
+        }
+        if (doc.uid.length !== 14){
+          return;
+        }
         emit(doc.person_id);
       }).toString(),
       reduce: '_count'
     },
     count_total: {
       map: ((doc) => {
-        if(doc._id.startsWith('uid_')){
-          emit(true);
+        if (!doc.uid){
+          return;
         }
+        emit(true);
+      }).toString(),
+      reduce: '_count'
+    },
+    count_4b_total: {
+      map: ((doc) => {
+        if (!doc.uid){
+          return;
+        }
+        if (doc.uid.length !== 8){
+          return;
+        }
+        emit(true);
+      }).toString(),
+      reduce: '_count'
+    },
+    count_7b_total: {
+      map: ((doc) => {
+        if (!doc.uid){
+          return;
+        }
+        if (doc.uid.length !== 14){
+          return;
+        }
+        emit(true);
       }).toString(),
       reduce: '_count'
     },
     count_by_ts_epoch: {
       map: ((doc) => {
+        if (!doc.uid){
+          return;
+        }
+        emit(doc.ts_epoch);
+      }).toString(),
+      reduce: '_count'
+    },
+    count_4b_by_ts_epoch: {
+      map: ((doc) => {
+        if (!doc.uid){
+          return;
+        }
+        if (doc.uid.length !== 8){
+          return;
+        }
+        emit(doc.ts_epoch);
+      }).toString(),
+      reduce: '_count'
+    },
+    count_7b_by_ts_epoch: {
+      map: ((doc) => {
+        if (!doc.uid){
+          return;
+        }
+        if (doc.uid.length !== 14){
+          return;
+        }
         emit(doc.ts_epoch);
       }).toString(),
       reduce: '_count'

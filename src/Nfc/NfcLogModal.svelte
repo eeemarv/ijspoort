@@ -15,6 +15,8 @@
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
   let nfc_count = 0;
+  let nfc_count_4b = 0;
+  let nfc_count_7b = 0;
   let nfcs = [];
   let persons = {};
   let nfc_count_week = 0;
@@ -24,7 +26,9 @@
   let tab = 'nfc_count';
 
   let open = false;
-  let list_length = 5;
+  let c_4b = true;
+  let c_7b = true;
+  let list_length = 10;
   const list_length_options = [5, 10, 25, 50, 100, 250, 500, 1000, 2500];
 
   export const toggle = () => (open = !open);
@@ -32,13 +36,32 @@
   const update_nfcs = () => {
     const ts_epoch = new Date();
     let tab_nfc_count = undefined;
+    let search_prefix = 'search/count_';
+
     person_ary = [];
+
+    if (!c_4b && !c_7b){
+      nfc_count = 0;
+      nfc_count_week = 0;
+      nfc_count_month = 0;
+      nfcs = [];
+      nfc_person_count_ary = [];
+      return;
+    }
+
+    if (!(c_4b && c_7b)){
+      if (c_4b){
+        search_prefix += '4b_';
+      } else {
+        search_prefix += '7b_';
+      }
+    }
 
     if (tab.startsWith('nfc_count_')){
       tab_nfc_count = parseInt(tab.substring(10));
     }
 
-    db_nfc.query('search/count_by_ts_epoch', {
+    db_nfc.query(search_prefix + 'by_ts_epoch', {
       startkey: ts_epoch.getTime() + 86400000,
       descending: true,
       include_docs: true,
@@ -74,7 +97,7 @@
     });
 
     if (tab === 'nfc_count'){
-      db_nfc.query('search/count_by_ts_epoch', {
+      db_nfc.query(search_prefix + 'by_ts_epoch', {
         endkey: ts_epoch.getTime() + 86400000,
         startkey: ts_epoch.getTime() - (86400000 * 7),
       }).then((res) => {
@@ -91,7 +114,7 @@
     }
 
     if (tab === 'nfc_count'){
-      db_nfc.query('search/count_by_ts_epoch', {
+      db_nfc.query(search_prefix + 'by_ts_epoch', {
         endkey: ts_epoch.getTime() + 86400000,
         startkey: ts_epoch.getTime() - (86400000 * 30),
       }).then((res) => {
@@ -107,7 +130,7 @@
       });
     }
 
-    db_nfc.query('search/count_by_person_id', {
+    db_nfc.query(search_prefix + 'by_person_id', {
       group: true
     }).then((res) => {
       console.log('COUNT_BY_PERSON_ID');
@@ -168,12 +191,11 @@
     });
   };
 
-  $: if (open){
-    update_nfcs();
-  }
-
   $: {
-    console.log(tab);
+    c_4b;
+    c_7b;
+    tab;
+    open;
     update_nfcs();
   }
 
@@ -187,73 +209,85 @@
     Geactiveerde NFC tags
   </ModalHeader>
   <ModalBody>
-    {#if nfc_count }
-      <FormGroup>
-        <Label for=list_length>Toon aantal in lijst (maximum)</Label>
-        <select id=list_length bind:value={list_length} class=form-control name=list_length on:change={() => update_nfcs()}>
-          {#each list_length_options as l (l)}
-            <option>{l}</option>
+    <Row>
+      <Col>
+        <FormGroup>
+          <Label for=list_length>Toon aantal in lijst (maximum)</Label>
+          <select id=list_length bind:value={list_length} class=form-control name=list_length on:change={() => update_nfcs()}>
+            {#each list_length_options as l (l)}
+              <option>{l}</option>
+            {/each}
+          </select>
+        </FormGroup>
+      </Col>
+      <Col>
+        <div class=form-check title="Filter op tags met 4 byte UID">
+          <input class=form-check-input type=checkbox id=c_4b bind:checked={c_4b}>
+          <label class=form-check-label for=c_4b>
+            4b uid: {nfc_count_4b}
+          </label>
+        </div>
+        <div class=form-check title="Filter op tags met 7 byte UID">
+          <input class=form-check-input type=checkbox id=c_7b bind:checked={c_7b}>
+          <label class=form-check-label for=c_7b>
+            7b uid: {nfc_count_7b}
+          </label>
+        </div>
+      </Col>
+    </Row>
+    <TabContent pills on:tab={(e) => tab = e.detail}>
+      <TabPane tabId=nfc_count active={tab === 'nfc_count'}>
+        <span slot=tab>
+          Totaal: {nfc_count}
+        </span>
+        <div>
+          Laatste week
+            <Badge color=accent>
+              {nfc_count_week}
+            </Badge>
+          Laatste maand
+            <Badge color=accent>
+              {nfc_count_month}
+            </Badge>
+        </div>
+        <ListGroup>
+          {#each nfcs as n(n.key)}
+            <SelectableListGroupItem
+              active={$person && $person._id === n.doc.person_id}
+              on:click={() => $person = persons[n.doc.person_id]}
+            >
+              <Row>
+                <Col md=6>
+                  <NfcTag nfc={n.doc} />
+                </Col>
+                <Col>
+                  {#if persons[n.doc.person_id]}
+                    <PersonTag person={persons[n.doc.person_id]} show_member_year />
+                  {/if}
+                </Col>
+              </Row>
+            </SelectableListGroupItem>
           {/each}
-        </select>
-      </FormGroup>
-      <TabContent pills on:tab={(e) => tab = e.detail}>
-        <TabPane tabId=nfc_count active={tab === 'nfc_count'}>
-          <span slot=tab>
-            Totaal: {nfc_count}
-          </span>
-          <div>
-            Laatste week
-              <Badge color=accent>
-                {nfc_count_week}
-              </Badge>
-            Laatste maand
-              <Badge color=accent>
-                {nfc_count_month}
-              </Badge>
-          </div>
-          <ListGroup>
-            {#each nfcs as n}
-              <SelectableListGroupItem
-                active={$person && $person._id === n.doc.person_id}
-                on:click={() => $person = persons[n.doc.person_id]}
-              >
-                <Row>
-                  <Col md=6>
-                    <NfcTag nfc={n.doc} />
-                  </Col>
-                  <Col>
-                    {#if persons[n.doc.person_id]}
-                      <PersonTag person={persons[n.doc.person_id]} show_member_year />
-                    {/if}
-                  </Col>
-                </Row>
-              </SelectableListGroupItem>
-            {/each}
-          </ListGroup>
-        </TabPane>
-        {#each nfc_person_count_ary as np}
-        <TabPane tabId={'nfc_count_' + np.count_nfcs} active={tab === ('nfc_count_' + np.count_nfcs)}>
-          <span slot=tab title="{np.count_persons} {np.count_persons > 1 ? 'personen hebben' : 'persoon heeft'} {np.count_nfcs} {np.count_nfcs > 1 ? 'tags' : 'tag'}">
-            <Icon icon={userIcon} /> {np.count_persons} > {np.count_nfcs}
-          </span>
-          <ListGroup>
-            {#each np.person_ary as p}
-              <SelectableListGroupItem
-                active={$person && $person._id === p._id}
-                on:click={() => $person = p}
-              >
-                <PersonTag person={p} show_member_year />
-              </SelectableListGroupItem>
-            {/each}
-          </ListGroup>
-        </TabPane>
-        {/each}
-      </TabContent>
-    {:else}
-      <p>
-        Nog geen NFC tags geactiveerd.
-      </p>
-    {/if}
+        </ListGroup>
+      </TabPane>
+      {#each nfc_person_count_ary as np(np.count_nfcs)}
+      <TabPane tabId={'nfc_count_' + np.count_nfcs} active={tab === ('nfc_count_' + np.count_nfcs)}>
+        <span slot=tab title="{np.count_persons} {np.count_persons > 1 ? 'personen hebben' : 'persoon heeft'} {np.count_nfcs} {np.count_nfcs > 1 ? 'tags' : 'tag'}">
+          <Icon icon={userIcon} /> {np.count_persons} > {np.count_nfcs}
+        </span>
+        <ListGroup>
+          {#each np.person_ary as p(p._id)}
+            <SelectableListGroupItem
+              active={$person && $person._id === p._id}
+              on:click={() => $person = p}
+            >
+              <PersonTag person={p} show_member_year />
+            </SelectableListGroupItem>
+          {/each}
+        </ListGroup>
+      </TabPane>
+      {/each}
+    </TabContent>
   </ModalBody>
   <ModalFooterClose on:click={toggle} />
 </Modal>
