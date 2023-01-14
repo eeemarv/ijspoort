@@ -17,6 +17,8 @@
   import PersonSearchSimular from './PersonSearchSimular.svelte';
   import PersonTagList from './PersonTagList.svelte';
 
+  let group_ary = [];
+
   $: {
     $assist_import_year;
     ipcRenderer.send('rebuild_menu');
@@ -40,8 +42,14 @@
   $: {
     if (typeof $person === 'undefined'){
       $person_nfc_list = [];
+      group_ary = [];
     } else {
       console.log($person);
+      if ($person.group){
+        group_ary = $person.group.split(',');
+      } else {
+        group_ary = [];
+      }
     }
   }
 
@@ -175,11 +183,12 @@
         </ListGroupItem>
       {/if}
 
-      {#if $person.group}
-        <ListGroupItem title="werkgroep" class="py-2 bg-info">
-          {$person.group}
+      {#each group_ary as grp}
+        <ListGroupItem title="werkgroep" class="d-flex w-100 justify-content-between py-2 bg-info">
+          <div title="werkgroep">{grp}</div>
+          <PersonSearchSimular type=group group={grp}/>
         </ListGroupItem>
-      {/if}
+      {/each}
 
       {#if $person.team}
         <ListGroupItem title="ploeg" class="py-2 bg-primary">
@@ -206,7 +215,7 @@
     </ListGroup>
     <CardBody>
     </CardBody>
-    <div class="card-footer d-flex w-100 justify-content-end">
+    <div class="card-footer d-flex w-100 justify-content-between">
       <Button
         color=warning
         on:click={handle_click_manual_reg}

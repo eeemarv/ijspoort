@@ -13,6 +13,7 @@
   };
 
   export let type;
+  export let group = '';
   let search_key;
   let result_persons = [];
 
@@ -24,7 +25,8 @@
     phone_work: 'Gelijke telefoon van het werk',
     email: 'Gelijk email adres',
     email_work: 'Gelijk email adres van het werk',
-    address: 'Gelijk adres'
+    address: 'Gelijk adres',
+    group: 'Gelijke werkgroep',
   };
 
   const handle_select = (prs) => {
@@ -39,6 +41,8 @@
     }
     if (type === 'name'){
       search_key = $person.firstname + $person.surname;
+    } else if (type === 'group'){
+      search_key = group;
     } else {
       search_key = $person[type];
     }
@@ -63,8 +67,11 @@
     });
   };
 
-  $: if ($person) {
-    search_func();
+  $: {
+    group;
+    if ($person) {
+      search_func();
+    }
   }
 </script>
 
@@ -74,6 +81,8 @@
     {lang[type]}:
     {#if type === 'name'}
       <PersonName person={$person} />
+    {:else if type === 'group'}
+      {group}
     {:else}
       {$person[type]}
     {/if}

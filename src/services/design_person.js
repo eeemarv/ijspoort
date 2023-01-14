@@ -100,7 +100,26 @@ const design_person_search_doc = {
     count_by_address: {
       map: ((doc) => {
         let address = doc.address.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+        if (address === ''){
+          return;
+        }
         emit(address);
+      }).toString(),
+      reduce: '_count'
+    },
+    count_by_group: {
+      map: ((doc) => {
+        if (!doc.group){
+          return;
+        }
+        let group_ary = doc.group.split(',');
+        group_ary.forEach((g) => {
+          let group = g.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+          if (group === ''){
+            return;
+          }
+          emit(group);
+        });
       }).toString(),
       reduce: '_count'
     }
