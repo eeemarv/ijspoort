@@ -40,6 +40,10 @@
     }).then((res) => {
       console.log('person_reg_count');
       console.log(res);
+      if (res.rows.length === 0){
+        person_reg_count = 0;
+        return;
+      }
       person_reg_count = res.rows[0].value;
     }).catch((err) => {
       console.log(err);
@@ -92,6 +96,7 @@
 
   $: if (!$person){
     open === false;
+    person_reg_count = 0;
   }
 </script>
 
