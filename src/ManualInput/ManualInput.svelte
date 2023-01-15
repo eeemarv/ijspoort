@@ -6,9 +6,9 @@
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
   import { person, focus_year } from './../services/store';
+  import { focus_year_filter_enabled } from './../services/store';
   import { tag_type_enabled_sorted_id_ary } from './../services/store';
 
-  let year_filter_enabled = false;
   let select_years = [];
   let el_manual;
   let el_group;
@@ -19,7 +19,7 @@
   const searchUpdateEmitter = new SearchUpdateEmitter();
 
   $: {
-    year_filter_enabled;
+    $focus_year_filter_enabled;
     $focus_year;
     searchUpdateEmitter.emit('update');
   }
@@ -43,7 +43,7 @@
         if (docs[v.id] || Object.keys(docs).length > 10){
           return;
         };
-        if (year_filter_enabled && !v.doc.member_year['y' + $focus_year]){
+        if ($focus_year_filter_enabled && !v.doc.member_year['y' + $focus_year]){
           return;
         }
         $tag_type_enabled_sorted_id_ary.forEach((tid) => {
@@ -145,8 +145,8 @@
       <div class="form-check ml-2">
         <input class=form-check-input
           type=checkbox
-          id=year_filter_enabled
-          bind:checked={year_filter_enabled}
+          id=focus_year_filter_enabled
+          bind:checked={$focus_year_filter_enabled}
           title="Filter op actief lid in {$focus_year}"
         />
         <label class=form-check-label for=yaer_filter_enabled>

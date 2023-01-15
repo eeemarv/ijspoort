@@ -63,14 +63,16 @@ export const nfc_read_test_enabled = create_coupled_estore('nfc_read_test_enable
 export const temp_display_enabled = create_coupled_estore('temp_display_enabled', false);
 export const assist_import_year = create_coupled_estore('assist_import_year', 2022, 2016, 2030);
 export const focus_year = create_coupled_estore('focus_year', 2022, 2016, 2030);
+export const focus_year_filter_enabled = create_coupled_estore('focus_year_filter_enabled', true);
+
 export const gate_display_enabled = create_coupled_estore('gate_display_enabled', true);
 
 export const beep_enabled = create_coupled_estore('beep_enabled', true);
 export const sound_ok_enabled = create_coupled_estore('sound_ok_enabled', false);
 export const sound_error_enabled = create_coupled_estore('sound_error_enabled', false);
 
-export const person_nfc_auto_enabled = writable(false);
-export const reg_nfc_auto_enabled = writable(true);
+export const person_nfc_auto_enabled = create_coupled_estore('person_nfc_auto_enabled', true);
+export const reg_nfc_auto_enabled = create_coupled_estore('reg_nfc_auto_enabled', false);
 
 export const tag_display_enabled = create_coupled_estore('tag_display_enabled', true);
 export const tag_types_enabled = create_coupled_estore('tag_types_enabled', {});
@@ -82,7 +84,7 @@ export const tag_type_enabled_sorted_id_ary = writable([]);
 export const tag_type_sorted_id_ary = writable([]);
 export const tag_person_sorted_ary = writable([]);
 export const tag_person_count_by_type = writable({});
-export const tag_nfc_auto_enabled = writable(false);
+export const tag_nfc_auto_enabled = create_coupled_estore('tag_nfc_auto_enabled', false);
 
 export const nfc_count = writable(0);
 export const nfc_4b_count = writable(0);
