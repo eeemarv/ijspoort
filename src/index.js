@@ -688,6 +688,7 @@ const build_menu = () => {
 
 	const exportMenu = new Menu();
 	exportMenu.append(new MenuItem({ label: 'Registraties CSV (covid-19 tracing)', click: () => { win.webContents.send('reg.csv.export'); }}));
+	exportMenu.append(new MenuItem({ label: 'Registratie Aantallen CSV', click: () => { win.webContents.send('reg.count.csv.export'); }}));
 	exportMenu.append(new MenuItem({ label: 'Database JSON', click: () => { win.webContents.send('db.json.export'); }}));
 
 	menu.append(new MenuItem({ label: 'Export', submenu: exportMenu }));

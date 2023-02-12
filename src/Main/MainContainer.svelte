@@ -1,6 +1,7 @@
 <script>
   import { Container, Row } from 'sveltestrap';
   import RegCSVExport from '../Reg/RegCSVExport.svelte';
+  import RegCountCSVExport from '../Reg/RegCountCSVExport.svelte';
   import DbJSONExport from '../Db/DbJSONExport.svelte';
   import Config from '../Config/Config.svelte';
   import MainPage from './MainPage.svelte';
@@ -28,6 +29,7 @@
 <svelte:window on:scroll={handle_scroll} bind:scrollY={y}/>
 
 <RegCSVExport />
+<RegCountCSVExport />
 <DbJSONExport />
 <Config />
 

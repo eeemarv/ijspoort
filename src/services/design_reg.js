@@ -19,6 +19,13 @@ const design_reg_search_doc = {
         emit(year + '-' + month + '-' + date);
       }).toString(),
       reduce: '_count'
+    },
+    count_per_hour: {
+      map: ((doc) => {
+        let ts_hour = Math.floor(doc.ts_epoch / 3600000) * 3600000;
+        emit(ts_hour);
+      }).toString(),
+      reduce: '_count'
     }
   }
 };
