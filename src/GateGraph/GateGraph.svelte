@@ -91,8 +91,9 @@
           current_ts = ts * 1;
           ts_date = new Date(current_ts);
           dt_in = d.in ? d.in : 0;
-          add_graph.total_count += dt_in;
+          add_graph.total_in += dt_in;
           dt_out = d.out ? d.out : 0;
+          add_graph.total_out += dt_out;
           current_count += dt_in;
           current_count -= dt_out;
           current_count = current_count < 0 ? 0 : current_count;
@@ -140,8 +141,9 @@
           ts_date = new Date(current_ts);
 
           dt_in = d.in ? d.in : 0;
-          add_graph.total_count = dt_in;
+          add_graph.total_in = dt_in;
           dt_out = d.out ? d.out : 0;
+          add_graph.total_out = dt_out;
           current_count = dt_in - dt_out;
           current_count = current_count < 0 ? 0 : current_count;
           add_graph.count_data.push({x: 0, y: current_count});
@@ -225,7 +227,7 @@
         <Col class=bg-black>
           <LocaleDateString ts={gr.ts * 1} />,
           <TimeTag ts={gr.ts * 1} color=nn />
-          Totaal aantal: {gr.total_count},
+          Totaal in: {gr.total_in}, uit: {gr.total_out},
           Maximum binnen: {gr.max_y}
           <div class="chart">
             <Pancake.Chart x1=0 x2={gr.max_x} y1={gr.min_y} y2={gr.max_y}>
