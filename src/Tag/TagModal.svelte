@@ -2,17 +2,16 @@
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { TabContent } from 'sveltestrap';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
-  import TagTypesTab from './TagTypesTab.svelte';
+  import TagTypeListTab from './TagTypeListTab.svelte';
   import TagTypePutTab from './TagTypePutTab.svelte';
   import TagTypeTab from './TagTypeTab.svelte';
   import { tag_type_enabled_sorted_id_ary } from '../services/store';
 
-  let tab = 'types';
-
-  let edit_tag_id = undefined;
-
+  export let tab = 'type_list';
   export let open = false;
   export const toggle = () => (open = !open);
+
+  let edit_tag_id = undefined;
 
   $: if (tab !== 'type_put'){
     edit_tag_id = undefined;
@@ -25,7 +24,7 @@
   </ModalHeader>
   <ModalBody>
     <TabContent pills on:tab={(e) => tab = e.detail}>
-      <TagTypesTab
+      <TagTypeListTab
         {tab}
         on:edit={(e) => edit_tag_id = e.detail}
       />

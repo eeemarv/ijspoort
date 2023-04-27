@@ -4,8 +4,13 @@
   import TagListen from './TagListen.svelte';
   import TagCardList from './TagCardList.svelte';
   import TagNfcAuto from './TagNfcAuto.svelte';
+  import TagModal from './TagModal.svelte';
 
+  let open;
+  let tab;
 </script>
+
+<TagModal bind:open bind:tab/>
 
 <TagListen
   on:new_tag
@@ -16,9 +21,9 @@
 />
 
 <Card class=my-2>
-  <TagCardHeader />
+  <TagCardHeader on:click={() => {open = true;}}/>
   <CardBody class=p-0>
-    <TagCardList />
+    <TagCardList on:open_tag_tab={(e) => {tab = e.detail; open = true;}}/>
   </CardBody>
 
   <TagNfcAuto />

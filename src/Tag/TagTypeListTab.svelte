@@ -7,7 +7,7 @@
   export let tab;
 </script>
 
-<TabPane tabId=types active={tab === 'types'}>
+<TabPane tabId=types active={tab === 'type_list'}>
   <span slot=tab title="Tag types">
     Types: {$tag_type_count}
   </span>
