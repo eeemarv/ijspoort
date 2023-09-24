@@ -8,8 +8,9 @@ Het programma kent twee algemene modi:
 * Een poort modus: enkel voor toegangs-registratie met tags waarbij eventueel een elektrische poort wordt aangestuurd.
 
 Reguirements:
-* OS Ubuntu 20.04
+* OS Ubuntu 22.04
 * NFC tag reader ACR122u
+* NFC tag reader MFC522 (poort modus met Raspberry Pi 4B)
 
 Dependencies:
 * ACR122u driver:
@@ -39,7 +40,7 @@ sudo apt-get install gcc
 
 ```
 
-Voor de poort-modus, aansturing door een Raspberry Pi (4B) ([Info](https://askubuntu.com/questions/1230947/gpio-for-raspberry-pi-gpio-group)):
+Voor de poort-modus, aansturing door een Raspberry Pi 4B([Info](https://askubuntu.com/questions/1230947/gpio-for-raspberry-pi-gpio-group)):
 
 ```
 sudo apt install rpi.gpio-common
@@ -50,7 +51,6 @@ sudo reboot
 Installatie:
 ```
 yarn install
-yarn upgrade
 ```
 Run app (dev mode):
 ```
