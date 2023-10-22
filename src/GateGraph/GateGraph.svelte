@@ -9,7 +9,7 @@
 
   export let tab;
 
-  let days = 7;
+  let days = 50;
   let days_offset = 0;
   let d_graphs = [];
   let ready = false;
