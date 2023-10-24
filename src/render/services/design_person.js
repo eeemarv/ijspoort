@@ -39,6 +39,9 @@ const design_person_search_doc = {
     },
     count_by_date_of_birth: {
       map: ((doc) => {
+        if (doc.date_of_birth === undefined){
+          return;
+        }
         let date_of_birth = doc.date_of_birth.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         if (date_of_birth === ''){
           return;
@@ -49,6 +52,9 @@ const design_person_search_doc = {
     },
     count_by_phone_mobile: {
       map: ((doc) => {
+        if (doc.phone_mobile === undefined){
+          return;
+        }
         let phone_mobile = doc.phone_mobile.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         if (phone_mobile === ''){
           return;
@@ -59,6 +65,9 @@ const design_person_search_doc = {
     },
     count_by_phone_home: {
       map: ((doc) => {
+        if (doc.phone_home === undefined){
+          return;
+        }
         let phone_home = doc.phone_home.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         if (phone_home === ''){
           return;
@@ -69,6 +78,9 @@ const design_person_search_doc = {
     },
     count_by_phone_work: {
       map: ((doc) => {
+        if (doc.phone_work === undefined){
+          return;
+        }
         let phone_work = doc.phone_work.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         if (phone_work === ''){
           return;
@@ -79,6 +91,9 @@ const design_person_search_doc = {
     },
     count_by_email: {
       map: ((doc) => {
+        if (doc.email === undefined){
+          return;
+        }
         let email = doc.email.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         if (email === ''){
           return;
@@ -89,6 +104,9 @@ const design_person_search_doc = {
     },
     count_by_email_work: {
       map: ((doc) => {
+        if (doc.email_work === undefined){
+          return;
+        }
         let email_work = doc.email_work.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         if (email_work === ''){
           return;
@@ -99,6 +117,9 @@ const design_person_search_doc = {
     },
     count_by_address: {
       map: ((doc) => {
+        if (doc.address === undefined){
+          return;
+        }
         let address = doc.address.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         if (address === ''){
           return;
@@ -110,6 +131,9 @@ const design_person_search_doc = {
     count_by_group: {
       map: ((doc) => {
         if (!doc.group){
+          return;
+        }
+        if (doc.group === undefined){
           return;
         }
         let group_ary = doc.group.split(',');
@@ -127,7 +151,7 @@ const design_person_search_doc = {
 };
 
 const put_design_person_search = () => {
-  db_person.get(design_person_search_doc._id).catch((err) => {
+  const put_design = db_person.get(design_person_search_doc._id).catch((err) => {
     if (err.name === 'not_found'){
       return 'put';
     }
@@ -148,6 +172,94 @@ const put_design_person_search = () => {
   }).then((res) => {
     console.log('design_person_search_doc updated');
     console.log(res);
+  }).catch((err) => {
+    console.log(err);
+  });
+
+  put_design.then(() => {
+    console.log('db_person build indexes ==');
+
+    console.log('build indexes db_person search/count_by_text');
+
+    return db_person.query('search/count_by_text', {
+      limit: 0
+    });
+
+  }).then((res) => {
+
+    console.log('build indexes db_person search/count_by_member_year');
+
+    return db_person.query('search/count_by_member_year', {
+      limit: 0
+    });
+  }).then((res) => {
+
+    console.log('build indexes db_person search/count_by_name');
+
+    return db_person.query('search/count_by_name', {
+      limit: 0
+    });
+  }).then((res) => {
+
+    console.log('build indexes db_person search/count_by_date_of_birth');
+
+    return db_person.query('search/count_by_date_of_birth', {
+      limit: 0
+    });
+  }).then((res) => {
+
+    console.log('build indexes db_person search/count_by_phone_mobile');
+
+    return db_person.query('search/count_by_phone_mobile', {
+      limit: 0
+    });
+  }).then((res) => {
+
+    console.log('build indexes db_person search/count_by_phone_home');
+
+    return db_person.query('search/count_by_phone_home', {
+      limit: 0
+    });
+  }).then((res) => {
+
+    console.log('build indexes db_person search/count_by_phone_work');
+
+    return db_person.query('search/count_by_phone_work', {
+      limit: 0
+    });
+
+  }).then((res) => {
+
+    console.log('build indexes db_person search/count_by_email');
+
+    return db_person.query('search/count_by_email', {
+      limit: 0
+    });
+
+  }).then((res) => {
+
+    console.log('build indexes db_person search/count_by_email_work');
+
+    return db_person.query('search/count_by_email_work', {
+      limit: 0
+    });
+
+  }).then((res) => {
+
+    console.log('build indexes db_person search/count_by_address');
+
+    return db_person.query('search/count_by_address', {
+      limit: 0
+    });
+
+  }).then((res) => {
+
+    console.log('build indexes db_person search/count_by_group');
+
+    return db_person.query('search/count_by_group', {
+      limit: 0
+    });
+
   }).catch((err) => {
     console.log(err);
   });

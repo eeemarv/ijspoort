@@ -80,7 +80,7 @@ const assist_person_map = {
   }
 };
 
-const xls_assist_import = (file, assist_import_year) => {
+const assist_import = (file, assist_import_year) => {
   const year_key = 'y' + assist_import_year.substring(0);
   const workbook = XLSX.readFile(file);
   const sheet_name_list = workbook.SheetNames;
@@ -197,4 +197,4 @@ const xls_assist_import = (file, assist_import_year) => {
   });
 };
 
-export { xls_assist_import };
+export { assist_import };

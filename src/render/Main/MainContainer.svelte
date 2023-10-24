@@ -5,6 +5,7 @@
   import DbJSONExport from '../Db/DbJSONExport.svelte';
   import Config from '../Config/Config.svelte';
   import MainPage from './MainPage.svelte';
+  import DbAssistImport from '../Db/DbAssistImport.svelte';
 
   let y;
   let el_btn_to_top;
@@ -31,6 +32,7 @@
 <RegCSVExport />
 <RegCountCSVExport />
 <DbJSONExport />
+<DbAssistImport />
 <Config />
 
 <Container fluid>

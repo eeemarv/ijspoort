@@ -1,13 +1,24 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import { Card, CardHeader, CardBody, CardFooter, CardGroup } from 'sveltestrap';
   import { createEventDispatcher } from 'svelte';
   import { Button } from 'sveltestrap';
   import { ListGroup, ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
-  import { xls_assist_import } from './../services/person';
-  import { person, person_nfc_list } from './../services/store';
-  import { assist_import_year } from './../services/store';
+
+  ////
+
+
+  import { person_table } from './../services/store';
+  import { nfc_table } from './../services/store';
+  import { person_nfc_table } from './../services/store';
+  import { selected_person_id } from './../services/store';
+  import { selected_nfc_id } from './../services/store';
+
+/////
+
+
+  import { person } from './../services/store';
+  import { person_nfc_list } from './../services/store';
   import { tag_display_enabled } from './../services/store';
   import PersonNfc from './PersonNfc.svelte';
   import PersonName from './PersonName.svelte';
@@ -18,24 +29,6 @@
   import PersonTagList from './PersonTagList.svelte';
 
   let group_ary = [];
-
-  $: {
-    $assist_import_year;
-    ipcRenderer.send('rebuild_menu');
-  }
-
-  ipcRenderer.on('xls.assist.import', (ev, file) => {
-    if (!$assist_import_year){
-      return;
-    }
-    if ($assist_import_year < 2010){
-      return;
-    }
-    if ($assist_import_year > 2030){
-      return;
-    }
-    xls_assist_import(file, $assist_import_year.toString());
-  });
 
   const dispatch = createEventDispatcher();
 
