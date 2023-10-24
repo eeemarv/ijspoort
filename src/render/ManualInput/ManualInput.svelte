@@ -30,34 +30,47 @@
       update([]);
       return;
     }
+    if ($focus_year_filter_enabled){
+      search_text = 'y' + $focus_year + '_' + search_text;
+    }
     db_person.query('search/count_by_text', {
       startkey: search_text,
       endkey: search_text + '\uffff',
-      limit: 30,
-      include_docs: true,
+      limit: 20,
+      include_docs: false,
       reduce: false
     }).then((res) => {
-      let docs = {};
+
+      let result_keys = {};
+
       let tag_search_keys = [];
-      res.rows.forEach((v) => {
-        if (docs[v.id] || Object.keys(docs).length > 10){
-          return;
-        };
-        if ($focus_year_filter_enabled && !v.doc.member_year['y' + $focus_year]){
-          return;
+
+      res.rows.every((v) => {
+        if (result_keys[v.id] !== undefined){
+          return true;
         }
+        if (Object.keys(result_keys).length > 10){
+          return false;
+        };
+
         $tag_type_enabled_sorted_id_ary.forEach((tid) => {
           tag_search_keys = [...tag_search_keys, tid + '_' + v.id];
         })
-        docs[v.id] = v.doc;
+
+        result_keys[v.id] = true;
+
+        return true;
       });
-      update(Object.values(docs));
+
+      update(Object.keys(result_keys));
+
       return db_tag.query('search/count_by_type_id_and_person_id', {
         keys: tag_search_keys,
         reduce: true,
         group: true,
         include_docs: false
       });
+
     }).then((res) => {
       let p_tag_types = {};
       res.rows.forEach((r) => {
@@ -103,14 +116,14 @@
         $person = item;
         el_manual.value = '';
       },
-      render: (item) => {
+      render: (person_id) => {
         let suggestion_div = document.createElement("div");
         suggestion_div.setAttribute('class', 'autocomplete-suggestion');
         new AutocompleteSuggestion({
           target: suggestion_div,
           props: {
-            person: item,
-            tags: person_tags[item._id] ?? []
+            person_id: person_id,
+            tags: person_tags[person_id] ?? []
           }
         });
         return suggestion_div;

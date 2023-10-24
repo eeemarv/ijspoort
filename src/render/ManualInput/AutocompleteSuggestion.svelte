@@ -3,9 +3,12 @@
   import PersonTag from '../Person/PersonTag.svelte';
   import Tag from '../Tag/Tag.svelte';
   import { tag_types } from '../services/store';
+  import { person_table } from '../services/store';
 
-  export let person;
+  export let person_id;
   export let tags = [];
+
+  $: person = $person_table[person_id];
 </script>
 
 <div>

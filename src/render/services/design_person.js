@@ -6,15 +6,27 @@ const design_person_search_doc = {
   views: {
     count_by_text: {
       map: ((doc) => {
+        let prefix_keys = [''];
+        if (doc.member_year !== undefined){
+          Object.keys(doc.member_year).forEach((v) => {
+            prefix_keys.push(v + '_');
+          })
+        }
         let firstname = doc.firstname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         let surname = doc.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-        emit(firstname + surname);
-        emit(surname + firstname);
+        prefix_keys.forEach((prefix) => {
+          emit(prefix + firstname + surname);
+          emit(prefix + surname + firstname);
+        });
         const ks = ['member_id', 'nickname', 'address', 'email', 'email_work', 'phone_mobile', 'phone_home', 'phone_work'];
         ks.forEach((k) => {
-          if (doc[k]){
-            emit(doc[k].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, ''));
+          if (doc[k] === undefined){
+            return;
           }
+          let str = doc[k].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+          prefix_keys.forEach((prefix) => {
+            emit(prefix + str);
+          })
         });
       }).toString(),
       reduce: '_count'

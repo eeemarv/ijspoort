@@ -33,10 +33,21 @@
   const dispatch = createEventDispatcher();
 
   $: {
+
     if (typeof $person === 'undefined'){
+
+      ///
+      $selected_person_id = undefined;
+      ///
+
       $person_nfc_list = [];
       group_ary = [];
     } else {
+
+      ///
+      $selected_person_id = $person._id;
+      ///
+
       console.log($person);
       if ($person.group){
         group_ary = $person.group.split(',');
