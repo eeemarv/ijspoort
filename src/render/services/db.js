@@ -37,6 +37,10 @@ const db_remote_person = new PouchDB(conn_prefix + 'person', {auth: auth});
 const db_remote_gate = new PouchDB(conn_prefix + 'gate', {auth: auth});
 const db_remote_tag = new PouchDB(conn_prefix + 'tag', {auth: auth});
 
+/**
+ * sync
+ */
+
 const sync_options = {
   live: true,
   retry: true,
@@ -168,16 +172,46 @@ db_tag.sync(db_remote_tag, sync_options)
   sync_monitor.set_error();
 });
 
+/**
+ * call to db.info() to create the
+ * remote dbs when they do not exist.
+ */
+
+db_remote_nfc.info().then((info) => {
+  console.log(info);
+}).catch((err) => {
+  console.log(err);
+});
+
+db_remote_reg.info().then((info) => {
+  console.log(info);
+}).catch((err) => {
+  console.log(err);
+});
+
+db_remote_person.info().then((info) => {
+  console.log(info);
+}).catch((err) => {
+  console.log(err);
+});
+
+db_remote_gate.info().then((info) => {
+  console.log(info);
+}).catch((err) => {
+  console.log(err);
+});
+
+db_remote_tag.info().then((info) => {
+  console.log(info);
+}).catch((err) => {
+  console.log(err);
+});
+
 export {
-  db_remote_nfc,
   db_remote_reg,
-  db_remote_person,
-  db_remote_gate,
-  db_remote_tag,
   db_reg,
   db_nfc,
   db_person,
   db_gate,
-  db_tag,
-  env
+  db_tag
 };

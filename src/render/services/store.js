@@ -53,6 +53,7 @@ const create_coupled_estore = (key, default_value, min_value, max_value) => {
 export const person = writable();
 export const person_nfc_list = writable([]);
 export const nfc_uid = writable();
+
 export const sync_monitor = create_sync_monitor();
 export const gate_count = create_coupled_estore('gate_count', 50, -99, 999);
 export const gate_count_enabled = writable(false);
@@ -86,6 +87,15 @@ export const tag_person_sorted_ary = writable([]);
 export const tag_person_count_by_type = writable({});
 export const tag_nfc_auto_enabled = create_coupled_estore('tag_nfc_auto_enabled', false);
 
-export const nfc_count = writable(0);
-export const nfc_4b_count = writable(0);
-export const nfc_7b_count = writable(0);
+//export const nfc_count = writable(0);
+//export const nfc_4b_count = writable(0);
+//export const nfc_7b_count = writable(0);
+
+export const person_table = writable({});
+export const nfc_table = writable({});
+export const person_nfc_table = writable({});
+
+export const nfc_sorted_ary = writable([]);
+
+export const selected_person_id = writable();
+export const selected_nfc_id = writable();
