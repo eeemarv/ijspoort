@@ -4,12 +4,17 @@
   import { tag_type_sorted_id_ary } from '../services/store';
   import { tag_type_count } from '../services/store';
 
+  import { tag_type_table } from '../services/store';
+
   export let tab;
+
+  $: tag_type_id_ary = Object.keys($tag_type_table);
+
 </script>
 
 <TabPane tabId=types active={tab === 'type_list'}>
   <span slot=tab title="Tag types">
-    Types: {$tag_type_count}
+    Types: {tag_type_id_ary.length}
   </span>
   <h3 class=mt-2>
     Tag types
@@ -27,9 +32,9 @@
       </tr>
     </thead>
     <tbody>
-      {#each $tag_type_sorted_id_ary as tid(tid)}
+      {#each tag_type_id_ary as type_id(type_id)}
         <TagTypeRow
-          tag_type_id={tid}
+          {type_id}
           on:edit
         />
       {/each}

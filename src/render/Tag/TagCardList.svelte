@@ -2,10 +2,12 @@
   import { ListGroup, ListGroupItem } from 'sveltestrap';
   import TagButton from './TagButton.svelte';
   import TagAddButton from './TagAddButton.svelte';
-  import { tag_count_by_type } from '../services/store';
-  import { tag_types } from '../services/store';
-  import { tag_type_enabled_sorted_id_ary } from '../services/store';
   import { onMount, createEventDispatcher } from 'svelte';
+  import { tag_types_enabled } from '../services/store';
+  import { tag_type_table } from '../services/store';
+  import { tag_count_table } from '../services/store';
+
+  let tag_type_list = [];
 
   const dispatch = createEventDispatcher();
 
@@ -17,23 +19,43 @@
     };
   });
 
+  const update_list = () => {
+    let list = [];
+
+    Object.keys($tag_type_table).forEach((type_id) => {
+      if (!$tag_types_enabled[type_id]){
+        return;
+      }
+      list.push(type_id);
+    });
+
+    tag_type_list = [...list];
+  }
+
+  $:{
+    $tag_types_enabled;
+    $tag_type_table;
+    $tag_count_table;
+    update_list();
+  }
+
 </script>
 
 <ListGroup>
-  {#each $tag_type_enabled_sorted_id_ary as tid(tid)}
+  {#each tag_type_list as type_id (type_id)}
     <ListGroupItem action>
       <div class="d-flex w-100 justify-content-between">
         <div>
           <TagButton
-            on:click={() => {handle_open_tag_tab(tid);}}
-            tag={$tag_types[tid]}
+            on:click={() => {handle_open_tag_tab(type_id);}}
+            {type_id}
           />
         </div>
         <div>
           <span class=me-3>
-            {$tag_count_by_type[tid] ?? '-'}
+            {$tag_count_table[type_id] ?? '-'}
           </span>
-          <TagAddButton tag_type_id={tid} />
+          <TagAddButton {type_id} />
         </div>
       </div>
     </ListGroupItem>

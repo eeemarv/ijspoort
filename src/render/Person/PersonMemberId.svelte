@@ -1,9 +1,11 @@
 <script>
-  export let member_id;
+  import { person_table } from "../services/store";
+
+  export let person_id = undefined;
 </script>
 
 <span class="badge bg-secondary" title="lidnummer">
-  {member_id}
+  {$person_table[person_id].member_id ?? '***'}
 </span>
 
 <style>

@@ -1,5 +1,8 @@
 <script>
-  export let person;
+  import { person_table } from "../services/store";
+  export let person_id;
+
+  $: person = $person_table[person_id] ?? {};
 </script>
 
 <span title="voornaam">

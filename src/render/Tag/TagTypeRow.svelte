@@ -9,16 +9,17 @@
   import { createEventDispatcher } from 'svelte';
   import { Button } from 'sveltestrap';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
-  import Tag from './Tag.svelte';
   import TagEnableCheckbox from './TagEnableCheckbox.svelte';
   import { db_tag } from '../services/db';
   import { tag_types } from '../services/store';
   import { tag_count_by_type } from '../services/store';
+  import TagType from './TagType.svelte';
 
   const { setActiveTab } = getContext('tabContent');
   const dispatch = createEventDispatcher();
 
-  export let tag_type_id;
+  export let type_id;
+
   let new_tag_type_id = getContext(ck_new_tag_type_id);
   let updated_tag_type_id = getContext(ck_updated_tag_type_id);
 
@@ -29,11 +30,11 @@
   let handle_edit;
   let handle_delete;
 
-  $: tag = $tag_types[tag_type_id];
+  $: tag = $tag_types[type_id];
 
   onMount(() => {
     handle_edit = () => {
-      dispatch('edit', tag_type_id);
+      dispatch('edit', type_id);
       setActiveTab('type_put');
     };
 
@@ -52,7 +53,7 @@
   });
 
   const show_update = (updated_tag_type_id) => {
-    if (updated_tag_type_id !== tag_type_id){
+    if (updated_tag_type_id !== type_id){
       return;
     }
     setTimeout(() => {
@@ -62,7 +63,7 @@
   };
 
   const show_add = (new_tag_type_id) => {
-    if (new_tag_type_id !== tag_type_id){
+    if (new_tag_type_id !== type_id){
       return;
     }
     setTimeout(() => {
@@ -81,12 +82,12 @@
   class:bg-danger={del}
 >
   <td>
-    <TagEnableCheckbox tag_id={tag_type_id}>
-      <Tag {tag} pointer />
+    <TagEnableCheckbox {type_id}>
+      <TagType {tag} />
     </TagEnableCheckbox>
   </td>
   <td>
-    {$tag_count_by_type[tag_type_id] ?? '-'}
+    {$tag_count_by_type[type_id] ?? '-'}
   </td>
   <td>
     {tag?.max_per_person}
@@ -95,11 +96,11 @@
     {tag?.description}
   </td>
   <td>
-    <LocaleDateString ts={tag?.ts_epoch} title="datum van aanmaak" />
+    <LocaleDateString ts_epoch={tag?.ts_epoch} title="datum van aanmaak" />
   </td>
   <td class=text-end>
-    {#if typeof $tag_count_by_type[tag_type_id] === 'undefined'
-      || !$tag_count_by_type[tag_type_id] === 'undefined'}
+    {#if typeof $tag_count_by_type[type_id] === 'undefined'
+      || !$tag_count_by_type[type_id] === 'undefined'}
 
       <Button
         color=danger

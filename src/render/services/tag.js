@@ -1,18 +1,33 @@
 import { db_tag } from './db';
 
-const tag_add = (tag_type_id, person_id) => {
+let flood_blocked = false;
+const flood_block_time = 1000;
+
+const tag_add = (type_id, person_id) => {
+
+  if (flood_blodked){
+    console.log('flood blocked tag_add');
+    return;
+  }
+  flood_blocked = true;
+
   let ts_epoch = (new Date()).getTime();
-  let id = 't' + tag_type_id + '_' + person_id + '_' + ts_epoch.toString();
+  let id = 't' + type_id + '_' + person_id + '_' + ts_epoch.toString();
   let tag = {
     ts_epoch: ts_epoch,
     person_id: person_id,
-    type_id: tag_type_id,
+    type_id: type_id,
     _id: id
   };
 
   db_tag.put(tag).then((res) => {
     console.log('db_tag.put');
     console.log(res);
+
+    setTimeout(() => {
+      flood_blocked = false;
+    }, flood_block_time);
+
   }).catch((err) => {
     console.log('ERR db_tag.put');
     console.log(err);

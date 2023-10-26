@@ -33,7 +33,7 @@
         bind:edit_tag_id
       />
       {#each $tag_type_enabled_sorted_id_ary as tid(tid)}
-        <TagTypeTab {tab} id={tid} />
+        <TagTypeTab {tab} type_id={tid} />
       {/each}
     </TabContent>
   </ModalBody>

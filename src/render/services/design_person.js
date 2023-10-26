@@ -10,7 +10,7 @@ const design_person_search_doc = {
         if (doc.member_year !== undefined){
           Object.keys(doc.member_year).forEach((v) => {
             prefix_keys.push(v + '_');
-          })
+          });
         }
         let firstname = doc.firstname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         let surname = doc.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
@@ -26,7 +26,7 @@ const design_person_search_doc = {
           let str = doc[k].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
           prefix_keys.forEach((prefix) => {
             emit(prefix + str);
-          })
+          });
         });
       }).toString(),
       reduce: '_count'

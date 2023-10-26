@@ -2,18 +2,18 @@
   const EventEmitter = require('events');
   import { onMount } from 'svelte';
   import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'sveltestrap';
-  import { db_person, db_tag } from '../services/db';
+  import { db_person } from '../services/db';
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
-  import { person, focus_year } from './../services/store';
+  import { person, selected_person_id } from './../services/store';
+  import { person_table } from './../services/store';
+  import { focus_year } from './../services/store';
   import { focus_year_filter_enabled } from './../services/store';
-  import { tag_type_enabled_sorted_id_ary } from './../services/store';
 
   let select_years = [];
   let el_manual;
   let el_group;
   let dropdown_open = false;
-  let person_tags = {};
 
   class SearchUpdateEmitter extends EventEmitter {};
   const searchUpdateEmitter = new SearchUpdateEmitter();
@@ -33,6 +33,7 @@
     if ($focus_year_filter_enabled){
       search_text = 'y' + $focus_year + '_' + search_text;
     }
+
     db_person.query('search/count_by_text', {
       startkey: search_text,
       endkey: search_text + '\uffff',
@@ -43,8 +44,6 @@
 
       let result_keys = {};
 
-      let tag_search_keys = [];
-
       res.rows.every((v) => {
         if (result_keys[v.id] !== undefined){
           return true;
@@ -53,10 +52,6 @@
           return false;
         };
 
-        $tag_type_enabled_sorted_id_ary.forEach((tid) => {
-          tag_search_keys = [...tag_search_keys, tid + '_' + v.id];
-        })
-
         result_keys[v.id] = true;
 
         return true;
@@ -64,29 +59,6 @@
 
       update(Object.keys(result_keys));
 
-      return db_tag.query('search/count_by_type_id_and_person_id', {
-        keys: tag_search_keys,
-        reduce: true,
-        group: true,
-        include_docs: false
-      });
-
-    }).then((res) => {
-      let p_tag_types = {};
-      res.rows.forEach((r) => {
-        let rparts = r.key.split('_');
-        let tag_type_id = rparts[0] + '_' + rparts[1];
-        let p_id = rparts[2];
-        if (typeof p_tag_types[p_id] !== 'object'){
-          p_tag_types[p_id] = [];
-        }
-        for (let i = 0; i < r.value; i++){
-          p_tag_types[p_id] = [...p_tag_types[p_id], tag_type_id];
-        }
-      });
-      Object.keys(p_tag_types).forEach((prsn_id) => {
-        person_tags[prsn_id] = p_tag_types[prsn_id];
-      });
     }).catch((err) => {
       console.log(err);
     });
@@ -111,9 +83,9 @@
       emptyMsg: '-- Niets gevonden --',
       className: 'autocomplete',
       fetch: search_func,
-      onSelect: (item) => {
-        console.log(item);
-        $person = item;
+      onSelect: (person_id) => {
+        $selected_person_id = person_id;
+        //$person = $person_table[person_id];
         el_manual.value = '';
       },
       render: (person_id) => {
@@ -122,8 +94,7 @@
         new AutocompleteSuggestion({
           target: suggestion_div,
           props: {
-            person_id: person_id,
-            tags: person_tags[person_id] ?? []
+            person_id: person_id
           }
         });
         return suggestion_div;

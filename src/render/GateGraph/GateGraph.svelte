@@ -225,7 +225,7 @@
     {#each d_graphs as gr(gr.ts)}
       <Row>
         <Col class=bg-black>
-          <LocaleDateString ts={gr.ts * 1} />,
+          <LocaleDateString ts_epoch={gr.ts * 1} />,
           <TimeTag ts={gr.ts * 1} color=nn />
           Totaal in: {gr.total_in}, uit: {gr.total_out},
           Maximum binnen: {gr.max_y}

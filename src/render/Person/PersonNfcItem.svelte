@@ -1,11 +1,11 @@
 <script>
   import { ListGroupItem } from 'sveltestrap';
-  import { nfc_uid } from './../services/store';
   import NfcTag from '../Nfc/NfcTag.svelte';
+  import { selected_nfc_id } from './../services/store';
 
-  export let nfc;
+  export let nfc_id;
 </script>
 
-<ListGroupItem active={$nfc_uid === nfc.uid}>
-  <NfcTag {nfc} />
+<ListGroupItem active={$selected_nfc_id === nfc_id}>
+  <NfcTag {nfc_id} />
 </ListGroupItem>

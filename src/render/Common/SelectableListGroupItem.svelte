@@ -3,7 +3,8 @@
 </script>
 
 <div
-    class="list-group-item{active ? ' active' : ''}"
+    class=list-group-item
+    class:active
     on:click
     on:keyup={() => {}}
 >

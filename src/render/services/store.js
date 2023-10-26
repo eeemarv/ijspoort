@@ -77,6 +77,8 @@ export const reg_nfc_auto_enabled = create_coupled_estore('reg_nfc_auto_enabled'
 
 export const tag_display_enabled = create_coupled_estore('tag_display_enabled', true);
 export const tag_types_enabled = create_coupled_estore('tag_types_enabled', {});
+export const tag_nfc_auto_enabled = create_coupled_estore('tag_nfc_auto_enabled', false);
+
 export const tag_types = writable({});
 export const tag_count_by_type = writable({});
 export const tag_total_count = writable(0);
@@ -85,17 +87,18 @@ export const tag_type_enabled_sorted_id_ary = writable([]);
 export const tag_type_sorted_id_ary = writable([]);
 export const tag_person_sorted_ary = writable([]);
 export const tag_person_count_by_type = writable({});
-export const tag_nfc_auto_enabled = create_coupled_estore('tag_nfc_auto_enabled', false);
-
-//export const nfc_count = writable(0);
-//export const nfc_4b_count = writable(0);
-//export const nfc_7b_count = writable(0);
 
 export const person_table = writable({});
 export const nfc_table = writable({});
 export const person_nfc_table = writable({});
-
 export const nfc_sorted_ary = writable([]);
+
+export const tag_type_table = writable({});
+export const person_tag_table = writable({});
+export const tag_count_table = writable({});
+
+export const reg_10h_table = writable({});
+export const reg_5h_sorted_ary = writable({});
 
 export const selected_person_id = writable();
 export const selected_nfc_id = writable();

@@ -1,5 +1,9 @@
 <script>
-  export let person;
+  import { person_table } from "../services/store";
+
+  export let person_id = undefined;
+
+  $: person = $person_table[person_id] ?? {};
 </script>
 
 {#if person.phone_mobile }

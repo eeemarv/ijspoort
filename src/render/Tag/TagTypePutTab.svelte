@@ -1,5 +1,4 @@
 <script>
-  import { createEventDispatcher } from 'svelte';
   import { getContext } from 'svelte';
   import Icon from '@iconify/svelte';
   import plusIcon from '@iconify/icons-fa/plus';

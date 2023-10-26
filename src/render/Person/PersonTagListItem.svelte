@@ -6,9 +6,12 @@
   import { onMount } from 'svelte';
   import { Button } from 'sveltestrap';
   import { db_tag } from '../services/db';
-  import { tag_types } from '../services/store';
   import Tag from '../Tag/Tag.svelte';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
+
+  export let person_id = undefined;
+  export let ts_epoch = undefined;
+  export let type_id = undefined;
 
   export let tag;
   let new_tag_id = getContext(ck_new_tag_id);
@@ -18,7 +21,9 @@
   let del = false;
 
   onMount(() => {
-    handle_delete = (tag) => {
+    handle_delete = (type_id, person_id, ts_epoch) => {
+      return;
+
       setTimeout(() => {
         db_tag.remove(tag).then((res) => {
           console.log(res);
@@ -27,10 +32,12 @@
         });
         del = false;
       }, 700);
+
       del = true;
     };
   });
 
+  /**
   const show_add = (new_tag_id) => {
     if (new_tag_id !== tag._id){
       return;
@@ -42,6 +49,7 @@
   }
 
   $: show_add($new_tag_id);
+  */
 </script>
 
 <div class="list-group-item list-group-item-action"
@@ -50,16 +58,16 @@
 >
   <div class="d-flex w-100 justify-content-between">
     <div>
-      <Tag tag={$tag_types[tag.type_id]} />
+      <Tag {type_id} />
       &nbsp;
-      <LocaleDateString ts={tag.ts_epoch} title="datum van aanmaak" />
+      <LocaleDateString {ts_epoch} title="datum van aanmaak" />
     </div>
     <div>
       <Button
         size=sm
         color=danger
         title="Tag verwijderen"
-        on:click={() => handle_delete(tag)}
+        on:click={() => handle_delete(type_id, person_id, ts_epoch)}
       >
         <Icon icon={timesIcon} />
       </Button>

@@ -84,7 +84,7 @@
         $person_nfc_table[v.doc.person_id] = {};
       }
 
-      $person_nfc_table[v.doc.person_id][v.doc._id] = true;
+      $person_nfc_table[v.doc.person_id][v.id] = true;
     });
 
     sort_nfc_ary();

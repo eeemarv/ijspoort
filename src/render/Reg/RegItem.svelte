@@ -1,19 +1,16 @@
 <script>
   import { db_person, db_reg } from '../services/db';
-  import { tag_types } from '../services/store';
   import { Button, Badge } from 'sveltestrap';
   import { onMount } from 'svelte';
   import { person } from '../services/store';
   import RegTimeTag from './RegTimeTag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
-  import Tag from '../Tag/Tag.svelte';
 
   export let reg_index = 0;
   export let reg;
   export let newly_add = true;
   export let blocked = false;
   export let block_time = 300000;
-  export let tags = [];
 
   const scan_previous_hours = 5;
   let reg_item;
@@ -109,10 +106,7 @@
         {#if !blocked}
           <RegTimeTag {reg} />
         {/if}
-        <PersonTag person={person_data} show_member_year />
-        {#each tags as t, index (index)}
-          <Tag tag={$tag_types[t]} />
-        {/each}
+        <PersonTag person_id={person_data._id} show_member_year show_tags />
         {#if blocked}
           <Badge color=dark>
             Reeds geregistreerd in laatste {Math.floor(block_time / 60000)} minuten.

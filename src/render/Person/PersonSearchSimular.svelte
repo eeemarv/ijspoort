@@ -1,21 +1,27 @@
 <script>
   import { Button, ListGroup, Modal, ModalBody, ModalHeader } from 'sveltestrap';
-  import { person } from './../services/store';
   import { db_person } from './../services/db';
   import PersonName from './PersonName.svelte';
   import PersonTag from './PersonTag.svelte';
   import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
+  import { person_table } from './../services/store';
+  import { selected_person_id } from './../services/store';
+
+  export let type = undefined;
+  export let group = '';
+  export let person_id = undefined;
+
   let open = false;
+
   const toggle = () => {
     open = !open;
   };
 
-  export let type;
-  export let group = '';
   let search_key;
-  let result_persons = [];
+  let res_person_ids = [];
+  let person = undefined;
 
   const lang = {
     name: 'Gelijke naam',
@@ -29,39 +35,48 @@
     group: 'Gelijke werkgroep',
   };
 
-  const handle_select = (prs) => {
+  const handle_select = (person_id) => {
     open = false;
-    $person = prs;
+    $selected_person_id = person_id;
   };
 
   const search_func = () => {
-    if (typeof $person === 'undefined'){
-      result_persons = [];
+    if (person_id === undefined){
+      res_person_ids = [];
       return;
     }
+
+    if ($person_table[person_id] === undefined){
+      res_person_ids = [];
+      return;
+    }
+
     if (type === 'name'){
-      search_key = $person.firstname + $person.surname;
+      search_key = person.firstname + person.surname;
     } else if (type === 'group'){
       search_key = group;
     } else {
-      search_key = $person[type];
+      search_key = person[type];
     }
+
     let search_text = search_key.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+
     if (search_text === ''){
-      result_persons = [];
+      res_person_ids = [];
       return;
     }
+
     db_person.query('search/count_by_' + type, {
       key: search_text,
-      include_docs: true,
+      include_docs: false,
       reduce: false
     }).then((res) => {
       console.log('person_search_simular ' + type, res);
-      let docs = [];
+      let ids = [];
       res.rows.forEach((v) => {
-        docs.push(v.doc);
+        ids.push(v.id);
       });
-      result_persons = docs;
+      res_person_ids = [...ids];
     }).catch((err) => {
       console.log(err);
     });
@@ -69,7 +84,8 @@
 
   $: {
     group;
-    if ($person) {
+    if (person_id) {
+      person = $person_table[person_id];
       search_func();
     }
   }
@@ -80,21 +96,21 @@
   <ModalHeader {toggle}>
     {lang[type]}:
     {#if type === 'name'}
-      <PersonName person={$person} />
+      <PersonName {person_id} />
     {:else if type === 'group'}
       {group}
     {:else}
-      {$person[type]}
+      {person[type]}
     {/if}
   </ModalHeader>
   <ModalBody>
     <ListGroup>
-        {#each result_persons as prs(prs._id)}
+        {#each res_person_ids as p_id(p_id)}
           <SelectableListGroupItem
-            active={prs._id === $person._id}
-            on:click={handle_select(prs)}
+            active={p_id === person_id}
+            on:click={handle_select(p_id)}
           >
-            <PersonTag person={prs} show_member_year />
+            <PersonTag person_id={p_id} show_member_year show_tags />
           </SelectableListGroupItem>
       {/each}
     </ListGroup>
@@ -102,7 +118,7 @@
   <ModalFooterClose on:click={toggle} />
 </Modal>
 
-{#if result_persons.length > 1}
+{#if res_person_ids.length > 1}
 <Button
     size=sm
     color=info
@@ -110,7 +126,7 @@
     on:click={toggle}
 >
   &gt;&gt;
-  {result_persons.length}
+  {res_person_ids.length}
 </Button>
 {/if}
 </div>

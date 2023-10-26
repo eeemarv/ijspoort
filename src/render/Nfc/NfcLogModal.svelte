@@ -7,7 +7,7 @@
   import { Badge } from 'sveltestrap';
   import { TabContent, TabPane } from 'sveltestrap';
   import { FormGroup, Label } from 'sveltestrap';
-  import { focus_year, nfc_uid } from '../services/store';
+  import { focus_year, nfc_uid, selected_person_id } from '../services/store';
   import { person } from '../services/store';
   import { nfc_table } from '../services/store';
   import { nfc_sorted_ary } from '../services/store';
@@ -18,6 +18,7 @@
   import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
   import PersonFocusYearTag from '../Person/PersonFocusYearTag.svelte';
+  import SelectListLength from '../Common/SelectListLength.svelte';
 
   let nfc_count = 0;
   let nfc_week_count = 0;
@@ -36,7 +37,6 @@
   let checked_7b = true;
   let checked_focus_year = false;
   let list_length = 10;
-  const list_length_options = [5, 10, 25, 50, 100, 250, 500, 1000, 2500];
 
   export const toggle = () => (open = !open);
 
@@ -192,14 +192,7 @@
   <ModalBody>
     <Row>
       <Col>
-        <FormGroup>
-          <Label for=list_length>Toon aantal in lijst (maximum)</Label>
-          <select id=list_length bind:value={list_length} class=form-control name=list_length on:change={() => update_view_data()}>
-            {#each list_length_options as l (l)}
-              <option>{l}</option>
-            {/each}
-          </select>
-        </FormGroup>
+        <SelectListLength {list_length} on:change={() => update_view_data()} />
       </Col>
       <Col>
         <div class=form-check title="Filter op tags met 4 byte UID">
@@ -245,12 +238,10 @@
             >
               <Row>
                 <Col md=6>
-                  <NfcTag nfc={$nfc_table[nfc_id]} />
+                  <NfcTag {nfc_id} />
                 </Col>
                 <Col>
-                  {#if $person_table[$nfc_table[nfc_id].person_id]}
-                    <PersonTag person={$person_table[$nfc_table[nfc_id].person_id]} show_member_year />
-                  {/if}
+                  <PersonTag person_id={$nfc_table[nfc_id].person_id} show_member_year show_tags />
                 </Col>
               </Row>
             </SelectableListGroupItem>
@@ -263,12 +254,12 @@
           <Icon icon={userIcon} /> {tx_tab_count_table[tx]} > {tx.substring(1)}
         </span>
         <ListGroup>
-          {#each tx_tab_table[tx] as p_id(p_id)}
+          {#each tx_tab_table[tx] as person_id(person_id)}
             <SelectableListGroupItem
-              active={$person && $person._id === p_id}
-              on:click={() => $person = $person_table[p_id]}
+              active={$selected_person_id && $selected_person_id === person_id}
+              on:click={() => $selected_person_id = person_id}
             >
-              <PersonTag person={$person_table[p_id]} show_member_year />
+              <PersonTag {person_id} show_member_year show_tags />
             </SelectableListGroupItem>
           {/each}
         </ListGroup>

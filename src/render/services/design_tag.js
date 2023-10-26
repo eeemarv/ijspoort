@@ -4,14 +4,6 @@ import lodash from 'lodash';
 const design_tag_search_doc = {
   _id: '_design/search',
   views: {
-    count_by_type_and_ts_epoch: {
-      map: ((doc) => {
-        if (doc._id.startsWith('t0_')){
-          emit(doc.type_id + '_' + doc.ts_epoch);
-        }
-      }).toString(),
-      reduce: '_count'
-    },
     count_by_type: {
       map: ((doc) => {
         if(doc._id.startsWith('t0_')){
@@ -22,14 +14,6 @@ const design_tag_search_doc = {
       }).toString(),
       reduce: '_count'
     },
-    count_by_type_id_and_person_id: {
-      map: ((doc) => {
-        if (doc._id.startsWith('t0_')){
-          emit(doc.type_id + '_' + doc.person_id);
-        }
-      }).toString(),
-      reduce: '_count'
-    }
   }
 };
 
