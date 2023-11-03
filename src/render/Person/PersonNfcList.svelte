@@ -1,21 +1,32 @@
 <script>
-  import PersonNfcItem from './PersonNfcItem.svelte';
-  import { person_nfc_table } from '../services/store';
+  import { nfc_map } from '../services/store';
+  import { person_nfc_map } from '../services/store';
+  import { ListGroupItem } from 'sveltestrap';
+  import NfcTag from '../Nfc/NfcTag.svelte';
+  import { selected_nfc_id } from '../services/store';
 
   export let person_id = undefined;
 
   let nfc_id_list = [];
 
   const update_view = () => {
-    id_ary = [];
-    Object.keys($person_nfc_table[person_id] ?? {}).forEach((nfc_id) => {
-      id_ary.push(nfc_id);
-    });
-    nfc_id_list = [...id_ary];
+    const id_ary = [];
+
+    if ($person_nfc_map.has(person_id)){
+      const s = $person_nfc_map.get(person_id);
+      [...s].reverse().forEach((nfc_id, i) => {
+        id_ary.push({
+          nfc_id: nfc_id,
+          abc_index: s.size - i - 1
+        });
+      });
+    }
+
+    nfc_id_list = id_ary;
   };
 
   $: {
-    $person_nfc_table[person_id];
+    $person_nfc_map;
     person_id;
     if (person_id){
       update_view();
@@ -24,6 +35,13 @@
 
 </script>
 
-{#each nfc_id_list as nfc_id(nfc_id)}
-  <PersonNfcItem {nfc_id}/>
+{#each nfc_id_list as {nfc_id, abc_index}(nfc_id)}
+<ListGroupItem active={$selected_nfc_id === nfc_id}>
+  <NfcTag
+    {nfc_id}
+    show_abc_index
+    {abc_index}
+    show_ts_epoch
+  />
+</ListGroupItem>
 {/each}

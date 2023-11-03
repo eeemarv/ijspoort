@@ -6,7 +6,7 @@
   import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
-  import { person_table } from './../services/store';
+  import { person_map } from './../services/store';
   import { selected_person_id } from './../services/store';
 
   export let type = undefined;
@@ -46,7 +46,7 @@
       return;
     }
 
-    if ($person_table[person_id] === undefined){
+    if (!$person_map.has(person_id)){
       res_person_ids = [];
       return;
     }
@@ -85,7 +85,7 @@
   $: {
     group;
     if (person_id) {
-      person = $person_table[person_id];
+      person = $person_map.get(person_id) ?? {};
       search_func();
     }
   }

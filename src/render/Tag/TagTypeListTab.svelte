@@ -8,7 +8,7 @@
 
   export let tab;
 
-  $: tag_type_id_ary = Object.keys($tag_type_table);
+  $: tag_type_id_ary = Object.keys($tag_type_table ?? {});
 
 </script>
 
@@ -33,10 +33,7 @@
     </thead>
     <tbody>
       {#each tag_type_id_ary as type_id(type_id)}
-        <TagTypeRow
-          {type_id}
-          on:edit
-        />
+        <TagTypeRow {type_id} on:edit />
       {/each}
     </tbody>
   </table>

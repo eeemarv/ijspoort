@@ -1,5 +1,5 @@
 const EStore = require('electron-store');
-import { writable } from 'svelte/store';
+import { readable, writable } from 'svelte/store';
 
 const create_sync_monitor = () => {
   const { subscribe, set } = writable('paused');
@@ -51,6 +51,7 @@ const create_coupled_estore = (key, default_value, min_value, max_value) => {
 };
 
 export const person = writable();
+
 export const person_nfc_list = writable([]);
 export const nfc_uid = writable();
 
@@ -75,6 +76,9 @@ export const sound_error_enabled = create_coupled_estore('sound_error_enabled', 
 export const person_nfc_auto_enabled = create_coupled_estore('person_nfc_auto_enabled', true);
 export const reg_nfc_auto_enabled = create_coupled_estore('reg_nfc_auto_enabled', false);
 
+export const reg_block_time = create_coupled_estore('reg_block_time', 1800000);
+
+
 export const tag_display_enabled = create_coupled_estore('tag_display_enabled', true);
 export const tag_types_enabled = create_coupled_estore('tag_types_enabled', {});
 export const tag_nfc_auto_enabled = create_coupled_estore('tag_nfc_auto_enabled', false);
@@ -88,17 +92,18 @@ export const tag_type_sorted_id_ary = writable([]);
 export const tag_person_sorted_ary = writable([]);
 export const tag_person_count_by_type = writable({});
 
-export const person_table = writable({});
-export const nfc_table = writable({});
-export const person_nfc_table = writable({});
-export const nfc_sorted_ary = writable([]);
+export const person_map = writable(new Map());
+export const nfc_map = writable(new Map());
+export const person_nfc_map = writable(new Map());
+
+export const gate_map = writable(new Map());
 
 export const tag_type_table = writable({});
 export const person_tag_table = writable({});
 export const tag_count_table = writable({});
 
-export const reg_10h_table = writable({});
-export const reg_5h_sorted_ary = writable({});
+export const reg_map = writable(new Map());
+export const person_last_reg_ts_map = writable(new Map());
 
 export const selected_person_id = writable();
 export const selected_nfc_id = writable();

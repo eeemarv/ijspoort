@@ -1,6 +1,6 @@
 <script>
   import { db_person } from '../services/db';
-  import { person_table } from '../services/store';
+  import { person_map } from '../services/store';
 
   const listen_changes = () => {
 
@@ -16,16 +16,21 @@
 
       if (change.deleted){
 
-        console.log('db_person.changes $person_table deleted ' + change.id);
+        console.log('db_person.changes delete from $person_map ', change);
 
-        delete $person_table[change.id];
-        $person_table = $person_table;
+        person_map.update((m) => {
+          m.delete(change.id);
+          return m;
+        });
 
         return;
       }
 
-      console.log('db_person.changes $person_table updated ' + change.id);
-      $person_table[change.id] = {...change.doc};
+      person_map.update((m) => {
+        m.set(change.id, change.doc);
+      });
+
+      console.log('db_person.changes $person_map updated', change);
 
     }).on('error', (err) => {
       console.log(err);
@@ -39,11 +44,16 @@
     endkey: 'n\uffff'
   }).then((res) => {
 
-    console.log('load $person_table PERSON RES');
+    console.log('load $person_map PERSON RES');
     console.log(res);
 
-    res.rows.forEach((v) => {
-      $person_table[v.id] = {...v.doc};
+    const person_ary = res.rows ?? [];
+
+    person_map.update((m) => {
+      person_ary.forEach((v) => {
+        m.set(v.id, v.doc);
+      });
+      return m;
     });
 
     listen_changes();

@@ -3,6 +3,7 @@
   import DbPersonTable from './DbPersonTable.svelte';
   import DbNfcTable from './DbNfcTable.svelte';
   import DbTagTable from './DbTagTable.svelte';
+  import DbRegTable from './DbRegTable..svelte';
 
   put_design();
 
@@ -11,3 +12,4 @@
 <DbPersonTable />
 <DbNfcTable />
 <DbTagTable />
+<DbRegTable />

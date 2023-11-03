@@ -8,15 +8,11 @@
   ////
 
 
-  import { person_table } from './../services/store';
-  import { nfc_table } from './../services/store';
-  import { person_nfc_table } from './../services/store';
+  import { person_map } from './../services/store';
   import { selected_person_id } from './../services/store';
-  import { selected_nfc_id } from './../services/store';
 
 /////
 
-  import { person_nfc_list } from './../services/store';
   import { tag_display_enabled } from './../services/store';
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
@@ -25,6 +21,7 @@
   import PersonTagList from './PersonTagList.svelte';
   import PersonNfcList from './PersonNfcList.svelte';
   import PersonRegList from './PersonRegList.svelte';
+  import PersonRegButton from './PersonRegButton.svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -32,10 +29,12 @@
   let person = undefined;
   let person_id = undefined;
 
+  let open_reg_list;
+
   $:  {
     if ($selected_person_id){
       person_id = $selected_person_id;
-      person = $person_table[person_id];
+      person = $person_map.get(person_id) ?? {};
       if (person.group !== undefined && person.group !== ''){
         group_ary = person.group.split(',');
       }
@@ -52,7 +51,9 @@
   });
 </script>
 
-{#if person}
+{#if person_id}
+
+<PersonRegList bind:open_reg_list />
 
 <CardGroup>
   <Card>
@@ -207,7 +208,10 @@
     </CardHeader>
     <ListGroup>
     <PersonNfcList {person_id} />
-    <PersonRegList {person_id} />
+    <PersonRegButton
+      {person_id}
+      on:click={() => open_reg_list(person_id)}
+    />
     {#if $tag_display_enabled}
       <PersonTagList {person_id} />
     {/if}

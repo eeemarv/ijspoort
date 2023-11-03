@@ -1,5 +1,6 @@
 <script>
-  import { person_table } from '../services/store';
+
+  import { person_map } from '../services/store';
   import { focus_year } from '../services/store';
   import { Button } from 'sveltestrap';
 
@@ -14,7 +15,8 @@
     if (person_id === undefined){
       return;
     }
-    if ($person_table[person_id] === undefined){
+
+    if (!$person_map.has(person_id)){
       return;
     }
 
@@ -23,14 +25,14 @@
     for (let y = year - years_list + 1; y <= year; y++){
       member_year_list = [...member_year_list, {
         year: y,
-        is_member: $person_table[person_id].member_year && $person_table[person_id].member_year['y' + y]
+        is_member: $person_map.get(person_id).member_year && $person_map.get(person_id).member_year['y' + y]
       }];
     }
   };
 
   $: {
     $focus_year;
-    $person_table;
+    $person_map;
     person_id;
     if (person_id){
       update_view();

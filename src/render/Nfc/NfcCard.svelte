@@ -7,24 +7,24 @@
   import NfcScan from './NfcScan.svelte';
   import NfcReadTest from './NfcReadTest.svelte';
   import NfcReset from './NfcReset.svelte';
-  import { nfc_uid } from '../services/store';
   import { nfc_read_test_enabled } from '../services/store';
   import { nfc_reset_enabled } from '../services/store';
   import { reg_nfc_auto_enabled } from '../services/store';
   import NfcPersonAuto from './NfcPersonAuto.svelte';
 
   let nfc_status;
+  let nfc_uid;
 </script>
 
 <NfcScan
   bind:nfc_status
+  bind:nfc_uid
   on:scanned_person_valid_member
   on:scanned_person_not_member
   on:scanned_person_found
   on:scanned_person_not_found
   on:scanned_uid_found
   on:scanned_uid_not_found
-  on:scanned_uid_blocked
 
   on:nfc_on
   on:nfc_off
@@ -32,7 +32,7 @@
 
 <Card class=my-2>
   <NfcDeviceCardHeader />
-  <NfcCardBody {nfc_status} />
+  <NfcCardBody {nfc_status} {nfc_uid} />
   <CardFooter>
     <div class="d-flex w100 justify-content-begin">
       <div>
@@ -49,7 +49,7 @@
     </div>
   </CardFooter>
   {#if !$reg_nfc_auto_enabled
-    && $nfc_uid
+    && nfc_uid
     && (nfc_status === 'writable' || nfc_status === 'ok')
     && ($nfc_read_test_enabled || $nfc_reset_enabled)
   }

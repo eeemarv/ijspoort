@@ -4,11 +4,16 @@ import lodash from 'lodash';
 const design_reg_search_doc = {
   _id: '_design/search',
   views: {
-    count_by_person_id_and_ts_epoch: {
+    count_by_person_id: {
       map: ((doc) => {
-        emit(doc.person_id + '_' + doc.ts_epoch.toString());
+        emit(doc.person_id);
       }).toString(),
       reduce: '_count'
+    },
+    by_person_id_and_ts_epoch: {
+      map: ((doc) => {
+        emit(doc.person_id + '_' + doc.ts_epoch);
+      }).toString()
     },
     count_by_date: {
       map: ((doc) => {

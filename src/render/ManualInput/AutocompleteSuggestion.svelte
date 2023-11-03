@@ -1,11 +1,13 @@
 <script>
   import PersonPhone from '../Person/PersonPhone.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
-  import { person_table } from '../services/store';
+  import { person_map } from '../services/store';
+
 
   export let person_id;
 
-  $: person = $person_table[person_id];
+  $: person = $person_map.get(person_id) ?? {};
+
 </script>
 
 <div>
@@ -19,10 +21,10 @@
   </div>
   <div class="d-flex w-100 justify-content-between">
     <div>
-      {person.address}, {person.address_zipcode} {person.address_municipality}
+      {person?.address}, {person?.address_zipcode} {person?.address_municipality}
     </div>
     <div>
-      {person.email}
+      {person?.email}
     </div>
   </div>
 </div>

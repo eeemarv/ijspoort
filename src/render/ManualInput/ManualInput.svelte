@@ -5,8 +5,7 @@
   import { db_person } from '../services/db';
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
-  import { person, selected_person_id } from './../services/store';
-  import { person_table } from './../services/store';
+  import { selected_person_id } from './../services/store';
   import { focus_year } from './../services/store';
   import { focus_year_filter_enabled } from './../services/store';
 
@@ -42,12 +41,12 @@
       reduce: false
     }).then((res) => {
 
+      console.log('MANUAL RES.', res);
+
       let result_keys = {};
 
       res.rows.every((v) => {
-        if (result_keys[v.id] !== undefined){
-          return true;
-        }
+
         if (Object.keys(result_keys).length > 10){
           return false;
         };
@@ -85,19 +84,18 @@
       fetch: search_func,
       onSelect: (person_id) => {
         $selected_person_id = person_id;
-        //$person = $person_table[person_id];
         el_manual.value = '';
       },
-      render: (person_id) => {
-        let suggestion_div = document.createElement("div");
-        suggestion_div.setAttribute('class', 'autocomplete-suggestion');
+      render: (item) => {
+        const div = document.createElement("div");
+        div.setAttribute('class', 'autocomplete-suggestion');
         new AutocompleteSuggestion({
-          target: suggestion_div,
+          target: div,
           props: {
-            person_id: person_id
+            person_id: item
           }
         });
-        return suggestion_div;
+        return div;
       },
       renderGroup: () => {''},
       customize: (input, inputRect, container, maxHeight) => {

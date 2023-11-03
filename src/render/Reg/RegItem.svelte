@@ -1,37 +1,32 @@
 <script>
-  import { db_person, db_reg } from '../services/db';
-  import { Button, Badge } from 'sveltestrap';
-  import { onMount } from 'svelte';
-  import { person } from '../services/store';
+  import { selected_person_id } from '../services/store';
   import RegTimeTag from './RegTimeTag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
+  import { reg_del } from '../services/reg';
+  import CountBadge from '../Common/CountBadge.svelte';
 
-  export let reg_index = 0;
-  export let reg;
-  export let newly_add = true;
-  export let blocked = false;
-  export let block_time = 300000;
+  export let reg = undefined;
+  export let count = undefined;
 
-  const scan_previous_hours = 5;
-  let reg_item;
+  let newly_add = false;
+  const newly_add_detect_time = 10000;
+  const newly_add_show_time = 1500;
+
   let deleted = false;
-  let selected = false;
-  let person_data = {};
-  let previous_regs = [];
+  const deleted_show_time = 700
 
-  const get_scan_since = () => {
-    let epoch = (new Date()).getTime();
-    return (epoch - (3600000 * scan_previous_hours)).toString();
-  }
+  let selected = false;
+  const selected_show_time = 1000;
 
   const handle_select_reg = () => {
     selected = true;
-    setTimeout(() => {selected = false}, 1000);
-    db_person.get(reg.person_id).then((res) => {
-        $person = res;
-    }).catch((err) => {
-        console.log(err);
-    });
+
+    setTimeout(() => {
+      selected = false
+    }, selected_show_time);
+
+    $selected_person_id = reg.person_id;
+
     window.scroll({
       top: 0,
       left: 0,
@@ -40,104 +35,50 @@
   };
 
   const handle_remove_reg = (e) => {
+
     deleted = true;
+
     setTimeout(() => {
-      db_reg.remove(reg).then((res) => {
-        console.log(res);
-        $person = undefined;
-      }).catch((err) => {
-        console.log(err);
-      });
-    }, 700);
+      reg_del(reg);
+    }, deleted_show_time);
+
   };
 
-  onMount(() => {
-    db_person.get(reg.person_id).then((res) => {
-      console.log('mount reg, get person data');
-      person_data = res;
-    }).catch((err) => {
-      console.log(err);
-    });
+  $: if (reg.ts_epoch > ((new Date).getTime() - newly_add_detect_time)){
+    newly_add = true;
+    setTimeout(() => newly_add = false, newly_add_show_time);
+  }
 
-    db_reg.query('search/count_by_person_id_and_ts_epoch', {
-      startkey: reg.person_id + '_' + get_scan_since(),
-      endkey: reg.person_id + '_\uffff',
-      include_docs: true,
-      reduce: false
-    }).then((res) => {
-      console.log('search/count_by_person_id_and_ts_epoch (no reduce)');
-      console.log(res);
-      previous_regs = res.rows;
-    }).catch((err) => {
-      console.log(err);
-    });
-
-    if (blocked){
-      newly_add = false;
-      setTimeout(() => {
-        reg_item.parentNode.removeChild(reg_item);
-      }, 1500);
-    }
-    setTimeout(() => {
-      newly_add = false;
-    }, 1000);
-  });
 </script>
 
 <li
-  bind:this={reg_item}
   on:click={handle_select_reg}
   on:keyup={() => {}}
   class=list-group-item
-  class:bg-warning={blocked}
   class:bg-success={newly_add}
   class:bg-danger={deleted}
   class:bg-primary={selected}
-  class:selectable={!blocked && !newly_add && !deleted && !selected}
+  class:selectable={!newly_add && !deleted && !selected}
 >
   <div class="d-flex w-100 justify-content-between">
     <div>
       <div>
-        {#if reg_index}
-          <Badge color=info title="teller">
-            {reg_index}
-          </Badge>
-        {/if}
-        {#if !blocked}
-          <RegTimeTag {reg} />
-        {/if}
-        <PersonTag person_id={person_data._id} show_member_year show_tags />
-        {#if blocked}
-          <Badge color=dark>
-            Reeds geregistreerd in laatste {Math.floor(block_time / 60000)} minuten.
-          </Badge>
-        {/if}
+        <CountBadge {count} />
+        <RegTimeTag {reg} />
+        <PersonTag person_id={reg.person_id} show_member_year show_tags />
       </div>
     </div>
     <div>
-      {#if !blocked}
-        <button
-          type=button
-          color=danger
-          class="btn btn-danger"
-          on:click|stopPropagation={handle_remove_reg}
-        >
-          Verwijder
-        </button>
-      {/if}
+      <button
+        type=button
+        color=danger
+        class="btn btn-danger"
+        on:click|stopPropagation={handle_remove_reg}
+      >
+        Verwijder
+      </button>
     </div>
   </div>
-  {#if false}
-  <div>
-    {#if previous_regs}
-    Ook om:
-  {/if}
-  {#each previous_regs as prev}
-    <RegTimeTag reg={prev.doc} />
-  {/each}
-  <Button color=info>Reg-Info</Button>
-  </div>
-  {/if}
 </li>
 
 <style>

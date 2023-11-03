@@ -18,7 +18,9 @@ $theme-colors: (
   green: darken($green, 10%),
   teal: darken($teal, 10%),
   cyan: darken($cyan, 10%),
-  grey: $gray-600
+  grey: $gray-600,
+  white: white,
+  maroon: maroon
 );
 
 $modal-sm:                          300px;
@@ -26,7 +28,7 @@ $modal-md:                          500px;
 $modal-lg:                          800px;
 $modal-xl:    1300px;                      // 1140px;
 
-$input-bg: #446;
+$input-bg: #223;
 $input-border-color: #ddd;
 $input-color: white;
 

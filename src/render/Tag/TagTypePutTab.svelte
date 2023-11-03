@@ -14,6 +14,7 @@
   import Tag from './Tag.svelte';
   import { tag_types_enabled } from '../services/store';
   import { tag_types } from '../services/store';
+  import TagType from './TagType.svelte';
 
   const { setActiveTab } = getContext('tabContent');
 
@@ -132,7 +133,7 @@
   </h3>
 
   <p>
-    Voorbeeld: <Tag tag={{text: text, description: description, color: color, max_per_person: max_per_person}} />
+    Voorbeeld: <TagType tag={{text: text, description: description, color: color, max_per_person: max_per_person}} />
   </p>
   <Row>
     <Col xs=2>
@@ -184,7 +185,7 @@
           name=color
           value={tc.value}
         >
-          <Tag tag={{text: tc.label, description: tc.title, color: tc.value}} />
+          <TagType tag={{text: tc.label, description: tc.title, color: tc.value}} />
         </Radio>
       {/each}
     </Col>

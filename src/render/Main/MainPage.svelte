@@ -1,4 +1,5 @@
 <script>
+  import { reg_add } from '../services/reg';
   import { setContext } from 'svelte';
   import { ck_new_tag_id } from '../services/context_keys';
   import { ck_new_tag_type_id } from '../services/context_keys';
@@ -18,7 +19,7 @@
   import NfcCard from '../Nfc/NfcCard.svelte';
   import TagCard from '../Tag/TagCard.svelte';
   import GateCard from '../Gate/GateCard.svelte';
-  import { temp_display_enabled } from '../services/store';
+  import { selected_person_id, temp_display_enabled } from '../services/store';
   import { gate_display_enabled } from '../services/store';
   import { tag_display_enabled } from '../services/store';
   import { reg_nfc_auto_enabled } from '../services/store';
@@ -32,6 +33,9 @@
   const updated_tag_type_id = writable();
   setContext(ck_updated_tag_type_id, updated_tag_type_id);
 
+  let show_blocked_reg;
+
+
   let cmp_reg;
   let cmp_reg_list;
   let block_time;
@@ -39,36 +43,43 @@
   let handle_person_already_registered;
   let handle_scanned_person_valid_member;
   let handle_scanned_person_not_member;
-  let handle_scanned_uid_blocked;
+//  let handle_scanned_uid_blocked;
 
   onMount(() => {
     block_time = cmp_reg.block_time;
 
     handle_click_manual_reg = () => {
       cmp_reg.add_by_manual($person);
-      $person = undefined;
+      $selected_person_id = undefined;
     };
 
     handle_person_already_registered = (e) => {
-      cmp_reg_list.add_person_already_registered(e.detail.reg);
+      show_blocked_reg(person_id);
     };
 
     handle_scanned_person_valid_member = (e) => {
+
       if ($reg_nfc_auto_enabled){
-        cmp_reg.add_by_nfc(e.detail.person, e.detail.nfc_uid);
+        reg_add(e.detail.person_id, e.detail.nfc_uid);
+        // cmp_reg.add_by_nfc(e.detail.person, e.detail.nfc_uid);
       }
+
       if ($person_nfc_auto_enabled){
-        $person = e.detail.person;
+        $selected_person_id = e.detail.selected_person_id;
+        //$person = e.detail.person;
       }
+
     };
 
     handle_scanned_person_not_member = (e) => {
       $person = e.detail.person;
     };
 
+    /*
     handle_scanned_uid_blocked = (e) => {
       $person = e.detail.person;
     };
+    */
   });
 </script>
 
@@ -84,8 +95,8 @@
   <Person on:click_manual_reg={handle_click_manual_reg} />
 
   <RegList
+    bind:show_blocked_reg
     bind:this={cmp_reg_list}
-    {block_time}
   />
 </Col>
 
@@ -97,7 +108,6 @@
     on:scanned_person_not_found
     on:scanned_uid_found
     on:scanned_uid_not_found
-    on:scanned_uid_blocked={handle_scanned_uid_blocked}
 
     on:nfc_on
     on:nfc_off

@@ -1,82 +1,20 @@
 <script>
   import { Row, Col, ListGroup, ListGroupItem } from 'sveltestrap';
   import RegItem from './RegItem.svelte';
-  import { db_reg } from '../services/db';
+  import { reg_map } from '../services/store';
+  import RegBlockedItem from './RegBlockedItem.svelte';
 
-  import { onMount } from 'svelte';
+  const show_blocked_time = 1500;
+  let blocked_reg_person_id = undefined;
 
-  const reg_hours = 5;
-  const reg_limit = 1000;
-  const refresh_interval = 10000;
-
-  let registrations = [];
-  let blocked_regs = [];
-
-  export let block_time = 300000;
-
-  export const add_person_already_registered = (reg) => {
-    blocked_regs = [reg, ...blocked_regs];
+  export const show_blocked_reg = (person_id) => {
+    blocked_reg_person_id = person_id;
+    setTimeout(() => {
+      blocked_reg_person_id = undefined;
+    }, show_blocked_time);
   };
 
-  const get_key_since = () => {
-    let epoch = (new Date()).getTime();
-    return 't' + (epoch - (3600000 * reg_hours)).toString();
-  }
-
-  const refresh_reg_list = () => {
-    db_reg.allDocs({
-      include_docs: true,
-      limit: reg_limit,
-      endkey: get_key_since(),
-      descending: true
-    }).then((res) => {
-      console.log('refresh reg_list');
-      console.log(res);
-      let regs = [];
-      let person_ids = {};
-      res.rows.forEach((v) => {
-        regs = [...regs, v.doc];
-        person_ids[v.doc.person_id] = true;
-      });
-      registrations = regs;
-    }).catch((err) => {
-      console.log(err);
-    });
-  };
-
-  onMount(() => {
-    refresh_reg_list();
-
-    db_reg.changes({
-      since: 'now',
-      live: true,
-      include_docs: true
-    }).on('change', (change) => {
-      console.log('reg change');
-      console.log(change);
-      if (change.deleted){
-        registrations = registrations.filter((reg) => reg._id !== change.id);
-        return;
-      }
-      if (change.id < get_key_since()){
-        console.log('change too old, do no display >', change.id);
-        return;
-      }
-      let person_ids = {};
-      person_ids[change.doc.person_id] = true;
-      registrations = [change.doc, ...registrations];
-    }).on('error', (err) => {
-      console.log(err);
-    });
-  });
-
-  $: {
-    refresh_reg_list();
-  }
-
-  setInterval(() => {
-    refresh_reg_list();
-  }, refresh_interval);
+  $: console.log('++ REG MAP  ++', $reg_map);
 </script>
 
 <Row>
@@ -85,20 +23,16 @@
       <ListGroupItem>
           <p><br></p>
       </ListGroupItem>
-      {#each blocked_regs as blocked_reg(blocked_reg._id)}
-        <RegItem
-        reg={blocked_reg}
-        blocked={true}
-        {block_time}
-        />
+
+      {#if blocked_reg_person_id}
+        <RegBlockedItem person_id={blocked_reg_person_id} />
+      {/if}
+
+      {#each [...$reg_map].reverse() as [reg_id, reg], index(reg._id)}
+        <RegItem {reg} count={$reg_map.size - index} />
       {/each}
-      {#each registrations as reg, index(reg._id)}
-        <RegItem
-        reg_index={registrations.length - index}
-        {reg}
-        />
-      {/each}
-      {#if registrations.length === 0}
+
+      {#if $reg_map.size === 0}
         <ListGroupItem class=bg-primary>
           <p>Nog geen registraties</p>
         </ListGroupItem>

@@ -28,7 +28,7 @@
   let handle_scanned_person_not_member;
   let handle_scanned_person_not_found;
   let handle_scanned_uid_not_found;
-  let handle_scanned_uid_blocked;
+//  let handle_scanned_uid_blocked;
   let handle_nfc_off;
   let handle_click_open_gate_config;
   let sound_ok;
@@ -104,6 +104,7 @@
 
   const check_wait = () => {
     if ($gate_nfc_enabled && open_gate){
+
       modal_class = 'bg-warning';
       title = 'Wacht even tot je voorganger door de poort is en probeer opnieuw.';
       show_reg_person = false;
@@ -139,12 +140,15 @@
 
     handle_scanned_person_valid_member = (event) => {
       dispatch('trigger_close_gate_config');
+
       if (!lodash.isEqual(reg_person, event.detail.person)){
         if (check_wait()){
           return;
         }
       }
+
       load_reg_person_nfc(event);
+
       if ($gate_count_enabled && ($gate_count <= 0)){
         modal_class = 'bg-warning';
         title = 'Volzet';
@@ -152,12 +156,15 @@
         sound_error();
         return;
       }
+
       modal_class = 'bg-success';
       title = 'Ok';
+
       dispatch('trigger_open_gate', {
         person: reg_person,
         nfc_uid: event.detail.nfc_uid
       });
+
       start_open_timer();
       sound_ok();
     };
@@ -176,12 +183,16 @@
 
     handle_scanned_person_not_found = (event) => {
       dispatch('trigger_close_gate_config');
+
       if (check_wait()){
         return;
       }
+
       clear_reg_person_nfc();
+
       modal_class = 'bg-danger';
       title = 'Persoon niet herkend';
+
       start_open_timer();
       sound_error();
     };
@@ -192,23 +203,31 @@
         return;
       }
       clear_reg_person_nfc();
+
       modal_class = 'bg-danger';
       title = 'Tag niet herkend';
+
       start_open_timer();
       sound_error();
     };
 
+    /*
     handle_scanned_uid_blocked = (event) => {
+
       dispatch('trigger_close_gate_config');
       if (check_wait()){
         return;
       }
+
       load_reg_person_nfc(event);
+
       modal_class = 'bg-danger';
       title = 'Tag geblokkeerd';
+
       start_open_timer();
       sound_error();
     };
+    */
 
     handle_click_open_gate_config = () => {
       open = false;
@@ -239,7 +258,7 @@
     <ModalBody class={modal_class}>
       {#if reg_person}
         <h2>
-          <PersonTag person={reg_person} />
+          <PersonTag person_id={reg_person._id} />
         </h2>
       {/if}
       {#if reg_person && already_registered}
@@ -292,8 +311,6 @@
   on:scanned_uid_found
   on:scanned_uid_not_found={handle_scanned_uid_not_found}
   on:scanned_uid_not_found
-  on:scanned_uid_blocked={handle_scanned_uid_blocked}
-  on:scanned_uid_blocked
 
   on:nfc_on
   on:nfc_off={handle_nfc_off}

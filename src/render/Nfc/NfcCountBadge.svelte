@@ -1,11 +1,8 @@
 <script>
-  import { nfc_table } from '../services/store';
+  import { nfc_map } from '../services/store';
 
   export let font_size = '1em';
 
-  let nfc_count = 0;
-
-  $: nfc_count = Object.keys($nfc_table).length;
 </script>
 
 <span
@@ -13,7 +10,7 @@
   title="Totaal NFC-tags"
   style="--font-size: {font_size};"
 >
-  {nfc_count}
+  {$nfc_map.size}
 </span>
 
 <style>

@@ -1,9 +1,9 @@
 <script>
-  import { person_table } from "../services/store";
+  import { person_map } from "../services/store";
 
   export let person_id = undefined;
 
-  $: person = $person_table[person_id] ?? {};
+  $: person = $person_map.get(person_id) ?? {};
 </script>
 
 {#if person.phone_mobile }

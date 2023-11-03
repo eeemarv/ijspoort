@@ -1,107 +1,140 @@
 <script>
+  const env = window.require('electron').remote.process.env;
   const { ipcRenderer } = window.require('electron');
   import { createEventDispatcher } from 'svelte';
-  import { db_nfc, db_person } from '../services/db';
-  import { nfc_uid } from '../services/store';
+  //import { nfc_uid } from '../services/store';
+
+  import { selected_nfc_id } from '../services/store';
+  import { selected_person_id } from '../services/store';
+  import { person_nfc_auto_enabled } from '../services/store';
+  import { reg_nfc_auto_enabled } from '../services/store';
+  import { person_map } from '../services/store';
+  import { person_last_reg_ts_map } from '../services/store';
+  import { reg_add } from '../services/reg';
+  import { reg_block_time } from '../services/store';
+  import { nfc_map } from '../services/store';
+
+  const gate_enabled = env.GATE === '1';
 
   const dispatch = createEventDispatcher();
 
   export let nfc_status = 'off';
+  export let nfc_uid = undefined;
+  export let nfc_id = undefined;
 
   ipcRenderer.on('nfc.on', (ev, card) => {
-    $nfc_uid = card.uid;
-    let blocked = false;
-    let year_key = 'y' + (new Date()).getFullYear().toString();
+    const now = new Date();
+    const ts_reg_fresh_after = now.getTime() - $reg_block_time;
+    const year_key = 'y' + now.getFullYear().toString();
+
+    nfc_uid = card.uid;
 
     dispatch('nfc_on', {
-      nfc_uid: $nfc_uid
+      nfc_uid: nfc_uid
     });
 
-    db_nfc.get('uid_'+ card.uid).then((res) => {
-      console.log('db_nfc.get');
-      console.log(res);
-      nfc_status = 'ok';
+    const id = 'uid_' + nfc_uid;
 
-      console.log('dispatch scanned_uid_found');
-      dispatch('scanned_uid_found', {
-        nfc: res,
-        nfc_uid: $nfc_uid
+    if (!$nfc_map.has(id)){
+
+      console.log('dispatch scanned_uid_not_found');
+      dispatch('scanned_uid_not_found', {
+        nfc_uid: nfc_uid
       });
 
-      return res;
-    }).catch((err) => {
-      if (err.name === 'not_found'){
+      ipcRenderer.send('nfc.test_transport_key');
+      return;
+    }
 
-        console.log('dispatch scanned_uid_not_found');
-        dispatch('scanned_uid_not_found', {
-          nfc_uid: $nfc_uid
-        });
+    nfc_id = id;
+    $selected_nfc_id = id;
+    nfc_status = 'ok';
 
-        ipcRenderer.send('nfc.test_transport_key');
-        throw 'nfc uid not found in database (check if transport key is set)';
-      }
-      throw err;
-    }).then((res) => {
-      if (typeof res.blocked === 'object'){
-        let last_block_item = res.blocked[res.blocked.length - 1];
-        if (last_block_item.blocked){
-          blocked = true;
-        }
-      }
-      return db_person.get(res.person_id);
-    }).catch((err) => {
-      console.log(err);
-      if (err.name === 'not_found'){
+    let nfc = $nfc_map.get(nfc_id);
 
-        console.log('dispatch scanned_person_not_found');
-        dispatch('scanned_person_not_found', {
-          nfc_uid: $nfc_uid
-        });
+    console.log('dispatch scanned_uid_found');
+    dispatch('scanned_uid_found', {
+      nfc_id: nfc_id,
+      nfc: nfc,
+      nfc_uid: nfc_uid
+    });
 
-        ipcRenderer.send('nfc.test_transport_key');
-        throw 'person was not found';
-      }
-      throw err;
-    }).then((res) => {
+    if (!$person_map.has(nfc.person_id)){
 
-      console.log('dispatch scanned_person_found');
-      dispatch('scanned_person_found', {
-        person: res,
-        nfc_uid: $nfc_uid
+      console.log('dispatch scanned_person_not_found');
+
+      dispatch('scanned_person_not_found', {
+        nfc_id: nfc_id,
+        nfc_uid: nfc_uid
       });
 
-      let is_member = false;
-      if (typeof res.member_year === 'object'
-        && res.member_year[year_key]){
-        is_member = true;
-      }
+      ipcRenderer.send('nfc.test_transport_key');
+      return;
+    }
 
-      if (!is_member){
-        console.log('dispatch scanned_person_not_member');
-        dispatch('scanned_person_not_member', {
-          person: res,
-          nfc_uid: $nfc_uid
-        });
-        return;
-      }
+    const person_id = nfc.person_id;
 
-      if (blocked){
-        console.log('dispatch scanned_uid_blocked');
-        dispatch('scanned_uid_blocked', {
-          person: res,
-          nfc_uid: $nfc_uid
-        });
-        return;
-      }
+    let person = $person_map.get(nfc.person_id);
 
-      console.log('dispatch scanned_person_valid_member');
-      dispatch('scanned_person_valid_member', {
-        person: res,
-        nfc_uid: $nfc_uid
+    console.log('dispatch scanned_person_found');
+
+    dispatch('scanned_person_found', {
+      person_id: person_id,
+      person: person,
+      nfc_uid: nfc_uid
+    });
+
+    let is_member = false;
+
+    if (typeof person.member_year === 'object'
+      && person.member_year[year_key]){
+      is_member = true;
+    }
+
+    if (!is_member){
+
+      $selected_person_id = person_id;
+
+      console.log('dispatch scanned_person_not_member');
+      dispatch('scanned_person_not_member', {
+        person_id: person_id,
+        person: person,
+        nfc_uid: nfc_uid
       });
+      return;
+    }
 
-    }).catch((err) => {
-      console.log(err);
+    /** valid member */
+
+    /** register (if fresh) */
+
+    if (!$person_last_reg_ts_map.has(person_id)
+      || $person_last_reg_ts_map.get(person_id) < ts_reg_fresh_after){
+
+      if ($reg_nfc_auto_enabled || gate_enabled){
+        reg_add(person_id, nfc_uid);
+      }
+
+    }
+    else
+    {
+      console.log('dispatch scanned_person_already_registered');
+
+      dispatch('scanned_person_already_registered', {
+        person_id: person_id
+      });
+    }
+
+    if ($person_nfc_auto_enabled){
+      $selected_person_id = person_id;
+    }
+
+    console.log('dispatch scanned_person_valid_member');
+
+    dispatch('scanned_person_valid_member', {
+      person_id: person_id,
+      person: person,
+      nfc_uid: nfc_uid
     });
 
     window.scroll({
@@ -145,8 +178,9 @@
   /*******/
 
   ipcRenderer.on('nfc.off', (ev) => {
-    $nfc_uid = undefined;
+    nfc_uid = undefined;
     nfc_status = 'off';
+    $selected_nfc_id = undefined;
     dispatch('nfc_off');
   });
 </script>

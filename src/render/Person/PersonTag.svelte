@@ -3,9 +3,11 @@
   import PersonMemberId from './PersonMemberId.svelte';
   import { focus_year } from '../services/store';
   import PersonFocusYearTag from './PersonFocusYearTag.svelte';
-  import { person_table } from '../services/store';
+  import { person_map } from '../services/store';
   import { person_tag_table } from '../services/store';
   import { tag_types_enabled } from '../services/store';
+  import { tag_display_enabled } from '../services/store';
+
   import Tag from '../Tag/Tag.svelte';
 
   export let person_id = undefined;
@@ -17,12 +19,16 @@
 
   const build_tag_ary = () => {
     tag_ary = [];
+    if (!$tag_display_enabled){
+      return;
+    }
     if (!person_id){
       return;
     }
     if (!$person_tag_table[person_id]){
       return;
     }
+
     Object.keys($person_tag_table[person_id]).forEach((type_id) => {
       if (!$tag_types_enabled[type_id]){
         return;
@@ -40,7 +46,7 @@
     $person_tag_table[person_id];
     $tag_types_enabled;
     if (person_id !== undefined){
-      person = $person_table[person_id];
+      person = $person_map.get(person_id) ?? {};
       if (show_tags){
         build_tag_ary();
       }
@@ -57,8 +63,8 @@
     <PersonFocusYearTag />
   {/if}
   {#if show_tags }
-    {#each tag_ary as t, index(index)}
-      <Tag type_id={t} />
+    {#each tag_ary as type_id, index(index)}
+      <Tag {type_id} />
     {/each}
   {/if}
 {/if}
