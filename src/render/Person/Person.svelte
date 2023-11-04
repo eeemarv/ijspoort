@@ -4,9 +4,9 @@
   import { Button } from 'sveltestrap';
   import { ListGroup, ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
+  import { get_person_count_by_simular } from './../services/person_simular';
 
   ////
-
 
   import { person_map } from './../services/store';
   import { selected_person_id } from './../services/store';
@@ -17,11 +17,12 @@
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonMemberYear from './PersonMemberYear.svelte';
-  import PersonSearchSimular from './PersonSearchSimular.svelte';
   import PersonTagList from './PersonTagList.svelte';
   import PersonNfcList from './PersonNfcList.svelte';
   import PersonRegList from './PersonRegList.svelte';
   import PersonRegButton from './PersonRegButton.svelte';
+  import PersonSimularButton from './PersonSimularButton.svelte';
+  import PersonSimularModal from './PersonSimularModal.svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -30,6 +31,7 @@
   let person_id = undefined;
 
   let open_reg_list;
+  let open_simular;
 
   $:  {
     if ($selected_person_id){
@@ -45,7 +47,6 @@
     }
   }
 
-
   const handle_click_manual_reg = (() => {
     dispatch('click_manual_reg');
   });
@@ -53,6 +54,7 @@
 
 {#if person_id}
 
+<PersonSimularModal bind:open_simular {person_id} />
 <PersonRegList bind:open_reg_list />
 
 <CardGroup>
@@ -71,12 +73,18 @@
           <div></div>
         {/if}
       </ListGroupItem>
-
+      {#await get_person_count_by_simular(person_id)}
+        <p>... data ophalen</p>
+      {:then simular_map}
       <ListGroupItem class="d-flex w-100 justify-content-between py-2">
           <div>
             <PersonName {person_id} />
           </div>
-          <PersonSearchSimular type=name {person_id}/>
+          <PersonSimularButton
+            key=name
+            {simular_map} {person_id}
+            on:click_simular={open_simular}
+          />
       </ListGroupItem>
 
       {#if person.gender || person.date_of_birth}
@@ -100,7 +108,11 @@
             </span>
           {/if}
           </div>
-          <PersonSearchSimular type=date_of_birth {person_id} />
+          <PersonSimularButton
+            key=date_of_birth
+            {simular_map} {person_id}
+            on:click_simular={open_simular}
+          />
         </ListGroupItem>
       {/if}
 
@@ -115,7 +127,11 @@
           </div>
 
           <div>
-            <PersonSearchSimular type=phone_mobile {person_id} />
+            <PersonSimularButton
+              key=phone_mobile
+              {simular_map} {person_id}
+              on:click_simular={open_simular}
+            />
           </div>
         </ListGroupItem>
       {/if}
@@ -130,7 +146,11 @@
             </Badge>
           </div>
           <div>
-            <PersonSearchSimular type=phone_home {person_id} />
+            <PersonSimularButton
+              key=phone_home
+              {simular_map} {person_id}
+              on:click_simular={open_simular}
+            />
           </div>
         </ListGroupItem>
       {/if}
@@ -140,10 +160,16 @@
           <div title="telefoon werk">
             {person.phone_work}
             &nbsp;
-            <Button color=primary>Tel.werk</Button>
+            <Button color=primary>
+              Tel.werk
+            </Button>
           </div>
           <idv>
-            <PersonSearchSimular type=phone_work {person_id} />
+            <PersonSimularButton
+              key=phone_work
+              {simular_map} {person_id}
+              on:click_simular={open_simular}
+            />
           </idv>
         </ListGroupItem>
       {/if}
@@ -151,7 +177,11 @@
       {#if person.email}
         <ListGroupItem class="d-flex w-100 justify-content-between py-2">
           <div title="email">{person.email}</div>
-          <PersonSearchSimular type=email {person_id} />
+          <PersonSimularButton
+            key=email
+            {simular_map} {person_id}
+            on:click_simular={open_simular}
+          />
         </ListGroupItem>
       {/if}
 
@@ -178,14 +208,22 @@
             </div>
           {/if}
           </div>
-          <PersonSearchSimular type=address {person_id} />
+          <PersonSimularButton
+            key=address
+            {simular_map} {person_id}
+            on:click_simular={open_simular}
+          />
         </ListGroupItem>
       {/if}
 
       {#each group_ary as group}
         <ListGroupItem title="werkgroep" class="d-flex w-100 justify-content-between py-2 bg-info">
           <div title="werkgroep">{group}</div>
-          <PersonSearchSimular type=group {group} {person_id} />
+          <PersonSimularButton
+            key=group
+            {group} {simular_map} {person_id}
+            on:click_simular={open_simular}
+          />
         </ListGroupItem>
       {/each}
 
@@ -194,7 +232,9 @@
           {person.team}
         </ListGroupItem>
       {/if}
-
+    {:catch err}
+      <p class="text-danger">{err}</p>
+    {/await}
     </ListGroup>
     <CardBody></CardBody>
     <CardFooter>

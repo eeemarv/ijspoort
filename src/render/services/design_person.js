@@ -6,14 +6,14 @@ const design_person_search_doc = {
   views: {
     count_by_text: {
       map: ((doc) => {
-        let prefix_keys = [''];
+        const prefix_keys = [''];
         if (doc.member_year !== undefined){
           Object.keys(doc.member_year).forEach((v) => {
-            prefix_keys.push(v + '_');
+            prefix_keys.push(v + '.');
           });
         }
-        let firstname = doc.firstname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-        let surname = doc.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+        const firstname = doc.firstname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+        const surname = doc.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
         prefix_keys.forEach((prefix) => {
           emit(prefix + firstname + surname);
           emit(prefix + surname + firstname);
@@ -23,7 +23,10 @@ const design_person_search_doc = {
           if (doc[k] === undefined){
             return;
           }
-          let str = doc[k].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+          if (doc[k] === ''){
+            return;
+          }
+          const str = doc[k].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
           prefix_keys.forEach((prefix) => {
             emit(prefix + str);
           });
@@ -31,6 +34,7 @@ const design_person_search_doc = {
       }).toString(),
       reduce: '_count'
     },
+
     count_by_member_year: {
       map: ((doc) => {
         if (typeof doc.member_year === 'object'){
@@ -41,124 +45,43 @@ const design_person_search_doc = {
       }).toString(),
       reduce: '_count'
     },
-    count_by_name: {
+
+    count_by_simular: {
       map: ((doc) => {
-        let firstname = doc.firstname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-        let surname = doc.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-        emit(firstname + surname);
-      }).toString(),
-      reduce: '_count'
-    },
-    count_by_date_of_birth: {
-      map: ((doc) => {
-        if (doc.date_of_birth === undefined){
-          return;
-        }
-        let date_of_birth = doc.date_of_birth.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-        if (date_of_birth === ''){
-          return;
-        }
-        emit(date_of_birth);
-      }).toString(),
-      reduce: '_count'
-    },
-    count_by_phone_mobile: {
-      map: ((doc) => {
-        if (doc.phone_mobile === undefined){
-          return;
-        }
-        let phone_mobile = doc.phone_mobile.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-        if (phone_mobile === ''){
-          return;
-        }
-        emit(phone_mobile);
-      }).toString(),
-      reduce: '_count'
-    },
-    count_by_phone_home: {
-      map: ((doc) => {
-        if (doc.phone_home === undefined){
-          return;
-        }
-        let phone_home = doc.phone_home.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-        if (phone_home === ''){
-          return;
-        }
-        emit(phone_home);
-      }).toString(),
-      reduce: '_count'
-    },
-    count_by_phone_work: {
-      map: ((doc) => {
-        if (doc.phone_work === undefined){
-          return;
-        }
-        let phone_work = doc.phone_work.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-        if (phone_work === ''){
-          return;
-        }
-        emit(phone_work);
-      }).toString(),
-      reduce: '_count'
-    },
-    count_by_email: {
-      map: ((doc) => {
-        if (doc.email === undefined){
-          return;
-        }
-        let email = doc.email.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-        if (email === ''){
-          return;
-        }
-        emit(email);
-      }).toString(),
-      reduce: '_count'
-    },
-    count_by_email_work: {
-      map: ((doc) => {
-        if (doc.email_work === undefined){
-          return;
-        }
-        let email_work = doc.email_work.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-        if (email_work === ''){
-          return;
-        }
-        emit(email_work);
-      }).toString(),
-      reduce: '_count'
-    },
-    count_by_address: {
-      map: ((doc) => {
-        if (doc.address === undefined){
-          return;
-        }
-        let address = doc.address.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
-        if (address === ''){
-          return;
-        }
-        emit(address);
-      }).toString(),
-      reduce: '_count'
-    },
-    count_by_group: {
-      map: ((doc) => {
-        if (!doc.group){
-          return;
-        }
+        const firstname = doc.firstname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+        const surname = doc.surname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+        emit('name.' + firstname + surname);
+
+        const key_prefixes = ['date_of_birth', 'phone_mobile', 'phone_work', 'phone_home',
+          'email', 'email_work', 'address'];
+        key_prefixes.forEach((k) => {
+          if (doc[k] === undefined){
+            return;
+          }
+          if (doc[k] === ''){
+            return;
+          }
+          const str = doc[k].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+          emit(k + '.' + str);
+        });
+
         if (doc.group === undefined){
           return;
         }
-        let group_ary = doc.group.split(',');
+        if (doc.group === ''){
+          return;
+        }
+        const group_ary = doc.group.split(',');
         group_ary.forEach((g) => {
-          let group = g.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+          const group = g.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
           if (group === ''){
             return;
           }
-          emit(group);
+          emit('group.' + group);
         });
       }).toString(),
       reduce: '_count'
-    }
+    },
   }
 };
 
@@ -200,10 +123,17 @@ const put_design_person_search = () => {
   }).then((res) => {
 
     console.log('build indexes db_person search/count_by_member_year');
-
     return db_person.query('search/count_by_member_year', {
       limit: 0
     });
+  }).then((res) => {
+
+    console.log('build indexes db_person search/count_by_simular');
+
+    return db_person.query('search/count_by_simular', {
+      limit: 0
+    });
+
   }).then((res) => {
 
     console.log('build indexes db_person search/count_by_name');

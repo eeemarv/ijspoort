@@ -8,6 +8,7 @@
   import { selected_person_id } from './../services/store';
   import { focus_year } from './../services/store';
   import { focus_year_filter_enabled } from './../services/store';
+  import { get_search_str } from './../services/functions';
 
   let select_years = [];
   let el_manual;
@@ -24,13 +25,15 @@
   }
 
   const search_func = (text, update) => {
-    let search_text = text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
+    let search_text = get_search_str(text);
+
     if (search_text === ''){
       update([]);
       return;
     }
+
     if ($focus_year_filter_enabled){
-      search_text = 'y' + $focus_year + '_' + search_text;
+      search_text = 'y' + $focus_year + '.' + search_text;
     }
 
     db_person.query('search/count_by_text', {

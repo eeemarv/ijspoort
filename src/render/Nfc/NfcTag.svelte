@@ -59,9 +59,19 @@
   {abc_code ?? '-'}
 </Badge>
 {/if}
-<Badge color=accent title="toegangsbadge {nfc?.uid}">NFC</Badge>
+<Badge
+  color={nfc.uid.length === 14 ? 'accent' : 'cyan'}
+  title="toegangsbadge {nfc?.uid}"
+>
+  NFC-{nfc.uid.length / 2}b
+</Badge>
 {#if show_uid}
-<Badge color=accent title="unieke code van badge">{nfc?.uid}</Badge>
+<Badge
+  color={nfc.uid.length === 14 ? 'accent' : 'cyan'}
+  title="unieke code van badge"
+>
+  {nfc?.uid}
+</Badge>
 {/if}
 {#if show_ts_epoch}
 &nbsp;
