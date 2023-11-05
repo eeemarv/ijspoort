@@ -16,8 +16,7 @@
 
   export let person_id = undefined;
 
-  export const open_reg_list = (prsn_id) => {
-    person_id = prsn_id;
+  export const open_reg_list = () => {
     open = true;
   };
 
@@ -92,9 +91,7 @@
   <ModalBody>
     <Row>
       <Col>
-        {#await get_reg_count(person_id)}
-          ...data ophalen
-        {:then reg_count}
+        {#await get_reg_count(person_id) then reg_count}
           Totaal: {reg_count}
         {:catch err}
           <span class="text-danger">{err}</span>

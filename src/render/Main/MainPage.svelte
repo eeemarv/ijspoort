@@ -10,7 +10,6 @@
   import Person from '../Person/Person.svelte';
   import RegList from '../Reg/RegList.svelte';
   import TemperatureCard from '../Common/TemperatureCard.svelte';
-  import Stats from '../Common/Stats.svelte';
   import Clock from '../Common/Clock.svelte';
   import DbSync from '../Db/DbSync.svelte';
   import Reg from '../Reg/Reg.svelte';
@@ -25,6 +24,8 @@
   import { reg_nfc_auto_enabled } from '../services/store';
   import { person_nfc_auto_enabled } from '../services/store';
   import { person } from '../services/store';
+  import MemberYearCardBody from '../Common/MemberYearCardBody.svelte';
+  import MemberYearModal from '../Common/MemberYearModal.svelte';
 
   const new_tag_id = writable();
   setContext(ck_new_tag_id, new_tag_id);
@@ -34,7 +35,7 @@
   setContext(ck_updated_tag_type_id, updated_tag_type_id);
 
   let show_blocked_reg;
-
+  let open_member_year_modal;
 
   let cmp_reg;
   let cmp_reg_list;
@@ -83,6 +84,8 @@
   });
 </script>
 
+<MemberYearModal bind:open_member_year_modal />
+
 <Reg
   bind:this={cmp_reg}
   bind:block_time
@@ -130,8 +133,8 @@
   {/if}
 
   <div class=my-2>
-    <Stats />
     <Card>
+      <MemberYearCardBody on:click={open_member_year_modal} />
       <CardBody class="d-flex w-100 justify-content-between">
         <DbSync />
         <Clock />

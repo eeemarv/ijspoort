@@ -1,5 +1,4 @@
 <script>
-  import { nfc_map } from '../services/store';
   import { person_nfc_map } from '../services/store';
   import { ListGroupItem } from 'sveltestrap';
   import NfcTag from '../Nfc/NfcTag.svelte';

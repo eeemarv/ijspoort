@@ -35,17 +35,6 @@ const design_person_search_doc = {
       reduce: '_count'
     },
 
-    count_by_member_year: {
-      map: ((doc) => {
-        if (typeof doc.member_year === 'object'){
-          Object.keys(doc.member_year).forEach((yk) => {
-            emit(yk.substring(1));
-          });
-        }
-      }).toString(),
-      reduce: '_count'
-    },
-
     count_by_simular: {
       map: ((doc) => {
         const firstname = doc.firstname.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]/gi, '');
@@ -112,7 +101,6 @@ const put_design_person_search = () => {
   });
 
   put_design.then(() => {
-    console.log('db_person build indexes ==');
 
     console.log('build indexes db_person search/count_by_text');
 
@@ -122,83 +110,9 @@ const put_design_person_search = () => {
 
   }).then((res) => {
 
-    console.log('build indexes db_person search/count_by_member_year');
-    return db_person.query('search/count_by_member_year', {
-      limit: 0
-    });
-  }).then((res) => {
-
     console.log('build indexes db_person search/count_by_simular');
 
     return db_person.query('search/count_by_simular', {
-      limit: 0
-    });
-
-  }).then((res) => {
-
-    console.log('build indexes db_person search/count_by_name');
-
-    return db_person.query('search/count_by_name', {
-      limit: 0
-    });
-  }).then((res) => {
-
-    console.log('build indexes db_person search/count_by_date_of_birth');
-
-    return db_person.query('search/count_by_date_of_birth', {
-      limit: 0
-    });
-  }).then((res) => {
-
-    console.log('build indexes db_person search/count_by_phone_mobile');
-
-    return db_person.query('search/count_by_phone_mobile', {
-      limit: 0
-    });
-  }).then((res) => {
-
-    console.log('build indexes db_person search/count_by_phone_home');
-
-    return db_person.query('search/count_by_phone_home', {
-      limit: 0
-    });
-  }).then((res) => {
-
-    console.log('build indexes db_person search/count_by_phone_work');
-
-    return db_person.query('search/count_by_phone_work', {
-      limit: 0
-    });
-
-  }).then((res) => {
-
-    console.log('build indexes db_person search/count_by_email');
-
-    return db_person.query('search/count_by_email', {
-      limit: 0
-    });
-
-  }).then((res) => {
-
-    console.log('build indexes db_person search/count_by_email_work');
-
-    return db_person.query('search/count_by_email_work', {
-      limit: 0
-    });
-
-  }).then((res) => {
-
-    console.log('build indexes db_person search/count_by_address');
-
-    return db_person.query('search/count_by_address', {
-      limit: 0
-    });
-
-  }).then((res) => {
-
-    console.log('build indexes db_person search/count_by_group');
-
-    return db_person.query('search/count_by_group', {
       limit: 0
     });
 

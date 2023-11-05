@@ -95,6 +95,7 @@ export const tag_person_count_by_type = writable({});
 export const person_map = writable(new Map());
 export const nfc_map = writable(new Map());
 export const person_nfc_map = writable(new Map());
+export const person_member_year_count_map = writable(new Map());
 
 export const gate_map = writable(new Map());
 

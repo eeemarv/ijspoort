@@ -55,7 +55,7 @@
 {#if person_id}
 
 <PersonSimularModal bind:open_simular {person_id} />
-<PersonRegList bind:open_reg_list />
+<PersonRegList bind:open_reg_list {person_id}/>
 
 <CardGroup>
   <Card>
@@ -73,9 +73,7 @@
           <div></div>
         {/if}
       </ListGroupItem>
-      {#await get_person_count_by_simular(person_id)}
-        <p>... data ophalen</p>
-      {:then simular_map}
+      {#await get_person_count_by_simular(person_id) then simular_map}
       <ListGroupItem class="d-flex w-100 justify-content-between py-2">
           <div>
             <PersonName {person_id} />
@@ -250,7 +248,7 @@
     <PersonNfcList {person_id} />
     <PersonRegButton
       {person_id}
-      on:click={() => open_reg_list(person_id)}
+      on:click={open_reg_list}
     />
     {#if $tag_display_enabled}
       <PersonTagList {person_id} />
