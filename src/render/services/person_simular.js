@@ -1,7 +1,12 @@
 import { db_person } from './db';
 import { person_map } from './store';
-import { get } from 'svelte/store';
 import { get_search_str } from './functions';
+
+let p_map = new Map();
+
+person_map.subscribe((m) => {
+  p_map = m;
+});
 
 const person_simular_lang_keys = {
   name: 'Gelijke naam',
@@ -18,7 +23,7 @@ const person_simular_lang_keys = {
 const get_person_simular_search_map = (person_id) => {
   const res_map = new Map();
   const lang_keys = person_simular_lang_keys;
-  const p_map = get(person_map);
+
   if (!p_map.has(person_id)){
     return res_map;
   }

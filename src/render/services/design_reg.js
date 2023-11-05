@@ -4,12 +4,18 @@ import lodash from 'lodash';
 const design_reg_search_doc = {
   _id: '_design/search',
   views: {
+
+    /** keep (view regs for a person */
+
     count_by_person_id: {
       map: ((doc) => {
         emit(doc.person_id);
       }).toString(),
       reduce: '_count'
     },
+
+    /*** to be removed (add reg) */
+
     by_person_id_and_ts_epoch: {
       map: ((doc) => {
         emit(doc.person_id + '_' + doc.ts_epoch);
@@ -25,6 +31,9 @@ const design_reg_search_doc = {
       }).toString(),
       reduce: '_count'
     },
+
+    /** csv export: rework to allDocs and _id */
+
     count_per_hour: {
       map: ((doc) => {
         let ts_hour = Math.floor(doc.ts_epoch / 3600000) * 3600000;

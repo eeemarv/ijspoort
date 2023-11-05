@@ -54,120 +54,115 @@ const sync_options = {
 
 db_reg.sync(db_remote_reg, sync_options)
 .on('change', (info) => {
-  console.log('CHANGE');
+  console.log('db_reg CHANGE');
   console.log(info);
   sync_monitor.set_active();
-}).on('paused', (err) => {
-  console.log('PAUSED');
-  console.log(err);
+}).on('paused', () => {
+  console.log('db_reg PAUSED');
 }).on('active', () => {
-  console.log('ACTIVE');
+  console.log('db_reg ACTIVE');
   sync_monitor.set_active();
 }).on('denied', (err) => {
-  console.log('DENIED');
+  console.log('db_reg DENIED');
   console.log(err);
   sync_monitor.set_error();
 }).on('complete', (info) => {
-  console.log('COMPLETE');
+  console.log('db_reg COMPLETE');
   console.log(info);
 }).on('error', (err) => {
-  console.log('UNHANDLED ERROR');
+  console.log('db_reg ERROR');
   console.log(err);
   sync_monitor.set_error();
 });
 
 db_nfc.sync(db_remote_nfc, sync_options)
 .on('change', (info) => {
-  console.log('CHANGE');
+  console.log('db_nfc CHANGE');
   console.log(info);
   sync_monitor.set_active();
-}).on('paused', (err) => {
-  console.log('PAUSED');
-  console.log(err);
+}).on('paused', () => {
+  console.log('db_nfc PAUSED');
 }).on('active', () => {
-  console.log('ACTIVE');
+  console.log('db_nfc ACTIVE');
   sync_monitor.set_active();
 }).on('denied', (err) => {
-  console.log('DENIED');
+  console.log('db_nfc DENIED');
   console.log(err);
   sync_monitor.set_error();
 }).on('complete', (info) => {
-  console.log('COMPLETE');
+  console.log('db_nfc COMPLETE');
   console.log(info);
 }).on('error', (err) => {
-  console.log('UNHANDLED ERROR');
+  console.log('db_nfc ERROR');
   console.log(err);
   sync_monitor.set_error();
 });
 
 db_person.sync(db_remote_person, sync_options)
 .on('change', (info) => {
-  console.log('CHANGE');
+  console.log('db_person CHANGE');
   console.log(info);
   sync_monitor.set_active();
-}).on('paused', (err) => {
-  console.log('PAUSED');
-  console.log(err);
+}).on('paused', () => {
+  console.log('db_person PAUSED');
 }).on('active', () => {
-  console.log('ACTIVE');
+  console.log('db_person ACTIVE');
   sync_monitor.set_active();
 }).on('denied', (err) => {
-  console.log('DENIED');
+  console.log('db_person DENIED');
   console.log(err);
   sync_monitor.set_error();
 }).on('complete', (info) => {
-    console.log('COMPLETE');
+    console.log('db_person COMPLETE');
     console.log(info);
 }).on('error', (err) => {
-  console.log('UNHANDLED ERROR');
+  console.log('db_person ERROR');
   console.log(err);
   sync_monitor.set_error();
 });
 
 db_gate.sync(db_remote_gate, sync_options)
 .on('change', (info) => {
-  console.log('CHANGE');
+  console.log('db_gate CHANGE');
   console.log(info);
   sync_monitor.set_active();
-}).on('paused', (err) => {
-  console.log('PAUSED');
-  console.log(err);
+}).on('paused', () => {
+  console.log('db_gate PAUSED');
 }).on('active', () => {
-  console.log('ACTIVE');
+  console.log('db_gate ACTIVE');
   sync_monitor.set_active();
 }).on('denied', (err) => {
-  console.log('DENIED');
+  console.log('db_gate DENIED');
   console.log(err);
   sync_monitor.set_error();
 }).on('complete', (info) => {
-  console.log('COMPLETE');
+  console.log('db_gate COMPLETE');
   console.log(info);
 }).on('error', (err) => {
-  console.log('UNHANDLED ERROR');
+  console.log('db_gate ERROR');
   console.log(err);
   sync_monitor.set_error();
 });
 
 db_tag.sync(db_remote_tag, sync_options)
 .on('change', (info) => {
-  console.log('CHANGE');
+  console.log('db_tag CHANGE');
   console.log(info);
   sync_monitor.set_active();
-}).on('paused', (err) => {
-  console.log('PAUSED');
-  console.log(err);
+}).on('paused', () => {
+  console.log('db_tag PAUSED');
 }).on('active', () => {
-  console.log('ACTIVE');
+  console.log('db_tag ACTIVE');
   sync_monitor.set_active();
 }).on('denied', (err) => {
-  console.log('DENIED');
+  console.log('db_tag DENIED');
   console.log(err);
   sync_monitor.set_error();
 }).on('complete', (info) => {
-  console.log('COMPLETE');
+  console.log('db_tag COMPLETE');
   console.log(info);
 }).on('error', (err) => {
-  console.log('UNHANDLED ERROR');
+  console.log('db_tag ERROR');
   console.log(err);
   sync_monitor.set_error();
 });

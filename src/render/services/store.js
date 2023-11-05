@@ -1,5 +1,5 @@
 const EStore = require('electron-store');
-import { readable, writable } from 'svelte/store';
+import { writable } from 'svelte/store';
 
 const create_sync_monitor = () => {
   const { subscribe, set } = writable('paused');
@@ -97,7 +97,8 @@ export const nfc_map = writable(new Map());
 export const person_nfc_map = writable(new Map());
 export const person_member_year_count_map = writable(new Map());
 
-export const gate_map = writable(new Map());
+export const gate_in_map = writable(new Map());
+export const gate_out_map = writable(new Map());
 
 export const tag_type_table = writable({});
 export const person_tag_table = writable({});

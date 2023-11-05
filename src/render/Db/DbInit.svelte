@@ -1,15 +1,17 @@
 <script>
   import { put_design } from './../services/put_design';
-  import DbPersonTable from './DbPersonTable.svelte';
-  import DbNfcTable from './DbNfcTable.svelte';
-  import DbTagTable from './DbTagTable.svelte';
-  import DbRegTable from './DbRegTable..svelte';
+  import DbGateMap from './DbGateMap.svelte';
+  import DbPersonMap from './DbPersonMap.svelte';
+  import DbRegMap from './DbRegMap..svelte';
+  import DbNfcMap from './DbNfcMap.svelte';
+  import DbTagMap from './DbTagMap.svelte';
 
   put_design();
 
 </script>
 
-<DbPersonTable />
-<DbNfcTable />
-<DbTagTable />
-<DbRegTable />
+<DbPersonMap />
+<DbNfcMap />
+<DbRegMap />
+<DbTagMap />
+<DbGateMap />

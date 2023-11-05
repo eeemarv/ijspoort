@@ -4,6 +4,8 @@ import lodash from 'lodash';
 const design_gate_search_doc = {
   _id: '_design/search',
   views: {
+
+    /** rework to use _id */
     count_in_by_ts_epoch: {
       map: ((doc) => {
         if (doc.in){
@@ -12,6 +14,8 @@ const design_gate_search_doc = {
       }).toString(),
       reduce: '_count'
     },
+
+    /** rework to use _id */
     count_out_by_ts_epoch: {
       map: ((doc) => {
         if (doc.out){
@@ -20,6 +24,8 @@ const design_gate_search_doc = {
       }).toString(),
       reduce: '_count'
     },
+
+    /** rework to use _id */
     count_per_5_min: {
       map: ((doc) => {
         let ts_5_min = Math.floor(doc.ts_epoch / 300000) * 300000;

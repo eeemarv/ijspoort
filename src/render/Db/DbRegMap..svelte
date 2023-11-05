@@ -80,9 +80,11 @@
 
         console.log('==$reg_map cleanup, ' + delete_keys.length + ' deleted ==');
       }
+      /*
       else {
         console.log('==$reg_map cleanup, no deletes ==');
       }
+      */
 
     }, cleanup_interval);
   };

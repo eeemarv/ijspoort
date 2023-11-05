@@ -1,7 +1,13 @@
 <script>
   import { Card, CardHeader } from 'sveltestrap';
   import GateSens from './GateSens.svelte';
+  import GateGraphModal from '../GateGraph/GateGraphModal.svelte';
+
+  let open_graph_modal;
+
 </script>
+
+<GateGraphModal bind:open_graph_modal />
 
 <Card class=my-2>
   <CardHeader>
@@ -10,7 +16,7 @@
         Poort
       </div>
       <div>
-        <GateSens />
+        <GateSens on:click={open_graph_modal} />
       </div>
     </div>
   </CardHeader>

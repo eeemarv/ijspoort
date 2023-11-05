@@ -12,7 +12,7 @@
     tab = 'count_unique';
   }
 
-  export const click_open = () => {
+  export const open_graph_modal = () => {
     open = true;
   };
 
