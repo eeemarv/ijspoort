@@ -15,7 +15,6 @@
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
   import PersonFocusYearTag from '../Person/PersonFocusYearTag.svelte';
   import Pagination from '../Common/Pagination.svelte';
-  import { onMount } from 'svelte';
   import CountBadge from '../Common/CountBadge.svelte';
 
   let nfc_count = 0;
@@ -317,11 +316,10 @@
               on:click={() => handle_click_list_item($nfc_map.get(nfc_id).person_id)}
             >
               <Row>
-                <Col>
+                <Col sm=5>
                   <CountBadge count={total_rows - start_row - index} />
                   <NfcTag {nfc_id}
                     show_ts_epoch
-                    show_uid
                   />
                 </Col>
                 <Col>
@@ -341,7 +339,7 @@
           {#if tx !== 't1'}
           <ListGroupItem>
             <Row>
-              <Col>
+              <Col sm=8>
                 Persoon
               </Col>
               <Col>
@@ -356,7 +354,7 @@
               on:click={() => handle_click_list_item(person_id)}
             >
             <Row>
-              <Col>
+              <Col sm=8>
                 <CountBadge count={total_rows - start_row - index} />
                 <PersonTag {person_id} show_member_year show_tags />
               </Col>
@@ -364,7 +362,6 @@
                 <NfcTag
                   nfc_id={person_last_nfc_map.get(person_id)}
                   show_ts_epoch
-                  show_uid
                 />
               </Col>
             </Row>

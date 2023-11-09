@@ -3,7 +3,7 @@
   import { reg_map } from '../services/store';
   import { person_last_reg_ts_map } from '../services/store';
 
-  const ms_period = 18000000; // view regs last 5 hours
+  const reg_period = 18000000; // view regs last 5 hours
   const cleanup_interval = 60000; // cleanup view regs every minute
 
   const listen_changes = () => {
@@ -32,6 +32,13 @@
         return;
       }
 
+      const ts_start = (new Date()).getTime() - reg_period;
+
+      if (change.doc.ts_epoch < ts_start){
+        console.log('== db_reg.changes, reg to old, do not map', change);
+        return;
+      }
+
       reg_map.update((m) => {
         m.set(change.id, change.doc);
         return m;
@@ -53,7 +60,7 @@
 
   const cleanup = () => {
     setInterval(() => {
-      const ts_start = (new Date()).getTime() - ms_period;
+      const ts_start = (new Date()).getTime() - reg_period;
       const delete_keys = [];
 
       for (const [k, v] of $reg_map){
@@ -91,7 +98,7 @@
 
   db_reg.allDocs({
     include_docs: true,
-    startkey: 't' + ((new Date()).getTime() - ms_period)
+    startkey: 't' + ((new Date()).getTime() - reg_period)
   }).then((res) => {
 
     console.log('load $reg_map map t RES');

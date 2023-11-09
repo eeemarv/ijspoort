@@ -13,6 +13,8 @@
   import { person_nfc_map } from '../services/store';
   import NfcTag from '../Nfc/NfcTag.svelte';
   import CountBadge from '../Common/CountBadge.svelte';
+  import Await from '../Common/Await.svelte';
+  import AwaitError from '../Common/AwaitError.svelte';
 
   export let person_id = undefined;
 
@@ -74,11 +76,6 @@
     open = false;
   }
 
-  $: {
-    person_id;
-    $reg_map;
-    get_reg_count(person_id);
-  }
 </script>
 
 <Modal isOpen={open} {toggle} size=xl>
@@ -91,10 +88,12 @@
   <ModalBody>
     <Row>
       <Col>
-        {#await get_reg_count(person_id) then reg_count}
+        {#await get_reg_count(person_id, $reg_map)}
+          <Await />
+        {:then reg_count}
           Totaal: {reg_count}
-        {:catch err}
-          <span class="text-danger">{err}</span>
+        {:catch error}
+          <AwaitError {error} />
         {/await}
       </Col>
       <Col>
@@ -106,8 +105,8 @@
       </Col>
     </Row>
     <Row>
-      {#await get_reg_cols(person_id, rows_per_page, start_row)}
-        <p>...laden registraties</p>
+      {#await get_reg_cols(person_id, rows_per_page, start_row, $reg_map)}
+        <Await />
       {:then res}
         {#each res.reg_cols as col, col_index (col_index)}
           <Col>
@@ -128,8 +127,8 @@
             </ListGroup>
           </Col>
         {/each}
-      {:catch err}
-        <p class="text-danger">{err}</p>
+      {:catch error}
+        <AwaitError {error} />
       {/await}
     </Row>
   </ModalBody>

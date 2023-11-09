@@ -52,7 +52,7 @@
       }
 
       if (change.doc.in){
-        $gate_in_map.update((m) => {
+        gate_in_map.update((m) => {
           m.set(change.id, change.doc);
           return m;
         });
@@ -61,7 +61,7 @@
       }
 
       if (change.doc.out){
-        $gate_out_map.update((m) => {
+        gate_out_map.update((m) => {
           m.set(change.id, change.doc);
           return m;
         });

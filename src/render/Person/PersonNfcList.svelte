@@ -35,12 +35,12 @@
 </script>
 
 {#each nfc_id_list as {nfc_id, abc_index}(nfc_id)}
-<ListGroupItem active={$selected_nfc_id === nfc_id}>
-  <NfcTag
-    {nfc_id}
-    show_abc_index
-    {abc_index}
-    show_ts_epoch
-  />
-</ListGroupItem>
+  <ListGroupItem active={$selected_nfc_id === nfc_id}>
+    <NfcTag
+      {nfc_id}
+      show_abc_index
+      {abc_index}
+      show_ts_epoch
+    />
+  </ListGroupItem>
 {/each}

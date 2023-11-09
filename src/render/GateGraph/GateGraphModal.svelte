@@ -36,10 +36,12 @@
     </h1>
   </ModalHeader>
   <ModalBody>
+    {#if open}
     <TabContent pills on:tab={(e) => tab = e.detail}>
       <GateCountUnique {tab} />
       <GateGraph {tab} />
     </TabContent>
+    {/if}
   </ModalBody>
   <ModalFooterClose on:click={toggle} />
 </Modal>

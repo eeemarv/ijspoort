@@ -1,192 +1,139 @@
 <script>
-  import { Row, Col } from 'sveltestrap';
-  import { FormGroup, Label } from 'sveltestrap';
+  import { Row, Col, ListGroup, ListGroupItem } from 'sveltestrap';
   import { TabPane } from 'sveltestrap';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import TimeTag from '../Common/TimeTag.svelte';
   import * as Pancake from '@sveltejs/pancake';
-  import { db_gate } from '../services/db';
+  import { Datepicker } from 'vanillajs-datepicker';
+  import { onMount } from 'svelte';
+  import DaysPeriodInput from './DaysPeriodInput.svelte';
+  import DaysOffsetInput from './DaysOffsetInput.svelte';
+  import AwaitNoResults from '../Common/AwaitNoResults.svelte';
+  import AwaitError from '../Common/AwaitError.svelte';
+  import Await from '../Common/Await.svelte';
+  import { get_gate_step_count } from '../services/gate_stats';
+  import { reg_map } from '../services/store';
 
   export let tab;
 
-  let days = 50;
+  const step_time = 300000; // 5 min
+  const next_graph_time = 3600000; // 1 hour
+
+  const graphs_map = new Map();
+
+  let closest = undefined;
+
+  /**
+  let el_datepicker;
+
+  onMount(() => {
+    const elem = document.querySelector('input[name="datepick"]');
+    new Datepicker(elem, {
+      buttonClass: 'btn'
+    });
+  });
+
+  */
+
+  let days = 14;
   let days_offset = 0;
-  let d_graphs = [];
-  let ready = false;
 
-  const update_data = () => {
-    ready = false;
-    d_graphs = [];
-
-    let now = new Date();
-    let ts_epoch = now.getTime();
-    let ts_end = ts_epoch - (days_offset * 86400000);
-    let ts_start = ts_end - (days * 86400000);
-    let d_count = {};
-    let add_graph;
-    let dt_in;
-    let dt_out;
-    let current_count;
-    let dt_x;
-    let ts_date;
-
-    let current_ts = undefined;
-
-    (async () => {
-      await db_gate.query('search/count_per_5_min', {
-
-        //startkey: (ts_epoch - (days * 86400000)) + '_in',
-        startkey: ts_start + '_in',
-        //endkey: ts_epoch + '_\uffff',
-        endkey: ts_end + '_\uffff',
-        reduce: true,
-        group: true
-      }).then((res) => {
-        console.log('res --- count_per_5_min ---');
-        console.log(res);
-        res.rows.forEach((v) => {
-          let skey = v.key.split('_');
-          if (typeof d_count[skey[0]] !== 'object'){
-            d_count[skey[0]] = {};
-          }
-          // in/out
-          d_count[skey[0]][skey[1]] = v.value;
-        });
-      }).catch((err) => {
-        console.log(err);
-      });
-
-      console.log('--- D_COUNT ---');
-      console.log(d_count);
-
-      Object.keys(d_count).sort().forEach((ts) => {
-        let d = d_count[ts];
-
-        if (current_ts && ts <= current_ts){
-          throw 'Error order ts ' + ts + ' and previous ts ' + current_ts;
-        };
-        // same graph
-        if (current_ts && current_ts > (ts - 2000000)){
-
-          while (current_ts < (ts - 400000)) {
-            current_ts += 300000;
-            ts_date = new Date(current_ts);
-            dt_x = (current_ts - add_graph.ts) / 60000;
-            add_graph.max_x = dt_x;
-            add_graph.count_data.push({x: dt_x, y: current_count});
-            add_graph.in_data.push({x: dt_x, y: 0});
-            add_graph.out_data.push({x: dt_x, y: 0});
-
-            add_graph.p_data.push({x: dt_x, y: current_count, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'count'});
-
-            if (current_count !== 0){
-              add_graph.p_data.push({x: dt_x, y: 0, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'in'});
-            }
-
-            if (ts_date.getMinutes() === 0){
-              add_graph.x_grid.push(dt_x);
-            }
-          }
-
-          current_ts = ts * 1;
-          ts_date = new Date(current_ts);
-          dt_in = d.in ? d.in : 0;
-          add_graph.total_in += dt_in;
-          dt_out = d.out ? d.out : 0;
-          add_graph.total_out += dt_out;
-          current_count += dt_in;
-          current_count -= dt_out;
-          current_count = current_count < 0 ? 0 : current_count;
-          dt_x = (ts - add_graph.ts) / 60000;
-          add_graph.max_x = dt_x;
-          add_graph.count_data.push({x: dt_x, y: current_count});
-          add_graph.in_data.push({x: dt_x, y: dt_in});
-          add_graph.out_data.push({x: dt_x, y: -dt_out});
-          add_graph.min_y = Math.min(add_graph.min_y, -dt_out);
-          add_graph.max_y = Math.max(add_graph.max_y, dt_in, current_count);
-          add_graph.max_x = dt_x;
-
-          add_graph.p_data.push({x: dt_x, y: current_count, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'count'});
-
-          if (current_count !== dt_in){
-            add_graph.p_data.push({x: dt_x, y: dt_in, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'in'});
-          }
-
-          if (current_count !== -dt_out && dt_in !== -dt_out){
-            add_graph.p_data.push({x: dt_x, y: -dt_out, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'out'});
-          }
-
-          if (ts_date.getMinutes() === 0){
-            add_graph.x_grid.push(dt_x);
-          }
-        } else {
-
-          // store previous
-
-          if (add_graph && add_graph.count_data.length > 5){
-            d_graphs.push(add_graph);
-          }
-
-          // new graph
-
-          add_graph = {};
-          add_graph.ts = ts * 1;
-          current_ts = ts * 1;
-          add_graph.count_data = [];
-          add_graph.in_data = [];
-          add_graph.out_data = [];
-          add_graph.x_grid = [];
-          add_graph.closest = [];
-          add_graph.p_data = [];
-          ts_date = new Date(current_ts);
-
-          dt_in = d.in ? d.in : 0;
-          add_graph.total_in = dt_in;
-          dt_out = d.out ? d.out : 0;
-          add_graph.total_out = dt_out;
-          current_count = dt_in - dt_out;
-          current_count = current_count < 0 ? 0 : current_count;
-          add_graph.count_data.push({x: 0, y: current_count});
-          add_graph.in_data.push({x: 0, y: dt_in});
-          add_graph.out_data.push({x: 0, y: -dt_out});
-          add_graph.min_y = -dt_out
-          add_graph.max_y = current_count;
-          add_graph.max_x = 0;
-
-          add_graph.p_data.push({x: 0, y: current_count, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'count'});
-
-          if (current_count !== dt_in){
-            add_graph.p_data.push({x: dt_x, y: dt_in, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'in'});
-          }
-
-          if (current_count !== -dt_out && dt_in !== -dt_out){
-            add_graph.p_data.push({x: dt_x, y: -dt_out, hour: ts_date.getHours(), min: ts_date.getMinutes(), type: 'out'});
-          }
-
-          if (ts_date.getMinutes() === 0){
-            add_graph.x_grid.push(0);
-          }
-        }
-      });
-
-      if (add_graph && add_graph.count_data.length > 5){
-        d_graphs.push(add_graph);
-      }
-
-      ready = true;
-
-      console.log('-- d_graphs ---');
-      console.log(d_graphs);
-    })();
+  const calc_min_max_y = (g) => {
+    g.min_y = Math.min(...g.out);
+    g.max_y = Math.max(...g.acc, ...g.in);
   };
 
-  $: {
-    days;
-    days_offset;
-    if (tab === 'graph'){
-      update_data();
+  const acc = (acc, add, sub) => {
+    const res = acc + add + sub;
+    if (res < 0){
+      return 0;
+    }
+    return res;
+  };
+
+  const push_p = (g, ts, y_in, y_out) => {
+    const x = g.in.length;
+    const prev_acc = x ? g.acc[x - 1] : 0;
+    const d_acc = acc(prev_acc, y_in, y_out);
+    g.in.push(y_in);
+    g.out.push(y_out);
+    g.acc.push(d_acc);
+    if (!(ts % 3600000)){
+      g.h.push(x);
+    }
+    g.p.push({x: x, y: d_acc, type: 'acc', ts: ts});
+    if (y_in !== d_acc){
+      g.p.push({x: x, y: y_in, type: 'in', ts: ts});
+    }
+    if (y_out !== d_acc && y_out !== y_in){
+      g.p.push({x: x, y: y_out, type: 'out', ts: ts});
     }
   }
+
+  const update_view = async (days, days_offset) => {
+
+    let graph_ts = undefined;
+    let last_ts = undefined;
+
+    graphs_map.clear();
+
+    const now = new Date();
+    const ts_epoch = now.getTime();
+    const ts_end = ts_epoch - (days_offset * 86400000);
+    const ts_start = ts_end - (days * 86400000);
+
+    const g_map = await get_gate_step_count(ts_start, ts_end, step_time);
+
+    console.log('=== G_MAP ===');
+    console.log(g_map);
+
+    for (const [ts, g5] of g_map){
+
+      if (last_ts !== undefined && (last_ts + next_graph_time) < ts){
+
+        const gg = graphs_map.get(graph_ts);
+        calc_min_max_y(gg);
+
+        graph_ts = undefined;
+      }
+
+      if (graph_ts === undefined){
+
+        graph_ts = ts;
+
+        graphs_map.set(graph_ts, {
+          in: [],
+          out: [],
+          acc: [],
+          p: [],
+          h: [],
+          max_y: 0,
+          min_y: 0,
+        });
+      }
+
+      const g = graphs_map.get(graph_ts);
+
+      while (ts < graph_ts + (g.in.length * step_time)){
+        const new_ts = graph_ts + (step * step_time);
+        push_p(g, new_ts, 0, 0);
+      }
+
+      push_p(g, ts, g5.in, g5.out);
+
+      last_ts = ts;
+    }
+
+    if (graph_ts !== undefined){
+      const gg = graphs_map.get(graph_ts);
+      calc_min_max_y(gg);
+    }
+
+    console.log('==== GRAPHS_MAP ===');
+    console.log(graphs_map);
+
+    return graphs_map;
+  };
 </script>
 
 <TabPane tabId=graph active={tab === 'graph'}>
@@ -195,93 +142,87 @@
   </span>
   <Row>
     <Col>
-      <FormGroup>
-        <Label for=days>Periode in dagen</Label>
-        <div class="input-group">
-          <input type=number
-            id=days class=form-control
-            bind:value={days}
-            min=1 max=3650
-            on:keypress={() => update_data()}
-          />
-        </div>
-       </FormGroup>
+      <!--
+      <input type="text" name="datepick">
+      -->
+      <DaysPeriodInput bind:days />
     </Col>
     <Col>
-      <FormGroup>
-        <Label for=days_offset>Dagen geleden</Label>
-        <div class="input-group">
-          <input type=number
-            id=days_offset class=form-control
-            bind:value={days_offset}
-            min=1 max=3650
-            on:keypress={() => update_data()}
-          />
-        </div>
-       </FormGroup>
+      <DaysOffsetInput bind:days_offset />
     </Col>
   </Row>
-  {#if ready}
-    {#each d_graphs as gr(gr.ts)}
+  {#if tab === 'graph'}
+  {#await update_view(days, days_offset, $reg_map)}
+    <Await />
+  {:then graphs_map}
+    {#each [...graphs_map] as [graph_ts, graph](graph_ts)}
       <Row>
         <Col class=bg-black>
-          <LocaleDateString ts_epoch={gr.ts * 1} />,
-          <TimeTag ts={gr.ts * 1} color=nn />
-          Totaal in: {gr.total_in}, uit: {gr.total_out},
-          Maximum binnen: {gr.max_y}
+          <LocaleDateString ts_epoch={graph_ts} />,
+          <TimeTag ts={graph_ts} color=nn />
+          Totaal in: {graph.in.reduce(((acc, a) => acc + a), 0)},
+          uit: {graph.out.reduce((acc, a) => acc - a, 0)},
+          Maximum binnen: {Math.max(...graph.acc)}
           <div class="chart">
-            <Pancake.Chart x1=0 x2={gr.max_x} y1={gr.min_y} y2={gr.max_y}>
+            <Pancake.Chart x1=0 x2={graph.acc.length - 1} y1={graph.min_y} y2={graph.max_y}>
               <Pancake.Grid horizontal count={5} let:value>
                 <div class="grid-line horizontal">
                   <span>{value}</span>
                 </div>
               </Pancake.Grid>
-              <Pancake.Grid vertical count={gr.max_x > 100 ? gr.max_x / 10 : gr.max_x / 5} let:value>
+              <Pancake.Grid vertical count={graph.acc.length > 99 ? graph.acc.length / 10 : graph.acc.length / 5} let:value>
                 <span class="x-label">
-                  {value}
+                  {value * (step_time / 60000) }
                 </span>
               </Pancake.Grid>
               <Pancake.Svg>
-                {#each gr.x_grid as gx}
-                  <Pancake.SvgLine data={[{x:gx, y: gr.min_y}, {x: gx, y:gr.max_y}]} let:d>
+                {#each graph.h as hx (hx)}
+                  <Pancake.SvgLine data={[{x: hx, y: graph.min_y}, {x: hx, y: graph.max_y}]} let:d>
                     <path class="x-hour" {d} />
                   </Pancake.SvgLine>
                 {/each}
-                <Pancake.SvgLine data={[{x:0, y:0}, {x: gr.max_x, y:0}]} let:d>
+                <Pancake.SvgLine data={[{x:0, y:0}, {x: graph.acc.length - 1, y:0}]} let:d>
                   <path class="zero" {d} />
                 </Pancake.SvgLine>
-                <Pancake.SvgLine data={gr.in_data} let:d>
+                <Pancake.SvgLine data={graph.in.map((v, i) => {return {x: i, y: v};})} let:d>
                   <path class="in-data" {d} />
                 </Pancake.SvgLine>
-                <Pancake.SvgLine data={gr.out_data} let:d>
+                <Pancake.SvgLine data={graph.out.map((v, i) => {return {x: i, y: v};})} let:d>
                   <path class="out-data" {d} />
                 </Pancake.SvgLine>
-                <Pancake.SvgLine data={gr.count_data} let:d>
+                <Pancake.SvgLine data={graph.acc.map((v, i) => {return {x: i, y: v};})} let:d>
                   <path class="data" {d} />
                 </Pancake.SvgLine>
               </Pancake.Svg>
 
-              {#if gr.closest}
-                <Pancake.Point x={gr.closest.x} y={gr.closest.y}>
-                  <span class="annotation-point {gr.closest.type}-point"></span>
-                  <div class="annotation {gr.closest.type}-ann" style="transform: translate(-{100 * ((gr.closest.x - 0) / (gr.max_x))}%,0)">
-                    <strong title="aantal">{gr.closest.type === 'in' ? '+' : ''}{gr.closest.y}</strong>
-                    {#if gr.closest.hour !== undefined && gr.closest.min !== undefined}
+              {#if closest}
+                <Pancake.Point x={closest.x} y={closest.y}>
+                  <span class="annotation-point {closest.type}-point"></span>
+                  <div class="annotation {closest.type}-ann" style="transform: translate(-{100 * (closest.x / (graph.acc.length - 1))}%, 0)">
+                    <strong title="aantal">
+                      {closest.type === 'in' ? '+' : ''}{closest.y}
+                    </strong>
+                    {#if closest.ts !== undefined}
                       <span title="tijdstip">
-                        {gr.closest.hour.toString().padStart(2, '0')}:
-                        {gr.closest.min.toString().padStart(2, '0')}
+                        {(new Date(closest.ts)).toLocaleTimeString('nl-BE', {hour: '2-digit', minute: '2-digit'})}
                       </span>
                     {/if}
                   </div>
                 </Pancake.Point>
               {/if}
 
-              <Pancake.Quadtree data={gr.p_data} bind:closest={gr.closest} />
+              <Pancake.Quadtree data={graph.p} bind:closest />
             </Pancake.Chart>
           </div>
         </Col>
       </Row>
     {/each}
+    {#if !graphs_map.size}
+      <AwaitNoResults />
+    {/if}
+  {:catch error}
+    <AwaitError {error} />
+  {/await}
   {/if}
 </TabPane>
 

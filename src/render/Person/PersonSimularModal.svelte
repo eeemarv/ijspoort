@@ -9,6 +9,8 @@
   import { selected_person_id } from '../services/store';
   import { get_person_ids_by_simular } from '../services/person_simular';
   import { person_simular_lang_keys } from '../services/person_simular';
+  import Await from '../Common/Await.svelte';
+  import AwaitError from '../Common/AwaitError.svelte';
 
   export let person_id = undefined;
 
@@ -47,22 +49,22 @@
     {/if}
   </ModalHeader>
   <ModalBody>
-    <ListGroup>
-        {#await get_person_ids_by_simular(search_key)}
-          <p>...data ophalen</p>
-        {:then person_ids}
-          {#each person_ids as p_id(p_id)}
-            <SelectableListGroupItem
-              active={p_id === $selected_person_id}
-              on:click={handle_select(p_id)}
-            >
-              <PersonTag person_id={p_id} show_member_year show_tags />
-            </SelectableListGroupItem>
-          {/each}
-        {:catch err}
-          <p class=text-danger>{err}</p>
-        {/await}
-    </ListGroup>
+    {#await get_person_ids_by_simular(search_key)}
+      <Await />
+    {:then person_ids}
+      <ListGroup>
+        {#each person_ids as p_id(p_id)}
+          <SelectableListGroupItem
+            active={p_id === $selected_person_id}
+            on:click={handle_select(p_id)}
+          >
+            <PersonTag person_id={p_id} show_member_year show_tags />
+          </SelectableListGroupItem>
+        {/each}
+      </ListGroup>
+    {:catch error}
+      <AwaitError {error} />
+    {/await}
   </ModalBody>
   <ModalFooterClose on:click={toggle} />
 </Modal>
