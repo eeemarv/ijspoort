@@ -1,5 +1,5 @@
 const MFRC522 = require('mfrc522-rpi');
-const SoftSPI = require("rpi-softspi");
+const SoftSPI = require('rpi-softspi');
 const rpio = require('rpio');
 
 const buzzer_pin = 18;

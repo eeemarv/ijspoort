@@ -75,7 +75,7 @@ const design_person_search_doc = {
 };
 
 const put_design_person_search = () => {
-  const put_design = db_person.get(design_person_search_doc._id).catch((err) => {
+  db_person.get(design_person_search_doc._id).catch((err) => {
     if (err.name === 'not_found'){
       return 'put';
     }
@@ -96,26 +96,6 @@ const put_design_person_search = () => {
   }).then((res) => {
     console.log('design_person_search_doc updated');
     console.log(res);
-  }).catch((err) => {
-    console.log(err);
-  });
-
-  put_design.then(() => {
-
-    console.log('build indexes db_person search/count_by_text');
-
-    return db_person.query('search/count_by_text', {
-      limit: 0
-    });
-
-  }).then((res) => {
-
-    console.log('build indexes db_person search/count_by_simular');
-
-    return db_person.query('search/count_by_simular', {
-      limit: 0
-    });
-
   }).catch((err) => {
     console.log(err);
   });
