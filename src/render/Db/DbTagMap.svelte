@@ -1,12 +1,17 @@
 <script>
   import { db_tag } from '../services/db';
+
   import { tag_type_table } from '../services/store';
   import { person_tag_table } from '../services/store';
   import { tag_count_table } from '../services/store';
 
+  import { tag_type_map } from '../services/store';
+  import { person_tag_map } from '../services/store';
+  import { tag_map } from '../services/store';
+
   const listen_changes = () => {
 
-    console.log('-------- LISTEN CHANGES TAGS ----');
+    console.log('--- LISTEN CHANGES TAGS ----');
 
     db_tag.changes({
       since: 'now',
@@ -17,92 +22,84 @@
       if (change.deleted){
 
         if (change.id.startsWith('0_')){
+          console.log('=// change delete $tag_type_map', change);
 
-          delete $tag_type_table[change.id];
-          $tag_type_table = $tag_type_table;
-          delete $tag_count_table[change.id];
-          $tag_count_table = $tag_count_table;
-          console.log('== change delete $tag_type_table ', change);
-          return;
+          tag_type_map.update((m) => {
+            m.delete(change.id);
+            return m;
+          });
         }
 
         if (change.id.startsWith('t0_')){
 
-          console.log('== change delete $person_tag_table ', change);
+          console.log('== change delete $person_tag_map & tag_map', change);
 
-          let ts_ary = [];
-          let person_id = change.doc.person_id;
-          let type_id = change.doc.type_id;
-          let ts_epoch = change.doc.ts_epoch;
+          const a = v.id.substring(3);
+          const b = a.split('_');
+          const type_id = '0_' + b[0];
+          const person_id = b[1];
+          const ts_epoch = parseInt(b[2]);
 
-          if ($tag_count_table[type_id] !== undefined){
-            let count = $tag_count_table[type_id];
-            count--;
-            count = count < 0 ? 0 : count;
-            $tag_count_table[type_id] = count;
-          }
-
-          if ($person_tag_table[person_id] === undefined){
-            return;
-          }
-
-          if ($person_tag_table[person_id][type_id] === undefined){
-            return;
-          }
-
-          $person_tag_table[person_id][type_id].forEach((ts) => {
-            if (ts === ts_epoch){
-              return;
+          person_tag_map.update((m) => {
+            if (!m.has(person_id)){
+              return m;
             }
-            ts_ary.push(ts);
+            const p_map = m.get(person_id);
+            if (!p_map.has(type_id)){
+              return m;
+            }
+            p_map.get(type_id).delete(ts_epoch);
+            return m;
           });
 
-          $person_tag_table[person_id][type_id] = [...ts_ary];
-
-          return;
+          tag_map.update((m) => {
+            if (!m.has(type_id)){
+              return m;
+            }
+            m.get(type_id).delete(ts_epoch);
+            return m;
+          });
         }
-
-        console.log('== tag change delete > not stored in table', change);
 
         return;
       }
 
       if (change.id.startsWith('0_')){
 
-        console.log('== change $tag_type_table ', change);
-        $tag_type_table[change.id] = {...change.doc};
+        console.log('=// change $tag_type_map ', change);
+
+        tag_type_map.update((m) => {
+          m.set(change.id, {...change.doc});
+          return m;
+        });
 
         return;
       }
 
       if (change.id.startsWith('t0_')){
 
-        console.log('== change $person_tag_table', change);
+        console.log('=// change $person_tag_map & $tag_map', change);
 
-        let person_id = change.doc.person_id;
-        let type_id = change.doc.type_id;
-        let ts_epoch = change.doc.ts_epoch;
+        person_tag_map.update((m) => {
+          if (!m.has(change.doc.person_id)){
+            m.set(change.doc.person_id, new Map());
+          }
+          const p_map = m.get(change.doc.person_id);
+          if (!p_map.has(change.doc.type_id)){
+            p_map.set(change.doc.type_id, new Set());
+          }
+          p_map.get(change.doc.type_id).add(change.doc.ts_epoch);
+          return m;
+        });
 
-        if ($person_tag_table[person_id] === undefined){
-          $person_tag_table[person_id] = {};
-        }
-
-        if ($person_tag_table[person_id][type_id] === undefined){
-          $person_tag_table[person_id][type_id] = [];
-        }
-
-        $person_tag_table = [...$person_tag_table[person_id][type_id], ts_epoch];
-
-        if ($tag_count_table[type_id] === undefined){
-          $tag_count_table[type_id] = 0;
-        }
-
-        $tag_count_table[type_id] = $tag_count_table[type_id] + 1;
-
-        return;
+        tag_map.update((m) => {
+          if (!m.has(change.doc.type_id)){
+            m.set(change.doc.type_id, new Map());
+          }
+          m.get(change.doc.type_id).set(change.doc.ts_epoch, change.doc.person_id);
+          return m;
+        });
       }
-
-      console.log('== tag change > not stored in table', change);
 
     }).on('error', (err) => {
       console.log(err);
@@ -115,9 +112,12 @@
     endkey: '0_\uffff',
   }).then((res) => {
 
-    console.log('load $tag_type_table TAG 0_ RES');
+    console.log('load $tag_type_map TAG 0_ RES');
     console.log(res);
 
+    /**
+     * to remove start
+     */ 
     let tt_table = {};
 
     res.rows.forEach((v) => {
@@ -125,9 +125,17 @@
     });
 
     $tag_type_table = {...tt_table};
+    /**
+     * to remove end
+    */
 
-    console.log('=====$tag_type_table====');
-    console.log($tag_type_table);
+    tag_type_map.update((m) => {
+      m.clear();
+      res.rows.forEach((v) => {
+        m.set(v.id, {...v.doc});
+      });
+      return m;
+    });
 
     return db_tag.allDocs({
       startkey: 't0_',
@@ -137,9 +145,12 @@
 
   }).then((res) => {
 
-    console.log('load $person_tag_table TAG t0_ RES');
+    console.log('load $person_tag_map TAG t0_ RES');
     console.log(res);
 
+    /**
+     * to remove start
+     */
     let pt_table = {};
     let c_table = {};
 
@@ -170,10 +181,35 @@
     $person_tag_table = {...pt_table};
     $tag_count_table = {...c_table};
 
-    console.log('=====$person_tag_table====');
-    console.log($person_tag_table);
-    console.log('=====$tag_count_table====');
-    console.log($tag_count_table);
+    /**
+     * to remove end
+    */
+
+    tag_map.update((m) => {
+      m.clear();
+      res.rows.forEach((v) => {
+        if (!m.has(v.doc.type_id)){
+          m.set(v.doc.type_id, new Map());
+        }
+        m.get(v.doc.type_id).set(v.doc.ts_epoch, v.doc.person_id);
+      });
+      return m;
+    });
+
+    person_tag_map.update((m) => {
+      m.clear();
+      res.rows.forEach((v) => {
+        if (!m.has(v.doc.person_id)){
+          m.set(v.doc.person_id, new Map());
+        }
+        const p_map = m.get(v.doc.person_id);
+        if (!p_map.has(v.doc.type_id)){
+          p_map.set(v.doc.type_id, new Set());
+        }
+        p_map.get(v.doc.type_id).add(v.doc.ts_epoch);
+      });
+      return m;
+    });
 
     listen_changes();
 

@@ -11,10 +11,10 @@
   export let open = false;
   export const toggle = () => (open = !open);
 
-  let edit_tag_id = undefined;
+  let edit_type_id = undefined;
 
   $: if (tab !== 'type_put'){
-    edit_tag_id = undefined;
+    edit_type_id = undefined;
   }
 </script>
 
@@ -26,11 +26,11 @@
     <TabContent pills on:tab={(e) => tab = e.detail}>
       <TagTypeListTab
         {tab}
-        on:edit={(e) => edit_tag_id = e.detail}
+        on:edit={(e) => edit_type_id = e.detail}
       />
       <TagTypePutTab
         {tab}
-        bind:edit_tag_id
+        bind:edit_type_id
       />
       {#each $tag_type_enabled_sorted_id_ary as tid(tid)}
         <TagTypeTab {tab} type_id={tid} />

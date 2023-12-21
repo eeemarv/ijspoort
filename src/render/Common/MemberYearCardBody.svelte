@@ -1,6 +1,6 @@
 <script>
   import { focus_year } from '../services/store';
-  import { person_member_year_count_map } from '../services/store';
+  import { member_year_person_map } from '../services/store';
   import { Button, CardBody } from 'sveltestrap';
 </script>
 
@@ -12,7 +12,7 @@
       outline
       on:click
     >
-      {$person_member_year_count_map.get('y' + $focus_year) ?? '-'}
+      {$member_year_person_map.get('y' + $focus_year)?.size ?? '-'}
     </Button>
       leden in
     <Button

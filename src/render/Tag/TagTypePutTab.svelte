@@ -3,24 +3,19 @@
   import Icon from '@iconify/svelte';
   import plusIcon from '@iconify/icons-fa/plus';
   import pencilIcon from '@iconify/icons-fa/pencil';
-  import lodash from 'lodash';
-  import { onMount } from 'svelte';
   import { Row, Col } from 'sveltestrap';
   import { Button } from 'sveltestrap';
   import { TabPane } from 'sveltestrap';
   import { FormGroup } from 'sveltestrap';
   import Radio from '../Common/Radio.svelte';
-  import { db_tag } from '../services/db';
-  import Tag from './Tag.svelte';
-  import { tag_types_enabled } from '../services/store';
-  import { tag_types } from '../services/store';
-  import TagType from './TagType.svelte';
+  import { tag_type_map } from '../services/store';
+  import TagSpan from './TagSpan.svelte';
+  import { tag_type_put } from '../services/tag';
 
   const { setActiveTab } = getContext('tabContent');
 
   export let tab;
-  export let edit_tag_id = undefined;
-  let handle_click;
+  export let edit_type_id = undefined;
 
   let text = 'nieuw';
   let description = '';
@@ -28,11 +23,9 @@
   let max_per_person = 1;
 
   const init_values = () => {
-    if (typeof edit_tag_id === 'string'){
-      text = $tag_types[edit_tag_id].text;
-      description = $tag_types[edit_tag_id].description;
-      color = $tag_types[edit_tag_id].color;
-      max_per_person = $tag_types[edit_tag_id].max_per_person;
+    if (typeof edit_type_id === 'string'){
+      const tag_type = $tag_type_map.get(edit_type_id);
+      ({text, description, color, max_per_person} = tag_type);
     } else {
       text = 'nieuw';
       description = '';
@@ -41,8 +34,7 @@
     }
   };
 
-  $: {
-    tab;
+  $: if (tab === 'type_put'){
     init_values();
   }
 
@@ -59,73 +51,21 @@
     {value: 'grey', label: 'G', title: 'Grijs'}
   ];
 
-  const put_tag_type = (edit_tag_id) => {
+  const handle_click = () => {
 
-    let tag = {
-      text: text,
-      description: description,
-      color: color,
-      max_per_person
-    };
+    tag_type_put({text, description, color, max_per_person, _id: edit_type_id});      
 
-    if (typeof edit_tag_id === 'undefined'){
-      let ts_epoch = (new Date()).getTime();
-      tag.ts_epoch = ts_epoch;
-      let id = '';
-      while (id.length !== 8){
-        id = Math.random().toString(36).substring(2,10);
-      }
-
-      tag._id = '0_' + id;
-
-      db_tag.put(tag).then((res) => {
-        console.log('-- db_tag.put --');
-        console.log(res);
-        $tag_types_enabled[tag._id] = true;
-      }).catch((err) => {
-        console.log('ERR db_tag.put');
-        console.log(err);
-      });
-
-      return;
-    }
-
-    tag._id = edit_tag_id;
-
-    db_tag.get(edit_tag_id).then((res) => {
-      tag.ts_epoch = res.ts_epoch;
-      let comp = {...res};
-      delete comp._rev;
-      if (lodash.isEqual(comp, tag)){
-        throw 'no change for tag ' + tag._id;
-      }
-      tag._rev = res._rev;
-      console.log('db_tag PUT');
-      console.log(tag);
-      return db_tag.put(tag);
-    }).then((res) => {
-      console.log('tag ' + res.id + ' updated');
-      console.log(res);
-    }).catch((err) => {
-      console.log(err);
-    });
+    edit_type_id = undefined;
+    setActiveTab('types');
   };
-
-  onMount(() => {
-    handle_click = () => {
-      put_tag_type(edit_tag_id);
-      edit_tag_id = undefined;
-      setActiveTab('types');
-    };
-  });
 </script>
 
 <TabPane tabId=type_put active={tab === 'type_put'}>
-  <span slot=tab title="Tag type {typeof edit_tag_id === 'string' ? 'aanpassen' : 'aanmaken'}">
-    <Icon icon={typeof edit_tag_id === 'string' ? pencilIcon : plusIcon} />
+  <span slot=tab title="Tag type {typeof edit_type_id === 'string' ? 'aanpassen' : 'aanmaken'}">
+    <Icon icon={typeof edit_type_id === 'string' ? pencilIcon : plusIcon} />
   </span>
   <h3 class=mt-2>
-    {#if typeof edit_tag_id === 'string'}
+    {#if typeof edit_type_id === 'string'}
       Tag type aanpassen
     {:else}
       Nieuw tag type aanmaken
@@ -133,7 +73,7 @@
   </h3>
 
   <p>
-    Voorbeeld: <TagType tag={{text: text, description: description, color: color, max_per_person: max_per_person}} />
+    Voorbeeld: <TagSpan tag={{text: text, description: description, color: color, max_per_person: max_per_person}} />
   </p>
   <Row>
     <Col xs=2>
@@ -185,7 +125,7 @@
           name=color
           value={tc.value}
         >
-          <TagType tag={{text: tc.label, description: tc.title, color: tc.value}} />
+          <TagSpan tag={{text: tc.label, description: tc.title, color: tc.value}} />
         </Radio>
       {/each}
     </Col>
@@ -196,10 +136,10 @@
         <div>
           <Button
             on:click={handle_click}
-            color={typeof edit_tag_id === 'string' ? 'primary' : 'success'}
+            color={typeof edit_type_id === 'string' ? 'primary' : 'success'}
             disabled={!text.length || !(max_per_person > 0) || !color}
           >
-            {#if typeof edit_tag_id === 'string'}
+            {#if typeof edit_type_id === 'string'}
               <Icon icon={pencilIcon} /> Aanpassen
             {:else}
               <Icon icon={plusIcon} /> Toevoegen

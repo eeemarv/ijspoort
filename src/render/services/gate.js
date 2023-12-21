@@ -12,6 +12,7 @@ let g_count_enabled = false;
 gate_count_enabled.subscribe((b) => {
   g_count_enabled = b;
 });
+
 gate_count.subscribe((v) => {
   g_count = v;
 });

@@ -13,6 +13,7 @@
     "lint": "echo \"No linting configured\"",
     "re": "./node_modules/.bin/electron-rebuild",
     "svelte-build": "rollup -c",
+    "sv": "rollup -c",
     "svelte-dev": "rollup -c -w",
     "svelte-start": "sirv public"
   },

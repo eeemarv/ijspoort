@@ -5,15 +5,14 @@
   import Icon from '@iconify/svelte';
   import timesIcon from '@iconify/icons-fa/times';
   import pencilIcon from '@iconify/icons-fa/pencil';
-  import { onMount } from 'svelte';
   import { createEventDispatcher } from 'svelte';
   import { Button } from 'sveltestrap';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import TagEnableCheckbox from './TagEnableCheckbox.svelte';
-  import { db_tag } from '../services/db';
-  import { tag_types } from '../services/store';
-  import { tag_count_by_type } from '../services/store';
-  import TagType from './TagType.svelte';
+  import { tag_type_map } from '../services/store';
+  import { tag_map } from '../services/store';
+  import Tag from './Tag.svelte';
+  import { tag_type_del } from '../services/tag';
 
   const { setActiveTab } = getContext('tabContent');
   const dispatch = createEventDispatcher();
@@ -27,30 +26,20 @@
   let add = false;
   let updated = false;
 
-  let handle_edit;
-  let handle_delete;
+  $: tag_type = $tag_type_map.get(type_id);
 
-  $: tag = $tag_types[type_id];
+  const handle_edit = () => {
+    setActiveTab('type_put');    
+    dispatch('edit', type_id);
+  };
 
-  onMount(() => {
-    handle_edit = () => {
-      dispatch('edit', type_id);
-      setActiveTab('type_put');
-    };
-
-    handle_delete = () => {
-      let tag_type = tag;
-      setTimeout(() => {
-        db_tag.remove(tag_type).then((res) => {
-          console.log(res);
-        }).catch((err) => {
-          console.log(err);
-        });
-        del = false;
-      }, 700);
-      del = true;
-    };
-  });
+  const handle_delete = () => {
+    setTimeout(() => {
+      tag_type_del(type_id);
+      del = false;
+    }, 700);
+    del = true;
+  };
 
   const show_update = (updated_tag_type_id) => {
     if (updated_tag_type_id !== type_id){
@@ -83,24 +72,23 @@
 >
   <td>
     <TagEnableCheckbox {type_id}>
-      <TagType {tag} />
+      <Tag {type_id} />
     </TagEnableCheckbox>
   </td>
   <td>
-    {$tag_count_by_type[type_id] ?? '-'}
+    {$tag_map.has(type_id) ? $tag_map.get(type_id).size : '-'}
   </td>
   <td>
-    {tag?.max_per_person}
+    {tag_type.max_per_person ?? '-'}
   </td>
   <td>
-    {tag?.description}
+    {tag_type.description ?? '-'}
   </td>
   <td>
-    <LocaleDateString ts_epoch={tag?.ts_epoch} title="datum van aanmaak" />
+    <LocaleDateString ts_epoch={tag_type.ts_epoch} title="datum van aanmaak" />
   </td>
   <td class=text-end>
-    {#if typeof $tag_count_by_type[type_id] === 'undefined'
-      || !$tag_count_by_type[type_id] === 'undefined'}
+    {#if $tag_map.get(type_id).size === 0}
 
       <Button
         color=danger
@@ -111,6 +99,7 @@
       </Button>
 
     {/if}
+
     <Button
       color=primary
       title="tag type aanpassen"
@@ -118,6 +107,7 @@
     >
       <Icon icon={pencilIcon} />
     </Button>
+  
   </td>
 </tr>
 

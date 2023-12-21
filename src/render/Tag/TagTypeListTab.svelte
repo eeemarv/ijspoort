@@ -1,20 +1,15 @@
 <script>
   import { TabPane } from 'sveltestrap';
   import TagTypeRow from './TagTypeRow.svelte';
-  import { tag_type_sorted_id_ary } from '../services/store';
-  import { tag_type_count } from '../services/store';
-
-  import { tag_type_table } from '../services/store';
+  import { tag_type_map } from '../services/store';
 
   export let tab;
-
-  $: tag_type_id_ary = Object.keys($tag_type_table ?? {});
 
 </script>
 
 <TabPane tabId=types active={tab === 'type_list'}>
   <span slot=tab title="Tag types">
-    Types: {tag_type_id_ary.length}
+    Types: {$tag_type_map.size}
   </span>
   <h3 class=mt-2>
     Tag types
@@ -32,7 +27,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each tag_type_id_ary as type_id(type_id)}
+      {#each [...$tag_type_map.keys()] as type_id(type_id)}
         <TagTypeRow {type_id} on:edit />
       {/each}
     </tbody>

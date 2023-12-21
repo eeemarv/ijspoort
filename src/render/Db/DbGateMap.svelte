@@ -2,6 +2,8 @@
   import { db_gate } from '../services/db';
   import { gate_in_map } from '../services/store';
   import { gate_out_map } from '../services/store';
+  import { sub_gate_in_map } from '../services/sub';
+  import { sub_gate_out_map } from '../services/sub';
 
   const ms_period = 18000000; // view regs last 5 hours
   const cleanup_interval = 60000; // cleanup view regs every minute
@@ -27,33 +29,33 @@
       */
       if (change.deleted){
 
-        if ($gate_in_map.has(change.id)){
+        if (sub_gate_in_map.has(change.id)){
           gate_in_map.update((m) => {
             m.delete(change.id);
             return m;
           });
 
-          console.log('== $gate_in_map deleted: ' + change.id);
+          console.log('== $gate_in_map deleted: ', change);
           return;
         }
 
-        if ($gate_out_map.has(change.id)){
+        if (sub_gate_out_map.has(change.id)){
           gate_out_map.update((m) => {
             m.delete(change.id);
             return m;
           });
 
-          console.log('== $gate_out_map deleted: ' + change.id);
+          console.log('== $gate_out_map deleted: ', change);
           return;
         }
 
-        console.log('== change del ' + change);
+        console.log('== change del ', change);
         return;
       }
 
       if (change.doc.in){
         gate_in_map.update((m) => {
-          m.set(change.id, change.doc);
+          m.set(change.id, {...change.doc});
           return m;
         });
         console.log('== change $gate_in_map ', change);
@@ -62,15 +64,14 @@
 
       if (change.doc.out){
         gate_out_map.update((m) => {
-          m.set(change.id, change.doc);
+          m.set(change.id, {...change.doc});
           return m;
         });
         console.log('== change $gate_out_map ', change);
         return;
       }
 
-      console.log('== db_gate change, not stored in map.');
-      console.log(change);
+      console.log('== db_gate change, not stored in map.', change);
       return;
 
     }).on('error', (err) => {
@@ -84,7 +85,7 @@
       const delete_in_keys = [];
       const delete_out_keys = [];
 
-      for (const [k, v] of $gate_in_map){
+      for (const [k, v] of sub_gate_in_map){
 
         console.log('GATE_IN_MAP CLEANUP _');
         console.log('K', k);
@@ -108,12 +109,8 @@
 
         console.log('==$gate_in_map cleanup, ' + delete_in_keys.length + ' deleted ==');
       }
-      /* else {
-        console.log('==$gate_in_map cleanup, no deletes ==');
-      }
-      */
 
-      for (const [k, v] of $gate_out_map){
+      for (const [k, v] of sub_gate_out_map){
 
         console.log('GATE_OUT_MAP CLEANUP _');
         console.log('K', k);
@@ -137,11 +134,6 @@
 
         console.log('==$gate_out_map cleanup, ' + delete_out_keys.length + ' deleted ==');
       }
-      /* else {
-        console.log('==$gate_out_map cleanup, no deletes ==');
-      }
-      */
-
     }, cleanup_interval);
   };
 
@@ -157,7 +149,7 @@
       gate_in_map.update((m) => {
         res.rows.forEach((v) => {
           if (v.doc.in === true){
-            m.set(v.id, v.doc);
+            m.set(v.id, {...v.doc});
           }
         });
         return m;
@@ -166,7 +158,7 @@
       gate_out_map.update((m) => {
         res.rows.forEach((v) => {
           if (v.doc.out === true){
-            m.set(v.id, v.doc);
+            m.set(v.id, {...v.doc});
           }
         });
         return m;
@@ -174,9 +166,9 @@
     }
 
     console.log('=====$gate_in_map====');
-    console.log($gate_in_map);
+    console.log(sub_gate_in_map);
     console.log('=====$gate_out_map====');
-    console.log($gate_out_map);
+    console.log(sub_gate_out_map);
 
     listen_changes();
     cleanup();

@@ -1,11 +1,8 @@
 <script>
-  import { tag_type_table } from "../services/store";
-  import TagType from "./TagType.svelte";
+  import { tag_type_map } from '../services/store';
+  import TagSpan from './TagSpan.svelte';
 
   export let type_id = undefined;
-
-  $: tag = $tag_type_table[type_id] ?? {};
-
 </script>
 
-<TagType {tag} />
+<TagSpan tag={$tag_type_map.get(type_id)} />

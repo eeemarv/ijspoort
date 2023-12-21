@@ -2,7 +2,7 @@ import { db_person } from './db';
 import lodash from 'lodash';
 import { get_search_str } from './functions';
 import { sub_person_map } from './sub';
-import { update_person_map } from './map';
+import { build_person_idx } from './build_idx';
 
 const XLSX = require('xlsx');
 
@@ -225,19 +225,7 @@ const assist_import = (file, assist_import_year) => {
     console.log('++ person bulkDocs ready');
     console.log(res);
 
-    return db_person.allDocs({
-      include_docs: true,
-      startkey: 'n',
-      endkey: 'n\uffff'
-    });
-  }).then((res) => {
-
-    console.log('load $person_map PERSON RES');
-    console.log(res);
-  
-    const person_ary = res.rows ?? [];
-  
-    update_person_map(person_ary);
+    build_person_idx();
 
   }).catch((err) => {
     console.log('!! person bulk error');

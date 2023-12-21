@@ -7,8 +7,8 @@
   import PersonTag from '../Person/PersonTag.svelte';
   import { person } from '../services/store';
   import { db_tag } from '../services/db';
-
   import { tag_count_table } from '../services/store';
+  import { tag_map } from '../services/store';
 
   export let tab;
   export let type_id;
@@ -57,7 +57,7 @@
   </span>
 
   <div>
-    Totaal: {$tag_count_table[type_id] ?? '-'}
+    Totaal: {$tag_map.has(type_id) ? $tag_map.get(type_id).size : '-'}
   </div>
 
   <ListGroup>

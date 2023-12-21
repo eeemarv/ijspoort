@@ -2,6 +2,8 @@
   import { db_reg } from '../services/db';
   import { reg_map } from '../services/store';
   import { person_last_reg_ts_map } from '../services/store';
+  import { sub_reg_map } from '../services/sub';
+  import { sub_person_last_reg_ts_map } from '../services/sub';
 
   const reg_period = 18000000; // view regs last 5 hours
   const cleanup_interval = 60000; // cleanup view regs every minute
@@ -40,14 +42,14 @@
       }
 
       reg_map.update((m) => {
-        m.set(change.id, change.doc);
+        m.set(change.id, {...change.doc});
         return m;
       });
 
       person_last_reg_ts_map.update((m) => {
         m.set(change.doc.person_id, change.doc.ts_epoch);
         return m;
-      })
+      });
 
       console.log('== db_reg.changes, set to $reg_map and $person_last_reg_ts_map');
       console.log(change);
@@ -63,7 +65,7 @@
       const ts_start = (new Date()).getTime() - reg_period;
       const delete_keys = [];
 
-      for (const [k, v] of $reg_map){
+      for (const [k, v] of sub_reg_map){
 
         console.log('REG_MAP_CLEANUP _');
         console.log('K', k);
@@ -87,11 +89,6 @@
 
         console.log('==$reg_map cleanup, ' + delete_keys.length + ' deleted ==');
       }
-      /*
-      else {
-        console.log('==$reg_map cleanup, no deletes ==');
-      }
-      */
 
     }, cleanup_interval);
   };
@@ -107,7 +104,7 @@
     if (res.rows !== undefined && res.rows.length){
       reg_map.update((m) => {
         res.rows.forEach((v) => {
-          m.set(v.id, v.doc);
+          m.set(v.id, {...v.doc});
         });
         return m;
       });
@@ -115,15 +112,15 @@
       person_last_reg_ts_map.update((m) => {
         res.rows.forEach((v) => {
           m.set(v.doc.person_id, v.doc.ts_epoch);
-        })
+        });
         return m;
       });
     }
 
     console.log('=====$reg_map====');
-    console.log($reg_map);
+    console.log(sub_reg_map);
     console.log('=====$person_last_reg_ts_map====');
-    console.log($person_last_reg_ts_map);
+    console.log(sub_person_last_reg_ts_map);
 
     listen_changes();
     cleanup();

@@ -2,6 +2,7 @@
   import { db_nfc } from '../services/db';
   import { nfc_map } from '../services/store';
   import { person_nfc_map } from '../services/store';
+  import { sub_nfc_map } from '../services/sub';
 
   const listen_changes = () => {
 
@@ -11,33 +12,35 @@
       include_docs: true
     }).on('change', (change) => {
 
-      if (!change.id.startsWith('uid_'))
-      {
-        return;
-      }
-
-      if (!$nfc_map.has(change.id)){
+      if (!change.id.startsWith('uid_')){
         return;
       }
 
       if (change.deleted){
 
+        if (!sub_nfc_map.has(change.id)){
+          console.log('== no change in nfc_map ', change);
+          return;
+        }
+
+        const {person_id} = sub_nfc_map.get(change.id);
+        
         nfc_map.update((m) => {
           m.delete(change.id);
           return m;
         });
 
         person_nfc_map.update((m) => {
-          if (m.has(change.doc.person_id)){
-            m.get(change.doc.person_id).delete(change.id);
-            if (!m.get(change.doc.person_id).size){
-              m.delete(change.doc.person_id);
+          if (m.has(person_id)){
+            m.get(person_id).delete(change.id);
+            if (!m.get(person_id).size){
+              m.delete(person_id);
             }
           }
           return m;
         });
 
-        console.log('db_nfc.changes $nfc_map deleted ' + change.id);
+        console.log('db_nfc.changes $nfc_map deleted ', change);
 
         return;
       }
@@ -46,16 +49,15 @@
       console.log(change);
 
       nfc_map.update((m) => {
-        m.set(change.id, change.doc);
+        m.set(change.id, {...change.doc});
         return m;
       });
 
       person_nfc_map.update((m) => {
-        if (m.has(change.doc.person_id)){
-          m.get(change.doc.person_id).add(change.id);
-          return m;
+        if (!m.has(change.doc.person_id)){
+          m.set(change.doc.person_id, new Set());
         }
-        m.set(change.doc.person_id, new Set([change.id]));
+        m.get(change.doc.person_id).add(change.id);
         return m;
       });
 
@@ -81,18 +83,17 @@
 
     nfc_map.update((m) => {
       nfc_ary.forEach((v) => {
-        m.set(v.doc._id, v.doc);
+        m.set(v.id, {...v.doc});
       });
       return m;
     });
 
     person_nfc_map.update((m) => {
       nfc_ary.forEach((v) => {
-        if (m.has(v.doc.person_id)){
-          m.get(v.doc.person_id).add(v.doc._id);
-          return;
+        if (!m.has(v.doc.person_id)){
+          m.set(v.doc.person_id, new Set());
         }
-        m.set(v.doc.person_id, new Set([v.doc._id]));
+        m.get(v.doc.person_id).add(v.id);
       });
       return m;
     });
