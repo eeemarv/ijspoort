@@ -37,7 +37,7 @@
       const ts_start = (new Date()).getTime() - reg_period;
 
       if (change.doc.ts_epoch < ts_start){
-        console.log('== db_reg.changes, reg to old, do not map', change);
+        console.log('== db_reg.changes, reg too old, do not map', change);
         return;
       }
 

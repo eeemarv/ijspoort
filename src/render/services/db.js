@@ -18,12 +18,16 @@ if (!env.DB_PASSWORD){
   throw 'env DB_PASSWORD not set';
 }
 
+const db_local_options = {
+  auto_compaction: true
+};
+
 const db_local_prefix = env.DB_LOCAL_PREFIX;
-const db_reg = new PouchDB(db_local_prefix + 'reg');
-const db_nfc = new PouchDB(db_local_prefix + 'nfc');
-const db_person = new PouchDB(db_local_prefix + 'person');
-const db_gate = new PouchDB(db_local_prefix + 'gate');
-const db_tag = new PouchDB(db_local_prefix + 'tag');
+const db_reg = new PouchDB(db_local_prefix + 'reg', db_local_options);
+const db_nfc = new PouchDB(db_local_prefix + 'nfc', db_local_options);
+const db_person = new PouchDB(db_local_prefix + 'person', db_local_options);
+const db_gate = new PouchDB(db_local_prefix + 'gate', db_local_options);
+const db_tag = new PouchDB(db_local_prefix + 'tag', db_local_options);
 
 const conn_prefix = env.DB_URL + '/' + env.DB_REMOTE_PREFIX;
 const auth = {
@@ -168,7 +172,7 @@ db_tag.sync(db_remote_tag, sync_options)
 });
 
 /**
- * call to db.info() to create the
+ * call to remote db.info() to create the
  * remote dbs when they do not exist.
  */
 

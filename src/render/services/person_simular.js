@@ -1,12 +1,6 @@
 import { db_person } from './db';
-import { person_map } from './store';
 import { get_search_str } from './functions';
-
-let p_map = new Map();
-
-person_map.subscribe((m) => {
-  p_map = m;
-});
+import { sub_person_map } from './sub';
 
 const person_simular_lang_keys = {
   name: 'Gelijke naam',
@@ -24,10 +18,10 @@ const get_person_simular_search_map = (person_id) => {
   const res_map = new Map();
   const lang_keys = person_simular_lang_keys;
 
-  if (!p_map.has(person_id)){
+  if (!sub_person_map.has(person_id)){
     return res_map;
   }
-  const person = p_map.get(person_id);
+  const person = sub_person_map.get(person_id);
 
   const firstname = get_search_str(person.firstname);
   const surname = get_search_str(person.surname);
@@ -47,7 +41,7 @@ const get_person_simular_search_map = (person_id) => {
       const group_ary = person.group.split(',');
       group_ary.forEach((g) => {
         const group = get_search_str(g);
-        res_map.set('group.' + group, 'group.' + g);
+        res_map.set('group.' + group, 'group.' + group);
       });
       return;
     }

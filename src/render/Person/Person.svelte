@@ -6,12 +6,8 @@
   import { Badge } from 'sveltestrap';
   import { get_person_count_by_simular } from './../services/person_simular';
 
-  ////
-
   import { person_map } from './../services/store';
   import { selected_person_id } from './../services/store';
-
-/////
 
   import { tag_display_enabled } from './../services/store';
   import PersonName from './PersonName.svelte';
@@ -26,26 +22,11 @@
 
   const dispatch = createEventDispatcher();
 
-  let group_ary = [];
-  let person = undefined;
-  let person_id = undefined;
-
   let open_reg_list;
   let open_simular;
 
-  $:  {
-    if ($selected_person_id){
-      person_id = $selected_person_id;
-      person = $person_map.get(person_id) ?? {};
-      if (person.group !== undefined && person.group !== ''){
-        group_ary = person.group.split(',');
-      }
-    } else {
-      person = undefined;
-      person_id = undefined;
-      group_ary = [];
-    }
-  }
+  $: person_id = $selected_person_id;
+  $: person = $person_map.get($selected_person_id) ?? {};
 
   const handle_click_manual_reg = (() => {
     dispatch('click_manual_reg');
@@ -213,18 +194,18 @@
           />
         </ListGroupItem>
       {/if}
-
-      {#each group_ary as group}
-        <ListGroupItem title="werkgroep" class="d-flex w-100 justify-content-between py-2 bg-info">
-          <div title="werkgroep">{group}</div>
-          <PersonSimularButton
-            key=group
-            {group} {simular_map} {person_id}
-            on:click_simular={open_simular}
-          />
-        </ListGroupItem>
-      {/each}
-
+      {#if person.group}
+        {#each person.group.split(',') as group}
+          <ListGroupItem title="werkgroep" class="d-flex w-100 justify-content-between py-2 bg-info">
+            <div title="werkgroep">{group}</div>
+            <PersonSimularButton
+              key=group
+              {group} {simular_map} {person_id}
+              on:click_simular={open_simular}
+            />
+          </ListGroupItem>
+        {/each}
+      {/if}
       {#if person.team}
         <ListGroupItem title="ploeg" class="py-2 bg-primary">
           {person.team}

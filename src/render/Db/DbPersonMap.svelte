@@ -45,7 +45,8 @@
       }
 
       person_map.update((m) => {
-        m.set(change.id, {...change.doc});
+        const member_year = {...change.doc.member_year};
+        m.set(change.id, {...change.doc, member_year});
         return m;
       });
 
@@ -78,7 +79,8 @@
     person_map.update((m) => {
       m.clear();
       person_ary.forEach((v) => {
-        m.set(v.id, {...v.doc});
+        const member_year = {...v.doc.member_year};
+        m.set(v.id, {...v.doc, member_year});
       });
       return m;
     });

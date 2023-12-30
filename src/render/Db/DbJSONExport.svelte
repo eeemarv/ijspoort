@@ -18,31 +18,26 @@
   const handle_export = () => {
     let dbs = {};
     db_nfc.allDocs({
-      include_docs: true,
-      include_attachments:true
+      include_docs: true
     }).then((res) => {
       dbs.db_nfc = res;
       return db_reg.allDocs({
-        include_docs: true,
-        include_attachments: true
+        include_docs: true
       });
     }).then((res) => {
       dbs.db_reg = res;
       return db_person.allDocs({
-        include_docs: true,
-        include_attachments: true
+        include_docs: true
       });
     }).then((res) => {
       dbs.db_person = res;
       return db_gate.allDocs({
-        include_docs: true,
-        include_attachments: true
+        include_docs: true
       });
     }).then((res) => {
       dbs.db_gate = res;
       return db_tag.allDocs({
-        include_docs: true,
-        include_attachments: true
+        include_docs: true
       });
     }).then((res) => {
       dbs.db_tag = res;

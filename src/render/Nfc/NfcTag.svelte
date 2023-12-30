@@ -27,7 +27,7 @@
     }
   };
 
-  $: if ($nfc_map.has(nfc_id)){
+  $: if (nfc_id && $nfc_map.has(nfc_id)){
     nfc = $nfc_map.get(nfc_id);
     if (fetch_abc_index){
       let s = $person_nfc_map.get(nfc.person_id);
@@ -45,35 +45,35 @@
     nfc = undefined;
   }
 
-  $: {
-    if (!fetch_abc_index){
-      set_abc(abc_index);
-    }
+  $: if (!fetch_abc_index){
+    set_abc(abc_index);
   }
 </script>
 
-{#if show_abc_index}
-<Badge color={abc_color ?? 'secondary'}
-  title="{abc_color ? 'Rangorde NFC van persoon' : 'NFC tag niet (meer) gelinkt aan persoon'}"
->
-  {abc_code ?? '-'}
-</Badge>
-{/if}
-<Badge
-  color={nfc.uid.length === 14 ? 'accent' : 'cyan'}
-  title="toegangsbadge {nfc?.uid}"
->
-  NFC-{nfc.uid.length / 2}b
-</Badge>
-{#if show_uid}
-<Badge
-  color={nfc.uid.length === 14 ? 'accent' : 'cyan'}
-  title="unieke code van badge"
->
-  {nfc?.uid}
-</Badge>
-{/if}
-{#if show_ts_epoch}
-&nbsp;
-<LocaleDateString ts_epoch={nfc?.ts_epoch} title="datum van activatie" />
+{#if $nfc_map.has(nfc_id)}
+  {#if show_abc_index}
+    <Badge color={abc_color ?? 'secondary'}
+      title="{abc_color ? 'Rangorde NFC van persoon' : 'NFC tag niet (meer) gelinkt aan persoon'}"
+    >
+      {abc_code ?? '-'}
+    </Badge>
+  {/if}
+    <Badge
+      color={nfc.uid.length === 14 ? 'accent' : 'cyan'}
+      title="toegangsbadge {nfc.uid}"
+    >
+      NFC-{nfc.uid.length / 2}b
+    </Badge>
+  {#if show_uid}
+    <Badge
+      color={nfc.uid.length === 14 ? 'accent' : 'cyan'}
+      title="unieke code van badge"
+    >
+      {nfc?.uid}
+    </Badge>
+  {/if}
+  {#if show_ts_epoch}
+    &nbsp;
+    <LocaleDateString ts_epoch={nfc?.ts_epoch} title="datum van activatie" />
+  {/if}
 {/if}

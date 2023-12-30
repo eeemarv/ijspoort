@@ -27,7 +27,8 @@ GATE_DEBLOCK_AUTH=dagelijks-bestuur,2050
 # Set DEBUG to "1" to open developer tools
 DEBUG=0
 
-# MFRC522 on Rasberry Pi 4B, for pin connection see ./scr/main/listen_mfrc.js
+# MFRC522 on Rasberry Pi 4B, 
+# for pin connection see ./scr/main/listen_mfrc.js
 # Set to "1" to enable
 MFRC522=0
 

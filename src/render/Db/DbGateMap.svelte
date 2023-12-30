@@ -5,8 +5,8 @@
   import { sub_gate_in_map } from '../services/sub';
   import { sub_gate_out_map } from '../services/sub';
 
-  const ms_period = 18000000; // view regs last 5 hours
-  const cleanup_interval = 60000; // cleanup view regs every minute
+  const ms_period = 18000000; // map last 5 hours
+  const cleanup_interval = 60000; // cleanup view every minute
 
   const listen_changes = () => {
 
@@ -50,6 +50,13 @@
         }
 
         console.log('== change del ', change);
+        return;
+      }      
+      
+      const ts_start = (new Date()).getTime() - ms_period;
+
+      if (change.doc.ts_epoch < ts_start){
+        console.log('== db_gate.changes, too old, do not map', change);
         return;
       }
 

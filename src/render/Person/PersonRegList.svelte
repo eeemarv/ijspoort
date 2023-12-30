@@ -39,9 +39,9 @@
   };
 
   const get_reg_cols = async (person_id, rows_per_page, start_row) => {
-    let regs = await get_reg_list_by_person_id(person_id, rows_per_page, start_row);
+    const regs = await get_reg_list_by_person_id(person_id, rows_per_page, start_row);
 
-    let col_size = Math.ceil(regs.length / col_count);
+    const col_size = Math.ceil(regs.length / col_count);
     let reg_cols = [];
 
     while (regs.length){
@@ -50,7 +50,7 @@
 
     console.log('reg_cols', reg_cols);
 
-    abc_map = new Map();
+    const abc_map = new Map();
 
     if ($person_nfc_map.has(person_id)){
       const s = $person_nfc_map.get(person_id);
