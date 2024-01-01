@@ -1,14 +1,9 @@
 <script>
   import { Button } from 'sveltestrap';
-  import { tag_count_table } from '../services/store';
+  import { tag_map } from '../services/store';
 
-  let total_count = 0;
-  let type_count = 0;
+  $: total_count = [...$tag_map.values()].reduce((acc, t_map) => acc + t_map.size, 0);
 
-  $: {
-    type_count = Object.keys($tag_count_table).length;
-    total_count = Object.values($tag_count_table).reduce((acc, val) => acc + val, 0);
-  }
 </script>
 
 <div class="card-header py-2 d-flex w-100 justify-content-between">
@@ -20,9 +15,9 @@
       on:click
       color=accent
       size=sm
-      title="Totaal {total_count} tags en {type_count} tag types."
+      title="Totaal {total_count} tags en {$tag_map.size} tag types."
     >
-      {total_count} / {type_count}
+      {total_count} / {$tag_map.size}
     </Button>
   </div>
 </div>

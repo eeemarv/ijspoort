@@ -70,7 +70,7 @@ const design_person_search_doc = {
         });
       }).toString(),
       reduce: '_count'
-    },
+    }
   }
 };
 

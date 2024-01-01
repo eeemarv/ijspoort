@@ -100,10 +100,6 @@ export const member_year_person_map = writable(new Map());
 export const gate_in_map = writable(new Map());
 export const gate_out_map = writable(new Map());
 
-export const tag_type_table = writable({});
-export const person_tag_table = writable({});
-export const tag_count_table = writable({});
-
 export const tag_type_map = writable(new Map());
 export const person_tag_map = writable(new Map());
 export const tag_map = writable(new Map());

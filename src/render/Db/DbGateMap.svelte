@@ -8,9 +8,60 @@
   const ms_period = 18000000; // map last 5 hours
   const cleanup_interval = 60000; // cleanup view every minute
 
+  let last_in_ts_epoch = undefined;
+  let last_out_ts_epoch = undefined;
+
+  const gate_map_build = async (type = undefined) => {
+    return await db_gate.allDocs({
+      include_docs: true,
+      startkey: 'g' + ((new Date()).getTime() - ms_period),
+      endkey: 'g\uffff'
+    }).then((res) => {
+
+      console.log('-db_gate allDocs- ', res);
+
+      const gate_ary = res.rows ?? [];
+
+      if (typeof type === 'undefined' || type === 'in'){
+        console.log('build gate_in_map -');
+        last_in_ts_epoch = undefined;
+
+        gate_in_map.update((m) => {
+          m.clear();
+          gate_ary.forEach((v) => {
+            if (v.doc.in === true){
+              m.set(v.id, {...v.doc});
+              last_in_ts_epoch = v.doc.ts_epoch;          
+            }
+          });
+          return m;
+        });     
+      }
+
+      if (typeof type === 'undefined' || type === 'out'){
+        console.log('build gate_out_map -');
+        last_out_ts_epoch = undefined;
+
+        gate_out_map.update((m) => {
+          m.clear();
+          res.rows.forEach((v) => {
+            if (v.doc.out === true){
+              m.set(v.id, {...v.doc});
+              last_out_ts_epoch = v.doc.ts_epoch;
+            }
+          });
+          return m;
+        });
+      }
+
+    }).catch((err) => {
+      console.log(err);
+    });
+  };
+
   const listen_changes = () => {
 
-    console.log('-- LISTEN CHANGES DB_REG --');
+    console.log('- listen changes gate map -');
 
     db_gate.changes({
       since: 'now',
@@ -61,20 +112,58 @@
       }
 
       if (change.doc.in){
-        gate_in_map.update((m) => {
-          m.set(change.id, {...change.doc});
-          return m;
+        if (typeof last_in_ts_epoch === 'undefined' 
+        || last_in_ts_epoch < change.doc.ts_epoch){
+          /*
+          * in sequence, add to gate_in_map
+          */
+
+          gate_in_map.update((m) => {
+            m.set(change.id, {...change.doc});
+            return m;
+          });
+          last_in_ts_epoch = change.doc.ts_epoch;
+          console.log('== change gate_in_map ', change);
+          return;
+        }
+
+        /*
+        * out sequence, rebuild gate_in_map
+        */
+
+        console.log('- gate in map out of sequence, rebuild -');
+        gate_map_build('in').then(() => {
+          console.log('- gate_in_map rebuild done -');
         });
-        console.log('== change $gate_in_map ', change);
+
         return;
       }
 
       if (change.doc.out){
-        gate_out_map.update((m) => {
-          m.set(change.id, {...change.doc});
-          return m;
+        if (typeof last_out_ts_epoch === 'undefined' 
+        || last_out_ts_epoch < change.doc.ts_epoch){
+          /*
+          * in sequence, add to gate_out_map
+          */
+
+          gate_out_map.update((m) => {
+            m.set(change.id, {...change.doc});
+            return m;
+          });
+          last_out_ts_epoch = change.doc.ts_epoch;
+          console.log('== change gate_out_map ', change);
+          return;
+        }
+
+        /*
+        * out sequence, rebuild gate_out_map
+        */
+
+        console.log('- gate_out_map out of sequence, rebuild -');
+        gate_map_build('out').then(() => {
+          console.log('- gate_out_map rebuild done -');
         });
-        console.log('== change $gate_out_map ', change);
+
         return;
       }
 
@@ -87,6 +176,8 @@
   };
 
   const cleanup = () => {
+    console.log('- setInterval cleanup gate map -');
+
     setInterval(() => {
       const ts_start = (new Date()).getTime() - ms_period;
       const delete_in_keys = [];
@@ -144,44 +235,9 @@
     }, cleanup_interval);
   };
 
-  db_gate.allDocs({
-    include_docs: true,
-    startkey: 'g' + ((new Date()).getTime() - ms_period)
-  }).then((res) => {
-
-    console.log('load $gate_in_map && $gate_out_map RES');
-    console.log(res);
-
-    if (res.rows !== undefined && res.rows.length){
-      gate_in_map.update((m) => {
-        res.rows.forEach((v) => {
-          if (v.doc.in === true){
-            m.set(v.id, {...v.doc});
-          }
-        });
-        return m;
-      });
-
-      gate_out_map.update((m) => {
-        res.rows.forEach((v) => {
-          if (v.doc.out === true){
-            m.set(v.id, {...v.doc});
-          }
-        });
-        return m;
-      });
-    }
-
-    console.log('=====$gate_in_map====');
-    console.log(sub_gate_in_map);
-    console.log('=====$gate_out_map====');
-    console.log(sub_gate_out_map);
-
+  gate_map_build().then(() => {
     listen_changes();
     cleanup();
-
-  }).catch((err) => {
-    console.log(err);
   });
 
 </script>

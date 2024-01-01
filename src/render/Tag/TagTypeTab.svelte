@@ -7,7 +7,7 @@
   import PersonTag from '../Person/PersonTag.svelte';
   import { person } from '../services/store';
   import { db_tag } from '../services/db';
-  import { tag_count_table } from '../services/store';
+
   import { tag_map } from '../services/store';
 
   export let tab;
@@ -43,7 +43,6 @@
   };
 
   $: {
-    $tag_count_table[type_id];
     if (tab === type_id){
       update_view();
     }

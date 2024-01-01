@@ -8,9 +8,50 @@
   const reg_period = 18000000; // view regs last 5 hours
   const cleanup_interval = 60000; // cleanup view regs every minute
 
-  const listen_changes = () => {
+  let last_ts_epoch = undefined;
 
-    console.log('-- LISTEN CHANGES DB_REG --');
+  const reg_map_build = async () => {
+
+    return await db_reg.allDocs({
+      include_docs: true,
+      startkey: 't' + ((new Date()).getTime() - reg_period)
+    }).then((res) => {
+
+      console.log('load $reg_map map t RES', res);
+
+      const reg_ary = res.rows ?? [];
+
+      last_ts_epoch = undefined;
+
+      reg_map.update((m) => {
+        m.clear();
+        reg_ary.forEach((v) => {
+          m.set(v.id, {...v.doc});
+          last_ts_epoch = v.doc.ts_epoch;
+        });
+        return m;
+      });
+
+      person_last_reg_ts_map.update((m) => {
+        m.clear();
+        reg_ary.forEach((v) => {
+          m.set(v.doc.person_id, v.doc.ts_epoch);
+        });
+        return m;
+      });
+
+      console.log('=====$reg_map====');
+      console.log(sub_reg_map);
+      console.log('=====$person_last_reg_ts_map====');
+      console.log(sub_person_last_reg_ts_map);
+
+    }).catch((err) => {
+      console.log(err);
+    });
+  };
+
+  const listen_changes = () => {
+    console.log('- listen changes reg map');
 
     db_reg.changes({
       since: 'now',
@@ -18,10 +59,11 @@
       include_docs: true
     }).on('change', (change) => {
 
-      if (!change.id.startsWith('t'))
-      {
+      if (!change.id.startsWith('t')){
         return;
       }
+
+      console.log('-- db reg changes ', change);
 
       if (change.deleted){
 
@@ -41,26 +83,42 @@
         return;
       }
 
-      reg_map.update((m) => {
-        m.set(change.id, {...change.doc});
-        return m;
+      if (typeof last_ts_epoch === 'undefined' 
+        || last_ts_epoch < change.doc.ts_epoch){
+        /*
+        * in sequence, just add to map
+        */
+        person_last_reg_ts_map.update((m) => {
+          m.set(change.doc.person_id, change.doc.ts_epoch);
+          return m;
+        });
+
+        reg_map.update((m) => {
+          m.set(change.id, {...change.doc});
+          last_ts_epoch = change.doc.ts_epoch;
+          return m;
+        });
+
+        return;
+      }
+
+      /*
+      * out of sequence, refetch map
+      */
+      console.log('-reg map out of sequence, rebuild -');
+      reg_map_build().then(() => {
+        console.log('-reg map rebuild done-');
       });
 
-      person_last_reg_ts_map.update((m) => {
-        m.set(change.doc.person_id, change.doc.ts_epoch);
-        return m;
-      });
-
-      console.log('== db_reg.changes, set to $reg_map and $person_last_reg_ts_map');
-      console.log(change);
       return;
-
     }).on('error', (err) => {
       console.log(err);
     });
   };
 
   const cleanup = () => {
+    console.log('- setInterval reg map cleanup -');
+
     setInterval(() => {
       const ts_start = (new Date()).getTime() - reg_period;
       const delete_keys = [];
@@ -93,40 +151,9 @@
     }, cleanup_interval);
   };
 
-  db_reg.allDocs({
-    include_docs: true,
-    startkey: 't' + ((new Date()).getTime() - reg_period)
-  }).then((res) => {
-
-    console.log('load $reg_map map t RES');
-    console.log(res);
-
-    if (res.rows !== undefined && res.rows.length){
-      reg_map.update((m) => {
-        res.rows.forEach((v) => {
-          m.set(v.id, {...v.doc});
-        });
-        return m;
-      });
-
-      person_last_reg_ts_map.update((m) => {
-        res.rows.forEach((v) => {
-          m.set(v.doc.person_id, v.doc.ts_epoch);
-        });
-        return m;
-      });
-    }
-
-    console.log('=====$reg_map====');
-    console.log(sub_reg_map);
-    console.log('=====$person_last_reg_ts_map====');
-    console.log(sub_person_last_reg_ts_map);
-
+  reg_map_build().then(() => {
     listen_changes();
     cleanup();
-
-  }).catch((err) => {
-    console.log(err);
   });
 
 </script>

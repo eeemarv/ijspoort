@@ -14,7 +14,6 @@
     }, show_blocked_time);
   };
 
-  $: console.log('++ REG MAP  ++', $reg_map);
 </script>
 
 <Row>

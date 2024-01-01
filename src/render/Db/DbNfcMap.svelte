@@ -4,8 +4,51 @@
   import { person_nfc_map } from '../services/store';
   import { sub_nfc_map } from '../services/sub';
 
-  const listen_changes = () => {
+  let last_ts_epoch = undefined;
 
+  const build_nfc_maps = async () => {
+    return await db_nfc.allDocs({
+      include_docs: true,
+      startkey: 'uid_',
+      endkey: 'uid_\uffff',
+    }).then((res) => {
+      console.log('build_nfc_maps NFC RES', res);
+
+      const nfc_ary = res.rows ?? [];
+
+      nfc_ary.sort((a, b) => {
+        return a.doc.ts_epoch - b.doc.ts_epoch;
+      });
+
+      last_ts_epoch = undefined;
+
+      nfc_map.update((m) => {
+        m.clear();
+        nfc_ary.forEach((v) => {
+          m.set(v.id, {...v.doc});
+          last_ts_epoch = v.doc.ts_epoch;
+        });
+        return m;
+      });
+
+      person_nfc_map.update((m) => {
+        m.clear();
+        nfc_ary.forEach((v) => {
+          if (!m.has(v.doc.person_id)){
+            m.set(v.doc.person_id, new Set());
+          }
+          m.get(v.doc.person_id).add(v.id);
+        });
+        return m;
+      });
+    }).catch((err) => {
+      console.log(err);
+    });
+  };
+
+  const listen_changes = () => {
+    console.log('-- listen changes nfc --');
+  
     db_nfc.changes({
       since: 'now',
       live: true,
@@ -48,59 +91,45 @@
       console.log('db_nfc.changes $nfc_map.set');
       console.log(change);
 
-      nfc_map.update((m) => {
-        m.set(change.id, {...change.doc});
-        return m;
+      if (typeof last_ts_epoch === 'undefined'
+        || last_ts_epoch < change.ts_epoch)
+      {
+        /**
+         * In sequence: add nfc to maps
+        */
+        nfc_map.update((m) => {
+          m.set(change.id, {...change.doc});
+          last_ts_epoch = change.ts_epoch;
+          return m;
+        });
+
+        person_nfc_map.update((m) => {
+          if (!m.has(change.doc.person_id)){
+            m.set(change.doc.person_id, new Set());
+          }
+          m.get(change.doc.person_id).add(change.id);
+          return m;
+        });
+        return;
+      } 
+  
+      /**
+       * Out of sequence: rebuild nfc maps
+      */
+      console.log('gate_map out of sequence, rebuild');
+      build_nfc_maps().then(() => {
+        console.log('gate_map rebuild done');
       });
 
-      person_nfc_map.update((m) => {
-        if (!m.has(change.doc.person_id)){
-          m.set(change.doc.person_id, new Set());
-        }
-        m.get(change.doc.person_id).add(change.id);
-        return m;
-      });
+      return;
 
     }).on('error', (err) => {
       console.log(err);
     });
   };
 
-  db_nfc.allDocs({
-    include_docs: true,
-    startkey: 'uid_',
-    endkey: 'uid_\uffff',
-  }).then((res) => {
-
-    console.log('load $nfc_map NFC RES');
-    console.log(res);
-
-    const nfc_ary = res.rows ?? [];
-
-    nfc_ary.sort((a, b) => {
-      return a.doc.ts_epoch - b.doc.ts_epoch;
-    });
-
-    nfc_map.update((m) => {
-      nfc_ary.forEach((v) => {
-        m.set(v.id, {...v.doc});
-      });
-      return m;
-    });
-
-    person_nfc_map.update((m) => {
-      nfc_ary.forEach((v) => {
-        if (!m.has(v.doc.person_id)){
-          m.set(v.doc.person_id, new Set());
-        }
-        m.get(v.doc.person_id).add(v.id);
-      });
-      return m;
-    });
-
+  build_nfc_maps().then(() => {
     listen_changes();
-
-  }).catch((err) => {
-    console.log(err);
   });
+
 </script>

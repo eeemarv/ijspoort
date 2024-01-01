@@ -1,6 +1,7 @@
 import { db_person } from './db';
 
 const build_person_idx = () => {
+  console.log('build indexes db_person count_by_text');
   db_person.query('search/count_by_text', {
     limit: 0
   }).then((res) => {

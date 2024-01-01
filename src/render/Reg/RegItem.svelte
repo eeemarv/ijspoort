@@ -44,7 +44,7 @@
 
   };
 
-  $: if (reg.ts_epoch > ((new Date).getTime() - newly_add_detect_time)){
+  if (reg.ts_epoch > ((new Date).getTime() - newly_add_detect_time)){
     newly_add = true;
     setTimeout(() => newly_add = false, newly_add_show_time);
   }

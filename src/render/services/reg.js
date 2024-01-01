@@ -44,7 +44,7 @@ const reg_del = (reg) => {
   db_reg.remove(reg).then((res) => {
     console('== handle remove reg ==');
     console.log(res);
-    $selected_person_id = undefined;
+    selected_person_id.set(undefined);
   }).catch((err) => {
     console.log(err);
   });
