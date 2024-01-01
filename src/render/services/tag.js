@@ -52,19 +52,22 @@ const tag_type_put = (tag_type) => {
   if (typeof tag_type._id === 'string'){
     if (!sub_tag_type_map.has(tag_type._id)){
       console.log('// no update tag type, non existant id ' + tag_type._id);
+      tag_type_put_flood_blocked = false;
       return;
     }
     const {_rev, ts_epoch, ...comp_tag_type} = sub_tag_type_map.get(tag_type._id);
     if (lodash.isEqual(tag_type, comp_tag_type)){
       console.log('** no update for tag type, no changes, type id: ' + tag_type._id);
+      tag_type_put_flood_blocked = false;
       return;
     }
     tag_type._rev = _rev;
     tag_type.ts_epoch = ts_epoch ?? (new Date()).getTime();
   } else {
     tag_type.ts_epoch = (new Date()).getTime();
+    tag_type._id = '--';
     while (tag_type._id.length !== 10){
-      tag_type._id = '0_' + Math.random().toString(36).substring(2,10);
+      tag_type._id = '0_' + Math.random().toString(36).substring(2, 10);
     }
   }
 

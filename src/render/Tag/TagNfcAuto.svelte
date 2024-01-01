@@ -8,7 +8,6 @@
   import { tag_type_enabled_sorted_id_ary } from '../services/store';
   import { tag_person_count_by_type } from '../services/store';
   import { tag_types } from '../services/store';
-  import { person } from '../services/store';
   import { nfc_uid } from '../services/store';
   import { focus_year } from '../services/store';
   import { CardFooter, Badge } from 'sveltestrap';

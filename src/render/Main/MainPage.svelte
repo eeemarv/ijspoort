@@ -1,10 +1,5 @@
 <script>
   import { reg_add } from '../services/reg';
-  import { setContext } from 'svelte';
-  import { ck_new_tag_id } from '../services/context_keys';
-  import { ck_new_tag_type_id } from '../services/context_keys';
-  import { ck_updated_tag_type_id } from '../services/context_keys';
-  import { writable } from 'svelte/store';
   import { Card, CardBody, Col } from 'sveltestrap';
   import ManualInput from '../ManualInput/ManualInput.svelte';
   import Person from '../Person/Person.svelte';
@@ -26,13 +21,6 @@
   import { person } from '../services/store';
   import MemberYearCardBody from '../Common/MemberYearCardBody.svelte';
   import MemberYearModal from '../Common/MemberYearModal.svelte';
-
-  const new_tag_id = writable();
-  setContext(ck_new_tag_id, new_tag_id);
-  const new_tag_type_id = writable();
-  setContext(ck_new_tag_type_id, new_tag_type_id);
-  const updated_tag_type_id = writable();
-  setContext(ck_updated_tag_type_id, updated_tag_type_id);
 
   let show_blocked_reg;
   let open_member_year_modal;
@@ -117,11 +105,7 @@
   />
 
   {#if $tag_display_enabled}
-    <TagCard
-      on:new_tag={(e) => $new_tag_id = e.detail}
-      on:new_tag_type={(e) => $new_tag_type_id = e.detail}
-      on:updated_tag_type={(e) => $updated_tag_type_id = e.detail}
-    />
+    <TagCard />
   {/if}
 
   {#if $gate_display_enabled}

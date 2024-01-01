@@ -4,6 +4,7 @@
   import { tag_type_map } from '../services/store';
 
   export let tab;
+  export let updated_id;
 
 </script>
 
@@ -27,8 +28,12 @@
       </tr>
     </thead>
     <tbody>
-      {#each [...$tag_type_map.keys()] as type_id(type_id)}
-        <TagTypeRow {type_id} on:edit />
+      {#each [...$tag_type_map.keys()].reverse() as type_id(type_id)}
+        <TagTypeRow 
+          {type_id} 
+          on:edit
+          bind:updated_id
+        />
       {/each}
     </tbody>
   </table>

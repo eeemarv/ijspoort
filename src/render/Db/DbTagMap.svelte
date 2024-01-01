@@ -2,8 +2,10 @@
   import { db_tag } from '../services/db';
   import { tag_type_map } from '../services/store';
   import { person_tag_map } from '../services/store';
+  import { tag_types_enabled } from '../services/store';
   import { tag_map } from '../services/store';
-  import { sub_tag_map, sub_tag_type_map } from '../services/sub';
+  import { sub_tag_map } from '../services/sub';
+  import { sub_tag_type_map } from '../services/sub';
 
   let last_type_ts_epoch = undefined;
   const last_ts_epoch_map = new Map();
@@ -29,6 +31,20 @@
           last_type_ts_epoch = v.doc.ts_epoch;
         });
   
+        return m;
+      });
+
+      /** cleanup tag_types_enabled */
+
+      tag_types_enabled.update((m) => {
+        for (const type_id in m){
+          if (!m.hasOwnProperty(type_id)){
+            continue;
+          }
+          if (!sub_tag_type_map.has(type_id)){
+            delete m[type_id];
+          }          
+        }
         return m;
       });
 

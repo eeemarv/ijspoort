@@ -46,6 +46,9 @@ const create_coupled_estore = (key, default_value, min_value, max_value) => {
     }),
     set: (n) => {
       set(store(n));
+    },
+    update: (fn) => {
+      set(store(fn(val)))
     }
 	};
 };

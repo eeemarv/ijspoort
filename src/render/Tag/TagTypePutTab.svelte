@@ -3,6 +3,7 @@
   import Icon from '@iconify/svelte';
   import plusIcon from '@iconify/icons-fa/plus';
   import pencilIcon from '@iconify/icons-fa/pencil';
+  import { createEventDispatcher } from 'svelte';
   import { Row, Col } from 'sveltestrap';
   import { Button } from 'sveltestrap';
   import { TabPane } from 'sveltestrap';
@@ -13,6 +14,7 @@
   import { tag_type_put } from '../services/tag';
 
   const { setActiveTab } = getContext('tabContent');
+  const dispatch = createEventDispatcher();
 
   export let tab;
   export let edit_type_id = undefined;
@@ -54,7 +56,9 @@
   const handle_click = () => {
 
     tag_type_put({text, description, color, max_per_person, _id: edit_type_id});      
-
+    if (typeof edit_type_id === 'string'){
+      dispatch('updated', edit_type_id);
+    }
     edit_type_id = undefined;
     setActiveTab('types');
   };

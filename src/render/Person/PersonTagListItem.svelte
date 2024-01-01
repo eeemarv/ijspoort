@@ -1,55 +1,45 @@
 <script>
-  import { getContext } from 'svelte';
-  import { ck_new_tag_id } from '../services/context_keys';
   import Icon from '@iconify/svelte';
   import timesIcon from '@iconify/icons-fa/times';
-  import { onMount } from 'svelte';
   import { Button } from 'sveltestrap';
   import { db_tag } from '../services/db';
   import Tag from '../Tag/Tag.svelte';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
+
+  const add_detect_time = 10000;
+  const show_add_time = 1000;
+  const show_del_time = 700;
 
   export let person_id = undefined;
   export let ts_epoch = undefined;
   export let type_id = undefined;
 
   export let tag;
-  let new_tag_id = getContext(ck_new_tag_id);
 
-  let handle_delete;
   let add = false;
   let del = false;
 
-  onMount(() => {
-    handle_delete = (type_id, person_id, ts_epoch) => {
-      return;
+  const handle_delete = (type_id, person_id, ts_epoch) => {
+    return;
 
-      setTimeout(() => {
-        db_tag.remove(tag).then((res) => {
-          console.log(res);
-        }).catch((err) => {
-          console.log(err);
-        });
-        del = false;
-      }, 700);
+    setTimeout(() => {
+      db_tag.remove(tag).then((res) => {
+        console.log(res);
+      }).catch((err) => {
+        console.log(err);
+      });
+      del = false;
+    }, show_del_time);
 
-      del = true;
-    };
-  });
+    del = true;
+  };
 
-  /**
-  const show_add = (new_tag_id) => {
-    if (new_tag_id !== tag._id){
-      return;
-    }
+  if (ts_epoch > ((new Date).getTime() - add_detect_time)){
+    add = true;
     setTimeout(() => {
       add = false;
-    }, 1000);
-    add = true;
+   }, show_add_time);
   }
-
-  $: show_add($new_tag_id);
-  */
 </script>
 
 <div class="list-group-item list-group-item-action"
