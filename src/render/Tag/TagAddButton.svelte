@@ -14,7 +14,7 @@
   $: disabled = !$selected_person_id
     || !$tag_type_map.has(type_id)
     || $tag_type_map.get(type_id).max_per_person < 1
-    || (!$person_tag_map.has($selected_person_id)
+    || ($person_tag_map.has($selected_person_id)
       && $person_tag_map.get($selected_person_id).has(type_id)
       && ($person_tag_map.get($selected_person_id).get(type_id).size 
         >= $tag_type_map.get(type_id).max_per_person));

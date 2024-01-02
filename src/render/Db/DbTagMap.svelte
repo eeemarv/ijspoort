@@ -4,7 +4,6 @@
   import { person_tag_map } from '../services/store';
   import { tag_types_enabled } from '../services/store';
   import { tag_map } from '../services/store';
-  import { sub_tag_map } from '../services/sub';
   import { sub_tag_type_map } from '../services/sub';
 
   let last_type_ts_epoch = undefined;
@@ -106,9 +105,9 @@
           const p_map = m.get(v.doc.person_id);
 
           if (!p_map.has(v.doc.type_id)){
-            p_map.set(v.doc.type_id, new Set());
+            p_map.set(v.doc.type_id, new Map());
           }
-          p_map.get(v.doc.type_id).add(v.doc.ts_epoch);
+          p_map.get(v.doc.type_id).set(v.doc.ts_epoch, {...v.doc});
           last_ts_epoch_map.set(v.doc.type_id, v.doc.ts_epoch);
         });
         return m;
@@ -130,7 +129,9 @@
     }).on('change', (change) => {
 
       if (change.deleted && change.id.startsWith('0_')){
+
         console.log('=// change delete tag_type_map', change);
+
         tag_type_map.update((m) => {
           m.delete(change.id);
           return m;
@@ -142,30 +143,28 @@
 
         console.log('== change delete person_tag_map & tag_map', change);
 
-        if (!sub_tag_map.has(change.id)){
-          console.log('tag not found in sub_tag_map');
-          return;
-        }
-
-        const tag = sub_tag_map.get(change.id);
+        const id_ary = change.id.substring(3).split('_');
+        const type_id = '0_' + id_ary[0];
+        const person_id = id_ary[1];
+        const ts_epoch = parseInt(id_ary[2]);
 
         person_tag_map.update((m) => {
-          if (!m.has(tag.person_id)){
+          if (!m.has(person_id)){
             return m;
           }
-          const p_map = m.get(tag.person_id);
-          if (!p_map.has(tag.type_id)){
+          const p_map = m.get(person_id);
+          if (!p_map.has(type_id)){
             return m;
           }
-          p_map.get(tag.type_id).delete(tag.ts_epoch);
+          p_map.get(type_id).delete(ts_epoch);
           return m;
         });
 
         tag_map.update((m) => {
-          if (!m.has(tag.type_id)){
+          if (!m.has(type_id)){
             return m;
           }
-          m.get(tag.type_id).delete(tag.ts_epoch);
+          m.get(type_id).delete(ts_epoch);
           return m;
         });
 
@@ -227,9 +226,9 @@
             }
             const p_map = m.get(change.doc.person_id);
             if (!p_map.has(change.doc.type_id)){
-              p_map.set(change.doc.type_id, new Set());
+              p_map.set(change.doc.type_id, new Map());
             }
-            p_map.get(change.doc.type_id).add(change.doc.ts_epoch);
+            p_map.get(change.doc.type_id).set(change.doc.ts_epoch, {...change.doc});
             return m;
           });
 

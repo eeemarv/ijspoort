@@ -85,14 +85,10 @@ export const tag_display_enabled = create_coupled_estore('tag_display_enabled', 
 export const tag_types_enabled = create_coupled_estore('tag_types_enabled', {});
 export const tag_nfc_auto_enabled = create_coupled_estore('tag_nfc_auto_enabled', false);
 
-export const tag_types = writable({});
-export const tag_count_by_type = writable({});
-export const tag_total_count = writable(0);
-export const tag_type_count = writable(0);
+// to remove
 export const tag_type_enabled_sorted_id_ary = writable([]);
-export const tag_type_sorted_id_ary = writable([]);
-export const tag_person_sorted_ary = writable([]);
 export const tag_person_count_by_type = writable({});
+// end to remove
 
 export const person_map = writable(new Map());
 export const nfc_map = writable(new Map());

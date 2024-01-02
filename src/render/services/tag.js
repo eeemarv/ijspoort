@@ -105,6 +105,17 @@ const tag_type_del = (type_id) => {
   });
 };
 
+const tag_del = (tag) => {
+  console.log('-tag remove: ', tag);
+
+  db_tag.remove(tag).then((res) => {
+    console.log(res);
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
 export { tag_add };
+export { tag_del };
 export { tag_type_put };
 export { tag_type_del };

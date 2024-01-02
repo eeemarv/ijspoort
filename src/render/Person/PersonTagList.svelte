@@ -11,8 +11,8 @@
 {#if person_id && $tag_display_enabled && $person_tag_map.has(person_id)}
   {#each [...$tag_type_map.keys()].reverse() as type_id(type_id)}
     {#if $tag_types_enabled[type_id] && $person_tag_map.get(person_id).has(type_id)}
-      {#each [...$person_tag_map.get(person_id).get(type_id)] as ts_epoch(ts_epoch)}
-        <PersonTagListItem {person_id} {type_id} {ts_epoch} />
+      {#each [...$person_tag_map.get(person_id).get(type_id).values()] as tag(tag._id)}
+        <PersonTagListItem {tag} />
       {/each}
     {/if}
   {/each}

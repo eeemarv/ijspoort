@@ -5,9 +5,8 @@
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import Tag from './Tag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
-  import { person } from '../services/store';
+  import { selected_person_id } from '../services/store';
   import { db_tag } from '../services/db';
-
   import { tag_map } from '../services/store';
 
   export let tab;
@@ -48,6 +47,10 @@
     }
   }
 
+  const handle_person_select = (person_id) => {
+    $selected_person_id = person_id;
+  };
+
 </script>
 
 <TabPane tabId={type_id} active={tab === type_id}>
@@ -62,8 +65,8 @@
   <ListGroup>
     {#each tag_list as t, index (index)}
       <SelectableListGroupItem
-        active={$person && $person._id === t.person_id}
-        on:click={() => $person = t.person_id}
+        active={$selected_person_id === t.person_id}
+        on:click={() => handle_person_select(t.person_id)}
       >
         <Row>
           <Col md=2>

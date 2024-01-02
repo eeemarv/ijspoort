@@ -1,7 +1,6 @@
 <script>
   import { tag_add } from '../services/tag';
   import { tag_nfc_auto_enabled } from '../services/store';
-  import { reg_nfc_auto_enabled } from '../services/store';
   import { selected_person_id } from '../services/store';
   import { person_nfc_auto_enabled } from '../services/store';
   import { person_map } from '../services/store';
@@ -82,9 +81,11 @@
     $tag_nfc_auto_enabled = false;
   }
 
+  /**
   $: if ($selected_person_id){
     tags_add();
   }
+  */
 </script>
 
 {#if $person_nfc_auto_enabled}
