@@ -3,11 +3,13 @@
   export let name;
   export let checked;
   export let title = undefined;
+  export let c_class = '';
 </script>
 
 <div
-  class=form-check
+  class="form-check{c_class ? ' ' + c_class : ''}"
   class:form-check-inline={inline}
+  {title}
 >
   <input
     class=form-check-input
@@ -15,7 +17,6 @@
     {name}
     id={name}
     bind:checked
-    {title}
     on:change
     on:click
   >

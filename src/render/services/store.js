@@ -102,6 +102,7 @@ export const gate_out_map = writable(new Map());
 export const tag_type_map = writable(new Map());
 export const person_tag_map = writable(new Map());
 export const tag_map = writable(new Map());
+export const auto_tag_on_nfc = writable({});
 
 export const reg_map = writable(new Map());
 export const person_last_reg_ts_map = writable(new Map());

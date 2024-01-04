@@ -12,7 +12,7 @@
 <TagModal bind:open bind:tab/>
 
 <Card class=my-2>
-  <TagCardHeader on:click={() => {open = true;}}/>
+  <TagCardHeader on:click={() => {tab = 'type_list'; open = true;}}/>
   <CardBody class=p-0>
     <TagCardList on:open_tag_tab={(e) => {tab = e.detail; open = true;}}/>
   </CardBody>

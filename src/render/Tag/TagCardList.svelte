@@ -1,38 +1,20 @@
 <script>
-  import { ListGroup, ListGroupItem } from 'sveltestrap';
-  import TagButton from './TagButton.svelte';
-  import TagAddButton from './TagAddButton.svelte';
-  import { createEventDispatcher } from 'svelte';
+  import { ListGroup } from 'sveltestrap';
   import { tag_types_enabled } from '../services/store';
   import { tag_type_map } from '../services/store';
-  import { tag_map } from '../services/store';
+  import TagCardListItem from './TagCardListItem.svelte';
+  import { auto_tag_on_nfc } from '../services/store';
 
-  const dispatch = createEventDispatcher();
-
-  const handle_open_tag_tab = (tid) => {
-    dispatch('open_tag_tab', tid);
-  };
 </script>
 
 <ListGroup>
   {#each [...$tag_type_map.keys()].reverse() as type_id(type_id)}
     {#if $tag_types_enabled[type_id]}
-      <ListGroupItem action>
-        <div class="d-flex w-100 justify-content-between">
-          <div>
-            <TagButton
-              on:click={() => {handle_open_tag_tab(type_id);}}
-              {type_id}
-            />
-          </div>
-          <div>
-            <span class=me-3>
-              {$tag_map.has(type_id) ? $tag_map.get(type_id)?.size : '-'}
-            </span>
-            <TagAddButton {type_id} />
-          </div>
-        </div>
-      </ListGroupItem>
+      <TagCardListItem 
+        {type_id}
+        on:open_tag_tab
+        bind:auto_tag_on_nfc={$auto_tag_on_nfc[type_id]}
+      />
     {/if}
   {/each}
 </ListGroup>

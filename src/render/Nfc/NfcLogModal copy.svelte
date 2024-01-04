@@ -9,7 +9,6 @@
   import { focus_year, selected_person_id } from '../services/store';
   import { person_map } from '../services/store';
   import { nfc_map } from '../services/store';
-  import { person_nfc_map } from '../services/store';
   import NfcTag from './NfcTag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
   import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
@@ -45,13 +44,6 @@
   let checked_has_person = true;
   let checked_has_no_person = true;
   let person_last_nfc_map = new Map();
-
-  const tab_map = new Map();
-
-  /**
-   * nfc_id > person_id 
-   * 
-   */
 
   export const toggle = () => (open = !open);
 

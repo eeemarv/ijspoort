@@ -6,50 +6,28 @@
   import Tag from './Tag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
   import { selected_person_id } from '../services/store';
-  import { db_tag } from '../services/db';
   import { tag_map } from '../services/store';
+  import Pagination from '../Common/Pagination.svelte';
+  import CountBadge from '../Common/CountBadge.svelte';
 
   export let tab;
   export let type_id;
 
-  let list_length = 30;
-  let tag_list = [];
-
-  const update_view = () => {
-
-    db_tag.allDocs({
-      startkey: 't' + type_id,
-      endkey: 't' + type_id + '\uffff',
-      include_docs: false
-    }).then((res) => {
-      let t_ary = [];
-
-      res.rows.forEach((v) => {
-        let a = v.id.substring(3);
-        let b = a.split('_');
-        t_ary.push({
-          ts_epoch: parseInt(b[2]),
-          person_id: b[1]
-        });
-      });
-
-      t_ary.sort((a, b) => b.ts_epoch - a.ts_epoch);
-      tag_list = [...t_ary.slice(0, list_length)];
-
-    }).catch((err) => {
-      console.log(err);
-    });
-  };
-
-  $: {
-    if (tab === type_id){
-      update_view();
-    }
-  }
+  let start_row = 0;
+  let end_row = 0;
+  let set_total_rows = () => {};
 
   const handle_person_select = (person_id) => {
     $selected_person_id = person_id;
   };
+
+  const handle_paginate_results = (e) => {
+    start_row = e.detail.start_row;
+    end_row = e.detail.end_row;
+  };
+
+  $: total_rows = $tag_map.has(type_id) ? $tag_map.get(type_id).size : 0;
+  $: set_total_rows(total_rows);
 
 </script>
 
@@ -58,28 +36,37 @@
     <Tag {type_id} />
   </span>
 
-  <div>
-    Totaal: {$tag_map.has(type_id) ? $tag_map.get(type_id).size : '-'}
-  </div>
+  <Row>
+    <Col>
+      Totaal: {total_rows ? total_rows : '-'}
+    </Col>
+    <Col>
+      <Pagination
+        bind:set_total_rows
+        on:change={handle_paginate_results}
+      />
+    </Col>
+  </Row>
 
+  {#if $tag_map.has(type_id)}
   <ListGroup>
-    {#each tag_list as t, index (index)}
+    {#each [...$tag_map.get(type_id)].reverse().slice(start_row, end_row) as [ts_epoch, person_id], index (ts_epoch)}
       <SelectableListGroupItem
-        active={$selected_person_id === t.person_id}
-        on:click={() => handle_person_select(t.person_id)}
+        active={$selected_person_id === person_id}
+        on:click={() => handle_person_select(person_id)}
       >
         <Row>
-          <Col md=2>
+          <Col md=5>
+            <CountBadge count={total_rows - start_row - index} />
             <Tag {type_id} />
-          </Col>
-          <Col md=3>
-            <LocaleDateString ts_epoch={t.ts_epoch} />
+            <LocaleDateString ts_epoch={ts_epoch} />
           </Col>
           <Col>
-            <PersonTag person_id={t.person_id} show_member_year />
+            <PersonTag person_id={person_id} show_member_year />
           </Col>
         </Row>
       </SelectableListGroupItem>
     {/each}
   </ListGroup>
+  {/if}
 </TabPane>
