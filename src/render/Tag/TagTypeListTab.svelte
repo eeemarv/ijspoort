@@ -8,7 +8,7 @@
 
 </script>
 
-<TabPane tabId=types active={tab === 'type_list'}>
+<TabPane tabId=type_list active={tab === 'type_list'}>
   <span slot=tab title="Tag types">
     Types: {$tag_type_map.size}
   </span>

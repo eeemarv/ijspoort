@@ -10,7 +10,7 @@ Het programma kent twee algemene modi:
 Reguirements:
 * OS Ubuntu 22.04
 * NFC tag reader ACR122u
-* NFC tag reader MFC522 (poort modus met Raspberry Pi 4B)
+* NFC tag reader MFRC522 (poort modus met Raspberry Pi 4B)
 
 Dependencies:
 * ACR122u driver:

@@ -6,7 +6,7 @@
 </script>
 
 <span title="voornaam">
-    {person.firstname}
+    {person.firstname ?? '***'}
 </span>
 {#if person.nickname}
   <span title="roepnaam">
@@ -14,5 +14,5 @@
   </span>
 {/if}
 <span title="achternaam">
-  {person.surname}
+  {person.surname ?? '***'}
 </span>

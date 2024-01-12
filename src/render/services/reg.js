@@ -42,7 +42,7 @@ const reg_add = (person_id, nfc_uid) => {
 const reg_del = (reg) => {
 
   db_reg.remove(reg).then((res) => {
-    console('== handle remove reg ==');
+    console.log('== handle remove reg ==');
     console.log(res);
     selected_person_id.set(undefined);
   }).catch((err) => {

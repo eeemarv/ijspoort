@@ -18,7 +18,7 @@ export default {
 		exports: 'auto'
 	},
     external: [
-        'fs'
+      'fs'
 	],
 	plugins: [
 		svelte({

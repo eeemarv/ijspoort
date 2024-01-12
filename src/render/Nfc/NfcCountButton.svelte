@@ -1,7 +1,7 @@
 <script>
   import { Button } from 'sveltestrap';
-  import NfcLogModal from './NfcLogModal.svelte';
   import { nfc_map } from '../services/store';
+  import NfcLogModal from '../NfcLog/NfcLogModal.svelte';
 
   let nfc_log_modal;
 </script>
