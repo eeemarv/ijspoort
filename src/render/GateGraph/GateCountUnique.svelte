@@ -3,8 +3,8 @@
   import { TabPane } from 'sveltestrap';
   import DaysPeriodInput from './DaysPeriodInput.svelte';
   import DaysOffsetInput from './DaysOffsetInput.svelte';
-  import AwaitError from '../Common/AwaitError.svelte';
-  import Await from '../Common/Await.svelte';
+  import AwaitError from '../Await/AwaitError.svelte';
+  import Await from '../Await/Await.svelte';
   import { get_person_in_count } from '../services/gate_stats';
   import { reg_map } from '../services/store';
 

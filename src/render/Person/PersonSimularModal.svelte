@@ -9,8 +9,8 @@
   import { selected_person_id } from '../services/store';
   import { get_person_ids_by_simular } from '../services/person_simular';
   import { person_simular_lang_keys } from '../services/person_simular';
-  import Await from '../Common/Await.svelte';
-  import AwaitError from '../Common/AwaitError.svelte';
+  import Await from '../Await/Await.svelte';
+  import AwaitError from '../Await/AwaitError.svelte';
 
   export let person_id = undefined;
 

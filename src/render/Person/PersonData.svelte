@@ -4,7 +4,7 @@
   import { Badge } from 'sveltestrap';
   import { person_map } from '../services/store';
   import PersonName from './PersonName.svelte';
-  import AwaitBadge from '../Common/AwaitBadge.svelte';
+  import AwaitBadge from '../Await/AwaitBadge.svelte';
 
   export let person_id = undefined;
 

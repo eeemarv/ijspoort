@@ -8,9 +8,9 @@
   import { onMount } from 'svelte';
   import DaysPeriodInput from './DaysPeriodInput.svelte';
   import DaysOffsetInput from './DaysOffsetInput.svelte';
-  import AwaitNoResults from '../Common/AwaitNoResults.svelte';
-  import AwaitError from '../Common/AwaitError.svelte';
-  import Await from '../Common/Await.svelte';
+  import AwaitNoResults from '../Await/AwaitNoResults.svelte';
+  import AwaitError from '../Await/AwaitError.svelte';
+  import Await from '../Await/Await.svelte';
   import { get_gate_step_count } from '../services/gate_stats';
   import { reg_map } from '../services/store';
 

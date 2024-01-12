@@ -13,8 +13,8 @@
   import { person_nfc_map } from '../services/store';
   import NfcTag from '../Nfc/NfcTag.svelte';
   import CountBadge from '../Common/CountBadge.svelte';
-  import Await from '../Common/Await.svelte';
-  import AwaitError from '../Common/AwaitError.svelte';
+  import Await from '../Await/Await.svelte';
+  import AwaitError from '../Await/AwaitError.svelte';
 
   export let person_id = undefined;
 

@@ -1,7 +1,7 @@
 <script>
   import { Button, ListGroupItem } from 'sveltestrap';
   import { get_reg_count_by_person_id } from '../services/reg';
-  import AwaitBadge from '../Common/AwaitBadge.svelte';
+  import AwaitBadge from '../Await/AwaitBadge.svelte';
 
   export let person_id;
 
