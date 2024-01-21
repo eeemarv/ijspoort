@@ -3,13 +3,23 @@ const SoftSPI = require('rpi-softspi');
 const rpio = require('rpio');
 
 const buzzer_pin = 18;
+const beep_time = 20; 
+
+// connect to mfrc522
+const clock_pin = 23;
+const mosi_pin = 19;
+const miso_pin = 21;
+const cs_pin = 24;
+
+const probe_interval = 50;
+const steps_hold_after_uid_found = 20; // 20 * 50 ms = 1 sec
 
 function listen_mfrc(win, eStore){
 	const softSPI = new SoftSPI({
-		clock: 23, // pin number of SCLK
-		mosi: 19, // pin number of MOSI
-		miso: 21, // pin number of MISO
-		client: 24 // pin number of CS
+		clock: clock_pin,
+		mosi: mosi_pin,
+		miso: miso_pin,
+		client: cs_pin
 	});
 
 	const MFRC522_CMD = {
@@ -37,6 +47,7 @@ function listen_mfrc(win, eStore){
 		if (no_find_countdown){
 			no_find_countdown--;
 		}
+	
 		mfrc522.reset();
 
 		let resp0 = mfrc522.findCard();
@@ -50,8 +61,7 @@ function listen_mfrc(win, eStore){
 			return;
 		}
 
-		console.log("Card detected:");
-		console.log(resp0);
+		console.log('Card detected: ', resp0);
 
 		//
 		let tmp_uid = res_uid;
@@ -60,13 +70,13 @@ function listen_mfrc(win, eStore){
 		res_uid = '';
 		let resp1 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid1);
 		if (resp1.status) {
-			if (typeof resp1.data === "undefined"){
+			if (typeof resp1.data === 'undefined'){
 				console.log('MFRC522 error read cycle 1 prop data is undefined');
 				return;
 			}
 			let uidCheck = 0;
 			for (let i = 0; i < 4; i++) {
-				if (typeof resp1.data[i] === "undefined"){
+				if (typeof resp1.data[i] === 'undefined'){
 					console.log('MFRC522 error read cycle 1 data ' + i + ' is undefined');
 					return;
 				}
@@ -90,9 +100,8 @@ function listen_mfrc(win, eStore){
 		}
 		buff1 = buff1.concat(mfrc522.calculateCRC(buff1));
 		let resp_a1 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, buff1);
-		console.log('resp ack 1:');
-		console.log(resp_a1);
-		if (typeof resp_a1 === "undefined"){
+		console.log('resp ack 1: ', resp_a1);
+		if (typeof resp_a1 === 'undefined'){
 			console.log('MFRC522 error: resp_a1 is undefined');
 			return;
 		}
@@ -106,13 +115,13 @@ function listen_mfrc(win, eStore){
 			const uid2 = [MFRC522_CMD.ANTICOL2, 0x20];
 			let resp2 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, uid2);
 			if (resp2.status) {
-				if (typeof resp2.data === "undefined"){
+				if (typeof resp2.data === 'undefined'){
 					console.log('MFRC522 error read cycle 2 prop data is undefined');
 					return;
 				}
 				let uidCheck = 0;
 				for (let i = 0; i < 4; i++) {
-					if (typeof resp2.data[i] === "undefined"){
+					if (typeof resp2.data[i] === 'undefined'){
 						console.log('MFRC522 error read cycle 2 data ' + i + ' is undefined');
 						return;
 					}
@@ -138,7 +147,7 @@ function listen_mfrc(win, eStore){
 				let resp_a2 = mfrc522.toCard(MFRC522_CMD.TRANSCEIVE, buff2);
 				console.log('resp ack 2:');
 				console.log(resp_a2);
-				if (typeof resp_a2 === "undefined"){
+				if (typeof resp_a2 === 'undefined'){
 					console.log('MFRC522 error: resp_a2 is undefined');
 					return;
 				}
@@ -154,22 +163,24 @@ function listen_mfrc(win, eStore){
 			rpio.write(buzzer_pin, rpio.LOW);
 			setTimeout(() => {
 				rpio.write(buzzer_pin, rpio.HIGH);
-			}, 20);
+			}, beep_time);
 		}
 
 		if (res_uid === tmp_uid){
 			console.log('MFRC522 already sent uid: ' + res_uid);
-			no_find_countdown = 5;
+			no_find_countdown = steps_hold_after_uid_found;
 			return;
 		}
 
+		/*
 		if (tmp_uid !== ''){
 			// nfc.off
 		}
+		*/
 
 		console.log('MFRC522 nfc.on uid: ', res_uid);
 		win.webContents.send('nfc.on', {uid: res_uid});
-	}, 200);
+	}, probe_interval);
 };
 
 module.exports = listen_mfrc;

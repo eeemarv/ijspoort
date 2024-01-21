@@ -4,7 +4,7 @@ const build_person_idx = () => {
   console.log('build indexes db_person count_by_text');
   db_person.query('search/count_by_text', {
     limit: 0
-  }).then((res) => {
+  }).then(() => {
     console.log('build indexes db_person search/count_by_simular');
     return db_person.query('search/count_by_simular', {
       limit: 0

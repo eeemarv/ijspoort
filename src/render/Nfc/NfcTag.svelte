@@ -1,5 +1,7 @@
 <script>
   import { Badge } from 'sveltestrap';
+  import Icon from '@iconify/svelte';
+  import banIcon from '@iconify/icons-fa/ban';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import { nfc_map } from '../services/store';
   import { person_nfc_map } from '../services/store';
@@ -63,6 +65,12 @@
       title="toegangsbadge {nfc.uid}"
     >
       NFC-{nfc.uid.length / 2}b
+    </Badge>
+    <Badge 
+      color=danger
+      title="geblokkeerd sinds "
+    >
+      <Icon icon={banIcon} color=light />
     </Badge>
   {#if show_uid}
     <Badge

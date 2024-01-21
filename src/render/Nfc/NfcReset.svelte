@@ -1,10 +1,15 @@
 <script>
   const { ipcRenderer } = window.require('electron');
   import { Button } from 'sveltestrap';
-  import { db_nfc } from '../services/db';
-  import { nfc_uid } from '../services/store';
+  import { nfc_del } from '../services/nfc';
+  import { nfc_map } from '../services/store';
   import { nfc_reset_enabled } from '../services/store';
+  import { reg_nfc_auto_enabled } from '../services/store';
+  import { selected_nfc_id } from '../services/store';
   import NfcInfoModal from './NfcInfoModal.svelte';
+  import { e_nfc } from '../services/enum';
+
+  export let nfc_status;
 
   let open = false;
   let progress = 0;
@@ -17,35 +22,8 @@
     progress = 0;
     open = true;
 
-    console.log($nfc_uid);
-    db_nfc.get('uid_' + $nfc_uid).catch((err) => {
-      console.log(err);
-      if (err.name === 'not_found'){
-        return 'not_found';
-      }
-      throw err;
-    }).then((doc) => {
-      if (doc === 'not_found'){
-        return 'not_from_database';
-      }
-      return db_nfc.remove(doc);
-    }).then((res) => {
-      console.log(res);
-      console.log('nfc.reset', $nfc_uid);
-      if (res === 'not_from_database'){
-        message = 'Tag is niet aanwezig in database.';
-        progress = 50;
-      } else {
-        message = 'Tag gewist uit database.';
-        progress = 100;
-      }
-      ipcRenderer.send('nfc.reset');
-    }).catch((err) => {
-      console.log(err);
-      progress = 50;
-      contentClassName = 'bg-danger';
-      message = 'Fout: ' + err;
-    });
+    nfc_del($nfc_map.get($selected_nfc_id));
+    ipcRenderer.send('nfc.reset');
   };
 
   ipcRenderer.on('nfc.reset.ok', (ev, card) => {
@@ -76,7 +54,7 @@
   </p>
 </NfcInfoModal>
 
-{#if $nfc_reset_enabled}
+{#if !$reg_nfc_auto_enabled && $nfc_reset_enabled && $selected_nfc_id && nfc_status === e_nfc.OK}
   <Button color=danger on:click={handle_nfc_reset} title="Wis deze NFC tag">
     Wis
   </Button>

@@ -38,17 +38,19 @@
     return row_count;
   };
 
-  const get_reg_cols = async (person_id, rows_per_page, start_row) => {
+  const get_regs = async (person_id, rows_per_page, start_row) => {
     const regs = await get_reg_list_by_person_id(person_id, rows_per_page, start_row);
 
+    /*
     const col_size = Math.ceil(regs.length / col_count);
     let reg_cols = [];
 
     while (regs.length){
       reg_cols = [...reg_cols, regs.splice(0, col_size)];
     }
+    */
 
-    console.log('reg_cols', reg_cols);
+    console.log('regs', regs);
 
     const abc_map = new Map();
 
@@ -60,10 +62,9 @@
     }
 
     return {
-      reg_cols: reg_cols,
+      regs: regs,
       abc_map: abc_map,
-      start_row: start_row,
-      col_size: col_size
+      start_row: start_row
     };
   };
 
@@ -105,15 +106,14 @@
       </Col>
     </Row>
     <Row>
-      {#await get_reg_cols(person_id, rows_per_page, start_row, $reg_map)}
+      {#await get_regs(person_id, rows_per_page, start_row, $reg_map)}
         <Await />
       {:then res}
-        {#each res.reg_cols as col, col_index (col_index)}
           <Col>
             <ListGroup>
-              {#each col as reg, reg_index(reg._id)}
+              {#each res.regs as reg, reg_index(reg._id)}
                 <ListGroupItem>
-                  <CountBadge count={row_count - res.start_row - reg_index - (res.col_size * col_index)} />
+                  <CountBadge count={row_count - res.start_row - reg_index} />
                   <RegTimeTag {reg} />
                   {#if reg.nfc_uid}
                     <NfcTag nfc_id={'uid_' + reg.nfc_uid}
@@ -126,7 +126,6 @@
               {/each}
             </ListGroup>
           </Col>
-        {/each}
       {:catch error}
         <AwaitError {error} />
       {/await}

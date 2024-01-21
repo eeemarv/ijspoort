@@ -3,6 +3,11 @@
   import { Button } from 'sveltestrap';
   import NfcInfoModal from './NfcInfoModal.svelte';
   import { nfc_read_test_enabled } from '../services/store';
+  import { reg_nfc_auto_enabled } from '../services/store';
+  import { e_nfc } from '../services/enum';
+
+  export let nfc_uid = undefined;
+  export let nfc_status = undefined;
 
   let progress = 0;
   let open = false;
@@ -42,7 +47,10 @@
   </p>
 </NfcInfoModal>
 
-{#if $nfc_read_test_enabled}
+{#if $nfc_read_test_enabled 
+  && !reg_nfc_auto_enabled 
+  && nfc_uid
+  && (nfc_status === e_nfc.WRITABLE || nfc_status === e_nfc.OK)}
   <Button color=info
     title="Lees inhoud van NFC tag"
     on:click={handle_nfc_read}

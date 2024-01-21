@@ -8,7 +8,6 @@
   import Clock from '../Common/Clock.svelte';
   import DbSync from '../Db/DbSync.svelte';
   import Reg from '../Reg/Reg.svelte';
-  import { onMount } from 'svelte';
   import MainPageLinks from './MainPageLinks.svelte';
   import NfcCard from '../Nfc/NfcCard.svelte';
   import TagCard from '../Tag/TagCard.svelte';
@@ -27,49 +26,42 @@
 
   let cmp_reg;
   let cmp_reg_list;
-  let block_time;
-  let handle_click_manual_reg;
-  let handle_person_already_registered;
-  let handle_scanned_person_valid_member;
-  let handle_scanned_person_not_member;
-//  let handle_scanned_uid_blocked;
 
-  onMount(() => {
-    block_time = cmp_reg.block_time;
+  /*** ? onMount -> cmp_reg undefined */
+  let block_time; // = cmp_reg.block_time;
 
-    handle_click_manual_reg = () => {
-      cmp_reg.add_by_manual($person);
-      $selected_person_id = undefined;
-    };
+  const handle_click_manual_reg = () => {
+//    cmp_reg.add_by_manual($person);
+    $selected_person_id = undefined;
+  };
 
-    handle_person_already_registered = (e) => {
-      show_blocked_reg(person_id);
-    };
+  const handle_person_already_registered = (e) => {
+    show_blocked_reg(person_id);
+  };
 
-    handle_scanned_person_valid_member = (e) => {
+  const handle_scanned_person_valid_member = (e) => {
 
-      if ($reg_nfc_auto_enabled){
-        reg_add(e.detail.person_id, e.detail.nfc_uid);
-        // cmp_reg.add_by_nfc(e.detail.person, e.detail.nfc_uid);
-      }
+    if ($reg_nfc_auto_enabled){
+      reg_add(e.detail.person_id, e.detail.nfc_uid);
+      // cmp_reg.add_by_nfc(e.detail.person, e.detail.nfc_uid);
+    }
 
-      if ($person_nfc_auto_enabled){
-        $selected_person_id = e.detail.selected_person_id;
-        //$person = e.detail.person;
-      }
+    if ($person_nfc_auto_enabled){
+      $selected_person_id = e.detail.selected_person_id;
+      //$person = e.detail.person;
+    }
 
-    };
+  };
 
-    handle_scanned_person_not_member = (e) => {
-      $person = e.detail.person;
-    };
+  const handle_scanned_person_not_member = (e) => {
+    $person = e.detail.person;
+  };
 
     /*
-    handle_scanned_uid_blocked = (e) => {
-      $person = e.detail.person;
-    };
+  const handle_scanned_uid_blocked = (e) => {
+    $person = e.detail.person;
+  };
     */
-  });
 </script>
 
 <MemberYearModal bind:open_member_year_modal />
@@ -95,13 +87,6 @@
   <NfcCard
     on:scanned_person_valid_member={handle_scanned_person_valid_member}
     on:scanned_person_not_member={handle_scanned_person_not_member}
-    on:scanned_person_found
-    on:scanned_person_not_found
-    on:scanned_uid_found
-    on:scanned_uid_not_found
-
-    on:nfc_on
-    on:nfc_off
   />
 
   {#if $tag_display_enabled}

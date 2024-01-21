@@ -62,8 +62,8 @@ function listen_pcsc(win){
 			win.webContents.send('nfc.on', card);
 
 			// get keys
-			let key_B = crypto.createHash('sha256').update(feed_B + card.uid.toLowerCase()).digest('hex').substr(0, 12);
-			let key_A = crypto.createHash('sha256').update(feed_A + card.uid.toLowerCase()).digest('hex').substr(0, 12);
+			const key_B = crypto.createHash('sha256').update(feed_B + card.uid.toLowerCase()).digest('hex').substr(0, 12);
+			const key_A = crypto.createHash('sha256').update(feed_A + card.uid.toLowerCase()).digest('hex').substr(0, 12);
 
 			console.log('key_B', key_B);
 			console.log('key_A', key_A);
@@ -137,11 +137,11 @@ function listen_pcsc(win){
 				}
 				reader_ready = false;
 				console.log('nfc.init');
-				let member_id = person._id.substring(1).padStart(8, '0');
-				let db = person.date_of_birth.split('/');
-				let date_of_birth = (db[2] + db[1] + db[0]).padStart(8, '0');
-				let str = date_of_birth + member_id;
-				let new_access = Buffer.from(key_A + read_a_write_b_access + key_B, 'hex');
+				const member_id = person._id.substring(1).padStart(8, '0');
+				const db = person.date_of_birth.split('/');
+				const date_of_birth = (db[2] + db[1] + db[0]).padStart(8, '0');
+				const str = date_of_birth + member_id;
+				const new_access = Buffer.from(key_A + read_a_write_b_access + key_B, 'hex');
 				const data = Buffer.alloc(16);
 				data.write(str, 'utf-8');
 				try {
@@ -174,13 +174,13 @@ function listen_pcsc(win){
 				console.log('nfc.read');
 				try {
 					await reader.authenticate(6, KEY_TYPE_A, key_A);
-					let data = await reader.read(6, 16, 16);
-					let str = data.toString();
-					let byear = str.substring(0, 4);
-					let bmonth = str.substring(4, 6);
-					let bdate = str.substring(6, 8);
-					let date_of_birth = byear + '.' + bmonth + '.' + bdate;
-					let member_id = str.substring(8, 16);
+					const data = await reader.read(6, 16, 16);
+					const str = data.toString();
+					const byear = str.substring(0, 4);
+					const bmonth = str.substring(4, 6);
+				  const bdate = str.substring(6, 8);
+					const date_of_birth = byear + '.' + bmonth + '.' + bdate;
+					const member_id = str.substring(8, 16);
 					console.log('nfc.read.ok', card.uid, date_of_birth, member_id);
 					reader_ready = true;
 					event.reply('nfc.read.ok', card, date_of_birth, member_id);
@@ -199,8 +199,8 @@ function listen_pcsc(win){
 				}
 				reader_ready = false;
 				console.log('nfc.reset');
-				let reset_access = Buffer.from(transport_key + transport_access + transport_key, 'hex');
-				let null_data = Buffer.alloc(16);
+				const reset_access = Buffer.from(transport_key + transport_access + transport_key, 'hex');
+				const null_data = Buffer.alloc(16);
 				try {
 					await reader.authenticate(6, KEY_TYPE_B, key_B);
 					await reader.write(6, null_data, 16);

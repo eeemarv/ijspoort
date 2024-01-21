@@ -302,19 +302,11 @@
 
 <NfcScan
   on:scanned_person_valid_member={handle_scanned_person_valid_member}
-  on:scanned_person_valid_member
   on:scanned_person_not_member={handle_scanned_person_not_member}
-  on:scanned_person_not_member
-  on:scanned_person_found
   on:scanned_person_not_found={handle_scanned_person_not_found}
-  on:scanned_person_not_found
-  on:scanned_uid_found
   on:scanned_uid_not_found={handle_scanned_uid_not_found}
-  on:scanned_uid_not_found
 
-  on:nfc_on
   on:nfc_off={handle_nfc_off}
-  on:nfc_off
 />
 
 <style>

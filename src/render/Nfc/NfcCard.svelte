@@ -11,6 +11,7 @@
   import { nfc_reset_enabled } from '../services/store';
   import { reg_nfc_auto_enabled } from '../services/store';
   import NfcPersonAuto from './NfcPersonAuto.svelte';
+  import { e_nfc } from '../services/enum';
 
   let nfc_status;
   let nfc_uid;
@@ -21,13 +22,6 @@
   bind:nfc_uid
   on:scanned_person_valid_member
   on:scanned_person_not_member
-  on:scanned_person_found
-  on:scanned_person_not_found
-  on:scanned_uid_found
-  on:scanned_uid_not_found
-
-  on:nfc_on
-  on:nfc_off
 />
 
 <Card class=my-2>
@@ -44,24 +38,30 @@
         <NfcRegAuto />
       </div>
       <div>
-        <NfcActivate {nfc_status} on:activated={() => { nfc_status = 'ok'; }} />
+        <NfcActivate
+          {nfc_uid}
+          {nfc_status} 
+          on:activated={() => { nfc_status = e_nfc.OK; }} 
+        />
       </div>
     </div>
   </CardFooter>
-  {#if !$reg_nfc_auto_enabled
+
+  {#if true || (!$reg_nfc_auto_enabled
     && nfc_uid
-    && (nfc_status === 'writable' || nfc_status === 'ok')
-    && ($nfc_read_test_enabled || $nfc_reset_enabled)
+    && (nfc_status === e_nfc.WRITABLE || nfc_status === e_nfc.OK)
+    && ($nfc_read_test_enabled || $nfc_reset_enabled))
   }
     <CardFooter>
       <div class="d-flex w-100 justify-content-between">
         <div>
-          <NfcReadTest />
+          <NfcReadTest {nfc_uid} {nfc_status} />
         </div>
         <div>
-          <NfcReset />
+          <NfcReset {nfc_status} />
         </div>
       </div>
     </CardFooter>
   {/if}
+
 </Card>

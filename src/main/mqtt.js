@@ -47,7 +47,7 @@ const mqtt_init = (win) => {
 	});
 
 	mqtt_client.on('message', (topic, message_buff) => {
-		let msg = message_buff.toString();
+		const msg = message_buff.toString();
 
 		console.log('mqtt rx -t ' + topic + ' -m ' + msg);
 
@@ -134,7 +134,7 @@ function mqtt_gate(win){
 	});
 
 	mqtt_client.on('message', (topic, message_buff) => {
-		let msg = message_buff.toString();
+		const msg = message_buff.toString();
 
 		if (topic === 'g/s/in'){
 

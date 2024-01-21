@@ -9,6 +9,7 @@
   };
 
   let open = false;
+
   const toggle = () => {
     open = !open;
   };

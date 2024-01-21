@@ -1,19 +1,23 @@
 const env = window.require('electron').remote.process.env;
 import PouchDB from 'pouchdb';
-import { sync_monitor } from './store';
+// import { sync_monitor } from './store';
 
 if (!env.DB_LOCAL_PREFIX){
   throw 'env DB_LOCAL_PREFIX not set';
 }
+
 if (!env.DB_REMOTE_PREFIX){
   throw 'env DB_LOCAL_PREFIX not set';
 }
+
 if (!env.DB_URL){
   throw 'env DB_URL not set';
 }
+
 if (!env.DB_USERNAME){
   throw 'env DB_USERNAME not set';
 }
+
 if (!env.DB_PASSWORD){
   throw 'env DB_PASSWORD not set';
 }
@@ -43,7 +47,7 @@ const db_remote_tag = new PouchDB(conn_prefix + 'tag', {auth: auth});
 
 /**
  * sync
- */
+
 
 const sync_options = {
   live: true,
@@ -56,8 +60,50 @@ const sync_options = {
   }
 };
 
+const db_replicate = db_nfc.replicate.from(db_remote_nfc).then(() => {
+  console.log('..repl completed db_nfc < remote');
+  return db_nfc.replicate.to(db_remote_nfc);
+}).then(() => {
+  console.log('..repl completed db_nfc > remote');
+  return db_person.replicate.from(db_remote_person);
+}).then(() => {
+  console.log('..repl completed db_person < remote');
+  return db_person.replicate.to(db_remote_person);
+}).then(() => {
+  console.log('..repl completed db_person > remote');
+  return db_reg.replicate.from(db_remote_reg);
+}).then(() => {
+  console.log('..repl completed db_reg < remote');
+  return db_reg.replicate.to(db_remote_reg);
+}).then(() => {
+  console.log('..repl completed db_reg > remote');
+  return db_gate.replicate.from(db_remote_gate);
+}).then(() => {
+  console.log('..repl completed db_gate < remote');
+  return db_gate.replicate.to(db_remote_gate);
+}).then(() => {
+  console.log('..repl completed db_gate > remote');
+  return db_tag.replicate.from(db_remote_tag);
+}).then(() => {
+  console.log('..repl completed db_tag < remote');
+  return db_tag.replicate.to(db_remote_tag);
+}).then(() => {
+  console.log('..repl completed db_tag > remote');
+}).catch((err) => {
+  console.log(err);
+});
+
+
 db_reg.sync(db_remote_reg, sync_options)
 .on('change', (info) => {
+  db_ev.dispatchEvent(new CustomEvent('sync', {
+    detail: {
+      source: 'reg',
+      on: 'change',
+      msg: 'Sync update registraties',
+      info: info      
+    }
+  }));
   console.log('db_reg CHANGE');
   console.log(info);
   sync_monitor.set_active();
@@ -171,10 +217,10 @@ db_tag.sync(db_remote_tag, sync_options)
   sync_monitor.set_error();
 });
 
-/**
+**
  * call to remote db.info() to create the
  * remote dbs when they do not exist.
- */
+ *
 
 db_remote_nfc.info().then((info) => {
   console.log(info);
@@ -206,8 +252,14 @@ db_remote_tag.info().then((info) => {
   console.log(err);
 });
 
+*/
+
 export {
   db_remote_reg,
+  db_remote_nfc,
+  db_remote_person,
+  db_remote_gate,
+  db_remote_tag,
   db_reg,
   db_nfc,
   db_person,
