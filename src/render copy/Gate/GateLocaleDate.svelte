@@ -1,16 +1,9 @@
 <script>
-  import { onMount } from 'svelte';
-
   let ts_date = new Date();
 
-  onMount(() => {
-    const timer_interval = setInterval(() => {
-      ts_date = new Date();
-    }, 1000);
-    return () => {
-      clearInterval(timer_interval);
-    };
-  });
+  setInterval(() => {
+    ts_date = new Date();
+  }, 1000);
 </script>
 
 <span>

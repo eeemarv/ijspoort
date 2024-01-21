@@ -21,6 +21,8 @@ GATE=0
 # a group in Assist
 # (or groups and/or member_id's
 # comma separated)
+# Group names are case and space 
+# insensitive
 GATE_CONFIG_AUTH=poorthouders,dagelijks-bestuur,2050
 GATE_DEBLOCK_AUTH=dagelijks-bestuur,2050
 

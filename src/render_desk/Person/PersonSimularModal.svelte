@@ -2,15 +2,14 @@
   import { ListGroup, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import PersonName from './PersonName.svelte';
   import PersonTag from './PersonTag.svelte';
-  import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
-  import ModalFooterClose from '../Common/ModalFooterClose.svelte';
-
+  import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
+  import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
   import { person_map } from '../../services/store';
   import { selected_person_id } from '../../services/store';
   import { person_get_ids_by_simular } from '../../db_get/person_get';
   import { person_simular_lang_keys } from '../../db_get/person_get';
-  import Await from '../Await/Await.svelte';
-  import AwaitError from '../Await/AwaitError.svelte';
+  import Await from '../../render/Await/Await.svelte';
+  import AwaitError from '../../render/Await/AwaitError.svelte';
 
   export let person_id = undefined;
 
