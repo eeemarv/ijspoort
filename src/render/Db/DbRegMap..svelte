@@ -1,9 +1,9 @@
 <script>
-  import { db_reg } from '../services/db';
-  import { reg_map } from '../services/store';
-  import { person_last_reg_ts_map } from '../services/store';
-  import { sub_reg_map } from '../services/sub';
-  import { sub_person_last_reg_ts_map } from '../services/sub';
+  import { db_reg } from '../db/db';
+  import { reg_map } from '../../services/store';
+  import { person_last_reg_ts_map } from '../../services/store';
+  import { sub_reg_map } from '../../services/sub';
+  import { sub_person_last_reg_ts_map } from '../../services/sub';
 
   const reg_period = 18000000; // view regs last 5 hours
   const cleanup_interval = 60000; // cleanup view regs every minute

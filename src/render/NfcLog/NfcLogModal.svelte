@@ -2,10 +2,10 @@
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { Row, Col } from 'sveltestrap';
   import { TabContent } from 'sveltestrap';
-  import { focus_year, selected_person_id } from '../services/store';
-  import { person_map } from '../services/store';
-  import { nfc_map } from '../services/store';
-  import { person_nfc_map } from '../services/store';
+  import { focus_year, selected_person_id } from '../../services/store';
+  import { person_map } from '../../services/store';
+  import { nfc_map } from '../../services/store';
+  import { person_nfc_map } from '../../services/store';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
   import PersonFocusYearTag from '../Person/PersonFocusYearTag.svelte';
   import Pagination from '../Common/Pagination.svelte';

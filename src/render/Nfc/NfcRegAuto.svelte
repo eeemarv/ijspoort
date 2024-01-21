@@ -1,6 +1,6 @@
 <script>
   import { Input } from 'sveltestrap';
-  import { reg_nfc_auto_enabled } from '../services/store';
+  import { reg_nfc_auto_enabled } from '../../services/store';
 
 </script>
 

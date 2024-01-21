@@ -5,8 +5,8 @@
   import DaysOffsetInput from './DaysOffsetInput.svelte';
   import AwaitError from '../Await/AwaitError.svelte';
   import Await from '../Await/Await.svelte';
-  import { get_person_in_count } from '../services/gate_stats';
-  import { reg_map } from '../services/store';
+  import { gate_get_person_in_count } from '../../db_get/gate_get';
+  import { reg_map } from '../../services/store';
 
   export let tab;
 
@@ -25,7 +25,7 @@
     let visit_count = 0;
     const visit_ary = [];
 
-    const res = await get_person_in_count(ts_start, ts_end, suppress_time);
+    const res = await gate_get_person_in_count(ts_start, ts_end, suppress_time);
 
     res.person_count_map.forEach((v) => {
       entries_map.set(v, (entries_map.get(v) ?? 0) + 1);

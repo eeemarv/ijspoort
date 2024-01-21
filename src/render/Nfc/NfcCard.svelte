@@ -7,11 +7,11 @@
   import NfcScan from './NfcScan.svelte';
   import NfcReadTest from './NfcReadTest.svelte';
   import NfcReset from './NfcReset.svelte';
-  import { nfc_read_test_enabled } from '../services/store';
-  import { nfc_reset_enabled } from '../services/store';
-  import { reg_nfc_auto_enabled } from '../services/store';
+  import { nfc_read_test_enabled } from '../../services/store';
+  import { nfc_reset_enabled } from '../../services/store';
+  import { reg_nfc_auto_enabled } from '../../services/store';
   import NfcPersonAuto from './NfcPersonAuto.svelte';
-  import { e_nfc } from '../services/enum';
+  import { e_nfc } from '../../services/enum';
 
   let nfc_status;
   let nfc_uid;

@@ -3,10 +3,10 @@
   import { createEventDispatcher } from 'svelte';
   import { Button } from 'sveltestrap';
   import { ListGroup, ListGroupItem } from 'sveltestrap';
-  import { get_person_count_by_simular } from './../services/person_simular';
-  import { person_map } from './../services/store';
-  import { selected_person_id } from './../services/store';
-  import { tag_display_enabled } from './../services/store';
+  import { person_get_by_simular } from '../../db_get/person_get';
+  import { person_map } from '../../services/store';
+  import { selected_person_id } from '../../services/store';
+  import { tag_display_enabled } from '../../services/store';
   import PersonMemberId from './PersonMemberId.svelte';
   import PersonMemberYear from './PersonMemberYear.svelte';
   import PersonTagList from './PersonTagList.svelte';
@@ -51,7 +51,7 @@
           <div></div>
         {/if}
       </ListGroupItem>
-      {#await get_person_count_by_simular(person_id)}
+      {#await person_get_by_simular(person_id)}
         <PersonData {person_id} />
       {:then simular_map}
         <PersonData {person_id}>

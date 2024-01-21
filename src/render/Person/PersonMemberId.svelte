@@ -1,5 +1,5 @@
 <script>
-  import { person_map } from "../services/store";
+  import { person_map } from '../../services/store';
 
   export let person_id = undefined;
 </script>

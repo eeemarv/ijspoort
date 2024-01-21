@@ -2,7 +2,7 @@
   import { Button } from 'sveltestrap';
   import { ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
-  import { person_map } from '../services/store';
+  import { person_map } from '../../services/store';
   import PersonName from './PersonName.svelte';
   import AwaitBadge from '../Await/AwaitBadge.svelte';
 

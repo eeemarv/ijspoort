@@ -1,7 +1,7 @@
 <script>
-  import { person_map } from '../services/store';
+  import { person_map } from '../../services/store';
+  import { member_year_person_map } from '../../services/store';
   import { Badge } from 'sveltestrap';
-  import { member_year_person_map } from '../services/store';
 
   export let person_id = undefined;
 

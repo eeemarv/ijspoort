@@ -1,6 +1,6 @@
 <script>
   import { Badge } from 'sveltestrap';
-  import { focus_year } from '../services/store';
+  import { focus_year } from '../../services/store';
 
   export let title = 'lid in ' + $focus_year.toString();
 </script>

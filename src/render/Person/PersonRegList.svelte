@@ -7,10 +7,10 @@
   import RegTimeTag from '../Reg/RegTimeTag.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
   import Pagination from '../Common/Pagination.svelte';
-  import { get_reg_count_by_person_id } from '../services/reg';
-  import { get_reg_list_by_person_id } from '../services/reg';
-  import { reg_map } from '../services/store';
-  import { person_nfc_map } from '../services/store';
+  import { reg_get_count_by_person_id } from '../../db_get/reg_get';
+  import { reg_get_list_by_person_id } from '../../db_get/reg_get';
+  import { reg_map } from '../../services/store';
+  import { person_nfc_map } from '../../services/store';
   import NfcTag from '../Nfc/NfcTag.svelte';
   import CountBadge from '../Common/CountBadge.svelte';
   import Await from '../Await/Await.svelte';
@@ -30,25 +30,15 @@
   let set_total_rows = () => {};
 
   let row_count = 0;
-  const col_count = 2;
 
-  const get_reg_count = async (person_id) => {
-    row_count = await get_reg_count_by_person_id(person_id);
+  const reg_get_count = async (person_id) => {
+    row_count = await reg_get_count_by_person_id(person_id);
     set_total_rows(row_count);
     return row_count;
   };
 
-  const get_regs = async (person_id, rows_per_page, start_row) => {
-    const regs = await get_reg_list_by_person_id(person_id, rows_per_page, start_row);
-
-    /*
-    const col_size = Math.ceil(regs.length / col_count);
-    let reg_cols = [];
-
-    while (regs.length){
-      reg_cols = [...reg_cols, regs.splice(0, col_size)];
-    }
-    */
+  const reg_get_list = async (person_id, rows_per_page, start_row) => {
+    const regs = await reg_get_list_by_person_id(person_id, rows_per_page, start_row);
 
     console.log('regs', regs);
 
@@ -89,7 +79,7 @@
   <ModalBody>
     <Row>
       <Col>
-        {#await get_reg_count(person_id, $reg_map)}
+        {#await reg_get_count(person_id, $reg_map)}
           <Await />
         {:then reg_count}
           Totaal: {reg_count}
@@ -106,7 +96,7 @@
       </Col>
     </Row>
     <Row>
-      {#await get_regs(person_id, rows_per_page, start_row, $reg_map)}
+      {#await reg_get_list(person_id, rows_per_page, start_row, $reg_map)}
         <Await />
       {:then res}
           <Col>

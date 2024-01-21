@@ -3,16 +3,16 @@
   const { ipcRenderer } = window.require('electron');
   import { createEventDispatcher } from 'svelte';
 
-  import { selected_nfc_id } from '../services/store';
-  import { selected_person_id } from '../services/store';
-  import { person_nfc_auto_enabled } from '../services/store';
-  import { reg_nfc_auto_enabled } from '../services/store';
-  import { person_map } from '../services/store';
-  import { person_last_reg_ts_map } from '../services/store';
-  import { reg_add } from '../services/reg';
-  import { reg_block_time } from '../services/store';
-  import { nfc_map } from '../services/store';
-  import { e_nfc } from '../services/enum';
+  import { selected_nfc_id } from '../../services/store';
+  import { selected_person_id } from '../../services/store';
+  import { person_nfc_auto_enabled } from '../../services/store';
+  import { reg_nfc_auto_enabled } from '../../services/store';
+  import { person_map } from '../../services/store';
+  import { person_last_reg_ts_map } from '../../services/store';
+  import { reg_add } from '../../db_put/reg_put';
+  import { reg_block_time } from '../../services/store';
+  import { nfc_map } from '../../services/store';
+  import { e_nfc } from '../../services/enum';
 
   const gate_enabled = env.GATE === '1';
 

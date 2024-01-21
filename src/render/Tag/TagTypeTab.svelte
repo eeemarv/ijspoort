@@ -5,8 +5,8 @@
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import Tag from './Tag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
-  import { selected_person_id } from '../services/store';
-  import { tag_map } from '../services/store';
+  import { selected_person_id } from '../../services/store';
+  import { tag_map } from '../../services/store';
   import Pagination from '../Common/Pagination.svelte';
   import CountBadge from '../Common/CountBadge.svelte';
 

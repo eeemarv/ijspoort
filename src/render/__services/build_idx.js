@@ -1,4 +1,4 @@
-import { db_person } from './db';
+import { db_person } from '../../db/db';
 
 const build_person_idx = () => {
   console.log('build indexes db_person count_by_text');

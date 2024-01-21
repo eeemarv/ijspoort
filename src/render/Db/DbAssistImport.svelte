@@ -1,7 +1,7 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { assist_import } from '../services/assist_import';
-  import { assist_import_year } from '../services/store';
+  import { person_assist_import } from '../../db_put/person_put';
+  import { assist_import_year } from '../../services/store';
 
   $: {
     $assist_import_year;
@@ -18,6 +18,6 @@
     if ($assist_import_year > 2030){
       return;
     }
-    assist_import(file, $assist_import_year.toString());
+    person_assist_import(file, $assist_import_year.toString());
   });
 </script>

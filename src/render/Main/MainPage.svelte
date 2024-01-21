@@ -1,5 +1,5 @@
 <script>
-  import { reg_add } from '../services/reg';
+  import { reg_add } from '../../db_put/reg_put';
   import { Card, CardBody, Col } from 'sveltestrap';
   import ManualInput from '../ManualInput/ManualInput.svelte';
   import Person from '../Person/Person.svelte';
@@ -12,12 +12,12 @@
   import NfcCard from '../Nfc/NfcCard.svelte';
   import TagCard from '../Tag/TagCard.svelte';
   import GateCard from '../Gate/GateCard.svelte';
-  import { selected_person_id, temp_display_enabled } from '../services/store';
-  import { gate_display_enabled } from '../services/store';
-  import { tag_display_enabled } from '../services/store';
-  import { reg_nfc_auto_enabled } from '../services/store';
-  import { person_nfc_auto_enabled } from '../services/store';
-  import { person } from '../services/store';
+  import { selected_person_id, temp_display_enabled } from '../../services/store';
+  import { gate_display_enabled } from '../../services/store';
+  import { tag_display_enabled } from '../../services/store';
+  import { reg_nfc_auto_enabled } from '../../services/store';
+  import { person_nfc_auto_enabled } from '../../services/store';
+  import { person } from '../../services/store';
   import MemberYearCardBody from '../Common/MemberYearCardBody.svelte';
   import MemberYearModal from '../Common/MemberYearModal.svelte';
 

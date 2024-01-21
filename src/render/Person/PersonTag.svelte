@@ -1,13 +1,13 @@
 <script>
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
-  import { focus_year } from '../services/store';
+  import { focus_year } from '../../services/store';
   import PersonFocusYearTag from './PersonFocusYearTag.svelte';
-  import { person_map } from '../services/store';
-  import { tag_types_enabled } from '../services/store';
-  import { tag_display_enabled } from '../services/store';
-  import { person_tag_map } from '../services/store';
-  import { tag_type_map } from '../services/store';
+  import { person_map } from '../../services/store';
+  import { tag_types_enabled } from '../../services/store';
+  import { tag_display_enabled } from '../../services/store';
+  import { person_tag_map } from '../../services/store';
+  import { tag_type_map } from '../../services/store';
   import Tag from '../Tag/Tag.svelte';
 
   export let person_id = undefined;

@@ -1,6 +1,6 @@
 <script>
-  import { focus_year } from '../services/store';
-  import { member_year_person_map } from '../services/store';
+  import { focus_year } from '../../services/store';
+  import { member_year_person_map } from '../../services/store';
   import { Button, CardBody } from 'sveltestrap';
 </script>
 

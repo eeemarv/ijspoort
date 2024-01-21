@@ -1,4 +1,4 @@
-import { db_person } from './db';
+import { db_person } from '../../db/db';
 import { get_search_str } from './functions';
 import { sub_person_map } from './sub';
 

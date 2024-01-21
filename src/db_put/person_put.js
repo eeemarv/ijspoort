@@ -1,8 +1,9 @@
-import { db_person } from './db';
+import { db_person } from '../db/db';
 import lodash from 'lodash';
-import { get_search_str } from './functions';
-import { sub_person_map } from './sub';
-import { build_person_idx } from './build_idx';
+import { get_search_str } from '../services/functions';
+import { sub_person_map } from '../services/sub';
+import { person_build_idx_by_text } from '../db_idx/person_idx';
+import { person_build_idx_by_simular } from '../db_idx/person_idx';
 
 const XLSX = require('xlsx');
 
@@ -83,7 +84,7 @@ const assist_person_map = {
   }
 };
 
-const assist_import = (file, assist_import_year) => {
+const person_assist_import = (file, assist_import_year) => {
   const year_key = 'y' + assist_import_year.substring(0);
   const workbook = XLSX.readFile(file);
   const sheet_name_list = workbook.SheetNames;
@@ -222,15 +223,13 @@ const assist_import = (file, assist_import_year) => {
   console.log('+++ persons_bulk +++', persons_bulk);
 
   db_person.bulkDocs(persons_bulk).then((res) => {
-    console.log('++ person bulkDocs ready');
-    console.log(res);
-
-    build_person_idx();
-
+    console.log('++ person bulkDocs ready', res);
+    return person_build_idx_by_text();
+  }).then(() => {
+    return person_build_idx_by_simular();
   }).catch((err) => {
-    console.log('!! person bulk error');
-    console.log(err);
+    console.log('!! person bulk error', err);
   });
 };
 
-export { assist_import };
+export { person_assist_import };

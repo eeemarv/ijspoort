@@ -7,10 +7,10 @@
   import { Button } from 'sveltestrap';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import TagEnableCheckbox from './TagEnableCheckbox.svelte';
-  import { tag_type_map } from '../services/store';
-  import { tag_map } from '../services/store';
+  import { tag_type_map } from '../../services/store';
+  import { tag_map } from '../../services/store';
   import Tag from './Tag.svelte';
-  import { tag_type_del } from '../services/tag';
+  import { tag_type_del } from '../../db_put/tag_put';
 
   const { setActiveTab } = getContext('tabContent');
   const dispatch = createEventDispatcher();

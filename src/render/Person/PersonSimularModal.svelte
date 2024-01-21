@@ -5,10 +5,10 @@
   import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
-  import { person_map } from '../services/store';
-  import { selected_person_id } from '../services/store';
-  import { get_person_ids_by_simular } from '../services/person_simular';
-  import { person_simular_lang_keys } from '../services/person_simular';
+  import { person_map } from '../../services/store';
+  import { selected_person_id } from '../../services/store';
+  import { person_get_ids_by_simular } from '../../db_get/person_get';
+  import { person_simular_lang_keys } from '../../db_get/person_get';
   import Await from '../Await/Await.svelte';
   import AwaitError from '../Await/AwaitError.svelte';
 
@@ -49,7 +49,7 @@
     {/if}
   </ModalHeader>
   <ModalBody>
-    {#await get_person_ids_by_simular(search_key)}
+    {#await person_get_ids_by_simular(search_key)}
       <Await />
     {:then person_ids}
       <ListGroup>

@@ -1,9 +1,9 @@
 <script>
   import { ListGroup } from 'sveltestrap';
-  import { tag_types_enabled } from '../services/store';
-  import { tag_type_map } from '../services/store';
+  import { tag_types_enabled } from '../../services/store';
+  import { tag_type_map } from '../../services/store';
   import TagCardListItem from './TagCardListItem.svelte';
-  import { auto_tag_on_nfc } from '../services/store';
+  import { auto_tag_on_nfc } from '../../services/store';
 
 </script>
 

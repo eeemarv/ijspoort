@@ -1,7 +1,7 @@
 <script>
   import { Badge } from 'sveltestrap';
   import PersonTag from '../Person/PersonTag.svelte';
-  import { reg_block_time } from '../services/store';
+  import { reg_block_time } from '../../services/store';
 
   export let person_id = undefined;
 

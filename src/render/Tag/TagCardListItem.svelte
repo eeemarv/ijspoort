@@ -3,9 +3,9 @@
   import TagButton from './TagButton.svelte';
   import TagAddButton from './TagAddButton.svelte';
   import { createEventDispatcher } from 'svelte';
-  import { tag_type_map } from '../services/store';
-  import { tag_map } from '../services/store';
-  import { focus_year } from '../services/store';
+  import { tag_type_map } from '../../services/store';
+  import { tag_map } from '../../services/store';
+  import { focus_year } from '../../services/store';
   import Checkbox from '../Common/Checkbox.svelte';
 
   const dispatch = createEventDispatcher();

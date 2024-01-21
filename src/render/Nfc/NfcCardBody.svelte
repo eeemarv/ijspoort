@@ -1,6 +1,6 @@
 <script>
   import { CardText } from 'sveltestrap';
-  import { e_nfc } from '../services/enum';
+  import { e_nfc } from '../../services/enum';
 
   export let nfc_status;
   export let nfc_uid;

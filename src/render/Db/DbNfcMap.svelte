@@ -1,8 +1,8 @@
 <script>
-  import { db_nfc } from '../services/db';
-  import { nfc_map } from '../services/store';
-  import { person_nfc_map } from '../services/store';
-  import { sub_nfc_map } from '../services/sub';
+  import { db_nfc } from '../db/db';
+  import { nfc_map } from '../../services/store';
+  import { person_nfc_map } from '../../services/store';
+  import { sub_nfc_map } from '../../services/sub';
 
   let last_ts_epoch = undefined;
 

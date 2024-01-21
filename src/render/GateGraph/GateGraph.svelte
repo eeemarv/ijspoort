@@ -1,18 +1,16 @@
 <script>
-  import { Row, Col, ListGroup, ListGroupItem } from 'sveltestrap';
+  import { Row, Col } from 'sveltestrap';
   import { TabPane } from 'sveltestrap';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import TimeTag from '../Common/TimeTag.svelte';
   import * as Pancake from '@sveltejs/pancake';
-  import { Datepicker } from 'vanillajs-datepicker';
-  import { onMount } from 'svelte';
   import DaysPeriodInput from './DaysPeriodInput.svelte';
   import DaysOffsetInput from './DaysOffsetInput.svelte';
   import AwaitNoResults from '../Await/AwaitNoResults.svelte';
   import AwaitError from '../Await/AwaitError.svelte';
   import Await from '../Await/Await.svelte';
-  import { get_gate_step_count } from '../services/gate_stats';
-  import { reg_map } from '../services/store';
+  import { gate_get_step_count } from '../../db_get/gate_get';
+  import { reg_map } from '../../services/store';
 
   export let tab;
 
@@ -22,18 +20,6 @@
   const graphs_map = new Map();
 
   let closest = undefined;
-
-  /**
-  let el_datepicker;
-
-  onMount(() => {
-    const elem = document.querySelector('input[name="datepick"]');
-    new Datepicker(elem, {
-      buttonClass: 'btn'
-    });
-  });
-
-  */
 
   let days = 14;
   let days_offset = 0;
@@ -82,7 +68,7 @@
     const ts_end = ts_epoch - (days_offset * 86400000);
     const ts_start = ts_end - (days * 86400000);
 
-    const g_map = await get_gate_step_count(ts_start, ts_end, step_time);
+    const g_map = await gate_get_step_count(ts_start, ts_end, step_time);
 
     console.log('=== G_MAP ===');
     console.log(g_map);
@@ -129,8 +115,7 @@
       calc_min_max_y(gg);
     }
 
-    console.log('==== GRAPHS_MAP ===');
-    console.log(graphs_map);
+    console.log('==== GRAPHS_MAP ===', graphs_map);
 
     return graphs_map;
   };
@@ -142,9 +127,6 @@
   </span>
   <Row>
     <Col>
-      <!--
-      <input type="text" name="datepick">
-      -->
       <DaysPeriodInput bind:days />
     </Col>
     <Col>

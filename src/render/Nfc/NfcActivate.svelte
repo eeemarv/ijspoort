@@ -1,13 +1,13 @@
 <script>
   const { ipcRenderer } = window.require('electron');
   import { Button } from 'sveltestrap';
-  import { nfc_map } from '../services/store';
-  import { person_map } from '../services/store';
-  import { person_nfc_map } from '../services/store';
-  import { selected_person_id } from '../services/store';
+  import { nfc_map } from '../../services/store';
+  import { person_map } from '../../services/store';
+  import { person_nfc_map } from '../../services/store';
+  import { selected_person_id } from '../../services/store';
   import NfcInfoModal from './NfcInfoModal.svelte';
-  import { nfc_add } from '../services/nfc';
-  import { e_nfc } from '../services/enum';
+  import { nfc_add } from '../../db_put/nfc_put';
+  import { e_nfc } from '../../services/enum';
 
   export let nfc_status;
   export let nfc_uid;

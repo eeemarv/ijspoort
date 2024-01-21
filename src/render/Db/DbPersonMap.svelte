@@ -1,9 +1,9 @@
 <script>
-  import { db_person } from '../services/db';
-  import { person_map } from '../services/store';
-  import { sub_person_map } from '../services/sub';
-  import { member_year_person_map } from '../services/store';
-  import { build_person_idx } from '../services/build_idx';
+  import { db_person } from '../db/db';
+  import { person_map } from '../../services/store';
+  import { sub_person_map } from '../../services/sub';
+  import { member_year_person_map } from '../../services/store';
+  // import { build_person_idx } from '../../services/build_idx';
   
   const person_map_build = async () => {
     console.log('- build person map -');
@@ -107,7 +107,7 @@
 
   person_map_build().then(() => {
     listen_changes();
-    build_person_idx();    
+    // build_person_idx();    
   });
 
 </script>

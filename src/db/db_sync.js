@@ -1,4 +1,4 @@
-import { e_db_sync } from './events';
+import { e_db_sync } from '../render/__services/events';
 import { db_nfc } from './db';
 import { db_person } from './db';
 import { db_reg } from './db';

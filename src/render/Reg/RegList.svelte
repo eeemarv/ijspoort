@@ -1,7 +1,7 @@
 <script>
   import { Row, Col, ListGroup, ListGroupItem } from 'sveltestrap';
   import RegItem from './RegItem.svelte';
-  import { reg_map } from '../services/store';
+  import { reg_map } from '../../services/store';
   import RegBlockedItem from './RegBlockedItem.svelte';
 
   const show_blocked_time = 1500;

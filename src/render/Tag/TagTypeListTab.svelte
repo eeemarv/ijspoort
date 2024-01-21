@@ -1,7 +1,7 @@
 <script>
   import { TabPane } from 'sveltestrap';
   import TagTypeRow from './TagTypeRow.svelte';
-  import { tag_type_map } from '../services/store';
+  import { tag_type_map } from '../../services/store';
 
   export let tab;
   export let updated_id;

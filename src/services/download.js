@@ -1,7 +1,7 @@
 const download = (data, filename, type) => {
-  var file = new Blob([data], {type: type});
-  var a = document.createElement("a"),
-    url = URL.createObjectURL(file);
+  let file = new Blob([data], {type: type});
+  let a = document.createElement('a');
+  let url = URL.createObjectURL(file);
   a.href = url;
   a.download = filename;
   document.body.appendChild(a);

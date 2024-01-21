@@ -2,12 +2,12 @@
   const env = window.require('electron').remote.process.env;
   const { ipcRenderer } = window.require('electron');
   import { createEventDispatcher, onMount } from 'svelte';
-  import { gate_count } from '../services/store';
-  import { gate_count_enabled } from '../services/store';
-  import { gate_in_map } from '../services/store';
-  import { gate_out_map } from '../services/store';
-  import { gate_in_add } from '../services/gate';
-  import { gate_out_add } from '../services/gate';
+  import { gate_count } from '../../services/store';
+  import { gate_count_enabled } from '../../services/store';
+  import { gate_in_map } from '../../services/store';
+  import { gate_out_map } from '../../services/store';
+  import { gate_in_add } from '../../db_put/gate_put';
+  import { gate_out_add } from '../../db_put/gate_put';
 
   // hold person and nfc_uid data until gate closes
   export let gate_person = undefined;

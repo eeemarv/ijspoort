@@ -4,7 +4,7 @@
   import { ListGroup } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
   import { TabPane } from 'sveltestrap';
-  import { selected_person_id } from '../services/store';
+  import { selected_person_id } from '../../services/store';
   import NfcTag from '../Nfc/NfcTag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
   import SelectableListGroupItem from '../Common/SelectableListGroupItem.svelte';

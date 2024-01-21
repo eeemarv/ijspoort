@@ -3,8 +3,8 @@
   import Icon from '@iconify/svelte';
   import banIcon from '@iconify/icons-fa/ban';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
-  import { nfc_map } from '../services/store';
-  import { person_nfc_map } from '../services/store';
+  import { nfc_map } from '../../services/store';
+  import { person_nfc_map } from '../../services/store';
 
   export let nfc_id = undefined;
   export let show_ts_epoch = false;

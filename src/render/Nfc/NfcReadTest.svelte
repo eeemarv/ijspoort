@@ -2,9 +2,9 @@
   const { ipcRenderer } = window.require('electron');
   import { Button } from 'sveltestrap';
   import NfcInfoModal from './NfcInfoModal.svelte';
-  import { nfc_read_test_enabled } from '../services/store';
-  import { reg_nfc_auto_enabled } from '../services/store';
-  import { e_nfc } from '../services/enum';
+  import { nfc_read_test_enabled } from '../../services/store';
+  import { reg_nfc_auto_enabled } from '../../services/store';
+  import { e_nfc } from '../../services/enum';
 
   export let nfc_uid = undefined;
   export let nfc_status = undefined;

@@ -2,13 +2,13 @@
   const EventEmitter = require('events');
   import { onMount } from 'svelte';
   import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'sveltestrap';
-  import { db_person } from '../services/db';
+  import { db_person } from '../db/db';
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
-  import { selected_person_id } from './../services/store';
-  import { focus_year } from './../services/store';
-  import { focus_year_filter_enabled } from './../services/store';
-  import { get_search_str } from './../services/functions';
+  import { selected_person_id } from '../../services/store';
+  import { focus_year } from '../../services/store';
+  import { focus_year_filter_enabled } from '../../services/store';
+  import { get_search_str } from '../../services/functions';
 
   let select_years = [];
   let el_manual;

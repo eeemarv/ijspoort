@@ -1,8 +1,8 @@
 <script>
-  import { selected_person_id } from '../services/store';
+  import { selected_person_id } from '../../services/store';
   import RegTimeTag from './RegTimeTag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
-  import { reg_del } from '../services/reg';
+  import { reg_del } from '../../db_put/reg_put';
   import CountBadge from '../Common/CountBadge.svelte';
 
   export let reg = undefined;
