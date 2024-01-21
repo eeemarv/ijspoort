@@ -3,7 +3,7 @@
   import plusIcon from '@iconify/icons-fa/plus';
   import minusIcon from '@iconify/icons-fa/minus';
   import { TabPane, Card } from 'sveltestrap';
-  import { gate_count, gate_count_enabled } from '../services/store';
+  import { gate_count, gate_count_enabled } from '../../services/store';
 
   export let tab;
 </script>

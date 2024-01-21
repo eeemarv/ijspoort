@@ -2,8 +2,8 @@
   const env = window.require('electron').remote.process.env;
   const { ipcRenderer } = window.require('electron');
   import { Button, Modal, ModalBody, ModalHeader } from 'sveltestrap';
-  import { db_reg, db_nfc, db_person, db_gate, db_tag } from '../services/db';
-  import { download } from './../services/download';
+  import { db_reg, db_nfc, db_person, db_gate, db_tag } from '../../db/db';
+  import { download } from '../../services/download';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 
   const db_local_prefix = env.DB_LOCAL_PREFIX;

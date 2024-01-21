@@ -1,8 +1,8 @@
 <script>
   import { TabPane, Card } from 'sveltestrap';
-  import { sound_ok_enabled } from '../services/store';
-  import { sound_error_enabled } from '../services/store';
-  import { beep_enabled } from '../services/store';
+  import { sound_ok_enabled } from '../../services/store';
+  import { sound_error_enabled } from '../../services/store';
+  import { beep_enabled } from '../../services/store';
 
   export let tab;
 </script>

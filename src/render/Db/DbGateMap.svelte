@@ -1,5 +1,5 @@
 <script>
-  import { db_gate } from '../db/db';
+  import { db_gate } from '../../db/db';
   import { gate_in_map } from '../../services/store';
   import { gate_out_map } from '../../services/store';
   import { sub_gate_in_map } from '../../services/sub';

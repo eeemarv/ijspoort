@@ -1,5 +1,5 @@
 <script>
-  import { gate_count } from "../services/store";
+  import { gate_count } from '../../services/store';
 </script>
 
 <span>

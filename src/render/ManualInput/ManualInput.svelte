@@ -2,7 +2,7 @@
   const EventEmitter = require('events');
   import { onMount } from 'svelte';
   import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'sveltestrap';
-  import { db_person } from '../db/db';
+  import { db_person } from '../../db/db';
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
   import { selected_person_id } from '../../services/store';

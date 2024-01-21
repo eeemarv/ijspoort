@@ -1,9 +1,9 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { createEventDispatcher } from "svelte";
-  import { gate_count_enabled, gate_count } from "../services/store";
-  import { gate_nfc_enabled, gate_nfc_open_time } from "../services/store";
-  import GateSens from "./GateSens.svelte";
+  import { createEventDispatcher } from 'svelte';
+  import { gate_count_enabled, gate_count } from '../../services/store';
+  import { gate_nfc_enabled, gate_nfc_open_time } from '../../services/store';
+  import GateSens from './GateSens.svelte';
 
   const dispatch = createEventDispatcher();
 

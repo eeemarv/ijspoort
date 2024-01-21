@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { db_reg } from '../services/db';
+  import { db_reg } from '../../db/db';
 
   export const block_time = 3600000; // 1 hour
   const dispatch = createEventDispatcher();

@@ -1,7 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import { sync_monitor } from '../../services/store';
-  import { db_remote_reg } from '../db/db';
+  import { db_remote_reg } from '../../db/db';
 
   export let font_size = '1em';
 

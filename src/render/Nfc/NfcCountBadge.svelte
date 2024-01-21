@@ -1,5 +1,5 @@
 <script>
-  import { nfc_map } from '../services/store';
+  import { nfc_map } from '../../services/store';
 
   export let font_size = '1em';
 

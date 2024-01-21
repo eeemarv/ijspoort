@@ -1,6 +1,6 @@
 <script>
   import { TabPane, Card } from 'sveltestrap';
-  import { focus_year, assist_import_year } from '../services/store';
+  import { focus_year, assist_import_year } from '../../services/store';
 
   export let tab;
   let select_years = [];

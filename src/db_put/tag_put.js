@@ -1,7 +1,7 @@
 import { db_tag } from '../db/db';
-import { sub_tag_type_map } from './sub';
-import { sub_tag_map } from './sub';
-import { tag_types_enabled } from './store';
+import { sub_tag_type_map } from '../services/sub';
+import { sub_tag_map } from '../services/sub'; 
+import { tag_types_enabled } from '../services/store'; 
 import lodash from 'lodash';
 
 let tag_add_flood_blocked = false;

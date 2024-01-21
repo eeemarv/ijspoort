@@ -1,14 +1,14 @@
 <script>
-  import { tag_add } from '../services/tag';
-  import { tag_nfc_auto_enabled } from '../services/store';
-  import { selected_person_id } from '../services/store';
-  import { person_nfc_auto_enabled } from '../services/store';
-  import { person_map } from '../services/store';
-  import { tag_type_enabled_sorted_id_ary } from '../services/store';
-  import { tag_person_count_by_type } from '../services/store';
-  import { tag_types } from '../services/store';
-  import { nfc_uid } from '../services/store';
-  import { focus_year } from '../services/store';
+  import { tag_add } from '../../db_put/tag_put';
+  import { tag_nfc_auto_enabled } from '../../services/store';
+  import { selected_person_id } from '../../services/store';
+  import { person_nfc_auto_enabled } from '../../services/store';
+  import { person_map } from '../../services/store';
+  import { tag_type_enabled_sorted_id_ary } from '../../services/store';
+  import { tag_person_count_by_type } from '../../services/store';
+  import { tag_types } from '../../services/store';
+  import { nfc_uid } from '../../services/store';
+  import { focus_year } from '../../services/store';
   import { CardFooter, Badge } from 'sveltestrap';
   import Checkbox from '../Common/Checkbox.svelte';
 

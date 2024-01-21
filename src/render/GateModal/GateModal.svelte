@@ -4,13 +4,13 @@
   import { Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
   import PersonTag from '../Person/PersonTag.svelte';
   import Reg from '../Reg/Reg.svelte';
-  import { gate_count_enabled } from '../services/store';
-  import { gate_count } from '../services/store';
-  import { gate_nfc_enabled } from '../services/store';
+  import { gate_count_enabled } from '../../services/store';
+  import { gate_count } from '../../services/store';
+  import { gate_nfc_enabled } from '../../services/store';
   import NfcScan from '../Nfc/NfcScan.svelte';
   import GateConfigButton from '../GateConfig/GateConfigButton.svelte';
-  import { sound_ok_enabled } from '../services/store';
-  import { sound_error_enabled } from '../services/store';
+  import { sound_ok_enabled } from '../../services/store';
+  import { sound_error_enabled } from '../../services/store';
 
   const dispatch = createEventDispatcher();
 

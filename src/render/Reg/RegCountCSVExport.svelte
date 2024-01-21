@@ -2,8 +2,8 @@
   const env = window.require('electron').remote.process.env;
   const { ipcRenderer } = window.require('electron');
   import { Button, Modal, ModalBody, ModalHeader, ListGroup, ListGroupItem } from 'sveltestrap';
-  import { db_reg } from '../services/db';
-  import { download } from '../services/download';
+  import { db_reg } from '../../db/db';
+  import { download } from '../../services/download';
   import Papa from 'papaparse';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
 

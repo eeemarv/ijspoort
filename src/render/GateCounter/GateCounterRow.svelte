@@ -1,6 +1,6 @@
 <script>
   import { Col } from 'sveltestrap';
-  import { gate_count, gate_nfc_enabled } from '../services/store';
+  import { gate_count, gate_nfc_enabled } from '../../services/store';
   import GateCounter from './GateCounter.svelte';
   import GateCounterOutLimit from './GateCounterOutLimit.svelte';
   import GateCounterStatus from './GateCounterStatus.svelte';

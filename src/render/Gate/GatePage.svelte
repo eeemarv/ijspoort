@@ -6,9 +6,9 @@
   import NfcCountBadge from '../Nfc/NfcCountBadge.svelte';
   import NfcDeviceBadge from '../Nfc/NfcDeviceBadge.svelte';
   import GateStatus from './GateStatus.svelte';
-  import { gate_count_enabled } from '../services/store';
-  import { temp_display_enabled } from '../services/store';
-  import { gate_nfc_enabled } from '../services/store';
+  import { gate_count_enabled } from '../../services/store';
+  import { temp_display_enabled } from '../../services/store';
+  import { gate_nfc_enabled } from '../../services/store';
   import GateModal from '../GateModal/GateModal.svelte';
   import GateConfig from '../GateConfig/GateConfig.svelte';
   import TemperatureCard from '../Common/TemperatureCard.svelte';

@@ -1,10 +1,10 @@
 <script>
   import { TabPane, Card } from 'sveltestrap';
-  import { temp_display_enabled } from '../services/store';
-  import { gate_display_enabled } from '../services/store';
-  import { tag_display_enabled } from '../services/store';
-  import { nfc_reset_enabled } from '../services/store';
-  import { nfc_read_test_enabled } from '../services/store';
+  import { temp_display_enabled } from '../../services/store';
+  import { gate_display_enabled } from '../../services/store';
+  import { tag_display_enabled } from '../../services/store';
+  import { nfc_reset_enabled } from '../../services/store';
+  import { nfc_read_test_enabled } from '../../services/store';
   import TemperatureCard from '../Common/TemperatureCard.svelte';
 
   export let tab;
