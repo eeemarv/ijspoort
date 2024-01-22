@@ -26,7 +26,7 @@ import { gate_map_build } from '../db_map/gate_map';
 import { gate_map_cleanup } from '../db_map/gate_map';
 import { gate_map_listen_changes } from '../db_map/gate_map';
 import { tag_map_build, tag_map_listen_changes } from '../db_map/tag_map';
-import { gate_sync } from './db_sync';
+import { db_probe_connection, gate_sync } from './db_sync';
 import { nfc_sync } from './db_sync';
 import { person_sync } from './db_sync';
 import { reg_sync } from './db_sync';
@@ -143,6 +143,8 @@ const db_init = async () => {
   await dispatch_step(36, 'gate.sync');
   tag_sync();
   await dispatch_step(37, 'tag.sync');
+  db_probe_connection();
+  await dispatch_step(38, 'db_probe_connection');
 
   await dispatch_step(100, 'end');
 }

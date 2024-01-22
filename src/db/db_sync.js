@@ -123,8 +123,20 @@ const tag_sync = () => {
   });
 };
 
+const db_probe_connection = () => {
+  setInterval(() => {
+    db_remote_reg.info().then(() => {
+      e_db_sync.dispatchEvent(new Event('connected'));
+    }).catch((err) => {
+      e_db_sync.dispatchEvent(new Event('not_connected'));
+      console.log(err);
+    });
+  }, 3000);
+};
+
 export { reg_sync };
 export { nfc_sync };
 export { person_sync };
 export { gate_sync };
 export { tag_sync };
+export { db_probe_connection };

@@ -22,7 +22,7 @@
       <Progress 
         color=light 
         value={step}
-        max=37 
+        max=38
       />
       <ListGroup>
         {#each init_steps as [step, name](step)}

@@ -6,7 +6,7 @@
   import RegList from '../Reg/RegList.svelte';
   import TemperatureCard from '../../render/Common/TemperatureCard.svelte';
   import Clock from '../../render/Common/Clock.svelte';
-  import DbSync from '../../render/Db/DbSync.svelte';
+  import SyncBadge from '../../render/Common/SyncBadge.svelte';
   import Reg from '../../render/Reg/Reg.svelte';
   import MainPageLinks from './MainPageLinks.svelte';
   import NfcCard from '../Nfc/NfcCard.svelte';
@@ -105,7 +105,7 @@
     <Card>
       <MemberYearCardBody on:click={open_member_year_modal} />
       <CardBody class="d-flex w-100 justify-content-between">
-        <DbSync />
+        <SyncBadge />
         <Clock />
       </CardBody>
     </Card>

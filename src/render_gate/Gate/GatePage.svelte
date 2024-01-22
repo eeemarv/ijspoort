@@ -1,7 +1,7 @@
 <script>
   import { Col, Container, Row } from 'sveltestrap';
   import Clock from '../../render/Common/Clock.svelte';
-  import DbSync from '../../render/Db/DbSync.svelte';
+  import SyncBadge from '../../render/Common/SyncBadge.svelte';
   import GateCounterRow from '../GateCounter/GateCounterRow.svelte';
   import NfcCountBadge from '../Nfc/NfcCountBadge.svelte';
   import NfcDeviceBadge from '../Nfc/NfcDeviceBadge.svelte';
@@ -99,7 +99,7 @@
           <NfcDeviceBadge font_size=1em/>
           <NfcCountBadge font_size=1em />
         </div>
-        <DbSync font_size=1em />
+        <SyncBadge font_size=1em />
       </div>
     </Col>
   </Row>
