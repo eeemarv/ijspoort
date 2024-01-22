@@ -3,7 +3,7 @@
   import { ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
   import { person_map } from '../../services/store';
-  import PersonName from './PersonName.svelte';
+  import PersonName from '../../render/Person/PersonName.svelte';
   import AwaitBadge from '../../render/Await/AwaitBadge.svelte';
 
   export let person_id = undefined;

@@ -1,4 +1,4 @@
-const e_nfc = {
+const en_nfc = {
   OFF: 'off',
   OK: 'ok',  
   WRITABLE: 'writable',
@@ -6,4 +6,4 @@ const e_nfc = {
   TRANSPORT_KEY: 'transport_key'
 };
 
-export { e_nfc };
+export { en_nfc };

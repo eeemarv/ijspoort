@@ -1,4 +1,4 @@
-import { e_db_sync } from '../services/events';
+import { ev_db_sync } from '../services/events';
 import { db_nfc } from './db';
 import { db_person } from './db';
 import { db_reg } from './db';
@@ -29,7 +29,7 @@ const dispatch_sync = (source, type, err_msg = undefined) => {
   if (typeof err_msg !== 'undefined'){
     detail.err = err;
   }
-  e_db_sync.dispatchEvent(new CustomEvent('sync', {
+  ev_db_sync.dispatchEvent(new CustomEvent('sync', {
     detail: detail
   }));
   console.log('__sync__' + source + '.' + type);
@@ -126,9 +126,9 @@ const tag_sync = () => {
 const db_probe_connection = () => {
   setInterval(() => {
     db_remote_reg.info().then(() => {
-      e_db_sync.dispatchEvent(new Event('connected'));
+      ev_db_sync.dispatchEvent(new Event('connected'));
     }).catch((err) => {
-      e_db_sync.dispatchEvent(new Event('not_connected'));
+      ev_db_sync.dispatchEvent(new Event('not_connected'));
       console.log(err);
     });
   }, 3000);

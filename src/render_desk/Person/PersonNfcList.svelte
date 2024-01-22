@@ -1,7 +1,7 @@
 <script>
   import { person_nfc_map } from '../../services/store';
   import { ListGroupItem } from 'sveltestrap';
-  import NfcTag from '../Nfc/NfcTag.svelte';
+  import NfcTag from '../../render/Nfc/NfcTag.svelte';
   import { selected_nfc_id } from '../../services/store';
 
   export let person_id = undefined;

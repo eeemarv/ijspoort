@@ -10,21 +10,21 @@
   import { person_map } from '../../services/store';
   import { person_last_reg_ts_map } from '../../services/store';
   import { reg_add } from '../../db_put/reg_put';
-  import { reg_block_time } from '../../services/store';
+  import { reg_block_time } from '../../db_put/reg_put';
   import { nfc_map } from '../../services/store';
-  import { e_nfc } from '../../services/enum';
+  import { en_nfc } from '../../services/enum';
 
   const gate_enabled = env.GATE === '1';
 
   const dispatch = createEventDispatcher();
 
-  export let nfc_status = e_nfc.OFF;
+  export let nfc_status = en_nfc.OFF;
   export let nfc_uid = undefined;
   export let nfc_id = undefined;
 
   ipcRenderer.on('nfc.on', (ev, card) => {
     const now = new Date();
-    const ts_reg_fresh_after = now.getTime() - $reg_block_time;
+    const ts_reg_fresh_after = now.getTime() - reg_block_time;
     const year_key = 'y' + now.getFullYear().toString();
 
     nfc_uid = card.uid;
@@ -50,7 +50,7 @@
 
     nfc_id = id;
     $selected_nfc_id = id;
-    nfc_status = e_nfc.OK;
+    nfc_status = en_nfc.OK;
 
     let nfc = $nfc_map.get(nfc_id);
 
@@ -174,7 +174,7 @@
 
   ipcRenderer.on('nfc.test_transport_key.ok', (ev, card) => {
     console.log('nfc.test_transport_key.ok', card);
-    nfc_status = e_nfc.TRANSPORT_KEY;
+    nfc_status = en_nfc.TRANSPORT_KEY;
   });
 
   ipcRenderer.on('nfc.test_transport_key.fail', (ev, card) => {
@@ -193,19 +193,19 @@
 
   ipcRenderer.on('nfc.test_b_key.ok', (ev) => {
     console.log('nfc.test_b_key.ok');
-    nfc_status = e_nfc.WRITABLE;
+    nfc_status = en_nfc.WRITABLE;
   });
 
   ipcRenderer.on('nfc.test_b_key.fail', (ev) => {
     console.log('nfc.test_b_key.fail');
-    nfc_status = e_nfc.NOT_WRITABLE;
+    nfc_status = en_nfc.NOT_WRITABLE;
   });
 
   /*******/
 
   ipcRenderer.on('nfc.off', (ev) => {
     nfc_uid = undefined;
-    nfc_status = e_nfc.OFF;
+    nfc_status = en_nfc.OFF;
     $selected_nfc_id = undefined;
     dispatch('nfc_off');
   });

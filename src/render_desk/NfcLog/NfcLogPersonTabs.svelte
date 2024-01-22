@@ -7,8 +7,8 @@
   import { ListGroup } from 'sveltestrap';
   import { TabPane } from 'sveltestrap';
   import { selected_person_id } from '../../services/store';
-  import NfcTag from '../Nfc/NfcTag.svelte';
-  import PersonTag from '../Person/PersonTag.svelte';
+  import NfcTag from '../../render/Nfc/NfcTag.svelte';
+  import PersonTag from '../../render/Person/PersonTag.svelte';
   import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
   import CountBadge from '../../render/Common/CountBadge.svelte';
 

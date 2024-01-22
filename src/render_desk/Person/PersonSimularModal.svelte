@@ -1,7 +1,7 @@
 <script>
   import { ListGroup, Modal, ModalBody, ModalHeader } from 'sveltestrap';
-  import PersonName from './PersonName.svelte';
-  import PersonTag from './PersonTag.svelte';
+  import PersonName from '../../render/Person/PersonName.svelte';
+  import PersonTag from '../../render/Person/PersonTag.svelte';
   import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
   import { person_map } from '../../services/store';

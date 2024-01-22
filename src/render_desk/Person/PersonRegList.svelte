@@ -3,7 +3,7 @@
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { Row, Col, Badge } from 'sveltestrap';
   import LocaleDateString from '../../render/Common/LocaleDateString.svelte';
-  import PersonTag from './PersonTag.svelte';
+  import PersonTag from '../../render/Person/PersonTag.svelte';
   import RegTimeTag from '../Reg/RegTimeTag.svelte';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
   import Pagination from '../../render/Common/Pagination.svelte';
@@ -11,7 +11,7 @@
   import { reg_get_list_by_person_id } from '../../db_get/reg_get';
   import { reg_map } from '../../services/store';
   import { person_nfc_map } from '../../services/store';
-  import NfcTag from '../Nfc/NfcTag.svelte';
+  import NfcTag from '../../render/Nfc/NfcTag.svelte';
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import Await from '../../render/Await/Await.svelte';
   import AwaitError from '../../render/Await/AwaitError.svelte';

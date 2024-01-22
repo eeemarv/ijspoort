@@ -7,7 +7,7 @@
   import { selected_person_id } from '../../services/store';
   import NfcInfoModal from './NfcInfoModal.svelte';
   import { nfc_add } from '../../db_put/nfc_put';
-  import { e_nfc } from '../../services/enum';
+  import { en_nfc } from '../../services/enum';
 
   export let nfc_status;
   export let nfc_uid;
@@ -77,7 +77,7 @@
 <Button
   color={person_nfc_count > 0 ? 'warning' : 'success'}
   title="Activeer deze NFC-tag voor deze persoon"
-  disabled={!nfc_uid || !$selected_person_id || nfc_status !== e_nfc.TRANSPORT_KEY || $nfc_map.has('uid_' + nfc_uid)}
+  disabled={!nfc_uid || !$selected_person_id || nfc_status !== en_nfc.TRANSPORT_KEY || $nfc_map.has('uid_' + nfc_uid)}
   on:click={handle_activate_nfc}>
   Activeer
   {#if person_nfc_count > 0}

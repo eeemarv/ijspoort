@@ -1,5 +1,5 @@
 <script>
-  import { e_db_sync } from '../../services/events';
+  import { ev_db_sync } from '../../services/events';
 
   export let font_size = '1em';
 
@@ -14,15 +14,15 @@
   let color_connect = 'warning';
   let color_sync = 'warning';
 
-  e_db_sync.addEventListener('sync', (e) => {
+  ev_db_sync.addEventListener('sync', (e) => {
     color_sync = color_sync_map[e.detail.type];
   });
 
-  e_db_sync.addEventListener('connected', (e) => {
+  ev_db_sync.addEventListener('connected', (e) => {
     color_connect = 'success';
   });
 
-  e_db_sync.addEventListener('not_connected', (e)=> {
+  ev_db_sync.addEventListener('not_connected', (e)=> {
     color_connect = 'danger';
   });
 </script>

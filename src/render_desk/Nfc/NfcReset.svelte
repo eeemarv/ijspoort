@@ -7,7 +7,7 @@
   import { reg_nfc_auto_enabled } from '../../services/store';
   import { selected_nfc_id } from '../../services/store';
   import NfcInfoModal from './NfcInfoModal.svelte';
-  import { e_nfc } from '../../services/enum';
+  import { en_nfc } from '../../services/enum';
 
   export let nfc_status;
 
@@ -54,7 +54,7 @@
   </p>
 </NfcInfoModal>
 
-{#if !$reg_nfc_auto_enabled && $nfc_reset_enabled && $selected_nfc_id && nfc_status === e_nfc.OK}
+{#if !$reg_nfc_auto_enabled && $nfc_reset_enabled && $selected_nfc_id && nfc_status === en_nfc.OK}
   <Button color=danger on:click={handle_nfc_reset} title="Wis deze NFC tag">
     Wis
   </Button>

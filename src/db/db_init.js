@@ -9,7 +9,7 @@ import { db_nfc } from './db';
 import { db_person } from './db';
 import { db_gate } from './db';
 import { db_tag } from './db';
-import { e_db_init } from '../services/events';
+import { ev_db_init } from '../services/events';
 import { person_put_design } from '../db_design/person_design';
 import { reg_put_design } from '../db_design/reg_design';
 import { person_build_idx_by_simular } from '../db_idx/person_idx';
@@ -25,7 +25,7 @@ import { reg_map_listen_changes } from '../db_map/reg_map';
 import { gate_map_build } from '../db_map/gate_map';
 import { gate_map_cleanup } from '../db_map/gate_map';
 import { gate_map_listen_changes } from '../db_map/gate_map';
-import { tag_map_build, tag_map_listen_changes } from '../db_map/tag_map';
+import { tag_map_build, tag_map_listen_changes, tag_type_map_build } from '../db_map/tag_map';
 import { db_probe_connection, gate_sync } from './db_sync';
 import { nfc_sync } from './db_sync';
 import { person_sync } from './db_sync';
@@ -33,7 +33,7 @@ import { reg_sync } from './db_sync';
 import { tag_sync } from './db_sync';
 
 const dispatch_step = async (step, name) => {
-  e_db_init.dispatchEvent(new CustomEvent('step', {
+  ev_db_init.dispatchEvent(new CustomEvent('step', {
     detail: {
       step: step, 
       name: name
@@ -128,23 +128,25 @@ const db_init = async () => {
   gate_map_cleanup();
   await dispatch_step(30, 'gate.map.cleanup');
 
+  await tag_type_map_build();
+  await dispatch_step(31, 'tag_type.map.build');
   await tag_map_build();
-  await dispatch_step(31, 'tag.map.build');
+  await dispatch_step(32, 'tag.map.build');
   tag_map_listen_changes();
-  await dispatch_step(32, 'tag.map.listen_changes');
+  await dispatch_step(33, 'tag.map.listen_changes');
 
   nfc_sync();
-  await dispatch_step(33, 'nfc.sync');
+  await dispatch_step(34, 'nfc.sync');
   person_sync();
-  await dispatch_step(34, 'person.sync');
+  await dispatch_step(35, 'person.sync');
   reg_sync();
-  await dispatch_step(35, 'reg.sync');
+  await dispatch_step(36, 'reg.sync');
   gate_sync();
-  await dispatch_step(36, 'gate.sync');
+  await dispatch_step(37, 'gate.sync');
   tag_sync();
-  await dispatch_step(37, 'tag.sync');
+  await dispatch_step(38, 'tag.sync');
   db_probe_connection();
-  await dispatch_step(38, 'db_probe_connection');
+  await dispatch_step(39, 'db_probe_connection');
 
   await dispatch_step(100, 'end');
 }

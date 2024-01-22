@@ -7,7 +7,7 @@
   import { nfc_map } from '../../services/store';
   import { person_nfc_map } from '../../services/store';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
-  import PersonFocusYearTag from '../Person/PersonFocusYearTag.svelte';
+  import PersonFocusYearTag from '../../render/Person/PersonFocusYearTag.svelte';
   import Pagination from '../../render/Common/Pagination.svelte';
   import Checkbox from '../../render/Common/Checkbox.svelte';
   import NfcLogListTab from './NfcLogListTab.svelte';

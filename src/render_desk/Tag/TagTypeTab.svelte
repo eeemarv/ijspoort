@@ -4,7 +4,7 @@
   import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
   import LocaleDateString from '../../render/Common/LocaleDateString.svelte';
   import Tag from '../../render/Tag/Tag.svelte';
-  import PersonTag from '../Person/PersonTag.svelte';
+  import PersonTag from '../../render/Person/PersonTag.svelte';
   import { selected_person_id } from '../../services/store';
   import { tag_map } from '../../services/store';
   import Pagination from '../../render/Common/Pagination.svelte';

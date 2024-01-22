@@ -150,6 +150,7 @@ const reg_map_cleanup = () => {
   }, cleanup_interval);
 };
 
+export { reg_period };
 export { reg_map_build };
 export { reg_map_listen_changes };
 export { reg_map_cleanup };

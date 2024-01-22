@@ -7,7 +7,7 @@
   import { person_map } from '../../services/store';
   import { selected_person_id } from '../../services/store';
   import { tag_display_enabled } from '../../services/store';
-  import PersonMemberId from './PersonMemberId.svelte';
+  import PersonMemberId from '../../render/Person/PersonMemberId.svelte';
   import PersonMemberYear from './PersonMemberYear.svelte';
   import PersonTagList from './PersonTagList.svelte';
   import PersonNfcList from './PersonNfcList.svelte';

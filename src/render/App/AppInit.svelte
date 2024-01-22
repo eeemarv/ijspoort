@@ -1,13 +1,13 @@
 <script>
   import { ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader, Progress } from 'sveltestrap';
   import { db_init } from '../../db/db_init';
-  import { e_db_init } from '../../services/events';
+  import { ev_db_init } from '../../services/events';
   import AwaitError from '../Await/AwaitError.svelte';
 
   let step = 0;
   let init_steps = [];
 
-  e_db_init.addEventListener('step', (e) => {
+  ev_db_init.addEventListener('step', (e) => {
     step = e.detail.step;
     init_steps = [[e.detail.step, e.detail.name], ...init_steps];
   });
@@ -22,7 +22,7 @@
       <Progress 
         color=light 
         value={step}
-        max=38
+        max=39
       />
       <ListGroup>
         {#each init_steps as [step, name](step)}

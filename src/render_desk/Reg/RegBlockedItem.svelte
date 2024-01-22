@@ -1,7 +1,7 @@
 <script>
   import { Badge } from 'sveltestrap';
-  import PersonTag from '../Person/PersonTag.svelte';
-  import { reg_block_time } from '../../services/store';
+  import PersonTag from '../../render/Person/PersonTag.svelte';
+  import { reg_block_time } from '../../db_put/reg_put';
 
   export let person_id = undefined;
 
@@ -15,7 +15,7 @@
       <div>
         <PersonTag {person_id} show_member_year show_tags />
         <Badge color=dark>
-          Reeds geregistreerd in laatste {Math.floor($reg_block_time / 60000)} minuten.
+          Reeds geregistreerd in laatste {Math.floor(reg_block_time / 60000)} minuten.
         </Badge>
       </div>
     </div>

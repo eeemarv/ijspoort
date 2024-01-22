@@ -47,5 +47,6 @@ const reg_del = (reg) => {
   });
 };
 
+export const reg_block_time = 3600000;
 export { reg_add };
 export { reg_del };

@@ -1,25 +1,6 @@
 const EStore = require('electron-store');
 import { writable } from 'svelte/store';
 
-const create_sync_monitor = () => {
-  const { subscribe, set } = writable('paused');
-  return {
-    subscribe,
-    set_active: () => {
-      set('active');
-      setTimeout(() => {
-        set('paused');
-      }, 1000);
-    },
-    set_error: () => {
-      set('error');
-      setTimeout(() => {
-        set('paused');
-      }, 3000);
-    }
-  }
-};
-
 const create_coupled_estore = (key, default_value, min_value, max_value) => {
   const eStore = new EStore();
   let val = eStore.get(key, default_value);
@@ -58,7 +39,6 @@ export const person = writable();
 export const person_nfc_list = writable([]);
 export const nfc_uid = writable();
 
-export const sync_monitor = create_sync_monitor();
 export const gate_count = create_coupled_estore('gate_count', 50, -99, 999);
 export const gate_count_enabled = writable(false);
 export const gate_nfc_enabled = writable(false);
@@ -77,8 +57,6 @@ export const sound_error_enabled = create_coupled_estore('sound_error_enabled', 
 
 export const person_nfc_auto_enabled = create_coupled_estore('person_nfc_auto_enabled', true);
 export const reg_nfc_auto_enabled = create_coupled_estore('reg_nfc_auto_enabled', false);
-
-export const reg_block_time = create_coupled_estore('reg_block_time', 1800000);
 
 export const tag_display_enabled = create_coupled_estore('tag_display_enabled', true);
 export const tag_types_enabled = create_coupled_estore('tag_types_enabled', {});
