@@ -1,4 +1,4 @@
-import { e_db_sync } from '../render/__services/events';
+import { e_db_sync } from '../services/events';
 import { db_nfc } from './db';
 import { db_person } from './db';
 import { db_reg } from './db';
@@ -38,7 +38,7 @@ const dispatch_sync = (source, type, err_msg = undefined) => {
   }
 };
 
-const db_sync = () => {
+const reg_sync = () => {
   db_reg.sync(db_remote_reg, sync_options)
   .on('change', () => {
     dispatch_sync('reg', 'change');
@@ -53,7 +53,9 @@ const db_sync = () => {
   }).on('error', (err) => {
     dispatch_sync('reg', 'error', err);
   });
+};
 
+const nfc_sync = () => {
   db_nfc.sync(db_remote_nfc, sync_options)
   .on('change', () => {
     dispatch_sync('nfc', 'change');
@@ -68,7 +70,9 @@ const db_sync = () => {
   }).on('error', (err) => {
     dispatch_sync('nfc', 'error', err);
   });
+};
 
+const person_sync = () => {
   db_person.sync(db_remote_person, sync_options)
   .on('change', () => {
     dispatch_sync('person', 'change');
@@ -83,7 +87,9 @@ const db_sync = () => {
   }).on('error', (err) => {
     dispatch_sync('person', 'error', err);
   });
+};
 
+const gate_sync = () => {
   db_gate.sync(db_remote_gate, sync_options)
   .on('change', () => {
     dispatch_sync('gate', 'change');
@@ -98,7 +104,9 @@ const db_sync = () => {
   }).on('error', (err) => {
     dispatch_sync('gate', 'error', err);
   });
+};
 
+const tag_sync = () => {
   db_tag.sync(db_remote_tag, sync_options)
   .on('change', () => {
     dispatch_sync('tag', 'change');
@@ -115,4 +123,8 @@ const db_sync = () => {
   });
 };
 
-export { db_sync };
+export { reg_sync };
+export { nfc_sync };
+export { person_sync };
+export { gate_sync };
+export { tag_sync };

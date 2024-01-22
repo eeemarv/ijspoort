@@ -3,13 +3,13 @@
   import DbInit from '../Db/DbInit.svelte';
   import MainContainer from '../../render_desk/Main/MainContainer.svelte';
   import GatePage from '../../render_gate/Gate/GatePage.svelte';
+  import AppInit from './AppInit.svelte';
 
-  const gate_enabled = env.GATE === '1';
 </script>
 
-<DbInit />
+<AppInit />
 
-{#if gate_enabled}
+{#if env.GATE === '1'}
   <GatePage />
 {:else}
   <MainContainer />

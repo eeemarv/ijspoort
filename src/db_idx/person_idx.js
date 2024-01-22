@@ -8,7 +8,7 @@ const person_build_idx_by_text = async () => {
 };
 
 const person_build_idx_by_simular = async () => {
-  console.log('build indexes db_person search/count_by_simular');
+  console.log('-- build indexes db_person count_by_simular');
   return await db_person.query('search/count_by_simular', {
     limit: 0
   });

@@ -1,4 +1,4 @@
-import { db_person } from '../services/db';
+import { db_person } from '../db/db';
 import { person_map } from '../services/store';
 import { sub_person_map } from '../services/sub';
 import { member_year_person_map } from '../services/store';

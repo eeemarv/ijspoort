@@ -15,9 +15,9 @@ const reg_get_count_by_person_id = async (person_id) => {
 };
 
 const reg_get_list_by_person_id = async (person_id, rows_per_page, start_row) => {
-  return await db_reg.query('search/by_person_id_and_ts_epoch', {
-    startkey: person_id + '_\uffff',
-    endkey: person_id + '_',
+
+  return await db_reg.query('search/count_by_person_id', {
+    key: person_id,
     descending: true,
     include_docs: true,
     limit: rows_per_page,
@@ -25,8 +25,7 @@ const reg_get_list_by_person_id = async (person_id, rows_per_page, start_row) =>
     reduce: false
   }).then((res) => {
 
-    console.log('REG search/by_person_id_and_ts_epoch');
-    console.log(res);
+    console.log('REG search/by_person (pag) ', res);
 
     let regs = [];
 

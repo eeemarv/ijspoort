@@ -1,4 +1,4 @@
-import { db_tag } from '../services/db';
+import { db_tag } from '../db/db';
 import { tag_type_map } from '../services/store';
 import { person_tag_map } from '../services/store';
 import { tag_types_enabled } from '../services/store';

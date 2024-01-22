@@ -1,4 +1,4 @@
-import { db_nfc } from '../services/db';
+import { db_nfc } from '../db/db';
 import { nfc_map } from '../services/store';
 import { person_nfc_map } from '../services/store';
 import { sub_nfc_map } from '../services/sub';
