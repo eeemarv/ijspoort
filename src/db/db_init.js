@@ -51,46 +51,50 @@ const replicate_options = {
   }
 };
 
-const db_init = async () => {
+const db_init = async (trig) => {
 
-  await db_remote_reg.info();
-  await dispatch_step(1, 'reg.remote.info');
-  await db_remote_nfc.info();
-  await dispatch_step(2, 'nfc.remote.info'); 
-  await db_remote_person.info();
-  await dispatch_step(3, 'person.remote.info');
-  await db_remote_gate.info();
-  await dispatch_step(4, 'gate.remote.info');  
-  await db_remote_tag.info();
-  await dispatch_step(5, 'tag.remote.info');
+  if (trig.hasOwnProperty('ignore_network')){
+    for (let i = 1; i < 16; i++){
+      await dispatch_step(i, 'skip step, ignore network');      
+    }
+  } else {
+    await db_remote_reg.info();
+    await dispatch_step(1, 'reg.remote.info');
+    await db_remote_nfc.info();
+    await dispatch_step(2, 'nfc.remote.info'); 
+    await db_remote_person.info();
+    await dispatch_step(3, 'person.remote.info');
+    await db_remote_gate.info();
+    await dispatch_step(4, 'gate.remote.info');  
+    await db_remote_tag.info();
+    await dispatch_step(5, 'tag.remote.info');
 
-  await db_nfc.replicate.from(db_remote_nfc, replicate_options);
-  await dispatch_step(6, 'nfc.replicate.in');
-  await db_nfc.replicate.to(db_remote_nfc, replicate_options);
-  await dispatch_step(7, 'nfc.replicate.out');  
-  await db_person.replicate.from(db_remote_person, replicate_options);
-  await dispatch_step(8, 'person.replicate.in');
-  await db_person.replicate.to(db_remote_person, replicate_options);
-  await dispatch_step(9, 'person.replicate.out');
-  await db_reg.replicate.from(db_remote_reg, replicate_options);
-  await dispatch_step(10, 'reg.replicate.in');
-  await db_reg.replicate.to(db_remote_reg, replicate_options);
-  await dispatch_step(11, 'reg.replicate.out');
-  await db_gate.replicate.from(db_remote_gate, replicate_options);
-  await dispatch_step(12, 'gate.replicate.in');
-  await db_gate.replicate.to(db_remote_gate, replicate_options);
-  await dispatch_step(13, 'gate.replicate.out');
-  await db_tag.replicate.from(db_remote_tag, replicate_options);
-  await dispatch_step(14, 'tag.replicate.in');
-  await db_tag.replicate.to(db_remote_tag, replicate_options);
-  await dispatch_step(15, 'tag.replicate.out');
+    await db_nfc.replicate.from(db_remote_nfc, replicate_options);
+    await dispatch_step(6, 'nfc.replicate.in');
+    await db_nfc.replicate.to(db_remote_nfc, replicate_options);
+    await dispatch_step(7, 'nfc.replicate.out');  
+    await db_person.replicate.from(db_remote_person, replicate_options);
+    await dispatch_step(8, 'person.replicate.in');
+    await db_person.replicate.to(db_remote_person, replicate_options);
+    await dispatch_step(9, 'person.replicate.out');
+    await db_reg.replicate.from(db_remote_reg, replicate_options);
+    await dispatch_step(10, 'reg.replicate.in');
+    await db_reg.replicate.to(db_remote_reg, replicate_options);
+    await dispatch_step(11, 'reg.replicate.out');
+    await db_gate.replicate.from(db_remote_gate, replicate_options);
+    await dispatch_step(12, 'gate.replicate.in');
+    await db_gate.replicate.to(db_remote_gate, replicate_options);
+    await dispatch_step(13, 'gate.replicate.out');
+    await db_tag.replicate.from(db_remote_tag, replicate_options);
+    await dispatch_step(14, 'tag.replicate.in');
+    await db_tag.replicate.to(db_remote_tag, replicate_options);
+    await dispatch_step(15, 'tag.replicate.out');
+  }
 
   if (env.GATE === '1'){
-    await dispatch_step(16, 'skip step for gate modus');
-    await dispatch_step(17, 'skip step for gate modus');
-    await dispatch_step(18, 'skip step for gate modus');
-    await dispatch_step(19, 'skip step for gate modus');
-    await dispatch_step(20, 'skip step for gate modus');
+    for (let j = 16; j < 21; j++){
+      await dispatch_step(16, 'skip step in gate modus');      
+    }
   } else {
     await person_put_design();
     await dispatch_step(16, 'person.put.design');
