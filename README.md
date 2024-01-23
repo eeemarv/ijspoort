@@ -52,7 +52,11 @@ Installatie:
 ```
 yarn install
 ```
-Run app (dev mode):
+Compileer Svelte naar Javascript:
+```
+yarn sv
+```
+Start app (dev mode):
 ```
 yarn start
 ```

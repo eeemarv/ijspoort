@@ -43,9 +43,9 @@ const dispatch_step = async (step, name) => {
 };
 
 const replicate_options = {
-  batch_size: 100,
-  batch_limit: 1,
-  checkpoint: false,
+  batch_size: 1000,
+  batch_limit: 10,
+  checkpoint: 'source',
   filter: (doc) => {
     return !doc._id.startsWith('_design');
   }
