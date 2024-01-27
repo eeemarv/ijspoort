@@ -4,16 +4,6 @@
   import { reg_map } from '../../services/store';
   import RegBlockedItem from './RegBlockedItem.svelte';
 
-  const show_blocked_time = 1500;
-  let blocked_reg_person_id = undefined;
-
-  export const show_blocked_reg = (person_id) => {
-    blocked_reg_person_id = person_id;
-    setTimeout(() => {
-      blocked_reg_person_id = undefined;
-    }, show_blocked_time);
-  };
-
 </script>
 
 <Row>
@@ -23,9 +13,7 @@
           <p><br></p>
       </ListGroupItem>
 
-      {#if blocked_reg_person_id}
-        <RegBlockedItem person_id={blocked_reg_person_id} />
-      {/if}
+      <RegBlockedItem />
 
       {#each [...$reg_map].reverse() as [reg_id, reg], index(reg._id)}
         <RegItem {reg} count={$reg_map.size - index} />

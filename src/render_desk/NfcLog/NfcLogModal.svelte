@@ -276,7 +276,7 @@
         />
       </Col>
     </Row>
-    <TabContent on:tab={(e) => tab = e.detail}>
+    <TabContent on:tab={(e) => tab = e.detail} pills>
 
       <NfcLogListTab 
         {tab}

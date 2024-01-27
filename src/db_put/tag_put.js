@@ -106,12 +106,10 @@ const tag_type_del = (type_id) => {
 };
 
 const tag_del = (tag) => {
-  console.log('-tag remove: ', tag);
-
   db_tag.remove(tag).then((res) => {
-    console.log(res);
+    console.log('db_tag.remove', res);
   }).catch((err) => {
-    console.log(err);
+    console.log('db_tag.remove err', err);
   });
 };
 

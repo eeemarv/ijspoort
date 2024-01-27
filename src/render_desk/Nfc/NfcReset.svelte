@@ -2,7 +2,6 @@
   const { ipcRenderer } = window.require('electron');
   import { Button } from 'sveltestrap';
   import { nfc_del } from '../../db_put/nfc_put';
-  import { nfc_map } from '../../services/store';
   import { nfc_reset_enabled } from '../../services/store';
   import { reg_nfc_auto_enabled } from '../../services/store';
   import { selected_nfc_id } from '../../services/store';
@@ -22,7 +21,7 @@
     progress = 0;
     open = true;
 
-    nfc_del($nfc_map.get($selected_nfc_id));
+    nfc_del($selected_nfc_id);
     ipcRenderer.send('nfc.reset');
   };
 

@@ -3,6 +3,9 @@
   import MainContainer from '../../render_desk/Main/MainContainer.svelte';
   import GatePage from '../../render_gate/Gate/GatePage.svelte';
   import AppInit from './AppInit.svelte';
+  import { listen_nfc } from '../../nfc/nfc_scan';
+
+  listen_nfc();
 
 </script>
 

@@ -24,7 +24,12 @@ const nfc_map_build = async () => {
     nfc_map.update((m) => {
       m.clear();
       nfc_ary.forEach((v) => {
-        m.set(v.id, {...v.doc});
+        if (typeof v.doc.blocked === 'undefined'){
+          m.set(v.id, {...v.doc});          
+        } else {
+          const blocked = {...v.doc.blocked};
+          m.set(v.id, {...v.doc, blocked});
+        }
         last_ts_epoch = v.doc.ts_epoch;
       });
       return m;
@@ -97,7 +102,12 @@ const nfc_map_listen_changes = () => {
        * In sequence: add nfc to maps
       */
       nfc_map.update((m) => {
-        m.set(change.id, {...change.doc});
+        if (typeof change.doc.blocked === 'undefined'){
+          m.set(change.id, {...change.doc});          
+        } else {
+          const blocked = {...change.doc.blocked};
+          m.set(change.id, {...change.doc, blocked});
+        }
         last_ts_epoch = change.ts_epoch;
         return m;
       });

@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { Row, Col } from 'sveltestrap';
   import { ListGroup } from 'sveltestrap';
+  import { ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
   import { TabPane } from 'sveltestrap';
   import { selected_person_id } from '../../services/store';
@@ -40,6 +41,16 @@
       </Badge>
   </div>
   <ListGroup>
+    <ListGroupItem>
+      <Row>
+        <Col sm=5>
+          NFC tag
+        </Col>
+        <Col>
+          Persoon
+        </Col>
+      </Row>
+    </ListGroupItem>
     {#if tab === 't0'}
     {#each nfc_list.slice(start_row, end_row) as [nfc_id, person_id], index(nfc_id)}
       <SelectableListGroupItem

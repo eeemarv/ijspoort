@@ -38,7 +38,11 @@
             Persoon
           </Col>
           <Col>
-            Laatste NFC tag van {tab_id.substring(1)}
+            {#if tab_id === 't1'}
+              NFC tag
+            {:else}
+              Laatste NFC tag van {tab_id.substring(1)}
+            {/if}
           </Col>
         </Row>
       </ListGroupItem>

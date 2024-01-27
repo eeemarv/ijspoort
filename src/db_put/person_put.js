@@ -84,6 +84,12 @@ const assist_person_map = {
   }
 };
 
+/**
+ * 
+ * @param {string} file 
+ * @param {string} assist_import_year 
+ * @returns {undefined}
+ */
 const person_assist_import = (file, assist_import_year) => {
   const year_key = 'y' + assist_import_year.substring(0);
   const workbook = XLSX.readFile(file);

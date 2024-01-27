@@ -25,7 +25,12 @@ const reg_map_build = async () => {
     reg_map.update((m) => {
       m.clear();
       reg_ary.forEach((v) => {
-        m.set(v.id, {...v.doc});
+        if (typeof v.doc.blocked_nfc_uid_ary === 'undefined'){
+          m.set(v.id, {...v.doc});
+        } else {
+          const blocked_nfc_uid_ary = [...v.doc.blocked_nfc_uid_ary];
+          m.set(v.id, {...v.doc, blocked_nfc_uid_ary});
+        }
         last_ts_epoch = v.doc.ts_epoch;
       });
       return m;
@@ -39,10 +44,8 @@ const reg_map_build = async () => {
       return m;
     });
 
-    console.log('=====$reg_map====');
-    console.log(sub_reg_map);
-    console.log('=====$person_last_reg_ts_map====');
-    console.log(sub_person_last_reg_ts_map);
+    console.log('=====sub_reg_map====', sub_reg_map);
+    console.log('=====sub_person_last_reg_ts_map====', sub_person_last_reg_ts_map);
 
   }).catch((err) => {
     console.log(err);
@@ -93,7 +96,13 @@ const reg_map_listen_changes = () => {
       });
 
       reg_map.update((m) => {
-        m.set(change.id, {...change.doc});
+        if (typeof change.doc.blocked_nfc_uid_ary === 'undefined'){
+          m.set(change.id, {...change.doc});
+        } else {
+          const blocked_nfc_uid_ary = [...change.doc.blocked_nfc_uid_ary];
+          m.set(change.id, {...change.doc, blocked_nfc_uid_ary});
+        }
+
         last_ts_epoch = change.doc.ts_epoch;
         return m;
       });
