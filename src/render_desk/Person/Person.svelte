@@ -1,6 +1,5 @@
 <script>
   import { Card, CardHeader, CardBody, CardFooter, CardGroup } from 'sveltestrap';
-  import { createEventDispatcher } from 'svelte';
   import { Button } from 'sveltestrap';
   import { ListGroup, ListGroupItem } from 'sveltestrap';
   import { person_get_count_by_simular } from '../../db_get/person_get';
@@ -8,7 +7,7 @@
   import { selected_person_id } from '../../services/store';
   import { tag_display_enabled } from '../../services/store';
   import PersonMemberId from '../../render/Person/PersonMemberId.svelte';
-  import PersonMemberYear from './PersonMemberYear.svelte';
+  import PersonMemberYearList from './PersonMemberYearList.svelte';
   import PersonTagList from './PersonTagList.svelte';
   import PersonNfcList from './PersonNfcList.svelte';
   import PersonRegList from './PersonRegList.svelte';
@@ -16,17 +15,33 @@
   import PersonSimularButton from './PersonSimularButton.svelte';
   import PersonSimularModal from './PersonSimularModal.svelte';
   import PersonData from './PersonData.svelte';
-
-  const dispatch = createEventDispatcher();
+  import { reg_add_by_desk_manual } from '../../db_put/reg_put';
+  import { person_last_reg_ts_map } from '../../services/store';
+  import { reg_block_time } from '../../db_put/reg_put';
+    import { get_time_str } from '../../services/functions';
 
   let open_reg_list;
   let open_simular;
+  let ts_reg_fresh_after = 0;
+
+  const set_ts_reg_fresh_after = () => {
+    ts_reg_fresh_after = (new Date()).getTime() - reg_block_time;
+  };
 
   $: person_id = $selected_person_id;
   $: person = $person_map.get($selected_person_id) ?? {};
+  $: already_registered = person_id 
+    && $person_last_reg_ts_map.has(person_id)
+    && $person_last_reg_ts_map.get(person_id) > ts_reg_fresh_after;
 
-  const handle_click_manual_reg = (() => {
-    dispatch('click_manual_reg');
+  setInterval(() => {
+    set_ts_reg_fresh_after();
+  }, 5000);
+  set_ts_reg_fresh_after();
+
+  const handle_manual_reg = (() => {
+    reg_add_by_desk_manual(person_id);
+    $selected_person_id = undefined;
   });
 </script>
 
@@ -120,7 +135,7 @@
     </ListGroup>
     <CardBody></CardBody>
     <CardFooter>
-      <PersonMemberYear {person_id} />
+      <PersonMemberYearList {person_id} />
     </CardFooter>
   </Card>
 
@@ -141,13 +156,21 @@
     <CardBody>
     </CardBody>
     <div class="card-footer d-flex w-100 justify-content-between">
-      <Button
-        color=warning
-        on:click={handle_click_manual_reg}
-        title="Registratie zonder tag!"
-      >
-        Registreer Manueel &#9888;
-      </Button>
+      {#if already_registered}
+        <Button color=danger
+          disabled
+        >
+          Geregistreerd {get_time_str($person_last_reg_ts_map.get(person_id))}          
+        </Button>
+      {:else}
+        <Button
+          color=warning
+          on:click={handle_manual_reg}
+          title="Registratie zonder tag!"
+        >
+          Registreer Manueel &#9888;
+        </Button>
+      {/if}
       <Button
         color=primary
         class=ms-3

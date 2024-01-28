@@ -4,7 +4,7 @@
   import NfcRegAuto from './NfcRegAuto.svelte';
   import NfcDeviceCardHeader from './NfcDeviceCardHeader.svelte';
   import NfcCardBody from './NfcCardBody.svelte';
-  import NfcScan from '../../render/Nfc/NfcScan.svelte';
+  // import NfcScan from '../../render/Nfc/NfcScan.svelte';
   import NfcReadTest from './NfcReadTest.svelte';
   import NfcReset from './NfcReset.svelte';
   import { nfc_read_test_enabled } from '../../services/store';
@@ -17,12 +17,14 @@
   let nfc_uid;
 </script>
 
+<!--
 <NfcScan
   bind:nfc_status
   bind:nfc_uid
   on:scanned_person_valid_member
   on:scanned_person_not_member
 />
+-->
 
 <Card class=my-2>
   <NfcDeviceCardHeader />

@@ -32,14 +32,14 @@ const mqtt_init = (win) => {
 
 		mqtt_client.subscribe([
 			'we/water_temp',
-			'we/air_temp'], () => {
+			'we/air_temp'
+		], () => {
 			console.log('mqtt subscribed to topics we/water_temp, we/air_temp');
 		});
 	});
 
 	mqtt_client.on('error', (err) => {
-		console.log('MQTT ERR:');
-		console.log(err);
+		console.log('MQTT ERR:', err);
 	});
 
 	mqtt_client.on('reconnect', () => {
@@ -59,7 +59,6 @@ const mqtt_init = (win) => {
 		if (topic === 'we/air_temp'){
 			win.webContents.send('air_temp', parseFloat(msg));
 		}
-
 	});
 };
 
@@ -72,14 +71,29 @@ function mqtt_term(win){
 	mqtt_client.on('connect', () => {
 		console.log('MQTT CONNECTED');
 		mqtt_client.subscribe([
-			'g/s/in', 'g/p', 'scan/p'], () => {
+			'g/s/in', 
+			'g/p', 
+			'scan/p',
+			'g/already_registered'
+		], () => {
 			console.log('mqtt subscribed to topics');
 		});
 
 		setInterval(() => {
 			console.log('mqtt pub -t term/p -m ' + mqtt_client_id);
 			mqtt_client.publish('term/p', mqtt_client_id);
-		}, 5000);
+		}, 5000);		
+	});
+
+	mqtt_client.on('message', (topic, message_buff) => {
+		const msg = message_buff.toString();
+
+		if (topic === 'g/already_registered'){
+			const nfc_id = msg;			
+			console.log('sub g/already_registered gate.rx.already_registered', nfc_id);
+			win.webContents.send('gate.rx.already_registered', nfc_id);
+			return;			
+		}
 	});
 }
 
@@ -94,7 +108,8 @@ function mqtt_gate(win){
 		mqtt_client.subscribe([
 			'g/s/in',
 			'g/t/in/p',
-			'g/t/out/p'], () => {
+			'g/t/out/p'
+		], () => {
 			console.log('mqtt subscribed to topics');
 		});
 
@@ -107,8 +122,7 @@ function mqtt_gate(win){
 			mqtt_client.publish('g/open/in', '', {
 				qos: 0
 			}, (err) => {
-					console.log('mqtt ERR on publish g/open/in');
-					console.log(err);
+					console.log('mqtt ERR on publish g/open/in', err);
 			});
 		});
 
@@ -127,8 +141,16 @@ function mqtt_gate(win){
 			mqtt_client.publish('g/close/in', '', {
 				qos: 0
 			}, (err) => {
-					console.log('mqtt ERR on publish g/close/in');
-					console.log(err);
+					console.log('mqtt ERR on publish g/close/in', err);
+			});
+		});
+
+		ipcMain.on('gate.tx.already_registered', async (event, nfc_id) => {
+			console.log('pub g/already_registered');
+			mqtt_client.publish('g/already_registered', nfc_id, {
+				qos: 0
+			}, (err) => {
+				console.log('mqtt ERR on publish g/already_registered', err);
 			});
 		});
 	});
@@ -160,11 +182,6 @@ function mqtt_gate(win){
 			win.webContents.send('sens.out');
 			return;
 		}
-	});
-
-	mqtt_client.on('error', (err) => {
-		console.log('MQTT connection err: ');
-		console.log(err);
 	});
 }
 

@@ -2,6 +2,7 @@ import { db_reg } from '../db/db';
 import { sub_nfc_map } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { nfc_block_others } from './nfc_put';
+import { selected_person_id } from '../services/store';
 
 let flood_blocked = false;
 const flood_block_time = 200;

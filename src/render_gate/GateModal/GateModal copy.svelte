@@ -3,7 +3,7 @@
   import { createEventDispatcher, onMount } from 'svelte';
   import { Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
   import PersonTag from '../../render/Person/PersonTag.svelte';
-//  import Reg from '../../render/Reg/Reg.svelte';
+  import Reg from '../../render/Reg/Reg.svelte';
   import { gate_count_enabled } from '../../services/store';
   import { gate_count } from '../../services/store';
   import { gate_nfc_enabled } from '../../services/store';
@@ -295,12 +295,10 @@
   {/if}
 </Modal>
 
-<!--
 <Reg
   bind:this={cmp_reg}
   on:person_already_registered={handle_person_already_registered}
 />
--->
 
 <!--
 <NfcScan

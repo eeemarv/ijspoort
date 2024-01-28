@@ -5,11 +5,13 @@
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import { nfc_map } from '../../services/store';
   import { person_nfc_map } from '../../services/store';
+  import { get_date_str } from '../../services/functions';
 
   export let nfc_id = undefined;
   export let show_ts_epoch = false;
   export let show_uid = false;
   export let show_abc_index = false;
+  export let show_blocked = false;
   export let abc_index = undefined;
   export let fetch_abc_index = false;
 
@@ -66,12 +68,14 @@
     >
       NFC-{nfc.uid.length / 2}b
     </Badge>
+  {#if show_blocked && nfc.blocked}
     <Badge 
       color=danger
-      title="geblokkeerd sinds "
+      title="Geblokkeerd sinds {get_date_str(nfc.blocked.ts_epoch)}"
     >
       <Icon icon={banIcon} color=light />
     </Badge>
+  {/if}
   {#if show_uid}
     <Badge
       color={nfc.uid.length === 14 ? 'accent' : 'cyan'}

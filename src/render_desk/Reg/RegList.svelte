@@ -2,7 +2,8 @@
   import { Row, Col, ListGroup, ListGroupItem } from 'sveltestrap';
   import RegItem from './RegItem.svelte';
   import { reg_map } from '../../services/store';
-  import RegBlockedItem from './RegBlockedItem.svelte';
+  import RegAlreadyGate from './RegAlreadyGate.svelte';
+  import RegAlreadyDesk from './RegAlreadyDesk.svelte';
 
 </script>
 
@@ -13,7 +14,8 @@
           <p><br></p>
       </ListGroupItem>
 
-      <RegBlockedItem />
+      <RegAlreadyGate />
+      <RegAlreadyDesk />
 
       {#each [...$reg_map].reverse() as [reg_id, reg], index(reg._id)}
         <RegItem {reg} count={$reg_map.size - index} />

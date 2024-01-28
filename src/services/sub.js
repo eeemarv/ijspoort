@@ -9,6 +9,7 @@ import { reg_map } from './store';
 import { person_last_reg_ts_map } from './store';
 import { reg_nfc_auto_enabled } from './store';
 import { nfc_block_enabled } from './store';
+import { nfc_gate_auto_block_enabled } from './store';
 import { person_nfc_auto_enabled } from './store';
 import { gate_count_enabled } from './store';
 import { gate_count } from './store';
@@ -24,6 +25,7 @@ let sub_reg_map = new Map();
 let sub_person_last_reg_ts_map = new Map();
 let sub_reg_nfc_auto_enabled = false;
 let sub_nfc_block_enabled = false;
+let sub_nfc_gate_auto_block_enabled = false;
 let sub_person_nfc_auto_enabled = false;
 let sub_gate_count_enabled = false;
 let sub_gate_count = 0;
@@ -72,6 +74,10 @@ nfc_block_enabled.subscribe((b) => {
   sub_nfc_block_enabled = b;
 });
 
+nfc_gate_auto_block_enabled.subscribe((b) => {
+  sub_nfc_gate_auto_block_enabled = b;
+});
+
 person_nfc_auto_enabled.subscribe((b) => {
   sub_person_nfc_auto_enabled = b;
 });
@@ -95,6 +101,7 @@ export { sub_reg_map };
 export { sub_person_last_reg_ts_map };
 export { sub_reg_nfc_auto_enabled };
 export { sub_nfc_block_enabled };
+export { sub_nfc_gate_auto_block_enabled };
 export { sub_person_nfc_auto_enabled };
 export { sub_gate_count_enabled };
 export { sub_gate_count };

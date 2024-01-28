@@ -5,6 +5,7 @@
   import GateConfigMembers from './GateConfigMembers.svelte';
   import GateConfigMax from './GateConfigMax.svelte';
   import GateConfigTemp from './GateConfigTemp.svelte';
+  import GateConfigAutoBlock from './GateConfigAutoBlock.svelte';
   import GateConfigSound from './GateConfigSound.svelte';
 
   let open = false;
@@ -71,6 +72,7 @@
       {#if gate_config_auth}
         <GateConfigMembers {tab} />
         <GateConfigMax {tab} on:keypress={handle_enter} />
+        <GateConfigAutoBlock {tab} />
         <GateConfigTemp {tab} />
         <GateConfigSound {tab} />
       {/if}

@@ -251,17 +251,19 @@
     {toggle}
   >
     <h1>
-      {title}
+      <slot name=title>
+        Ok
+      </slot>
     </h1>
   </ModalHeader>
   {#if show_reg_person}
     <ModalBody class={modal_class}>
-      {#if reg_person}
+      {#if person_id}
         <h2>
-          <PersonTag person_id={reg_person._id} />
+          <PersonTag {person_id} />
         </h2>
       {/if}
-      {#if reg_person && already_registered}
+      {#if already_registered}
         <p>
           <i>
             Reeds geregistreerd.

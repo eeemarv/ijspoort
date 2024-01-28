@@ -1,9 +1,7 @@
 <script>
-  import { Badge } from 'sveltestrap';
-  import PersonTag from '../../render/Person/PersonTag.svelte';
-  import { reg_block_time } from '../../db_put/reg_put';
   import { ev_nfc_scan } from '../../services/events';
   import { sub_nfc_map } from '../../services/sub';
+  import RegAlready from './RegAlready.svelte';
 
   let person_id = undefined;
   let timeout_id = undefined;
@@ -28,12 +26,7 @@
   >
     <div class="d-flex w-100 justify-content-between">
       <div>
-        <div>
-          <PersonTag {person_id} show_member_year show_tags />
-          <Badge color=dark>
-            Reeds geregistreerd in laatste {Math.floor(reg_block_time / 60000)} minuten.
-          </Badge>
-        </div>
+        <RegAlready {person_id} />
       </div>
       <div>
       </div>

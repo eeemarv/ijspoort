@@ -1,5 +1,6 @@
 import { db_nfc } from '../db/db';
 import { sub_nfc_map } from '../services/sub';
+import { sub_nfc_gate_auto_block_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { sub_person_nfc_map } from '../services/sub';
 
@@ -63,6 +64,9 @@ const nfc_del = (nfc_id) => {
  * @returns {Object} mixin for reg_add
  */
 const nfc_block_others = (nfc_id) => {
+  if (!sub_nfc_gate_auto_block_enabled){
+    return {};
+  }
   if (!sub_nfc_map.has(nfc_id)){
     return {};
   }

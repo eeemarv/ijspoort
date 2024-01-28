@@ -4,7 +4,7 @@
   import RegCountCSVExport from '../Reg/RegCountCSVExport.svelte';
   import DbJSONExport from '../Db/DbJSONExport.svelte';
   import Config from '../Config/Config.svelte';
-  import MainPage from './MainPage.svelte';
+  import DeskPage from './DeskPage.svelte';
   import DbAssistImport from '../Db/DbAssistImport.svelte';
 
   let y;
@@ -37,7 +37,7 @@
 
 <Container fluid>
   <Row class=min-vh-100>
-    <MainPage />
+    <DeskPage />
   </Row>
 </Container>
 

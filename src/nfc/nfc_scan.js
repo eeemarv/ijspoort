@@ -156,6 +156,9 @@ const listen_nfc = () => {
     else
     {
       ev_nfc_scan_dispatch('already_registered', {nfc_id});
+      if (gate_enabled){
+        ipcRenderer.send('gate.tx.already_registered', nfc_id);
+      }
     }
 
     ev_nfc_scan_dispatch('valid_member', {nfc_id});

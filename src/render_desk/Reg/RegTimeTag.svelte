@@ -7,8 +7,6 @@
 
 <TimeTag
   ts={reg.ts_epoch}
-  color:warning={reg.manual}
-  color:accent={reg.gate}
-  color:teal={reg.desk && !reg.manual}
+  color={reg.manual ? 'warning' : (reg.desk ? 'teal' : 'accent')}
   title={reg.manual ? 'tijdstip manuele registratie' : (reg.desk ? 'tijdstip registratie met NFC vanaf desk ' + reg.nfc_uid : 'tijdstip registratie met NFC vanaf poort ' + reg.nfc_uid)}
 />

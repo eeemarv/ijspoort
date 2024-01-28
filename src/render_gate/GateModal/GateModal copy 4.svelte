@@ -11,6 +11,8 @@
   import GateConfigButton from '../GateConfig/GateConfigButton.svelte';
   import { sound_ok_enabled } from '../../services/store';
   import { sound_error_enabled } from '../../services/store';
+  import { ev_nfc_scan } from '../../services/events';
+    import { sub_nfc_map } from '../../services/sub';
 
   const dispatch = createEventDispatcher();
 
@@ -50,26 +52,9 @@
     open = !open
   };
 
-  const update_member_year_list = () => {
-    if (reg_person === undefined){
-      member_year_list = [];
-      return;
-    }
 
-    year = new Date().getFullYear();
-    member_year_list = [];
 
-    for (let y = year -1; y <= year + 1; y++){
-      member_year_list = [...member_year_list, {
-        year: y,
-        is_member: reg_person.member_year && reg_person.member_year['y' + y]
-      }];
-    }
-  };
 
-  $: if (reg_person) {
-    update_member_year_list();
-  }
 
   setInterval(() => {
     if (open_time > 0){
@@ -93,7 +78,7 @@
     already_registered = false;
     reg_person = event.detail.person;
     reg_nfc_uid = event.detail.nfc_uid;
-    cmp_reg.add_by_nfc(reg_person, reg_nfc_uid);
+    // cmp_reg.add_by_nfc(reg_person, reg_nfc_uid);
     show_reg_person = true;
   };
 
@@ -138,6 +123,16 @@
       already_registered = true;
     };
 
+    ev_nfc_scan.addEventListener('valid_member', (e) => {
+      // close gate_config 
+      const nfc = sub_nfc_map.get(e.detail.nfc_id);
+      if (person_id && nfc.person_id === person_id){
+        // check_wait
+      }
+
+      
+    });
+
     handle_scanned_person_valid_member = (event) => {
       dispatch('trigger_close_gate_config');
 
@@ -174,7 +169,9 @@
       if (check_wait()){
         return;
       }
+
       load_reg_person_nfc(event);
+  
       modal_class = 'bg-warning';
       title = 'Lidmaatschap niet in orde';
       start_open_timer();
@@ -251,17 +248,19 @@
     {toggle}
   >
     <h1>
-      {title}
+      <slot name=title>
+        Ok
+      </slot>
     </h1>
   </ModalHeader>
   {#if show_reg_person}
     <ModalBody class={modal_class}>
-      {#if reg_person}
+      {#if person_id}
         <h2>
-          <PersonTag person_id={reg_person._id} />
+          <PersonTag {person_id} />
         </h2>
       {/if}
-      {#if reg_person && already_registered}
+      {#if already_registered}
         <p>
           <i>
             Reeds geregistreerd.
