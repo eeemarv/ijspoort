@@ -6,7 +6,7 @@ const path = require('path');
 const listen_pcsc = require('./main/listen_pcsc.js');
 const listen_mfrc = require('./main/listen_mfrc.js');
 const build_menu = require('./main/build_menu.js');
-const { mqtt_term, mqtt_gate } = require('./main/mqtt.js');
+const { mqtt_init } = require('./main/mqtt.js');
 
 const eStore = new EStore();
 let win;
@@ -14,7 +14,8 @@ let win;
 const env = process.env;
 
 const debug_enabled = env?.DEBUG === '1';
-const gate_enabled = env?.GATE === '1';
+const gate_modus = env?.GATE === '1';
+const mfrc522_enabled = env?.MFRC522 === '1';
 
 // https://stackoverflow.com/questions/68874940/gpu-process-isnt-usable-goodbye
 app.commandLine.appendSwitch('in-process-gpu');
@@ -46,12 +47,12 @@ const createWindow = () => {
     }
   });
 
-	if (!gate_enabled){
+	if (!gate_modus){
 		win.setMinimumSize(1366, 768);
 		win.maximize();
 	}
 
-  if (gate_enabled && !debug_enabled){
+  if (gate_modus && !debug_enabled){
 		win.setKiosk(true);
   }
 
@@ -59,21 +60,14 @@ const createWindow = () => {
   .then(() => {
 		console.log('win then');
 		listen_pcsc(win);
-
-		if (gate_enabled){
+		if (mfrc522_enabled){
 			try {
 				listen_mfrc(win, eStore);
-				mqtt_gate(win);
-			} catch (err) {
-				console.log(err);
-			}
-		} else {
-			try {
-				mqtt_term(win);
 			} catch (err) {
 				console.log(err);
 			}
 		}
+		mqtt_init();
   });
 
   if (debug_enabled){

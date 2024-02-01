@@ -10,7 +10,7 @@
 
 <TabPane tabId=max active={tab === 'max'}>
   <span slot=tab>
-    Maximum aantal
+    Maximum
   </span>
   <Card body>
     <div class=form-check>

@@ -1,317 +1,232 @@
 <script>
-  import lodash from 'lodash';
-  import { createEventDispatcher, onMount } from 'svelte';
   import { Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
   import PersonTag from '../../render/Person/PersonTag.svelte';
-//  import Reg from '../../render/Reg/Reg.svelte';
-  import { gate_count_enabled } from '../../services/store';
-  import { gate_count } from '../../services/store';
-  import { gate_nfc_enabled } from '../../services/store';
- // import NfcScan from '../../render/Nfc/NfcScan.svelte';
-  import GateConfigButton from '../GateConfig/GateConfigButton.svelte';
-  import { sound_ok_enabled } from '../../services/store';
-  import { sound_error_enabled } from '../../services/store';
+  import GateConfig from '../GateConfig/GateConfig.svelte';
+  import { get_time_str } from '../../services/functions';
+  import { sub_gate_count, sub_gate_count_enabled, sub_gate_nfc_enabled } from '../../services/sub';
+  import { sub_nfc_map } from '../../services/sub';
+  import { sub_person_last_reg_ts_map } from '../../services/sub';
+  import { reg_block_time } from '../../db_put/reg_put';
+  import GateModalPersonMemberYearList from './GateModalPersonMemberYearList.svelte';
+  import { sub_gate_open } from '../../services/sub';
+  import { sound_ok } from '../../services/sound';
+  import { sound_error } from '../../services/sound';
+  import { ev_nfc_scan } from '../../services/events';
+  import { get_nfc_id_that_opened_gate } from '../../gate/gate_trigger';
+  import { gate_auth } from '../../gate/gate_auth';
 
-  const dispatch = createEventDispatcher();
+  let open_gate_config = () => {};
+  let close_gate_config = () => {};
 
-  export let open = false;
-  export let open_gate;
+  let open_down_count = 0;
+  const open_start_count = 50;
+  const open_count_interval_time = 100;
+  
+  let message = undefined;
+  let color = 'primary';
+  let person_id = undefined;
+  let already_registered_person_id = undefined;
+  let gate_auth_person_id = undefined;
+  
+  $: gate_auth_enabled = gate_auth(gate_auth_person_id);
 
-  let cmp_reg;
-  let already_registered;
-  let show_reg_person = true;
-  let reg_person;
-  let reg_nfc_uid;
-
-  let handle_person_already_registered;
-  let handle_scanned_person_valid_member;
-  let handle_scanned_person_not_member;
-  let handle_scanned_person_not_found;
-  let handle_scanned_uid_not_found;
-//  let handle_scanned_uid_blocked;
-  let handle_nfc_off;
-  let handle_click_open_gate_config;
-  let sound_ok;
-  let sound_error;
-
-  let title;
-  let modal_class = 'bg-default';
-  let member_year_list = [];
-  let year;
-
-  const minimum_open_time = 2000;
-  let open_time = 0;
-  let open_timeout_ref = 0;
-
-  const ok_sound = new Audio('../audio/ok3.mp3');
-  const error_sound = new Audio('../audio/error2.mp3');
-
-  const toggle = () => {
-    open = !open
-  };
-
-  const update_member_year_list = () => {
-    if (reg_person === undefined){
-      member_year_list = [];
-      return;
-    }
-
-    year = new Date().getFullYear();
-    member_year_list = [];
-
-    for (let y = year -1; y <= year + 1; y++){
-      member_year_list = [...member_year_list, {
-        year: y,
-        is_member: reg_person.member_year && reg_person.member_year['y' + y]
-      }];
-    }
-  };
-
-  $: if (reg_person) {
-    update_member_year_list();
-  }
+  let time = (new Date()).getTime();
+  setInterval(() => {
+    time = (new Date()).getTime();
+  }, 1000);
 
   setInterval(() => {
-    if (open_time > 0){
-      open_time -= 100;
+    if (open_down_count){
+      open_down_count--;
     }
-  }, 100);
+  }, open_count_interval_time);
 
-  const start_open_timer = () => {
-    open = true;
-    open_time = minimum_open_time;
-    clearTimeout(open_timeout_ref);
-  };
-
-  const stop_open_timer = () => {
-    open_timeout_ref = setTimeout(() => {
-      open = false;
-    }, open_time);
-  };
-
-  const load_reg_person_nfc = (event) => {
-    already_registered = false;
-    reg_person = event.detail.person;
-    reg_nfc_uid = event.detail.nfc_uid;
-    cmp_reg.add_by_nfc(reg_person, reg_nfc_uid);
-    show_reg_person = true;
-  };
-
-  const clear_reg_person_nfc = () => {
-    reg_person = undefined;
-    reg_nfc_uid = undefined;
-  };
-
-  const check_wait = () => {
-    if ($gate_nfc_enabled && open_gate){
-
-      modal_class = 'bg-warning';
-      title = 'Wacht even tot je voorganger door de poort is en probeer opnieuw.';
-      show_reg_person = false;
-      start_open_timer();
-      sound_error();
-      return true;
+  const toggle = () => {
+    if (open_down_count){
+      open_down_count = 0;
+      return;
     }
-    return false;
-  }
+    open_down_count = open_start_count;
+  };
 
-  onMount(() => {
-    ok_sound.addEventListener('canplaythrough', (ev) => {
-      sound_ok = () => {
-        if (!$sound_ok_enabled){
-          return;
-        }
-        ok_sound.play();
-      };
-    });
+  const handle_open_gate_config = () => {
+    open_down_count = 0;
+    open_gate_config();
+  };
 
-    error_sound.addEventListener('canplaythrough', (ev) => {
-      sound_error = () => {
-        if (!$sound_error_enabled){
-          return;
-        }
-        error_sound.play();
-      };
-    });
+  const msgs = {
+    wait: {
+      msg: 'Wacht even tot je voorganger door de poort is en probeer opnieuw.',
+      color: 'purple',
+      person: false,
+      gate_auth: true
+    },
+    full: {
+      msg: 'Volzet',
+      color: 'purple',
+      person: true,
+      gate_auth: true
+    },
+    person_valid_member: {
+      msg: 'Ok',
+      color: 'success',
+      person: true,
+      open_gate: true,
+      gate_auth: true
+    },
+    person_not_member: {
+      msg: 'Lidmaatschap niet in orde',
+      color: 'purple',
+      person: true,
+      gate_auth: false
+    },
+    nfc_not_found: {
+      msg: 'Tag niet herkend',
+      color: 'danger',
+      person: false,
+      gate_auth: false
+    },
+    person_not_found: {
+      msg: 'Geen personsdata gevonden',
+      color: 'danger',
+      person: false,
+      gate_auth: false
+    },
+    nfc_blocked: {
+      msg: 'Tag geblokkeerd',
+      color: 'purple',
+      person: true,
+      gate_auth: false
+    },
+    person_already_registered: {}
+  };
 
-    handle_person_already_registered = () => {
-      already_registered = true;
-    };
-
-    handle_scanned_person_valid_member = (event) => {
-      dispatch('trigger_close_gate_config');
-
-      if (!lodash.isEqual(reg_person, event.detail.person)){
-        if (check_wait()){
-          return;
-        }
-      }
-
-      load_reg_person_nfc(event);
-
-      if ($gate_count_enabled && ($gate_count <= 0)){
-        modal_class = 'bg-warning';
-        title = 'Volzet';
-        start_open_timer();
-        sound_error();
-        return;
-      }
-
-      modal_class = 'bg-success';
-      title = 'Ok';
-
-      dispatch('trigger_open_gate', {
-        person: reg_person,
-        nfc_uid: event.detail.nfc_uid
-      });
-
-      start_open_timer();
+  const launch_modal = (ev_name, nfc_id = undefined, prsn_id = undefined) => {
+    const d = msgs[ev_name];
+    message = d.msg;
+    color = d.color;
+    if (d.person){
+      person_id = prsn_id;
+    } else {
+      person_id = undefined;
+      already_registered_person_id = undefined;
+    }
+    if (d.gate_auth){
+      gate_auth_person_id = prsn_id;
+    } else {
+      gate_auth_person_id = undefined;
+    }
+    open_down_count = open_start_count;
+    if (typeof d.open_gate === 'boolean' && d.open_gate){
       sound_ok();
-    };
-
-    handle_scanned_person_not_member = (event) => {
-      dispatch('trigger_close_gate_config');
-      if (check_wait()){
-        return;
-      }
-      load_reg_person_nfc(event);
-      modal_class = 'bg-warning';
-      title = 'Lidmaatschap niet in orde';
-      start_open_timer();
-      sound_error();
-    };
-
-    handle_scanned_person_not_found = (event) => {
-      dispatch('trigger_close_gate_config');
-
-      if (check_wait()){
-        return;
-      }
-
-      clear_reg_person_nfc();
-
-      modal_class = 'bg-danger';
-      title = 'Persoon niet herkend';
-
-      start_open_timer();
-      sound_error();
-    };
-
-    handle_scanned_uid_not_found = (event) => {
-      dispatch('trigger_close_gate_config');
-      if (check_wait()){
-        return;
-      }
-      clear_reg_person_nfc();
-
-      modal_class = 'bg-danger';
-      title = 'Tag niet herkend';
-
-      start_open_timer();
-      sound_error();
-    };
-
-    /*
-    handle_scanned_uid_blocked = (event) => {
-
-      dispatch('trigger_close_gate_config');
-      if (check_wait()){
-        return;
-      }
-
-      load_reg_person_nfc(event);
-
-      modal_class = 'bg-danger';
-      title = 'Tag geblokkeerd';
-
-      start_open_timer();
-      sound_error();
-    };
-    */
-
-    handle_click_open_gate_config = () => {
-      open = false;
-    };
-
-    handle_nfc_off = () => {
-      stop_open_timer();
+      ev_nfc_scan.dispatchEvent(new CustomEvent('gate_open_trigger', {
+        detail: {nfc_id}
+      }));
+      return;
     }
-  });
+    sound_error();
+  };
+
+  const process_ev_nfc_scan = (ev_name, nfc_id) => {
+    let prsn_id = undefined;
+    if (typeof nfc_id === 'string'
+      && sub_nfc_map.has(nfc_id)){
+        prsn_id = sub_nfc_map.get(nfc_id).person_id;
+    }
+    if (ev_name === 'person_already_registered'){
+      already_registered_person_id = prsn_id;
+      return;
+    }
+    close_gate_config();
+
+    if (sub_gate_open && sub_gate_nfc_enabled){
+      const og_nfc_id = get_nfc_id_that_opened_gate();
+      if (typeof og_nfc_id === 'string'
+        && (typeof prsn_id === 'undefined'
+          || prsn_id !== sub_nfc_map.get(og_nfc_id).person 
+      )){
+        launch_modal('wait', nfc_id, prsn_id);
+        return;
+      }
+    }
+    if (ev_name === 'person_valid_member'
+      && sub_gate_count_enabled 
+      && (sub_gate_count <= 0
+    )){
+      launch_modal('full', nfc_id, prsn_id);
+      return;
+    }
+    launch_modal(ev_name, nfc_id, prsn_id);
+  };
+
+  for (const ev_name in msgs){
+    if (ev_name === 'wait'){
+      continue;
+    }
+    if (ev_name === 'full'){
+      continue;
+    }
+    console.log('..GateModal ev_nfc_scan listen ' + ev_name);
+    ev_nfc_scan.addEventListener(ev_name, (e) => {
+      console.log('..GateModal ev_nfc_scah ' + ev_name + ' ' + e.detail.nfc_id);
+      process_ev_nfc_scan(ev_name, e.detail.nfc_id ?? undefined);
+    });
+  }
 
 </script>
 
+<GateConfig 
+  bind:open_gate_config
+  bind:close_gate_config
+/>
+
 <Modal
-  isOpen={open}
+  isOpen={open_down_count}
   {toggle}
   fullscreen
   fade={false}
+  contentClassName="bg-{color}"
 >
-  <ModalHeader
-    class={modal_class}
-    {toggle}
-  >
-    <h1>
-      {title}
-    </h1>
+  <ModalHeader {toggle}>
+    <h1>{message}</h1>
   </ModalHeader>
-  {#if show_reg_person}
-    <ModalBody class={modal_class}>
-      {#if reg_person}
-        <h2>
-          <PersonTag person_id={reg_person._id} />
-        </h2>
-      {/if}
-      {#if reg_person && already_registered}
+  {#if person_id}
+    <ModalBody>
+      <h2>
+        <PersonTag {person_id} />
+      </h2>
+      {#if typeof already_registered_person_id === 'string'
+        && already_registered_person_id === person_id
+        && sub_person_last_reg_ts_map.has(person_id)
+        && sub_person_last_reg_ts_map.get(person_id) > (time - reg_block_time)
+      }
         <p>
-          <i>
-            Reeds geregistreerd.
-          </i>
+          Reeds geregistreerd om {get_time_str(sub_person_last_reg_ts_map.get(person_id))}
         </p>
       {/if}
     </ModalBody>
-    {#if reg_person}
-      <ModalFooter class={modal_class}>
-        <div class="d-flex w-100 justify-content-between">
-          <div class="bg-dark p-2">
-            {#each member_year_list as item(item.year)}
-              <span class="me-2 badge bg-{item.is_member ? 'success' : 'dark'}"
-                title="{item.is_member ? 'Lid in' : 'Geen lid in'} {item.year}"
-              >
-                {item.year}
-              </span>
-            {/each}
-          </div>
-          <div>
-            <GateConfigButton
-              person={reg_person}
-              nfc_uid={reg_nfc_uid}
-              on:click_open_gate_config
-              on:click_open_gate_config={handle_click_open_gate_config}
-            />
-          </div>
+  {/if}
+  {#if person_id || gate_auth_enabled}
+    <ModalFooter>
+      <div class="d-flex w-100 justify-content-between">
+        <div>
+          {#if person_id}
+            <GateModalPersonMemberYearList {person_id} />
+          {/if}
         </div>
-      </ModalFooter>
-    {/if}
+        <div>
+          {#if gate_auth_enabled}
+            <button type=button class="btn btn-primary btn-lg"
+              on:click={handle_open_gate_config}
+            >
+              Instellingen
+            </button>
+          {/if}
+        </div>
+      </div>
+    </ModalFooter>
   {/if}
 </Modal>
-
-<!--
-<Reg
-  bind:this={cmp_reg}
-  on:person_already_registered={handle_person_already_registered}
-/>
--->
-
-<!--
-<NfcScan
-  on:scanned_person_valid_member={handle_scanned_person_valid_member}
-  on:scanned_person_not_member={handle_scanned_person_not_member}
-  on:scanned_person_not_found={handle_scanned_person_not_found}
-  on:scanned_uid_not_found={handle_scanned_uid_not_found}
-
-  on:nfc_off={handle_nfc_off}
-/>
--->
 
 <style>
 h1 {
@@ -323,7 +238,7 @@ h2 {
 p {
   font-size: 1.4em;
 }
-span {
-  font-size: 1.3em;
+button {
+  font-size: 1.6em;
 }
 </style>

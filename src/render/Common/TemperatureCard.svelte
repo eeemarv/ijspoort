@@ -15,12 +15,12 @@
 
   onMount(() => {
 
-    ipcRenderer.on('water_temp', (ev, temp) => {
+    ipcRenderer.on('water_temp', (ev, temp_str) => {
       window.clearTimeout(water_temp_timeout_id);
       water_temp_timeout_id = window.setTimeout(() => {
         water_temp = undefined;
       }, water_temp_valid_time);
-      water_temp = temp;
+      water_temp = parseFloat(temp_str);
     });
 
     ipcRenderer.on('air_temp', (ev, temp) => {
@@ -28,7 +28,7 @@
       air_temp_timeout_id = window.setTimeout(() => {
         air_temp = undefined;
       }, air_temp_valid_time);
-      air_temp = temp;
+      air_temp = perseFloat(temp_str);
     });
   });
 </script>

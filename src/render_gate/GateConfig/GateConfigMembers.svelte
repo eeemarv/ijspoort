@@ -10,7 +10,7 @@
 
 <TabPane tabId=members active={tab === 'members'}>
   <span slot=tab>
-    Enkel leden
+    Leden
   </span>
   <Card body>
     <div class=form-check>

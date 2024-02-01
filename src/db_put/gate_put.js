@@ -25,6 +25,12 @@ const get_new_gate_base = () => {
  * @returns {Object} {person_id, nfc_uid}
  */
 const get_from_nfc = (nfc_id) => {
+  if (typeof nfc_id === 'undefined'){
+    return {};
+  }
+  if (!sub_nfc_map.has(nfc_id)){
+    return {};
+  }
   const nfc = sub_nfc_map.get(nfc_id);
   return {
     person_id: nfc.person_id,
@@ -56,10 +62,6 @@ const gate_in_add = (nfc_id) => {
     return;
   }
   flood_in_blocked = true;
-
-  if (!sub_nfc_map.has(nfc_id)){
-    return;
-  }
 
   db_gate.put({
     ...get_new_gate_base(),

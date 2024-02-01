@@ -25,6 +25,8 @@
       el_btn_to_top.style.visibility = 'hidden';
     }
   };
+
+  
 </script>
 
 <svelte:window on:scroll={handle_scroll} bind:scrollY={y}/>

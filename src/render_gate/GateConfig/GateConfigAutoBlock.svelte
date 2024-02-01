@@ -7,7 +7,7 @@
 
 <TabPane tabId=auto_block active={tab === 'auto_block'}>
   <span slot=tab>
-    Automatisch blokkeren NFC tags
+    NFC blok
   </span>
   <Card body>
     <div class=form-check>

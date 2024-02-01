@@ -9,36 +9,17 @@
   import GateConfigSound from './GateConfigSound.svelte';
 
   let open = false;
-  export let tab = 'members';
-  let gate_person;
-  let gate_nfc_uid;
-  let gate_config_auth = false;
-  let gate_deblock_auth = false;
+  let tab = 'members';
 
   $: if (open) {
     tab = 'members';
   }
 
-  $: if (!open){
-    gate_person = undefined;
-    gate_nfc_uid = undefined;
-    gate_config_auth = false;
-    gate_deblock_auth = false;
-  }
-
-  export const click_open = (person, nfc_uid, config_auth, deblock_auth) => {
-    if (!person || !nfc_uid){
-      return;
-    }
-
-    gate_person = person;
-    gate_nfc_uid = nfc_uid;
-    gate_config_auth = config_auth;
-    gate_deblock_auth = deblock_auth;
+  export const open_gate_config = () => {
     open = true;
   };
 
-  export const close = () => {
+  export const close_gate_config = () => {
     open = false;
   };
 
@@ -69,18 +50,16 @@
   </ModalHeader>
   <ModalBody>
     <TabContent pills on:tab={(e) => tab = e.detail}>
-      {#if gate_config_auth}
-        <GateConfigMembers {tab} />
-        <GateConfigMax {tab} on:keypress={handle_enter} />
-        <GateConfigAutoBlock {tab} />
-        <GateConfigTemp {tab} />
-        <GateConfigSound {tab} />
-      {/if}
+      <GateConfigMembers {tab} />
+      <GateConfigMax {tab} on:keypress={handle_enter} />
+      <GateConfigAutoBlock {tab} />
+      <GateConfigTemp {tab} />
+      <GateConfigSound {tab} />
     </TabContent>
   </ModalBody>
   <ModalFooterClose
     on:click={toggle}
     font_size=1.2em
-    btn_lg={true}
+    btn_lg
   />
 </Modal>

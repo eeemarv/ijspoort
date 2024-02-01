@@ -97,7 +97,7 @@ li:nth-child(even) {
   background-color: black;
 }
 li {
-  border-bottom:  1px solid darkgrey;
+  border-bottom:  1px solid lightgrey;
 }
 li.selectable:hover{
   background-color: darkblue;

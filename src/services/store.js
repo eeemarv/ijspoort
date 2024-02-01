@@ -41,13 +41,16 @@ export const person_nfc_list = writable([]);
 export const nfc_uid = writable();
 /** to remove end  */
 
+export const gate_open = writable(true);
+
 export const gate_count = create_coupled_estore('gate_count', 50, -99, 999);
 export const gate_count_enabled = writable(false);
 export const gate_nfc_enabled = writable(false);
 export const gate_nfc_open_time = create_coupled_estore('gate_nfc_open_time', 12, 6, 20);
 export const nfc_reset_enabled = create_coupled_estore('nfc_reset_enabled', false);
-export const nfc_block_enabled = create_coupled_estore('nfc_reset_enabled', false);
-export const nfc_gate_auto_block_enabled = create_coupled_estore('nfc_reset_enabled', false);
+export const nfc_block_enabled = create_coupled_estore('nfc_block_enabled', false);
+export const nfc_gate_auto_block_enabled = create_coupled_estore('nfc_gate_auto_block_enabled', false);
+
 export const nfc_read_test_enabled = create_coupled_estore('nfc_read_test_enabled', false);
 export const temp_display_enabled = create_coupled_estore('temp_display_enabled', false);
 export const assist_import_year = create_coupled_estore('assist_import_year', 2022, 2016, 2030);

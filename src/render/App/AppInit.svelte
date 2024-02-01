@@ -48,7 +48,7 @@
     </ModalBody>
   </Modal>
 {:catch error}
-  <Modal isOpen size=xl contentClassName=bg-danger>
+  <Modal isOpen size=lg contentClassName=bg-danger>
     <ModalHeader>
       Initialisatie Fout
     </ModalHeader>

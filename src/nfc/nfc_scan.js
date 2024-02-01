@@ -10,7 +10,7 @@ import { sub_reg_nfc_auto_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { sub_person_last_reg_ts_map } from '../services/sub';
 
-const gate_enabled = env.GATE === '1';
+const gate_modus = env.GATE === '1';
 
 // const dispatch = createEventDispatcher();
 
@@ -30,6 +30,11 @@ const ev_nfc_scan_dispatch = (name, detail = {}) => {
   ev_nfc_scan.dispatchEvent(new CustomEvent(name, {
     detail: detail
   }));
+  if (gate_modus){
+    const msg = detail.nfc_id ?? detail.nfc_uid ?? '';
+    console.log('ipcRenderer.send scan.' + name + ' ' + msg);
+    ipcRenderer.send('scan.' + name, msg);    
+  }
 };
 
 const listen_nfc = () => {
@@ -75,7 +80,6 @@ const listen_nfc = () => {
     }
 
     const person_id = nfc.person_id;
-
     const person = sub_person_map.get(nfc.person_id);
 
     /** 
@@ -103,8 +107,6 @@ const listen_nfc = () => {
       // 
       // selected_person_id.set(person_id);
 
-      console.log('ev_nfc - not_member', nfc);
-
       /** 
       dispatch('scanned_person_not_member', {
         person_id: person_id,
@@ -114,7 +116,7 @@ const listen_nfc = () => {
       });
       */
 
-      ev_nfc_scan_dispatch('not_member', {nfc_id});
+      ev_nfc_scan_dispatch('person_not_member', {nfc_id});
 
       return;
     }
@@ -137,7 +139,7 @@ const listen_nfc = () => {
 
     if (typeof nfc.blocked !== 'undefined'){
 
-      ev_nfc_scan_dispatch('blocked', {nfc_id});
+      ev_nfc_scan_dispatch('nfc_blocked', {nfc_id});
 
       return;
     }
@@ -149,19 +151,16 @@ const listen_nfc = () => {
 
       if (sub_reg_nfc_auto_enabled){
         reg_add_by_desk_auto(nfc_id);
-      } else if (gate_enabled){
+      } else if (gate_modus){
         reg_add_by_gate(nfc_id);
       }
     }
     else
     {
-      ev_nfc_scan_dispatch('already_registered', {nfc_id});
-      if (gate_enabled){
-        ipcRenderer.send('gate.tx.already_registered', nfc_id);
-      }
+      ev_nfc_scan_dispatch('person_already_registered', {nfc_id});
     }
 
-    ev_nfc_scan_dispatch('valid_member', {nfc_id});
+    ev_nfc_scan_dispatch('person_valid_member', {nfc_id});
 
     /** desktop when selected person
     window.scroll({
@@ -176,9 +175,9 @@ const listen_nfc = () => {
 
   ipcRenderer.on('nfc.test_transport_key.ok', (ev, card) => {
     console.log('nfc.test_transport_key.ok', card);
-    nfc_status = en_nfc.TRANSPORT_KEY;
+    // nfc_status = en_nfc.TRANSPORT_KEY;
 
-    ev_nfc_scan_dispatch('transport_key');
+    ev_nfc_scan_dispatch('nfc_transport_key_ok');
   });
 
   ipcRenderer.on('nfc.test_transport_key.fail', (ev, card) => {
@@ -186,7 +185,7 @@ const listen_nfc = () => {
     console.log('test for B key, nfc.test_b_key');
     ipcRenderer.send('nfc.test_b_key');
 
-    ev_nfc_scan_dispatch('transport_key_fail');
+    ev_nfc_scan_dispatch('nfc_transport_key_fail');
   });
 
   ipcRenderer.on('nfc.test_a_key.ok', (ev) => {
@@ -200,23 +199,19 @@ const listen_nfc = () => {
   ipcRenderer.on('nfc.test_b_key.ok', (ev) => {
     console.log('nfc.test_b_key.ok');
     // nfc_status = en_nfc.WRITABLE;
-
-
-    ev_nfc_scan_dispatch('writable');
+    ev_nfc_scan_dispatch('nfc_writable');
   });
 
   ipcRenderer.on('nfc.test_b_key.fail', (ev) => {
     console.log('nfc.test_b_key.fail');
     //  nfc_status = en_nfc.NOT_WRITABLE;
-
-    ev_nfc_scan_dispatch('not_writable');
+    ev_nfc_scan_dispatch('nfc_not_writable');
   });
 
   /*******/
 
   ipcRenderer.on('nfc.off', (ev) => {
-    ev_nfc_scan_dispatch('off');
-
+    ev_nfc_scan_dispatch('nfc_off');
     /**
     nfc_uid = undefined;
     nfc_status = en_nfc.OFF;
