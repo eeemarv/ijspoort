@@ -75,7 +75,11 @@
   $: person_nfc_count = $person_nfc_map.get($selected_person_id)?.size ?? 0;
 </script>
 
-<NfcInfoModal {open} {progress} {contentClassName}>
+<NfcInfoModal 
+  bind:open
+  {progress} 
+  {contentClassName}
+>
   <h1 slot=title>Activeer NFC tag</h1>
   <p slot=message>
     {message}

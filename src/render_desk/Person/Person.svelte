@@ -19,28 +19,6 @@
   import { person_last_reg_ts_map } from '../../services/store';
   import { reg_block_time } from '../../db_put/reg_put';
   import { get_time_str } from '../../services/functions';
-  import { ev_nfc_scan } from '../../services/events';
-  import { sub_nfc_map } from '../../services/sub';
-  import { sub_person_nfc_auto_enabled } from '../../services/sub';
-
-  ev_nfc_scan.addEventListener('nfc_blocked', (e) => {
-    $selected_person_id = sub_nfc_map.get(e.detail.nfc_id).person_id;
-  });
-  ev_nfc_scan.addEventListener('person_not_member', (e) => {
-    $selected_person_id = sub_nfc_map.get(e.detail.nfc_id).person_id;
-  });
-  ev_nfc_scan.addEventListener('person_valid_member', (e) => {
-    if (!sub_person_nfc_auto_enabled){
-      return;
-    }
-    $selected_person_id = sub_nfc_map.get(e.detail.nfc_id).person_id;
-  });
-  ev_nfc_scan.addEventListener('person_found', (e) => {
-    if (!sub_person_nfc_auto_enabled){
-      return;
-    }
-    $selected_person_id = sub_nfc_map.get(e.detail.nfc_id).person_id;
-  });
 
   let open_reg_list;
   let open_simular;
@@ -65,6 +43,15 @@
     reg_add_by_desk_manual(person_id);
     $selected_person_id = undefined;
   });
+
+  $: if ($selected_person_id){
+    console.log('selected_person_id', $selected_person_id);
+    window.scroll({
+      top: 0,
+      left: 0,
+      behavior: 'smooth'
+    });
+  }
 
 </script>
 
@@ -197,7 +184,7 @@
       <Button
         color=primary
         class=ms-3
-        on:click={() => person_id = undefined}
+        on:click={() => $selected_person_id = undefined}
       >
         Sluiten
       </Button>

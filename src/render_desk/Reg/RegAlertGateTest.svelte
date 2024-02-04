@@ -1,5 +1,4 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import { sub_nfc_map } from '../../services/sub';
   import { sub_person_last_reg_ts_map } from '../../services/sub';
   import { ev_nfc_scan } from '../../services/events';

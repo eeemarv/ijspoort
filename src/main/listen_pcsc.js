@@ -33,15 +33,6 @@ const unset_reader = () => {
 	reader_ready = false;
 };
 
-const remove_nfc_listeners = () => {
-	ipcMain.removeAllListeners('nfc.test_a_key');
-	ipcMain.removeAllListeners('nfc.test_b_key');
-	ipcMain.removeAllListeners('nfc.test_transport_key');
-	ipcMain.removeAllListeners('nfc.init');
-	ipcMain.removeAllListeners('nfc.read');
-	ipcMain.removeAllListeners('nfc.reset');
-};
-
 const win_send = (ev_name, data = undefined) => {
 	console.log(ev_name, data);
 	win.webContents.send(ev_name, data);
@@ -96,7 +87,7 @@ const can_reply = (ev_name, data) => {
 	return true;
 };
 
- const listen_pcsc = (wwin) => {
+const listen_pcsc = (wwin) => {
 	win = wwin;
 
 	ipcMain.on('nfc.test_a_key', async (event, data) => {

@@ -4,20 +4,14 @@ import { reg_add_by_desk_auto } from '../db_put/reg_put';
 import { reg_add_by_gate } from '../db_put/reg_put';
 import { ev_nfc_scan } from '../services/events';
 import { reg_block_time } from '../db_put/reg_put';
-import { sub_nfc_map } from '../services/sub';
+import { sub_nfc_map, sub_person_nfc_auto_enabled } from '../services/sub';
 import { sub_reg_nfc_auto_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { sub_person_last_reg_ts_map } from '../services/sub';
+import { selected_person_id } from '../services/store';
+import { selected_nfc_id } from '../services/store';
 
 const gate_modus = env.GATE === '1';
-
-// const dispatch = createEventDispatcher();
-
-/*
-export let nfc_status = en_nfc.OFF;
-export let nfc_uid = undefined;
-export let nfc_id = undefined;
-*/
 
 /**
  * @param {string} nfc_id 
@@ -63,27 +57,14 @@ const listen_nfc = () => {
       return;
     }
 
-    //const nfc_uid = card.uid;
-
-    /** not used 
-    dispatch('nfc_on', {
-      nfc_uid: nfc_uid
-    });
-    */
-
     const nfc_id = nfc_uid_to_id(nfc_uid);
+    selected_nfc_id.set(nfc_id);
 
     if (!sub_nfc_map.has(nfc_id)){
       ev_nfc_scan_dispatch('nfc_not_found', {nfc_id});
       ipcRenderer.send('nfc.test_transport_key', {nfc_uid});
       return;
     }
-
-    // nfc_id = id;
-    // review
-    // selected_nfc_id.set(nfc_id);
-    // review 
-    // nfc_status = en_nfc.OK;
 
     ev_nfc_scan_dispatch('nfc_found', {nfc_id});
 
@@ -100,17 +81,6 @@ const listen_nfc = () => {
     const person_id = nfc.person_id;
     const person = sub_person_map.get(nfc.person_id);
 
-    /** 
-    console.log('dispatch scanned_person_found');
-
-    dispatch('scanned_person_found', {
-      person_id: person_id,
-      person: person,
-      nfc_uid: nfc_uid
-    });
-
-    */
-
     ev_nfc_scan_dispatch('person_found', {nfc_id});
 
     let is_member = false;
@@ -122,43 +92,16 @@ const listen_nfc = () => {
 
     if (!is_member){
 
-      // 
-      // selected_person_id.set(person_id);
-
-      /** 
-      dispatch('scanned_person_not_member', {
-        person_id: person_id,
-        nfc_id: nfc_id,
-        person: person,
-        nfc_uid: nfc_uid
-      });
-      */
+      selected_person_id.set(person_id);
 
       ev_nfc_scan_dispatch('person_not_member', {nfc_id});
 
       return;
     }
 
-    /**
-     * 
-    */
-
-    /** valid member */
-
-
-    // not here ... use events 
-    /*
-    if ($person_nfc_auto_enabled){
-      selected_person_id.set(person_id);
-    }
-    */
-
-    /** nfc tag blocked */
-
     if (typeof nfc.blocked !== 'undefined'){
-
+      selected_person_id.set(person_id);
       ev_nfc_scan_dispatch('nfc_blocked', {nfc_id});
-
       return;
     }
 
@@ -167,10 +110,10 @@ const listen_nfc = () => {
     if (!sub_person_last_reg_ts_map.has(person_id)
       || sub_person_last_reg_ts_map.get(person_id) < ts_reg_fresh_after){
 
-      if (sub_reg_nfc_auto_enabled){
+      if (gate_modus){
+        reg_add_by_gate(nfc_id);        
+      } else if (sub_reg_nfc_auto_enabled){
         reg_add_by_desk_auto(nfc_id);
-      } else if (gate_modus){
-        reg_add_by_gate(nfc_id);
       }
     }
     else
@@ -180,20 +123,13 @@ const listen_nfc = () => {
 
     ev_nfc_scan_dispatch('person_valid_member', {nfc_id});
 
-    /** desktop when selected person
-    window.scroll({
-      top: 0,
-      left: 0,
-      behavior: 'smooth'
-    });
-    **/ 
+    if (sub_person_nfc_auto_enabled){
+      selected_person_id.set(person_id);
+    }
   });
-
-  /******/
 
   ipcRenderer.on('nfc.test_transport_key.ok', (ev, {nfc_uid}) => {
     console.log('nfc.test_transport_key.ok', nfc_uid);
-    // nfc_status = en_nfc.TRANSPORT_KEY;
     const nfc_id = nfc_uid_to_id(nfc_uid);
 
     ev_nfc_scan_dispatch('nfc_transport_key_ok', {nfc_id});
@@ -217,28 +153,19 @@ const listen_nfc = () => {
 
   ipcRenderer.on('nfc.test_b_key.ok', (ev, {nfc_uid}) => {
     console.log('nfc.test_b_key.ok', nfc_uid);
-    // nfc_status = en_nfc.WRITABLE;
     const nfc_id = nfc_uid_to_id(nfc_uid);
     ev_nfc_scan_dispatch('nfc_writable', {nfc_id});
   });
 
   ipcRenderer.on('nfc.test_b_key.fail', (ev, {nfc_uid}) => {
     console.log('nfc.test_b_key.fail', nfc_uid);
-    //  nfc_status = en_nfc.NOT_WRITABLE;
     const nfc_id = nfc_uid_to_id(nfc_uid);
     ev_nfc_scan_dispatch('nfc_not_writable', {nfc_id});
   });
 
-  /*******/
-
   ipcRenderer.on('nfc.off', (ev) => {
     ev_nfc_scan_dispatch('nfc_off');
-    /**
-    nfc_uid = undefined;
-    nfc_status = en_nfc.OFF;
     selected_nfc_id.set(undefined);
-    dispatch('nfc_off');
-    */
   });
 };
 

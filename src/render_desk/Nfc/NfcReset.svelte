@@ -47,8 +47,14 @@
   });
 </script>
 
-<NfcInfoModal {open} {progress} {contentClassName}>
-  <h1 slot=title>Wis NFC tag</h1>
+<NfcInfoModal 
+  bind:open 
+  {progress} 
+  {contentClassName}
+>
+  <h1 slot=title>
+    Wis NFC tag
+  </h1>
   <p slot=message>
     {message}
   </p>

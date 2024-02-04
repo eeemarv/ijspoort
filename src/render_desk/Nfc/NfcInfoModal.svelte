@@ -3,9 +3,9 @@
   import { Modal, ModalHeader, ModalBody } from 'sveltestrap';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
 
-  export let progress = 0;
-  export let open = false;
-  export let contentClassName = 'bg-dark';
+  export let progress;
+  export let open;
+  export let contentClassName;
 
   const toggle = () => {
     open = !open;

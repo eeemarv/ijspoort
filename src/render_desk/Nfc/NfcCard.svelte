@@ -6,28 +6,25 @@
   import NfcCardBody from './NfcCardBody.svelte';
   import NfcReadTest from './NfcReadTest.svelte';
   import NfcReset from './NfcReset.svelte';
-  import { nfc_read_test_enabled } from '../../services/store';
-  import { nfc_reset_enabled } from '../../services/store';
-  import { reg_nfc_auto_enabled } from '../../services/store';
   import NfcPersonAuto from './NfcPersonAuto.svelte';
   import { en_nfc_status } from '../../services/enum';
   import { ev_nfc_scan } from '../../services/events';
+  import { selected_nfc_id } from '../../services/store';
 
   let nfc_status = en_nfc_status.OFF;
-  let nfc_id = undefined;
+  $: nfc_id = $selected_nfc_id;
 
   for (const k in en_nfc_status){
     ev_nfc_scan.addEventListener(en_nfc_status[k], (e) => {
       nfc_status = en_nfc_status[k];
-      nfc_id = e.detail.nfc_id ?? undefined;
     });
   }
+
   ev_nfc_scan.addEventListener('nfc_device_error', () => {
-    nfc_id = undefined;
     nfc_status = en_nfc_status.OFF;
   });
+
   ev_nfc_scan.addEventListener('nfc_device_off', () => {
-    nfc_id = undefined;
     nfc_status = en_nfc_status.OFF;
   }); 
 </script>
@@ -54,22 +51,14 @@
       </div>
     </div>
   </CardFooter>
-
-  {#if (!$reg_nfc_auto_enabled
-    && nfc_id
-    && (nfc_status === en_nfc_status.WRITABLE 
-      || nfc_status === en_nfc_status.FOUND)
-    && ($nfc_read_test_enabled || $nfc_reset_enabled))
-  }
-    <CardFooter>
-      <div class="d-flex w-100 justify-content-between">
-        <div>
-          <NfcReadTest {nfc_id} {nfc_status} />
-        </div>
-        <div>
-          <NfcReset {nfc_id} {nfc_status} />
-        </div>
+  <CardFooter>
+    <div class="d-flex w-100 justify-content-between">
+      <div>
+        <NfcReadTest {nfc_id} {nfc_status} />
       </div>
-    </CardFooter>
-  {/if}
+      <div>
+        <NfcReset {nfc_id} {nfc_status} />
+      </div>
+    </div>
+  </CardFooter>
 </Card>

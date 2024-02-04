@@ -1,5 +1,6 @@
 <script>
-  import { sub_nfc_map, sub_person_last_reg_ts_map } from '../../services/sub';
+  import { sub_nfc_map } from '../../services/sub';
+  import { sub_person_last_reg_ts_map } from '../../services/sub';
   import { ev_nfc_scan } from '../../services/events';
   import PersonTag from '../../render/Person/PersonTag.svelte';
   import { Badge } from 'sveltestrap';
