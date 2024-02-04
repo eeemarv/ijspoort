@@ -5,6 +5,7 @@
   import { reg_del } from '../../db_put/reg_put';
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
+  import { nfc_uid_to_id } from '../../nfc/nfc_scan';
 
   export let reg = undefined;
   export let count = undefined;
@@ -84,7 +85,7 @@
     <div class=bg-purple>
       {#each reg.blocked_nfc_uid_ary as nfc_uid, index(index)}
         <NfcTag 
-          nfc_id={'uid_' + nfc_uid} 
+          nfc_id={nfc_uid_to_id(nfc_uid)} 
           show_abc_index
         />
       {/each}

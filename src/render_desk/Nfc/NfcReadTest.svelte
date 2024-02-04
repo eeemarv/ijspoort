@@ -4,10 +4,11 @@
   import NfcInfoModal from './NfcInfoModal.svelte';
   import { nfc_read_test_enabled } from '../../services/store';
   import { reg_nfc_auto_enabled } from '../../services/store';
-  import { en_nfc } from '../../services/enum';
+  import { en_nfc_status } from '../../services/enum';
+  import { nfc_id_to_uid } from '../../nfc/nfc_scan';
 
-  export let nfc_uid = undefined;
-  export let nfc_status = undefined;
+  export let nfc_id;
+  export let nfc_status;
 
   let progress = 0;
   let open = false;
@@ -16,7 +17,8 @@
 
   const handle_nfc_read = (ev) => {
     console.log('handle_nfc_read');
-    ipcRenderer.send('nfc.read');
+    const nfc_uid = nfc_id_to_uid(nfc_id);
+    ipcRenderer.send('nfc.read', {nfc_uid});
 
     contentClassName = 'bg-default';
     progress = 0;
@@ -24,16 +26,14 @@
     open = true;
   };
 
-  ipcRenderer.on('nfc.read.ok', (event, card, date_of_birth, member_id) => {
-    console.log('nfc.read.ok');
-    console.log('date_of_birth', date_of_birth);
-    console.log('member_id', member_id);
+  ipcRenderer.on('nfc.read.ok', (event, data) => {
+    console.log('nfc.read.ok', data);
 
     progress = 100;
-    message = date_of_birth + ' ' + member_id;
+    message = data.date_of_birth + '.' + data.member_id;
   });
 
-  ipcRenderer.on('nfc.read.fail', (event, card, str) => {
+  ipcRenderer.on('nfc.read.fail', (event, data) => {
     contentClassName = 'bg-danger';
     progress = 50;
     message = 'Test niet geslaagd.';
@@ -47,10 +47,10 @@
   </p>
 </NfcInfoModal>
 
-{#if $nfc_read_test_enabled 
-  && !reg_nfc_auto_enabled 
-  && nfc_uid
-  && (nfc_status === en_nfc.WRITABLE || nfc_status === en_nfc.OK)}
+{#if $nfc_read_test_enabled
+  && !$reg_nfc_auto_enabled 
+  && nfc_id
+  && (nfc_status === en_nfc_status.WRITABLE || nfc_status === en_nfc_status.FOUND)}
   <Button color=info
     title="Lees inhoud van NFC tag"
     on:click={handle_nfc_read}
@@ -58,3 +58,4 @@
     Lees
   </Button>
 {/if}
+

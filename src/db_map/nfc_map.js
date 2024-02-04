@@ -124,7 +124,7 @@ const nfc_map_listen_changes = () => {
 
     console.log('gate_map out of sequence, rebuild');
   
-    build_nfc_maps().then(() => {
+    nfc_map_build().then(() => {
       console.log('gate_map rebuild done');
     });
 

@@ -15,6 +15,7 @@
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import Await from '../../render/Await/Await.svelte';
   import AwaitError from '../../render/Await/AwaitError.svelte';
+  import { nfc_uid_to_id } from '../../nfc/nfc_scan';
 
   export let person_id = undefined;
 
@@ -106,9 +107,9 @@
                   <CountBadge count={row_count - res.start_row - reg_index} />
                   <RegTimeTag {reg} />
                   {#if reg.nfc_uid}
-                    <NfcTag nfc_id={'uid_' + reg.nfc_uid}
+                    <NfcTag nfc_id={nfc_uid_to_id(reg.nfc_uid)}
                       show_abc_index
-                      abc_index={res.abc_map.get('uid_' + reg.nfc_uid)}
+                      abc_index={res.abc_map.get(nfc_uid_to_id(reg.nfc_uid))}
                     />
                   {/if}
                   <LocaleDateString ts_epoch={reg.ts_epoch} title="datum" />

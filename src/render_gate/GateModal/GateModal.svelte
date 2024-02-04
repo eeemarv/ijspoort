@@ -3,7 +3,9 @@
   import PersonTag from '../../render/Person/PersonTag.svelte';
   import GateConfig from '../GateConfig/GateConfig.svelte';
   import { get_time_str } from '../../services/functions';
-  import { sub_gate_count, sub_gate_count_enabled, sub_gate_nfc_enabled } from '../../services/sub';
+  import { sub_gate_count } from '../../services/sub';
+  import { sub_gate_count_enabled } from '../../services/sub';
+  import { sub_gate_nfc_enabled } from '../../services/sub';
   import { sub_nfc_map } from '../../services/sub';
   import { sub_person_last_reg_ts_map } from '../../services/sub';
   import { reg_block_time } from '../../db_put/reg_put';

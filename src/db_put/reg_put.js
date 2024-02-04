@@ -2,7 +2,6 @@ import { db_reg } from '../db/db';
 import { sub_nfc_map } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { nfc_block_others } from './nfc_put';
-import { selected_person_id } from '../services/store';
 
 let flood_blocked = false;
 const flood_block_time = 200;
@@ -124,8 +123,6 @@ const reg_add_by_gate = (nfc_id) => {
 const reg_del = (reg) => {
   db_reg.remove(reg).then((res) => {
     console.log('== handle remove reg ==', res);
-    /** review */
-    selected_person_id.set(undefined);
   }).catch((err) => {
     console.log(err);
   });

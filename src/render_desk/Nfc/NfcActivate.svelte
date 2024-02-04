@@ -1,5 +1,6 @@
 <script>
   const { ipcRenderer } = window.require('electron');
+  import { createEventDispatcher } from 'svelte';
   import { Button } from 'sveltestrap';
   import { nfc_map } from '../../services/store';
   import { person_map } from '../../services/store';
@@ -7,10 +8,14 @@
   import { selected_person_id } from '../../services/store';
   import NfcInfoModal from './NfcInfoModal.svelte';
   import { nfc_add } from '../../db_put/nfc_put';
-  import { en_nfc } from '../../services/enum';
+  import { en_nfc_status } from '../../services/enum';
+  import { nfc_uid_to_id } from '../../nfc/nfc_scan';
+  import { nfc_id_to_uid } from '../../nfc/nfc_scan';
+
+  const dispatch = createEventDispatcher();
 
   export let nfc_status;
-  export let nfc_uid;
+  export let nfc_id;
 
   let open = false;
   let progress = 0;
@@ -26,11 +31,11 @@
       return;
     }
 
-    if (typeof !nfc_uid !== 'string'){
+    if (typeof nfc_id !== 'string'){
       return;
     }
 
-    if ($nfc_map.has('uid_' + nfc_uid)){
+    if ($nfc_map.has(nfc_id)){
       return;
     }
 
@@ -40,11 +45,15 @@
     contentClassName = 'bg-default';
     open = true;
     console.log('send nfc.init');
-    ipcRenderer.send('nfc.init', $person_map.get($selected_person_id));
+    const data = {
+      person: {...$person_map.get($selected_person_id)},
+      nfc_uid: nfc_id_to_uid(nfc_id)
+    };
+    ipcRenderer.send('nfc.init', data);
   };
 
-  ipcRenderer.on('nfc.init.ok', (ev, card) => {
-    nfc_add($selected_person_id, nfc_uid);
+  ipcRenderer.on('nfc.init.ok', (ev, data) => {
+    nfc_add($selected_person_id, nfc_uid_to_id(data.nfc_uid));
     dispatch('activated');
     setTimeout(() => {
       open = false;
@@ -54,7 +63,7 @@
     progress = 100;
   });
 
-  ipcRenderer.on('nfc.init.fail', (ev, card) => {
+  ipcRenderer.on('nfc.init.fail', (ev, data) => {
     setTimeout(() => {
       open = false;
     }, 5000);
@@ -73,11 +82,10 @@
   </p>
 </NfcInfoModal>
 
-
 <Button
   color={person_nfc_count > 0 ? 'warning' : 'success'}
   title="Activeer deze NFC-tag voor deze persoon"
-  disabled={!nfc_uid || !$selected_person_id || nfc_status !== en_nfc.TRANSPORT_KEY || $nfc_map.has('uid_' + nfc_uid)}
+  disabled={!nfc_id || !$selected_person_id || nfc_status !== en_nfc_status.TRANSPORT_KEY_OK || $nfc_map.has(nfc_id)}
   on:click={handle_activate_nfc}>
   Activeer
   {#if person_nfc_count > 0}

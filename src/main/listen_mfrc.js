@@ -14,7 +14,7 @@ const cs_pin = 24;
 const probe_interval = 50;
 const steps_hold_after_uid_found = 20; // 20 * 50 ms = 1 sec
 
-function listen_mfrc(win, eStore){
+const listen_mfrc = (win, eStore) => {
 	const softSPI = new SoftSPI({
 		clock: clock_pin,
 		mosi: mosi_pin,
@@ -179,7 +179,7 @@ function listen_mfrc(win, eStore){
 		*/
 
 		console.log('MFRC522 nfc.on uid: ', res_uid);
-		win.webContents.send('nfc.on', {uid: res_uid});
+		win.webContents.send('nfc.on', {nfc_uid: res_uid});
 	}, probe_interval);
 };
 

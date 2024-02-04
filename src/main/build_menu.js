@@ -17,7 +17,7 @@ const import_assist_xlsx = (win, eStore) => {
 	win.webContents.send('xls.assist.import', files[0]);
 };
 
-function build_menu(win, eStore){
+const build_menu = (win, eStore) => {
 	const menu = new Menu();
 
 	const assist_import_year = eStore.get('assist_import_year');

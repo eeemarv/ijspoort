@@ -5,11 +5,11 @@
 
   export let progress = 0;
   export let open = false;
-  export let contentClassName = 'bg-default';
+  export let contentClassName = 'bg-dark';
 
   const toggle = () => {
     open = !open;
-    pogress = 0;
+    progress = 0;
   };
 </script>
 
@@ -18,7 +18,7 @@
     <slot name=title></slot>
   </ModalHeader>
   <ModalBody>
-    <Progress value={progress} color=light/>
+    <Progress value={progress} color=light />
     <slot name=message></slot>
   </ModalBody>
   <ModalFooterClose on:click={toggle} />

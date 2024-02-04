@@ -92,4 +92,3 @@ export const reg_map = writable(new Map());
 export const person_last_reg_ts_map = writable(new Map());
 
 export const selected_person_id = writable();
-export const selected_nfc_id = writable();

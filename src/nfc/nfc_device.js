@@ -1,19 +1,36 @@
 const { ipcRenderer } = window.require('electron');
+import { ev_nfc_scan } from '../services/events';
 
-export let on = false;
-export let error = false;
+let on = false;
+let error = false;
+let timeout_id = undefined;
 
-ipcRenderer.on('dev.nfc.on', (ev) => {
-  on = true;
-});
+const listen_nfc_device = () => {
+  ipcRenderer.on('dev.nfc.on', (ev) => {
+    ev_nfc_scan.dispatchEvent(new Event('nfc_device_on'));
+    on = true;
+  });
 
-ipcRenderer.on('dev.nfc.off', (ev) => {
-  on = false;
-});
+  ipcRenderer.on('dev.nfc.off', (ev) => {
+    ev_nfc_scan.dispatchEvent(new Event('nfc_device_off'));
+    on = false;
+  });
 
-ipcRenderer.on('dev.nfc.error', (ev) => {
-  error = true;
-  setTimeout(() => {
-    error = false;
+  ipcRenderer.on('dev.nfc.error', (ev) => {
+    ev_nfc_scan.dispatchEvent(new Event('nfc_device_error'));
+    error = true;
+    clearTimeout(timeout_id);
+    timeout_id = setTimeout(() => {
+      ev_nfc_scan.dispatchEvent(new Event('nfc_device_no_error'));
+      error = false;
+    }, 5000);
+  });
+
+  setInterval(() => {
+    ev_nfc_scan.dispatchEvent(new Event(on ? 'nfc_device_on' : 'nfc_device_off'));
+    ev_nfc_scan.dispatchEvent(new Event(error ? 'nfc_device_error' : 'nfc_device_no_error'));
   }, 5000);
-});
+};
+
+export { listen_nfc_device };
+

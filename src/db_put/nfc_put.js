@@ -9,10 +9,10 @@ const flood_block_time = 500;
 
 /**
  * @param {string} person_id 
- * @param {string} nfc_uid 
+ * @param {string} nfc_id 
  * @returns {undefined}
  */
-const nfc_add = (person_id, nfc_uid) => {
+const nfc_add = (person_id, nfc_id) => {
 
   if (flood_blocked){
     console.log('flood blocked nfc_add');
@@ -23,8 +23,8 @@ const nfc_add = (person_id, nfc_uid) => {
   const nfc = {
     ts_epoch: (new Date()).getTime(),
     person_id: person_id,
-    uid: nfc_uid,
-    _id: 'uid_' + nfc_uid
+    uid: nfc_id.substring(4),
+    _id: nfc_id
   };
 
   db_nfc.put(nfc).then((res) => {

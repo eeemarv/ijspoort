@@ -2,7 +2,6 @@ const env = window.require('electron').remote.process.env;
 const { ipcRenderer } = window.require('electron');
 import { reg_add_by_desk_auto } from '../db_put/reg_put';
 import { reg_add_by_gate } from '../db_put/reg_put';
-import { en_nfc } from '../services/enum';
 import { ev_nfc_scan } from '../services/events';
 import { reg_block_time } from '../db_put/reg_put';
 import { sub_nfc_map } from '../services/sub';
@@ -19,6 +18,22 @@ export let nfc_status = en_nfc.OFF;
 export let nfc_uid = undefined;
 export let nfc_id = undefined;
 */
+
+/**
+ * @param {string} nfc_id 
+ * @returns {string}
+ */
+const nfc_id_to_uid = (nfc_id) => {
+  return nfc_id.substring(4);
+};
+
+/**
+ * @param {string} nfc_uid 
+ * @returns {string}
+ */
+const nfc_uid_to_id = (nfc_uid) => {
+  return 'uid_' + nfc_uid;
+};
 
 /**
  * local
@@ -38,12 +53,17 @@ const ev_nfc_scan_dispatch = (name, detail = {}) => {
 };
 
 const listen_nfc = () => {
-  ipcRenderer.on('nfc.on', (ev, card) => {
+  ipcRenderer.on('nfc.on', (ev, {nfc_uid}) => {
     const now = new Date();
     const ts_reg_fresh_after = now.getTime() - reg_block_time;
     const year_key = 'y' + now.getFullYear().toString();
 
-    const nfc_uid = card.uid;
+    if (typeof nfc_uid !== 'string'){
+      console.log('nfc_uid is not string', nfc_uid);
+      return;
+    }
+
+    //const nfc_uid = card.uid;
 
     /** not used 
     dispatch('nfc_on', {
@@ -51,13 +71,11 @@ const listen_nfc = () => {
     });
     */
 
-    const nfc_id = 'uid_' + nfc_uid;
+    const nfc_id = nfc_uid_to_id(nfc_uid);
 
     if (!sub_nfc_map.has(nfc_id)){
-
-      ev_nfc_scan_dispatch('nfc_not_found', {nfc_uid});
-
-      ipcRenderer.send('nfc.test_transport_key', nfc_uid);
+      ev_nfc_scan_dispatch('nfc_not_found', {nfc_id});
+      ipcRenderer.send('nfc.test_transport_key', {nfc_uid});
       return;
     }
 
@@ -75,7 +93,7 @@ const listen_nfc = () => {
 
       ev_nfc_scan_dispatch('person_not_found', {nfc_id});
 
-      ipcRenderer.send('nfc.test_transport_key', nfc_uid);
+      ipcRenderer.send('nfc.test_transport_key', {nfc_uid});
       return;
     }
 
@@ -173,39 +191,42 @@ const listen_nfc = () => {
 
   /******/
 
-  ipcRenderer.on('nfc.test_transport_key.ok', (ev, card) => {
-    console.log('nfc.test_transport_key.ok', card);
+  ipcRenderer.on('nfc.test_transport_key.ok', (ev, {nfc_uid}) => {
+    console.log('nfc.test_transport_key.ok', nfc_uid);
     // nfc_status = en_nfc.TRANSPORT_KEY;
+    const nfc_id = nfc_uid_to_id(nfc_uid);
 
-    ev_nfc_scan_dispatch('nfc_transport_key_ok');
+    ev_nfc_scan_dispatch('nfc_transport_key_ok', {nfc_id});
   });
 
-  ipcRenderer.on('nfc.test_transport_key.fail', (ev, card) => {
-    console.log('nfc.test_transport_key.fail', card);
+  ipcRenderer.on('nfc.test_transport_key.fail', (ev, {nfc_uid}) => {
+    console.log('nfc.test_transport_key.fail', nfc_uid);
     console.log('test for B key, nfc.test_b_key');
-    ipcRenderer.send('nfc.test_b_key');
-
-    ev_nfc_scan_dispatch('nfc_transport_key_fail');
+    ipcRenderer.send('nfc.test_b_key', {nfc_uid});
+    const nfc_id = nfc_uid_to_id(nfc_uid);
+    ev_nfc_scan_dispatch('nfc_transport_key_fail', {nfc_id});
   });
 
-  ipcRenderer.on('nfc.test_a_key.ok', (ev) => {
-    console.log('A key OK');
+  ipcRenderer.on('nfc.test_a_key.ok', (ev, {nfc_uid}) => {
+    console.log('A key OK', nfc_uid);
   });
 
-  ipcRenderer.on('nfc.test_a_key.fail', (ev) => {
-    console.log('A key FAIL');
+  ipcRenderer.on('nfc.test_a_key.fail', (ev, {nfc_uid}) => {
+    console.log('A key FAIL', nfc_uid);
   });
 
-  ipcRenderer.on('nfc.test_b_key.ok', (ev) => {
-    console.log('nfc.test_b_key.ok');
+  ipcRenderer.on('nfc.test_b_key.ok', (ev, {nfc_uid}) => {
+    console.log('nfc.test_b_key.ok', nfc_uid);
     // nfc_status = en_nfc.WRITABLE;
-    ev_nfc_scan_dispatch('nfc_writable');
+    const nfc_id = nfc_uid_to_id(nfc_uid);
+    ev_nfc_scan_dispatch('nfc_writable', {nfc_id});
   });
 
-  ipcRenderer.on('nfc.test_b_key.fail', (ev) => {
-    console.log('nfc.test_b_key.fail');
+  ipcRenderer.on('nfc.test_b_key.fail', (ev, {nfc_uid}) => {
+    console.log('nfc.test_b_key.fail', nfc_uid);
     //  nfc_status = en_nfc.NOT_WRITABLE;
-    ev_nfc_scan_dispatch('nfc_not_writable');
+    const nfc_id = nfc_uid_to_id(nfc_uid);
+    ev_nfc_scan_dispatch('nfc_not_writable', {nfc_id});
   });
 
   /*******/
@@ -221,4 +242,6 @@ const listen_nfc = () => {
   });
 };
 
+export { nfc_id_to_uid };
+export { nfc_uid_to_id };
 export { listen_nfc };

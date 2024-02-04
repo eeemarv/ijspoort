@@ -223,7 +223,6 @@
   $: if ($selected_person_id){
     open = false;
   }
-
 </script>
 
 <Modal isOpen={open} {toggle} size=xl>

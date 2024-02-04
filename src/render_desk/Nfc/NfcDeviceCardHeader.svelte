@@ -1,12 +1,24 @@
 <script>
   import NfcCountButton from './NfcCountButton.svelte';
-  import NfcDevice from '../../render/Nfc/NfcDevice.svelte';
+  import { ev_nfc_scan } from '../../services/events';
 
   let on;
   let error;
-</script>
 
-<NfcDevice bind:on bind:error />
+  ev_nfc_scan.addEventListener('nfc_device_on', () => {
+    on = true;
+  });
+  ev_nfc_scan.addEventListener('nfc_device_off', () => {
+    on = false;
+  });
+  ev_nfc_scan.addEventListener('nfc_device_error', () => {
+    error = true;
+  });
+  ev_nfc_scan.addEventListener('nfc_device_no_error', () => {
+    error = false;
+  });
+
+</script>
 
 <div class="card-header py-2 d-flex w-100 justify-content-between"
   class:bg-success={on && !error}
