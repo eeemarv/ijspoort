@@ -2,13 +2,12 @@
   const EventEmitter = require('events');
   import { onMount } from 'svelte';
   import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'sveltestrap';
-  import { db_person } from '../../db/db';
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
   import { selected_person_id } from '../../services/store';
   import { focus_year } from '../../services/store';
   import { focus_year_filter_enabled } from '../../services/store';
-  import { get_search_str } from '../../services/functions';
+  import { person_ids_to_func_by_text } from '../../db_get/person_get';
 
   let select_years = [];
   let el_manual;
@@ -23,48 +22,6 @@
     $focus_year;
     searchUpdateEmitter.emit('update');
   }
-
-  const search_func = (text, update) => {
-    let search_text = get_search_str(text);
-
-    if (search_text === ''){
-      update([]);
-      return;
-    }
-
-    if ($focus_year_filter_enabled){
-      search_text = 'y' + $focus_year + '.' + search_text;
-    }
-
-    db_person.query('search/count_by_text', {
-      startkey: search_text,
-      endkey: search_text + '\uffff',
-      limit: 20,
-      include_docs: false,
-      reduce: false
-    }).then((res) => {
-
-      console.log('MANUAL RES.', res);
-
-      let result_keys = {};
-
-      res.rows.every((v) => {
-
-        if (Object.keys(result_keys).length > 10){
-          return false;
-        };
-
-        result_keys[v.id] = true;
-
-        return true;
-      });
-
-      update(Object.keys(result_keys));
-
-    }).catch((err) => {
-      console.log(err);
-    });
-  };
 
   const update_select_years = () => {
     select_years = [];
@@ -84,7 +41,7 @@
       preventSubmit: true,
       emptyMsg: '-- Niets gevonden --',
       className: 'autocomplete',
-      fetch: search_func,
+      fetch: person_ids_to_func_by_text,
       onSelect: (person_id) => {
         $selected_person_id = person_id;
         el_manual.value = '';

@@ -1,5 +1,7 @@
 import { db_person } from '../db/db';
 import { get_search_str } from '../services/functions';
+import { sub_focus_year } from '../services/sub';
+import { sub_focus_year_filter_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 
 const person_simular_lang_keys = {
@@ -99,8 +101,46 @@ const person_get_ids_by_simular = async (search_key) => {
   });
 };
 
+const person_ids_to_func_by_text = (text, update_func) => {
+  let search_text = get_search_str(text);
 
+  if (search_text === ''){
+    update_func([]);
+    return;
+  }
+
+  if (sub_focus_year_filter_enabled){
+    search_text = 'y' + sub_focus_year + '.' + search_text;
+  }
+
+  db_person.query('search/count_by_text', {
+    startkey: search_text,
+    endkey: search_text + '\uffff',
+    limit: 20,
+    include_docs: false,
+    reduce: false
+  }).then((res) => {
+
+    console.log('MANUAL RES.', res);
+
+    const person_id_set = new Set();
+
+    res.rows.every((v) => {
+      if (person_id_set.size > 10){
+        return false;
+      }
+      person_id_set.add(v.id);
+      return true;
+    });
+
+    update_func([...person_id_set]);
+
+  }).catch((err) => {
+    console.log(err);
+  });
+};
 
 export { person_simular_lang_keys };
 export { person_get_count_by_simular };
 export { person_get_ids_by_simular };
+export { person_ids_to_func_by_text };

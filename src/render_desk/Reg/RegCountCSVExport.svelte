@@ -1,5 +1,4 @@
 <script>
-  const env = window.require('electron').remote.process.env;
   const { ipcRenderer } = window.require('electron');
   import { Button, Modal, ModalBody, ModalHeader, ListGroup, ListGroupItem } from 'sveltestrap';
   import { db_reg } from '../../db/db';

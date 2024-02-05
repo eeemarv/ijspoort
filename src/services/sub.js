@@ -18,6 +18,8 @@ import { gate_nfc_enabled } from './store';
 import { gate_nfc_open_time } from './store';
 import { sound_ok_enabled } from './store';
 import { sound_error_enabled } from './store';
+import { focus_year } from './store';
+import { focus_year_filter_enabled } from './store';
 
 let sub_person_map = new Map();
 let sub_person_nfc_map = new Map();
@@ -39,6 +41,8 @@ let sub_gate_nfc_enabled = false;
 let sub_gate_nfc_open_time = 12;
 let sub_sound_ok_enabled = false;
 let sub_sound_error_enabled = false;
+let sub_focus_year = 0;
+let sub_focus_year_filter_enabled = false;
 
 person_map.subscribe((m) => {
   sub_person_map = m;
@@ -120,6 +124,14 @@ sound_error_enabled.subscribe((b) => {
   sub_sound_error_enabled = b;
 });
 
+focus_year.subscribe((i) => {
+  sub_focus_year = i;
+});
+
+focus_year_filter_enabled.subscribe((b) => {
+  sub_focus_year_filter_enabled = b;
+});
+
 export { sub_person_map };
 export { sub_person_nfc_map };
 export { sub_tag_type_map};
@@ -140,3 +152,5 @@ export { sub_gate_nfc_enabled };
 export { sub_gate_nfc_open_time };
 export { sub_sound_ok_enabled };
 export { sub_sound_error_enabled };
+export { sub_focus_year };
+export { sub_focus_year_filter_enabled };
