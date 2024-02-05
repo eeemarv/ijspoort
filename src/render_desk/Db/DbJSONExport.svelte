@@ -1,12 +1,9 @@
 <script>
-  const env = window.require('electron').remote.process.env;
   const { ipcRenderer } = window.require('electron');
   import { Button, Modal, ModalBody, ModalHeader } from 'sveltestrap';
-  import { db_reg, db_nfc, db_person, db_gate, db_tag } from '../../db/db';
-  import { download } from '../../services/download';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
+  import { db_json_export } from '../../db_export/db_json_export';
 
-  const db_local_prefix = env.DB_LOCAL_PREFIX;
   let open = false;
 
   const toggle = () => (open = !open);
@@ -15,43 +12,7 @@
     open = true
   });
 
-  const handle_export = () => {
-    let dbs = {};
-    db_nfc.allDocs({
-      include_docs: true
-    }).then((res) => {
-      dbs.db_nfc = res;
-      return db_reg.allDocs({
-        include_docs: true
-      });
-    }).then((res) => {
-      dbs.db_reg = res;
-      return db_person.allDocs({
-        include_docs: true
-      });
-    }).then((res) => {
-      dbs.db_person = res;
-      return db_gate.allDocs({
-        include_docs: true
-      });
-    }).then((res) => {
-      dbs.db_gate = res;
-      return db_tag.allDocs({
-        include_docs: true
-      });
-    }).then((res) => {
-      dbs.db_tag = res;
-      return true;
-    }).then(() => {
-      let time_str = (new Date()).getTime().toString();
-      download(JSON.stringify(dbs),
-        'db_' + db_local_prefix + time_str+'.json',
-        'application/json');
-      open = false;
-    }).catch((err) => {
-      console.log(err);
-    });
-  };
+
 </script>
 
 <Modal isOpen={open} {toggle}>
@@ -59,7 +20,7 @@
     Export data
   </ModalHeader>
   <ModalBody>
-    <Button color=warning on:click={handle_export}>
+    <Button color=warning on:click={() => {db_json_export(); toggle();}}>
       Export Db JSON
     </Button>
     <p>
