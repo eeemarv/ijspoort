@@ -25,7 +25,7 @@
   };
 
   const get_iso_week = (ts) => {
-    var ts_dt = new Date(ts.valueOf());
+    var ts_dt = new Date(ts);
     var day_n = (ts.getDay() + 6) % 7;
     ts_dt.setDate(ts_dt.getDate() - day_n + 3);
     var first_thursday = ts_dt.valueOf();
@@ -146,7 +146,7 @@
       res.rows.forEach((v) => {
         let ts = new Date(v.key);
 
-        week = get_iso_week(ts);
+        week = get_iso_week(v.key);
 
         if (week !== prev_week){
           next = true;

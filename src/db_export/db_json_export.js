@@ -1,12 +1,10 @@
-const env = window.require('electron').remote.process.env;
 import { db_reg } from '../db/db';
 import { db_nfc } from '../db/db';
 import { db_person } from '../db/db';
 import { db_gate } from '../db/db';
 import { db_tag } from '../db/db';
 import { download } from '../services/download';
-
-const db_local_prefix = env.DB_LOCAL_PREFIX;
+import { get_export_filename } from './export_functions';
 
 const db_json_export = () => {
   const dbs = {};
@@ -36,11 +34,8 @@ const db_json_export = () => {
     dbs.db_tag = res;
     return true;
   }).then(() => {
-    const ts = new Date();
-    const date_str = ts.toLocaleDateString('nl-be', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric'}).replace(/ /g, '_');
-    const time_str = ts.toLocaleTimeString('nl-be').replace(/:/g, '_');
     download(JSON.stringify(dbs),
-      'db_' + db_local_prefix + date_str + '_' + time_str + '.json',
+      get_export_filename('db_all', 'json'),
       'application/json');
     open = false;
   }).catch((err) => {
