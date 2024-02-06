@@ -38,7 +38,7 @@ const reg_hour_count_csv_export = () => {
     include_docs: true
   }).then((res) => {
     res.rows.forEach((v) => {
-      const ts_hour = Math.floor(v.doc.ts_epoch / 3600000) * 3600000;
+      const ts_hour = Math.floor(v.doc.ts_epoch / 3_600_000) * 3_600_000;
       if (reg_hour_map.has(ts_hour)){
         reg_hour_map.set(ts_hour, reg_hour_map.get(ts_hour) + 1);
         return;
@@ -47,7 +47,7 @@ const reg_hour_count_csv_export = () => {
     });
 
     for (const [ts_hour, r_count] of reg_hour_map){
-      if (ts_hour > ts_prev_hour + 3600000){
+      if (ts_hour > ts_prev_hour + 3_600_000){
         next = true;
       }
       if (next && hour_count && reg_count > 9){

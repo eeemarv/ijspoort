@@ -11,8 +11,6 @@
   ipcRenderer.on('db.json.export', () => {
     open = true
   });
-
-
 </script>
 
 <Modal isOpen={open} {toggle}>

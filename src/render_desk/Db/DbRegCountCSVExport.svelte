@@ -24,7 +24,7 @@
     <ListGroup>
       <ListGroupItem>
         <Button 
-          color=warning 
+          color=purple
           on:click={() => {reg_hour_count_csv_export(); toggle();}}
         >
           Export CSV aantal/zwemmoment
@@ -32,7 +32,7 @@
       </ListGroupItem>
       <ListGroupItem>
         <Button 
-          color=warning 
+          color=purple 
           on:click={() => {reg_week_count_csv_export(); toggle();}}
         >
           Export CSV aantal/week
@@ -40,7 +40,7 @@
       </ListGroupItem>
       <ListGroupItem>
         <Button 
-          color=warning 
+          color=purple 
           on:click={() => {reg_month_count_csv_export(); toggle();}}>
           Export CSV aantal/maand
         </Button>
