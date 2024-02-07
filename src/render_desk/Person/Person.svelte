@@ -17,27 +17,20 @@
   import PersonData from './PersonData.svelte';
   import { reg_add_by_desk_manual } from '../../db_put/reg_put';
   import { person_last_reg_ts_map } from '../../services/store';
-  import { reg_block_time } from '../../db_put/reg_put';
   import { get_time_str } from '../../services/functions';
+  import { person_is_already_registered } from '../../person/person_already_registered';
 
   let open_reg_list;
   let open_simular;
-  let ts_reg_fresh_after = 0;
-
-  const set_ts_reg_fresh_after = () => {
-    ts_reg_fresh_after = (new Date()).getTime() - reg_block_time;
-  };
+  let refresh_switch = false;
 
   $: person_id = $selected_person_id;
   $: person = $person_map.get(person_id) ?? {};
-  $: already_registered = person_id 
-    && $person_last_reg_ts_map.has(person_id)
-    && $person_last_reg_ts_map.get(person_id) > ts_reg_fresh_after;
+  $: already_registered = person_is_already_registered(person_id, refresh_switch);
 
   setInterval(() => {
-    set_ts_reg_fresh_after();
+    refresh_switch = !refresh_switch;
   }, 5000);
-  set_ts_reg_fresh_after();
 
   const handle_manual_reg = (() => {
     reg_add_by_desk_manual(person_id);
@@ -52,7 +45,6 @@
       behavior: 'smooth'
     });
   }
-
 </script>
 
 {#if person_id}

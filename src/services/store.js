@@ -34,15 +34,7 @@ const create_coupled_estore = (key, default_value, min_value, max_value) => {
 	};
 };
 
-/** to remove begin */
-export const person = writable();
-
-export const person_nfc_list = writable([]);
-export const nfc_uid = writable();
-/** to remove end  */
-
 export const gate_open = writable(true);
-
 export const gate_count = create_coupled_estore('gate_count', 50, -99, 999);
 export const gate_count_enabled = writable(false);
 export const gate_nfc_enabled = writable(false);
@@ -67,12 +59,6 @@ export const reg_nfc_auto_enabled = create_coupled_estore('reg_nfc_auto_enabled'
 
 export const tag_display_enabled = create_coupled_estore('tag_display_enabled', true);
 export const tag_types_enabled = create_coupled_estore('tag_types_enabled', {});
-export const tag_nfc_auto_enabled = create_coupled_estore('tag_nfc_auto_enabled', false);
-
-// to remove
-export const tag_type_enabled_sorted_id_ary = writable([]);
-export const tag_person_count_by_type = writable({});
-// end to remove
 
 export const person_map = writable(new Map());
 export const nfc_map = writable(new Map());

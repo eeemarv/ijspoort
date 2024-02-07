@@ -3,6 +3,8 @@ import { person_nfc_map } from './store';
 import { tag_type_map } from './store';
 import { tag_map } from './store';
 import { person_tag_map } from './store';
+import { auto_tag_on_nfc } from './store';
+import { tag_types_enabled } from './store';
 import { nfc_map } from './store';
 import { gate_in_map } from './store';
 import { gate_out_map } from './store';
@@ -27,6 +29,8 @@ let sub_person_nfc_map = new Map();
 let sub_tag_type_map = new Map();
 let sub_tag_map = new Map();
 let sub_person_tag_map = new Map();
+let sub_auto_tag_on_nfc = {};
+let sub_tag_types_enabled = {};
 let sub_nfc_map = new Map();
 let sub_gate_in_map = new Map();
 let sub_gate_out_map = new Map();
@@ -64,6 +68,14 @@ tag_map.subscribe((m) => {
 
 person_tag_map.subscribe((m) => {
   sub_person_tag_map = m;
+});
+
+auto_tag_on_nfc.subscribe((o) => {
+  sub_auto_tag_on_nfc = o;
+});
+
+tag_types_enabled.subscribe((o) => {
+  sub_tag_types_enabled = o;
 });
 
 nfc_map.subscribe((m) => {
@@ -143,6 +155,8 @@ export { sub_person_nfc_map };
 export { sub_tag_type_map};
 export { sub_tag_map };
 export { sub_person_tag_map };
+export { sub_auto_tag_on_nfc };
+export { sub_tag_types_enabled };
 export { sub_nfc_map };
 export { sub_gate_in_map };
 export { sub_gate_out_map };

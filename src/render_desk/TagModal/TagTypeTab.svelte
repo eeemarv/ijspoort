@@ -8,6 +8,7 @@
   import PersonTag from '../../render/Person/PersonTag.svelte';
   import { selected_person_id } from '../../services/store';
   import { tag_map } from '../../services/store';
+  import { tag_type_map } from '../../services/store';
   import Pagination from '../../render/Common/Pagination.svelte';
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import TagTypeDelButton from './TagTypeDelButton.svelte';
@@ -30,6 +31,7 @@
 
   $: total_rows = $tag_map.has(type_id) ? $tag_map.get(type_id).size : 0;
   $: set_total_rows(total_rows);
+  $: tag_type = $tag_type_map.get(type_id) ?? {};
 
 </script>
 
@@ -39,7 +41,7 @@
   </span>
 
   <Row>
-    <Col>
+    <Col md=2>
       <div>
         Totaal: {total_rows ? total_rows : '-'}        
       </div>
@@ -47,6 +49,14 @@
         <TagTypeDelButton {type_id} on:del />
         <TagTypeEditButton {type_id} on:edit />   
       </div> 
+    </Col>
+    <Col md=5>
+      <div>
+        Max/persoon: {tag_type.max_per_person}
+      </div>
+      <div>
+        Omschrijving: {tag_type.description ? tag_type.description : '-'}
+      </div>
     </Col>
     <Col>
       <Pagination

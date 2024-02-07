@@ -3,13 +3,14 @@ const { ipcRenderer } = window.require('electron');
 import { reg_add_by_desk_auto } from '../db_put/reg_put';
 import { reg_add_by_gate } from '../db_put/reg_put';
 import { ev_nfc_scan } from '../services/events';
-import { reg_block_time } from '../db_put/reg_put';
-import { sub_nfc_map, sub_person_nfc_auto_enabled } from '../services/sub';
+import { sub_nfc_map } from '../services/sub';
+import { sub_person_nfc_auto_enabled } from '../services/sub';
 import { sub_reg_nfc_auto_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
-import { sub_person_last_reg_ts_map } from '../services/sub';
 import { selected_person_id } from '../services/store';
 import { selected_nfc_id } from '../services/store';
+import { person_is_member_this_year } from '../person/person_member';
+import { person_is_already_registered } from '../person/person_already_registered';
 
 const gate_modus = env.GATE === '1';
 
@@ -46,11 +47,11 @@ const ev_nfc_scan_dispatch = (name, detail = {}) => {
   }
 };
 
+/**
+ * @returns {undefined}
+ */
 const listen_nfc = () => {
   ipcRenderer.on('nfc.on', (ev, {nfc_uid}) => {
-    const now = new Date();
-    const ts_reg_fresh_after = now.getTime() - reg_block_time;
-    const year_key = 'y' + now.getFullYear().toString();
 
     if (typeof nfc_uid !== 'string'){
       console.log('nfc_uid is not string', nfc_uid);
@@ -71,31 +72,17 @@ const listen_nfc = () => {
     const nfc = sub_nfc_map.get(nfc_id);
 
     if (!sub_person_map.has(nfc.person_id)){
-
       ev_nfc_scan_dispatch('person_not_found', {nfc_id});
-
       ipcRenderer.send('nfc.test_transport_key', {nfc_uid});
       return;
     }
 
     const person_id = nfc.person_id;
-    const person = sub_person_map.get(nfc.person_id);
-
     ev_nfc_scan_dispatch('person_found', {nfc_id});
 
-    let is_member = false;
-
-    if (typeof person.member_year === 'object'
-      && person.member_year[year_key]){
-      is_member = true;
-    }
-
-    if (!is_member){
-
+    if (!person_is_member_this_year(person_id)){
       selected_person_id.set(person_id);
-
       ev_nfc_scan_dispatch('person_not_member', {nfc_id});
-
       return;
     }
 
@@ -107,18 +94,14 @@ const listen_nfc = () => {
 
     /** register (if fresh) */
 
-    if (!sub_person_last_reg_ts_map.has(person_id)
-      || sub_person_last_reg_ts_map.get(person_id) < ts_reg_fresh_after){
-
+    if (person_is_already_registered(person_id)){
+      ev_nfc_scan_dispatch('person_already_registered', {nfc_id});
+    } else {
       if (gate_modus){
         reg_add_by_gate(nfc_id);        
       } else if (sub_reg_nfc_auto_enabled){
         reg_add_by_desk_auto(nfc_id);
       }
-    }
-    else
-    {
-      ev_nfc_scan_dispatch('person_already_registered', {nfc_id});
     }
 
     ev_nfc_scan_dispatch('person_valid_member', {nfc_id});

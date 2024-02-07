@@ -3,7 +3,6 @@
   import { tag_types_enabled } from '../../services/store';
   import { tag_type_map } from '../../services/store';
   import TagCardListItem from './TagCardListItem.svelte';
-  import { auto_tag_on_nfc } from '../../services/store';
 
 </script>
 
@@ -13,7 +12,6 @@
       <TagCardListItem 
         {type_id}
         on:open_tag_tab
-        bind:auto_tag_on_nfc={$auto_tag_on_nfc[type_id]}
       />
     {/if}
   {/each}

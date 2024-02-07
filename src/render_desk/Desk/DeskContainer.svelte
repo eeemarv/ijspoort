@@ -6,6 +6,9 @@
   import Config from '../Config/Config.svelte';
   import DeskPage from './DeskPage.svelte';
   import DbAssistImport from '../Db/DbAssistImport.svelte';
+  import { listen_tag_nfc_auto } from '../../tag/tag_nfc_auto';
+
+  listen_tag_nfc_auto();
 
   let y;
   let el_btn_to_top;
