@@ -60,7 +60,7 @@
       dispatch('updated', edit_type_id);
     }
     edit_type_id = undefined;
-    setActiveTab('types');
+    setActiveTab('type_list');
   };
 </script>
 

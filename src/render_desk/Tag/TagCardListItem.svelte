@@ -32,12 +32,15 @@
       <span class=me-3>
         {$tag_map.has(type_id) ? $tag_map.get(type_id)?.size : '-'}
       </span>
+
       <TagAddButton {type_id} />
+      
       <Checkbox title="Voeg tag automatisch toe bij gescand lid in focus jaar {$focus_year}" 
         name="auto_reg_{type_id}"
         bind:checked={auto_tag_on_nfc}
         c_class=d-inline-block
       />
+
     </div>
   </div>
 </ListGroupItem>

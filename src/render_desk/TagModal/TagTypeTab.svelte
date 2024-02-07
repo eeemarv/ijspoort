@@ -1,5 +1,6 @@
 <script>
   import { TabPane, Row, Col } from 'sveltestrap';
+  import TagTypeEditButton from './TagTypeEditButton.svelte';
   import { ListGroup } from 'sveltestrap';
   import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
   import LocaleDateString from '../../render/Common/LocaleDateString.svelte';
@@ -9,6 +10,7 @@
   import { tag_map } from '../../services/store';
   import Pagination from '../../render/Common/Pagination.svelte';
   import CountBadge from '../../render/Common/CountBadge.svelte';
+  import TagTypeDelButton from './TagTypeDelButton.svelte';
 
   export let tab;
   export let type_id;
@@ -38,7 +40,13 @@
 
   <Row>
     <Col>
-      Totaal: {total_rows ? total_rows : '-'}
+      <div>
+        Totaal: {total_rows ? total_rows : '-'}        
+      </div>
+      <div>
+        <TagTypeDelButton {type_id} on:del />
+        <TagTypeEditButton {type_id} on:edit />   
+      </div> 
     </Col>
     <Col>
       <Pagination

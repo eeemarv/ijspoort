@@ -5,6 +5,7 @@
 
   export let tab;
   export let updated_id;
+  export let deleted_id;
 
 </script>
 
@@ -33,6 +34,7 @@
           {type_id} 
           on:edit
           bind:updated_id
+          bind:deleted_id
         />
       {/each}
     </tbody>

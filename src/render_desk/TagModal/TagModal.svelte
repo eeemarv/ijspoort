@@ -15,6 +15,7 @@
 
   let edit_type_id = undefined;
   let updated_id = undefined;
+  let deleted_id = undefined;
 
   $: if (tab !== 'type_put'){
     edit_type_id = undefined;
@@ -33,7 +34,8 @@
       <TagTypeListTab
         {tab}
         bind:updated_id
-        on:edit={(e) => edit_type_id = e.detail}
+        bind:deleted_id
+        on:edit={(e) => {edit_type_id = e.detail;}}
       />
       <TagTypePutTab
         {tab}
@@ -42,7 +44,12 @@
       />
       {#each [...$tag_type_map.keys()].reverse() as type_id(type_id)}
         {#if $tag_types_enabled[type_id]}
-          <TagTypeTab {tab} {type_id} />
+          <TagTypeTab 
+            {tab} 
+            {type_id} 
+            on:edit={() => {edit_type_id = type_id;}}
+            on:del={() => {deleted_id = type_id;}}
+          />
         {/if}
       {/each}
     </TabContent>

@@ -1,45 +1,25 @@
 <script>
-  import { getContext } from 'svelte';
-  import Icon from '@iconify/svelte';
-  import timesIcon from '@iconify/icons-fa/times';
-  import pencilIcon from '@iconify/icons-fa/pencil';
-  import { createEventDispatcher } from 'svelte';
-  import { Button } from 'sveltestrap';
   import LocaleDateString from '../../render/Common/LocaleDateString.svelte';
-  import TagEnableCheckbox from './TagEnableCheckbox.svelte';
+  import TagEnableCheckbox from '../Tag/TagEnableCheckbox.svelte';
   import { tag_type_map } from '../../services/store';
   import { tag_map } from '../../services/store';
   import Tag from '../../render/Tag/Tag.svelte';
-  import { tag_type_del } from '../../db_put/tag_put';
-
-  const { setActiveTab } = getContext('tabContent');
-  const dispatch = createEventDispatcher();
+  import TagTypeEditButton from './TagTypeEditButton.svelte';
+  import TagTypeDelButton from './TagTypeDelButton.svelte';
 
   const add_detect_time = 5000;
-  const show_add_time = 1000;
-  const show_updated_time = 1000;
-  const show_del_time = 700;
+  const show_add_time = 2000;
+  const show_updated_time = 2000;
 
   export let type_id;
   export let updated_id;
+  export let deleted_id;
 
   let del = false;
   let add = false;
   let updated = false;
 
   $: tag_type = $tag_type_map.get(type_id) ?? {};
-
-  const handle_edit = () => {
-    setActiveTab('type_put');    
-    dispatch('edit', type_id);
-  };
-
-  const handle_delete = () => {
-    setTimeout(() => {
-      tag_type_del(type_id);
-    }, show_del_time);
-    del = true;
-  };
 
   $: if (typeof updated_id === 'string' 
       && updated_id === type_id){
@@ -49,6 +29,11 @@
     updated = true;
     updated_id = undefined;
   };
+
+  $: if (typeof deleted_id === 'string'
+    && deleted_id === type_id){
+    del = true;
+  }
 
   $: if (typeof tag_type !== 'undefined' 
     && tag_type.ts_epoch > ((new Date).getTime() - add_detect_time)){
@@ -82,26 +67,14 @@
     <LocaleDateString ts_epoch={tag_type.ts_epoch} title="datum van aanmaak" />
   </td>
   <td class=text-end>
-    {#if !$tag_map.has(type_id) || $tag_map.get(type_id).size === 0}
-
-      <Button
-        color=danger
-        title="tag type verwijderen"
-        on:click={handle_delete}
-      >
-        <Icon icon={timesIcon} />
-      </Button>
-
-    {/if}
-
-    <Button
-      color=primary
-      title="tag type aanpassen"
-      on:click={handle_edit}
-    >
-      <Icon icon={pencilIcon} />
-    </Button>
-  
+    <TagTypeDelButton 
+      {type_id}
+      on:del={() => {del = true;}}
+    />
+    <TagTypeEditButton
+      {type_id}
+      on:edit 
+    />  
   </td>
 </tr>
 

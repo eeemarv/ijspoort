@@ -3,7 +3,7 @@
   import TagCardHeader from './TagCardHeader.svelte';
   import TagCardList from './TagCardList.svelte';
   // import TagNfcAuto from './TagNfcAuto.svelte';
-  import TagModal from './TagModal.svelte';
+  import TagModal from '../TagModal/TagModal.svelte';
 
   let open;
   let tab;

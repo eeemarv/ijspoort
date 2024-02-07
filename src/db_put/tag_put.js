@@ -1,6 +1,6 @@
 import { db_tag } from '../db/db';
-import { sub_tag_type_map } from '../services/sub';
-import { sub_tag_map } from '../services/sub'; 
+import { sub_person_tag_map, sub_tag_type_map } from '../services/sub';
+import { sub_tag_map } from '../services/sub';
 import { tag_types_enabled } from '../services/store'; 
 import lodash from 'lodash';
 
@@ -10,39 +10,66 @@ const tag_add_flood_block_time = 1000;
 let tag_type_put_flood_blocked = false;
 const tag_type_put_flood_block_time = 1000;
 
-const tag_add = (type_id, person_id) => {
-
+/**
+ * @param {Array} type_id_ary 
+ * @param {string} person_id 
+ * @returns {undefined}
+ */
+const tag_add_bulk = (type_id_ary, person_id) => {
   if (tag_add_flood_blocked){
     console.log('flood blocked tag_add');
     return;
   }
   tag_add_flood_blocked = true;
 
-  const ts_epoch = (new Date()).getTime();
-  const id = 't' + type_id + '_' + person_id + '_' + ts_epoch.toString();
-  const tag = {
-    ts_epoch: ts_epoch,
-    person_id: person_id,
-    type_id: type_id,
-    _id: id
-  };
+  const p_map = sub_person_tag_map.get(person_id) ?? new Map();
+  const tags_bulk = [];
 
-  db_tag.put(tag).then((res) => {
-    console.log('db_tag.put');
-    console.log(res);
+  for (const type_id of type_id_ary){
+    if (!sub_tag_type_map.has(type_id)){
+      continue;
+    }
+    const tag_type = sub_tag_type_map.get(type_id);
+    if (p_map.has(type_id)){
+      const tag_count = p_map.get(type_id).size;
+      if (tag_type.max_per_person <= tag_count){
+        continue;
+      }
+    }
+    const ts_epoch = (new Date()).getTime();
+    const id = 't' + type_id + '_' + person_id + '_' + ts_epoch.toString();
+    tags_bulk.push({
+      ts_epoch: ts_epoch,
+      person_id: person_id,
+      type_id: type_id,
+      _id: id
+    });
+  }
+
+  console.log('-- tags_bulk', tags_bulk);
+
+  if (!tags_bulk.length){
+    tag_add_flood_blocked = false;    
+    return;
+  }
+
+  db_tag.bulkDocs(tags_bulk).then((res) => {
+    console.log('db_tag.bulkDocs', res);
 
     setTimeout(() => {
       tag_add_flood_blocked = false;
     }, tag_add_flood_block_time);
 
   }).catch((err) => {
-    console.log('ERR db_tag.put');
-    console.log(err);
+    console.log('ERR db_tag.put', err);
   });
 };
 
+/**
+ * @param {Object} tag_type 
+ * @returns {undefined}
+ */
 const tag_type_put = (tag_type) => {
-
   if (tag_type_put_flood_blocked){
     console.log('flood blocked tag_type_put');
     return;
@@ -85,11 +112,14 @@ const tag_type_put = (tag_type) => {
     }, tag_type_put_flood_block_time);
 
   }).catch((err) => {
-    console.log('ERR db_tag.put');
-    console.log(err);
+    console.log('ERR db_tag.put', err);
   });
 };
 
+/**
+ * @param {string} type_id 
+ * @returns {undefined}
+ */
 const tag_type_del = (type_id) => {
   if (sub_tag_map.has(type_id)
     && sub_tag_map.get(type_id).size > 0 
@@ -105,6 +135,10 @@ const tag_type_del = (type_id) => {
   });
 };
 
+/**
+ * @param {Object} tag
+ * @returns {undefined}
+ */
 const tag_del = (tag) => {
   db_tag.remove(tag).then((res) => {
     console.log('db_tag.remove', res);
@@ -113,7 +147,7 @@ const tag_del = (tag) => {
   });
 };
 
-export { tag_add };
+export { tag_add_bulk };
 export { tag_del };
 export { tag_type_put };
 export { tag_type_del };

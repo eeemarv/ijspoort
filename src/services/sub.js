@@ -2,6 +2,7 @@ import { person_map } from './store';
 import { person_nfc_map } from './store';
 import { tag_type_map } from './store';
 import { tag_map } from './store';
+import { person_tag_map } from './store';
 import { nfc_map } from './store';
 import { gate_in_map } from './store';
 import { gate_out_map } from './store';
@@ -25,6 +26,7 @@ let sub_person_map = new Map();
 let sub_person_nfc_map = new Map();
 let sub_tag_type_map = new Map();
 let sub_tag_map = new Map();
+let sub_person_tag_map = new Map();
 let sub_nfc_map = new Map();
 let sub_gate_in_map = new Map();
 let sub_gate_out_map = new Map();
@@ -58,6 +60,10 @@ tag_type_map.subscribe((m) => {
 
 tag_map.subscribe((m) => {
   sub_tag_map = m;
+});
+
+person_tag_map.subscribe((m) => {
+  sub_person_tag_map = m;
 });
 
 nfc_map.subscribe((m) => {
@@ -136,6 +142,7 @@ export { sub_person_map };
 export { sub_person_nfc_map };
 export { sub_tag_type_map};
 export { sub_tag_map };
+export { sub_person_tag_map };
 export { sub_nfc_map };
 export { sub_gate_in_map };
 export { sub_gate_out_map };
