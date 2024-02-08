@@ -71,9 +71,11 @@ const mqtt_init = (win) => {
 		console.log('listen to ipcMain.on ' + ev_main + ', relay to mqtt ' + ev_mqtt);
 		ipcMain.on(ev_main, async (ev, msg = '') => {
 			console.log('on_main ' + ev_main + ' ' + msg + ' > ev_mqtt ' + ev_mqtt);
-			//const b_msg = Buffer.from(msg, 'utf-8');
-			//console.log('b_msg', b_msg);
-			mqtt_client.publish(ev_mqtt, '' + msg, console.log);
+			mqtt_client.publishAsync(ev_mqtt, '' + msg, {}, (err) => {
+				if (err){
+					console.log(err);
+				}
+			});
 		});
 	};
 
@@ -175,13 +177,21 @@ const mqtt_init = (win) => {
 		on_main_to_mqtt('scan.person_valid_member', 'scan/person_valid_member');
 
 		setInterval(() => {
-			mqtt_client.publish('scan/p', mqtt_client_id, console.log);
+			mqtt_client.publishAsync('scan/p', mqtt_client_id, {}, (err) => {
+				if (err){
+					console.log(err);
+				}
+			});
 		}, 5000);
 	}
 
 	if (!gate_modus){
 		setInterval(() => {
-			mqtt_client.publish('desk/p', mqtt_client_id, console.log);
+			mqtt_client.publishAsync('desk/p', mqtt_client_id, {}, (err) => {
+				if (err){
+					console.log(err);
+				}
+			});
 		}, 5000);
 	}
 }
