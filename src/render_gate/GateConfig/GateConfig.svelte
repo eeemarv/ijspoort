@@ -5,7 +5,7 @@
   import GateConfigMembers from './GateConfigMembers.svelte';
   import GateConfigMax from './GateConfigMax.svelte';
   import GateConfigTemp from './GateConfigTemp.svelte';
-  import GateConfigAutoBlock from './GateConfigAutoBlock.svelte';
+  import GateConfigNfcBlock from './GateConfigNfcBlock.svelte';
   import GateConfigSound from './GateConfigSound.svelte';
 
   let open = false;
@@ -52,7 +52,7 @@
     <TabContent pills on:tab={(e) => tab = e.detail}>
       <GateConfigMembers {tab} />
       <GateConfigMax {tab} on:keypress={handle_enter} />
-      <GateConfigAutoBlock {tab} />
+      <GateConfigNfcBlock {tab} />
       <GateConfigTemp {tab} />
       <GateConfigSound {tab} />
     </TabContent>

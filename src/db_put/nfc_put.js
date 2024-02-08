@@ -1,4 +1,5 @@
 import { db_nfc } from '../db/db';
+import { nfc_id_to_uid } from '../nfc/nfc_scan';
 import { sub_nfc_map } from '../services/sub';
 import { sub_nfc_gate_auto_block_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
@@ -23,7 +24,7 @@ const nfc_add = (person_id, nfc_id) => {
   const nfc = {
     ts_epoch: (new Date()).getTime(),
     person_id: person_id,
-    uid: nfc_id.substring(4),
+    uid: nfc_id_to_uid(nfc_id),
     _id: nfc_id
   };
 
@@ -97,10 +98,10 @@ const nfc_block_others = (nfc_id) => {
     nfcs_bulk.push({...bl_nfc, 
       blocked: {
         ts_epoch: (new Date()).getTime(),
-        by_nfc_uid: nfc_id.substring(4)
+        by_nfc_uid: nfc_id_to_uid(nfc_id) 
       }
     });
-    blocked_nfc_uid_ary.push(n_id.substring(4));
+    blocked_nfc_uid_ary.push(nfc_id_to_uid(n_id));
   }
   if (blocked_nfc_uid_ary.length === 0){
     return {};

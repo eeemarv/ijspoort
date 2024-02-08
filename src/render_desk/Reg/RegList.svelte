@@ -2,15 +2,10 @@
   import { Row, Col, ListGroup, ListGroupItem } from 'sveltestrap';
   import RegItem from './RegItem.svelte';
   import { reg_map } from '../../services/store';
-
-  /**
-  import RegAlreadyGate from './RegAlreadyGate.svelte';
-  import RegAlreadyDesk from './RegAlreadyDesk.svelte';
-  import RegAlreadyTry from './RegAlreadyTry.svelte';
-  **/
-  import RegAlertGateTest from './RegAlertGateTest.svelte';
-    import RegAlertGate from './RegAlertGate.svelte';
-    import RegAlertDesk from './RegAlertDesk.svelte';
+  // import RegAlertGateTest from './RegAlertGateTest.svelte';
+  import RegAlertGate from './RegAlertGate.svelte';
+  import RegAlertDesk from './RegAlertDesk.svelte';
+  import RegAlertGateValidMember from './RegAlertGateValidMember.svelte';
 
 </script>
 
@@ -20,15 +15,12 @@
       <ListGroupItem>
           <p><br></p>
       </ListGroupItem>
-
-      <RegAlertGateTest />
-      <RegAlertGate />
-      <RegAlertDesk />
-
       <!--
-      <RegAlreadyGate />
-      <RegAlreadyDesk />
+      <RegAlertGateTest />
       -->
+      <RegAlertGate />
+      <RegAlertGateValidMember />
+      <RegAlertDesk />
 
       {#each [...$reg_map].reverse() as [reg_id, reg], index(reg._id)}
         <RegItem {reg} count={$reg_map.size - index} />

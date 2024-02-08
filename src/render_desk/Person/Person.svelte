@@ -143,7 +143,7 @@
 
   <Card>
     <CardHeader class=bg-info>
-      Gelinkte data
+      Gekoppelde data
     </CardHeader>
     <ListGroup>
     <PersonNfcList {person_id} />

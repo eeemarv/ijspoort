@@ -32,11 +32,13 @@ const topics_subscr_desk_modus = () => {
 		return [];
 	}
 	return [
-		'scan/person_already_registered',
 		'scan/nfc_not_found',
-		'scan/person_not_found',
 		'scan/nfc_blocked',
-		'scan/nfc_not_member',
+		'scan/nfc_blocked_ignored',
+		'scan/person_already_registered',			
+		'scan/person_not_found',
+		'scan/person_not_member',
+		'scan/person_valid_member',
 		'scan/p'	
 	];
 }
@@ -116,24 +118,36 @@ const mqtt_init = (win) => {
 			case 'g/p':
 				win.webContents.send('gate.pulse');
 				break;
-			case 'scan/person_already_registered':
-				// msg: nfc_id
-				win.webContents.send('scan.person_already_registered', msg);
+
+			case 'scan/nfc_not_found':
+				win.webContents.send('scan.nfc_not_found', msg);
 				break;
 			case 'scan/nfc_blocked':
 				// msg: nfc_id
 				win.webContents.send('scan.nfc_blocked', msg);
 				break;
+			case 'scan/nfc_blocked_ignored':
+				// msg: nfc_id
+				win.webContents.send('scan.nfc_blocked_ignored', msg);
+				break;
+
+			case 'scan/person_already_registered':
+				// msg: nfc_id
+				win.webContents.send('scan.person_already_registered', msg);
+				break;
+			case 'scan/person_not_found':
+				// msg: nfc_id
+				win.webContents.send('scan.person_not_found', msg);
+				break;
 			case 'scan/person_not_member':
 				// msg: nfc_id
 				win.webContents.send('scan.person_not_member', msg);
 				break;
-			case 'scan/nfc_not_found':
-				win.webContents.send('scan.nfc_not_found', msg);
+			case 'scan/person_valid_member':
+				// msg: nfc_id
+				win.webContents.send('scan.person_valid_member', msg);
 				break;
-			case 'scan/person_not_found':
-				win.webContents.send('scan.person_not_found');
-				break;
+
 			case 'scan/p':
 				win.webContents.send('scan.pulse');
 				break;
@@ -152,11 +166,16 @@ const mqtt_init = (win) => {
 		on_main_to_mqtt('gate.open', 'g/open/in');
 		on_main_to_mqtt('gate.open_once_with_timer', 'g/once/in');
 		on_main_to_mqtt('gate.close', 'g/close/in');
-		on_main_to_mqtt('scan.person_already_registered', 'scan/person_already_registered');
-		on_main_to_mqtt('scan.person_not_member', 'scan/person_not_member');
+
 		on_main_to_mqtt('scan.nfc_not_found', 'scan/nfc_not_found');
-		on_main_to_mqtt('scan.person_not_found', 'scan/person_not_found');
 		on_main_to_mqtt('scan.nfc_blocked', 'scan/blocked');
+		on_main_to_mqtt('scan.nfc_blocked_ignored', 'scan/nfc_blocked_ignored');
+	
+		on_main_to_mqtt('scan.person_already_registered', 'scan/person_already_registered');
+		on_main_to_mqtt('scan.person_not_found', 'scan/person_not_found');		
+		on_main_to_mqtt('scan.person_not_member', 'scan/person_not_member');
+		on_main_to_mqtt('scan.person_valid_member', 'scan/person_valid_member');
+
 		setInterval(() => {
 			mqtt_client.publish('scan/p', mqtt_client_id);
 		}, 5000);

@@ -4,6 +4,7 @@ import { reg_add_by_desk_auto } from '../db_put/reg_put';
 import { reg_add_by_gate } from '../db_put/reg_put';
 import { ev_nfc_scan } from '../services/events';
 import { sub_nfc_map } from '../services/sub';
+import { sub_nfc_block_enabled } from '../services/sub';
 import { sub_person_nfc_auto_enabled } from '../services/sub';
 import { sub_reg_nfc_auto_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
@@ -41,7 +42,7 @@ const ev_nfc_scan_dispatch = (name, detail = {}) => {
     detail: detail
   }));
   if (gate_modus){
-    const msg = detail.nfc_id ?? detail.nfc_uid ?? '';
+    const msg = detail.nfc_id ?? '';
     console.log('ipcRenderer.send scan.' + name + ' ' + msg);
     ipcRenderer.send('scan.' + name, msg);    
   }
@@ -87,9 +88,12 @@ const listen_nfc = () => {
     }
 
     if (typeof nfc.blocked !== 'undefined'){
-      selected_person_id.set(person_id);
-      ev_nfc_scan_dispatch('nfc_blocked', {nfc_id});
-      return;
+      if (sub_nfc_block_enabled || !gate_modus){
+        selected_person_id.set(person_id);
+        ev_nfc_scan_dispatch('nfc_blocked', {nfc_id});
+        return;        
+      }
+      ev_nfc_scan_dispatch('nfc_blocked_ignored', {nfc_id});
     }
 
     /** register (if fresh) */

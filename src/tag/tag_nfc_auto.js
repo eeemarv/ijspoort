@@ -1,5 +1,6 @@
 const env = window.require('electron').remote.process.env;
-import { sub_nfc_map, sub_person_tag_map } from '../services/sub';
+import { sub_nfc_map } from '../services/sub';
+import { sub_person_tag_map } from '../services/sub';
 import { sub_person_nfc_auto_enabled } from '../services/sub';
 import { sub_auto_tag_on_nfc } from '../services/sub';
 import { sub_tag_types_enabled } from '../services/sub';
