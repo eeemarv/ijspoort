@@ -4,7 +4,7 @@
   let show = false;
   const show_time = 500;
 
-  ipcRenderer.on('scan/person_valid_member', (ev, nfc_id) => {
+  ipcRenderer.on('scan.person_valid_member', (ev, nfc_id) => {
     setTimeout(() => {
       show = false;
     }, show_time); 
@@ -22,7 +22,9 @@
       <h3>POORT</h3>
     </div>
     <div class="col-md pt-2 pb-2">
-      Ok
+      <span>
+        Ok        
+      </span>
     </div>
   </div>
   </li>
@@ -38,6 +40,8 @@ div.b-gate{
 }
 h3 {
   font-size: .8em;
-  line-height: 2em;
+}
+span {
+  font-size: .8em;
 }
 </style>

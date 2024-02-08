@@ -43,8 +43,8 @@
   };
 
   for (const prop in listen){
-    ipcRenderer.on('scan/' + prop, (ev, nfc_id) => {
-      const d = listen[props];
+    ipcRenderer.on('scan.' + prop, (ev, nfc_id) => {
+      const d = listen[prop];
       if (d.person === true){
         if (typeof nfc_id !== 'string'){
           return;
