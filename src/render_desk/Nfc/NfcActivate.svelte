@@ -9,8 +9,8 @@
   import NfcInfoModal from './NfcInfoModal.svelte';
   import { nfc_add } from '../../db_put/nfc_put';
   import { en_nfc_status } from '../../services/enum';
-  import { nfc_uid_to_id } from '../../nfc/nfc_scan';
-  import { nfc_id_to_uid } from '../../nfc/nfc_scan';
+  import { nfc_uid_to_id } from '../../nfc/nfc_id';
+  import { nfc_id_to_uid } from '../../nfc/nfc_id';
 
   const dispatch = createEventDispatcher();
 

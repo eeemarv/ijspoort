@@ -6,7 +6,7 @@
   import { reg_nfc_auto_enabled } from '../../services/store';
   import NfcInfoModal from './NfcInfoModal.svelte';
   import { en_nfc_status } from '../../services/enum';
-  import { nfc_id_to_uid } from '../../nfc/nfc_scan';
+  import { nfc_id_to_uid } from '../../nfc/nfc_id';
 
   export let nfc_status;
   export let nfc_id;

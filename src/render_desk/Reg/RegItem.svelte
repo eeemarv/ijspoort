@@ -5,7 +5,7 @@
   import { reg_del } from '../../db_put/reg_put';
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
-  import { nfc_uid_to_id } from '../../nfc/nfc_scan';
+  import { nfc_uid_to_id } from '../../nfc/nfc_id';
 
   export let reg = undefined;
   export let count = undefined;

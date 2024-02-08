@@ -12,24 +12,9 @@ import { selected_person_id } from '../services/store';
 import { selected_nfc_id } from '../services/store';
 import { person_is_member_this_year } from '../person/person_member';
 import { person_is_already_registered } from '../person/person_already_registered';
+import { nfc_uid_to_id } from './nfc_id';
 
 const gate_modus = env.GATE === '1';
-
-/**
- * @param {string} nfc_id 
- * @returns {string}
- */
-const nfc_id_to_uid = (nfc_id) => {
-  return nfc_id.substring(4);
-};
-
-/**
- * @param {string} nfc_uid 
- * @returns {string}
- */
-const nfc_uid_to_id = (nfc_uid) => {
-  return 'uid_' + nfc_uid;
-};
 
 /**
  * local
@@ -156,6 +141,4 @@ const listen_nfc = () => {
   });
 };
 
-export { nfc_id_to_uid };
-export { nfc_uid_to_id };
 export { listen_nfc };

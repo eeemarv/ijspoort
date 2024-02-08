@@ -1,5 +1,5 @@
 import { db_nfc } from '../db/db';
-import { nfc_id_to_uid } from '../nfc/nfc_scan';
+import { nfc_id_to_uid } from '../nfc/nfc_id';
 import { sub_nfc_map } from '../services/sub';
 import { sub_nfc_gate_auto_block_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';

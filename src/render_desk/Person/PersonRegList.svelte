@@ -15,7 +15,7 @@
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import Await from '../../render/Await/Await.svelte';
   import AwaitError from '../../render/Await/AwaitError.svelte';
-  import { nfc_uid_to_id } from '../../nfc/nfc_scan';
+  import { nfc_uid_to_id } from '../../nfc/nfc_id';
 
   export let person_id = undefined;
 
