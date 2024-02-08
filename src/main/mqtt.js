@@ -188,6 +188,4 @@ const mqtt_init = (win) => {
 	}
 }
 
-module.exports = {
-	mqtt_init
-};
+module.exports = { mqtt_init };

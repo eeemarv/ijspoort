@@ -67,7 +67,7 @@ const createWindow = () => {
 				console.log(err);
 			}
 		}
-		mqtt_init();
+		mqtt_init(win);
   });
 
   if (debug_enabled){
