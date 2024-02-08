@@ -3,6 +3,7 @@
   import GateSens from '../../render/Gate/GateSens.svelte';
   import GateGraphModal from '../GateGraph/GateGraphModal.svelte';
   import { gate_open } from '../../services/store';
+  import GateAlert from './GateAlert.svelte';
 
   let open_graph_modal;
 
@@ -23,4 +24,5 @@
       </div>
     </div>
   </CardHeader>
+  <GateAlert />
 </Card>

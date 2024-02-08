@@ -32,6 +32,18 @@ const topics_subscr_desk_modus = () => {
 		return [];
 	}
 	return [
+		'scan/gate/wait',
+		'scan/gate/full',
+		'scan/gate/nfc_not_found',
+		'scan/gate/nfc_blocked',
+		'scan/gate/person_already_registered',			
+		'scan/gate/person_not_found',
+		'scan/gate/person_not_member',
+		'scan/gate/person_valid_member',
+		'scan/p'	
+	];
+/*
+	return [
 		'scan/nfc_not_found',
 		'scan/nfc_blocked',
 		'scan/nfc_blocked_ignored',
@@ -41,6 +53,7 @@ const topics_subscr_desk_modus = () => {
 		'scan/person_valid_member',
 		'scan/p'	
 	];
+*/
 }
 
 const mqtt_init = (win) => {
@@ -119,6 +132,34 @@ const mqtt_init = (win) => {
 				win.webContents.send('gate.pulse');
 				break;
 
+			case 'scan/gate/wait':
+				win.webContents.send('scan.gate.wait', msg);
+				break;
+			case 'scan/gate/full':
+				win.webContents.send('scan.gate.full', msg);
+				break;
+
+			case 'scan/gate/nfc_not_found':
+				win.webContents.send('scan.gate.nfc_not_found', msg);
+				break;
+			case 'scan/gate/nfc_blocked':
+				win.webContents.send('scan.gate.nfc_not_found', msg);
+				break;
+
+			case 'scan/gate/person_already_registered':
+					win.webContents.send('scan.gate.person_already_registered', msg);
+					break;
+			case 'scan/gate/person_not_found':
+				win.webContents.send('scan.gate.person_not_found', msg);
+				break;
+			case 'scan/gate/person_not_member':
+				win.webContents.send('scan.gate.person_not_member', msg);
+				break;
+			case 'scan/gate/person_valid_member':
+				win.webContents.send('scan.gate.person_valid_member', msg);
+				break;
+
+/*
 			case 'scan/nfc_not_found':
 				win.webContents.send('scan.nfc_not_found', msg);
 				break;
@@ -147,6 +188,7 @@ const mqtt_init = (win) => {
 				// msg: nfc_id
 				win.webContents.send('scan.person_valid_member', msg);
 				break;
+*/
 
 			case 'scan/p':
 				win.webContents.send('scan.pulse');
@@ -166,15 +208,26 @@ const mqtt_init = (win) => {
 		on_main_to_mqtt('gate.open', 'g/open/in');
 		on_main_to_mqtt('gate.open_once_with_timer', 'g/once/in');
 		on_main_to_mqtt('gate.close', 'g/close/in');
-
+/*
 		on_main_to_mqtt('scan.nfc_not_found', 'scan/nfc_not_found');
-		on_main_to_mqtt('scan.nfc_blocked', 'scan/blocked');
+		on_main_to_mqtt('scan.nfc_blocked', 'scan/nfc_blocked');
 		on_main_to_mqtt('scan.nfc_blocked_ignored', 'scan/nfc_blocked_ignored');
-	
+
 		on_main_to_mqtt('scan.person_already_registered', 'scan/person_already_registered');
 		on_main_to_mqtt('scan.person_not_found', 'scan/person_not_found');		
 		on_main_to_mqtt('scan.person_not_member', 'scan/person_not_member');
 		on_main_to_mqtt('scan.person_valid_member', 'scan/person_valid_member');
+*/
+		on_main_to_mqtt('scan.gate.wait', 'scan/gate/wait');
+		on_main_to_mqtt('scan.gate.full', 'scan/gate/full');
+
+		on_main_to_mqtt('scan.gate.nfc_not_found', 'scan/gate/nfc_not_found');
+		on_main_to_mqtt('scan.gate.nfc_blocked', 'scan/gate/nfc_blocked');
+
+		on_main_to_mqtt('scan.gate.person_already_registered', 'scan/gate/person_already_registered');
+		on_main_to_mqtt('scan.gate.person_not_found', 'scan/gate/person_not_found');		
+		on_main_to_mqtt('scan.gate.person_not_member', 'scan/gate/person_not_member');
+		on_main_to_mqtt('scan.gate.person_valid_member', 'scan/gate/person_valid_member');
 
 		setInterval(() => {
 			mqtt_client.publish('scan/p', mqtt_client_id, {}, (err) => {

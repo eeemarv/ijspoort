@@ -1,4 +1,5 @@
 <script>
+  const { ipcRenderer } = window.require('electron');
   import { Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
   import PersonTag from '../../render/Person/PersonTag.svelte';
   import GateConfig from '../GateConfig/GateConfig.svelte';
@@ -104,6 +105,7 @@
   };
 
   const launch_modal = (ev_name, nfc_id = undefined, prsn_id = undefined) => {
+    ipcRenderer.send('scan.gate.' + ev_name, nfc_id);
     const d = msgs[ev_name];
     message = d.msg;
     color = d.color;
@@ -151,6 +153,7 @@
         return;
       }
     }
+
     if (ev_name === 'person_valid_member'
       && sub_gate_count_enabled 
       && (sub_gate_count <= 0
