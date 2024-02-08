@@ -40,7 +40,7 @@
 
   setInterval(() => {
     if (open_down_count){
-      open_down_count--;
+      open_down_count = open_down_count - 1;
     }
   }, open_count_interval_time);
 
@@ -139,6 +139,7 @@
     }
     if (ev_name === 'person_already_registered'){
       already_registered_person_id = prsn_id;
+      ipcRenderer.send('scan.gate.person_already_registered', nfc_id);   
       return;
     }
     close_gate_config();

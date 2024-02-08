@@ -3,9 +3,9 @@
   import RegItem from './RegItem.svelte';
   import { reg_map } from '../../services/store';
   // import RegAlertGateTest from './RegAlertGateTest.svelte';
-  import RegAlertGate from './RegAlertGate.svelte';
+  // import RegAlertGate from './RegAlertGate.svelte';
   import RegAlertDesk from './RegAlertDesk.svelte';
-  import RegAlertGateValidMember from './RegAlertGateValidMember.svelte';
+  // import RegAlertGateValidMember from './RegAlertGateValidMember.svelte';
 
 </script>
 
@@ -17,9 +17,9 @@
       </ListGroupItem>
       <!--
       <RegAlertGateTest />
-      -->
       <RegAlertGate />
       <RegAlertGateValidMember />
+      -->  
       <RegAlertDesk />
 
       {#each [...$reg_map].reverse() as [reg_id, reg], index(reg._id)}
