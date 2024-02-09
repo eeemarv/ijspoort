@@ -3,7 +3,7 @@ import { sub_nfc_map } from '../services/sub';
 import { sub_person_last_reg_ts_map } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { sub_reg_map } from '../services/sub';
-import { nfc_block_others, nfc_block_others } from './nfc_put';
+import { nfc_block_others } from './nfc_put';
 
 let flood_blocked = false;
 const flood_block_time = 200;
