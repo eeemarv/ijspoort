@@ -91,7 +91,10 @@
     <Badge color=dark>
       Geblokkeerd: 
         {#each reg.blocked_nfc_uid_ary as nfc_uid, index(index)}
-          <NfcTag nfc_id={nfc_uid_to_id(nfc_uid)} />
+          <NfcTag 
+            nfc_id={nfc_uid_to_id(nfc_uid)} 
+            fetch_abc_index 
+          />
         {/each}
     </Badge>
   </li>

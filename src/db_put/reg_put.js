@@ -1,7 +1,9 @@
 import { db_reg } from '../db/db';
 import { sub_nfc_map } from '../services/sub';
+import { sub_person_last_reg_ts_map } from '../services/sub';
 import { sub_person_map } from '../services/sub';
-import { nfc_block_others } from './nfc_put';
+import { sub_reg_map } from '../services/sub';
+import { nfc_block_others, nfc_block_others } from './nfc_put';
 
 let flood_blocked = false;
 const flood_block_time = 200;
@@ -116,6 +118,41 @@ const reg_add_by_gate = (nfc_id) => {
   });
 };
 
+const reg_update_nfc_blocks_already_registered = (nfc_id) => {
+  if (!sub_nfc_map.has(nfc_id)){
+    console.log('nfc not found');
+    return;
+  }
+  const person_id = sub_nfc_map.get(nfc_id).person_id;
+  if (!sub_person_last_reg_ts_map.has(person_id)){
+    console.log('person last reg not found');
+    return;
+  }
+  const reg_id = 't' + sub_person_last_reg_ts_map.get(person_id).toString();
+  if (!sub_reg_map.has(reg_id)){
+    console.log('reg not found');
+    return;
+  }
+  const reg = sub_reg_map.get(reg_id);
+  if (typeof reg === 'undefined'){
+    return;
+  }
+  const nfc_block = nfc_block_others(nfc_id);
+  if (typeof nfc_block.blocked_nfc_uid_ary === 'undefined'){
+    console.log('no nfcs blocked');
+    return;
+  }
+  if (typeof reg.blocked_nfc_uid_ary === 'undefined'){
+    reg.blocked_nfc_uid_ary = [];
+  }
+  reg.blocked_nfc_uid_ary = [...reg.blocked_nfc_uid_ary, ...nfc_block.blocked_nfc_uid_ary];
+  db_reg.put(reg).then((res) => {
+    console.log('reg (already registered) - blocked nfc uids updated', res);
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
 /**
  * @param {Object} reg 
  * @returns {undefined}
@@ -133,3 +170,4 @@ export { reg_add_by_desk_manual };
 export { reg_add_by_desk_auto };
 export { reg_add_by_gate };
 export { reg_del };
+export { reg_update_nfc_blocks_already_registered };
