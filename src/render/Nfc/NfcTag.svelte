@@ -7,11 +7,13 @@
   import { person_nfc_map } from '../../services/store';
   import { get_date_str } from '../../services/functions';
 
-  export let nfc_id = undefined;
+  export let nfc_id;
   export let show_ts_epoch = false;
   export let show_uid = false;
-  export let show_abc_index = false;
-  export let show_blocked = false;
+  export let show_uid_type = false;
+  /**
+   * set either abc_index or fetch_abc_index
+   */
   export let abc_index = undefined;
   export let fetch_abc_index = false;
 
@@ -19,7 +21,7 @@
   let abc_color = undefined;
   let abc_code = undefined;
 
-  const abc_colors = ['blue', 'pink', 'red', 'orange', 'yellow', 'green', 'cyan', 'grey'];
+  const abc_colors = ['blue', 'pink', 'orange', 'yellow', 'green', 'cyan', 'grey'];
 
   const set_abc = (abc_index) => {
     if (abc_index === undefined){
@@ -34,15 +36,10 @@
   $: if (nfc_id && $nfc_map.has(nfc_id)){
     nfc = $nfc_map.get(nfc_id);
     if (fetch_abc_index){
-      let s = $person_nfc_map.get(nfc.person_id);
-
-      console.log('NFC person_id', nfc.person_id);
-      console.log('Person nfc Set ', s);
-
-      let i = [...s].indexOf(nfc_id);
-      abc_index = i === -1 ? undefined : s.size - i - 1;
+      const s = $person_nfc_map.get(nfc.person_id);
+      const i = [...s].indexOf(nfc_id);
+      abc_index = i === -1 ? undefined : i; // s.size - i - 1;
       set_abc(abc_index);
-      console.log('abc_index', abc_index);
     }
   } else {
     abc_index = undefined;
@@ -55,27 +52,30 @@
 </script>
 
 {#if $nfc_map.has(nfc_id)}
-  {#if show_abc_index}
-    <Badge color={abc_color ?? 'secondary'}
-      title="{abc_color ? 'Rangorde NFC van persoon' : 'NFC tag niet (meer) gelinkt aan persoon'}"
-    >
-      {abc_code ?? '-'}
-    </Badge>
-  {/if}
+  <div 
+    class="badge bg-{abc_color ?? 'secondary'} position-relative"
+    title="NFC toegangsbadge {nfc.uid}"    
+  >
+    {abc_code ?? '-'}
+    {#if nfc.blocked}
+      <span 
+        class="position-absolute top-0 start-100 badge bg-danger border border-light blocked"
+        title="Geblokkeerd sinds {get_date_str(nfc.blocked.ts_epoch)}"    
+      >
+        <Icon icon={banIcon} />
+        <span class="visually-hidden">Geblokkeerde tag</span>
+      </span>
+    {/if}
+  </div>
+  {#if show_uid_type}
     <Badge
       color={nfc.uid.length === 14 ? 'accent' : 'cyan'}
       title="toegangsbadge {nfc.uid}"
     >
       NFC-{nfc.uid.length / 2}b
     </Badge>
-  {#if show_blocked && nfc.blocked}
-    <Badge 
-      color=danger
-      title="Geblokkeerd sinds {get_date_str(nfc.blocked.ts_epoch)}"
-    >
-      <Icon icon={banIcon} color=light />
-    </Badge>
   {/if}
+
   {#if show_uid}
     <Badge
       color={nfc.uid.length === 14 ? 'accent' : 'cyan'}
@@ -84,8 +84,16 @@
       {nfc?.uid}
     </Badge>
   {/if}
+
   {#if show_ts_epoch}
     &nbsp;
     <LocaleDateString ts_epoch={nfc?.ts_epoch} title="datum van activatie" />
   {/if}
 {/if}
+
+<style>
+span.blocked{
+  font-size: .7em;
+  transform: translate(-50%, -.4rem);
+}
+</style>

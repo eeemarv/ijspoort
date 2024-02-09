@@ -61,7 +61,9 @@
           <Col>
             <NfcTag
               {nfc_id}
+              show_uid_type
               show_ts_epoch
+              fetch_abc_index
             />
           </Col>
         </Row>

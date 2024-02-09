@@ -61,7 +61,9 @@
           <Col sm=5>
             <CountBadge count={(nfc_list?.length ?? 0) - start_row - index} />
             <NfcTag {nfc_id}
+              show_uid_type
               show_ts_epoch
+              fetch_abc_index
             />
           </Col>
           <Col>

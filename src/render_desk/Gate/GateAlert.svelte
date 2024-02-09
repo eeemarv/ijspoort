@@ -21,7 +21,7 @@
     'person_not_found',
     'nfc_not_found',
     'nfc_blocked',
-    'already_registered'
+    'person_already_registered'
   ];
 
   let sev = undefined;
@@ -41,19 +41,21 @@
           already_registered_person_id = prsn_id;
         }
         return;
-      }
+      } 
       sev = ev;
       if (typeof prsn_id === 'string'){
+        if (prsn_id !== already_registered_person_id){
+          already_registered_person_id = undefined;
+        }
         person_id = prsn_id;
       }
       show_down_count = show_start_count;
     });
   }
 
-  $: if (!show_down_count){
-    sev = undefined;
+  $: if (show_down_count === 0){
     person_id = undefined;
-    already_registered_person_id = undefined;
+    sev = undefined;
   }
 </script>
 
@@ -67,14 +69,14 @@
       {#if sev === 'person_valid_member'}
         Ok
           {#if person_id && already_registered_person_id === person_id}
-            , <i>Reeds geregistreerd</i>
+            - <i>Reeds geregistreerd</i>
           {/if}
       {:else if sev === 'person_not_member'}
         Lidmaatschap niet in orde
       {:else if sev === 'person_not_found'}
         Geen persoonsdata
       {:else if sev === 'nfc_not_found'}
-        NFC tag niet gevonden
+        NFC tag niet herkend
       {:else if sev === 'nfc_blocked'}
         NFC tag geblokkeerd
       {:else if sev === 'wait'}

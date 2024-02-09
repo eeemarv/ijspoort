@@ -24,8 +24,18 @@ const get_time_str = (ts) => {
  */
 const get_date_str = (ts) => {
   return (new Date(ts)).toLocaleDateString('nl-BE', {weekday: 'short', month: 'short', year: 'numeric', day:'numeric'});
-}
+};
+
+const get_random_str = (length = 12) => {
+  const ch = 'abcdefghijklmnopqrstuvwxyz';
+  let r = '';
+  for (let i = 0; i < length; i++){
+    r += ch.charAt(Math.floor(Math.random() * ch.length));
+  }
+  return r;
+};
 
 export { get_search_str };
 export { get_time_str };
 export { get_date_str };
+export { get_random_str };

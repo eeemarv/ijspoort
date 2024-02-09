@@ -118,6 +118,7 @@ const nfc_block_others = (nfc_id) => {
 };
 
 /**
+ * not used
  * @param {string} nfc_id 
  * @returns {undefined}
  */
@@ -125,14 +126,35 @@ const nfc_block_manually = (nfc_id) => {
   if (!sub_nfc_map.has(nfc_id)){
     return;
   }
-  const bl_nfc = {...sub_nfc_map.get(nfc_id),
+  const nfc = {...sub_nfc_map.get(nfc_id),
     blocked: {
       ts_epoch: (new Date()).getTime(),
       by_manual: true
     }
   };
-  db_nfc.put(bl_nfc).then((res) => {
+  db_nfc.put(nfc).then((res) => {
     console.log('nfc manually blocked', res);
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
+/**
+ * @param {string} nfc_id 
+ * @returns {undefined}
+ */
+const nfc_deblock = (nfc_id) => {
+  if (!sub_nfc_map.has(nfc_id)){
+    return;
+  }
+  const nfc = {...sub_nfc_map.get(nfc_id)};
+  delete nfc.blocked;
+  if (typeof nfc.deblocked === 'undefined'){
+    nfc.deblocked = [];
+  }
+  nfc.deblocked.push((new Date()).getTime());
+  db_nfc.put(nfc).then((res) => {
+    console.log('nfc deblocked', res);
   }).catch((err) => {
     console.log(err);
   });
@@ -142,3 +164,4 @@ export { nfc_add };
 export { nfc_del };
 export { nfc_block_others };
 export { nfc_block_manually };
+export { nfc_deblock };

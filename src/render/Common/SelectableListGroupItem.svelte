@@ -1,5 +1,8 @@
 <script>
+  import { get_random_str } from '../../services/functions';
+
   export let active = false;
+  export let id = get_random_str(6);
 </script>
 
 <div
@@ -7,6 +10,7 @@
     class:active
     on:click
     on:keyup={() => {}}
+    {id}
 >
     <slot></slot>
 </div>

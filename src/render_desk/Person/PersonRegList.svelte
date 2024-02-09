@@ -108,11 +108,21 @@
                   <RegTimeTag {reg} />
                   {#if reg.nfc_uid}
                     <NfcTag nfc_id={nfc_uid_to_id(reg.nfc_uid)}
-                      show_abc_index
+                      show_uid_type
                       abc_index={res.abc_map.get(nfc_uid_to_id(reg.nfc_uid))}
                     />
                   {/if}
                   <LocaleDateString ts_epoch={reg.ts_epoch} title="datum" />
+                  {#if reg.blocked_nfc_uid_ary}
+                    <div class="badge bg-dark blocked-badge">
+                      Geblokkeerd: 
+                        {#each reg.blocked_nfc_uid_ary as nfc_uid, index(index)}
+                          <NfcTag nfc_id={nfc_uid_to_id(nfc_uid)} 
+                            abc_index={res.abc_map.get(nfc_uid_to_id(nfc_uid))}
+                          />
+                        {/each}
+                    </div>
+                  {/if}
                 </ListGroupItem>
               {/each}
             </ListGroup>
@@ -125,8 +135,12 @@
   <ModalFooterClose on:click={toggle} >
     <div slot=left>
       <span>Legende </span>
+      <Badge color=primary>
+        NFC-desk
+      </Badge>
+      &nbsp;
       <Badge color=accent>
-        NFC
+        NFC-poort
       </Badge>
       &nbsp;
       <Badge color=warning>
@@ -135,3 +149,9 @@
     </div>
   </ModalFooterClose>
 </Modal>
+
+<style>
+div.blocked-badge {
+  border: 1px solid grey;
+}
+</style>

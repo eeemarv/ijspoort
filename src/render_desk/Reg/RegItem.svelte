@@ -6,6 +6,7 @@
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
   import { nfc_uid_to_id } from '../../nfc/nfc_id';
+    import { Badge } from 'sveltestrap';
 
   export let reg = undefined;
   export let count = undefined;
@@ -81,17 +82,20 @@
       </button>
     </div>
   </div>
-  {#if reg.blocked_nfc_uid_ary}
-    <div class=bg-purple>
-      {#each reg.blocked_nfc_uid_ary as nfc_uid, index(index)}
-        <NfcTag 
-          nfc_id={nfc_uid_to_id(nfc_uid)} 
-          show_abc_index
-        />
-      {/each}
-    </div>
-  {/if}
 </li>
+{#if reg.blocked_nfc_uid_ary}
+  <li class="list-group-item bg-purple"
+    on:click={handle_select_reg}
+    on:keyup={() => {}}  
+  >
+    <Badge color=dark>
+      Geblokkeerd: 
+        {#each reg.blocked_nfc_uid_ary as nfc_uid, index(index)}
+          <NfcTag nfc_id={nfc_uid_to_id(nfc_uid)} />
+        {/each}
+    </Badge>
+  </li>
+{/if}
 
 <style>
 li:nth-child(even) {
