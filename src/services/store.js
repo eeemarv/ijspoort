@@ -55,6 +55,7 @@ export const sound_error_enabled = create_coupled_estore('sound_error_enabled', 
 
 export const person_nfc_auto_enabled = create_coupled_estore('person_nfc_auto_enabled', true);
 export const reg_nfc_auto_enabled = create_coupled_estore('reg_nfc_auto_enabled', false);
+export const reg_delete_enabled = create_coupled_estore('reg_delete_enabled', false);
 
 export const tag_display_enabled = create_coupled_estore('tag_display_enabled', true);
 export const tag_types_enabled = create_coupled_estore('tag_types_enabled', {});

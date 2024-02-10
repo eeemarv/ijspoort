@@ -5,6 +5,7 @@
   import { tag_display_enabled } from '../../services/store';
   import { nfc_reset_enabled } from '../../services/store';
   import { nfc_read_test_enabled } from '../../services/store';
+  import { reg_delete_enabled } from '../../services/store';
   import TemperatureCard from '../../render/Common/TemperatureCard.svelte';
 
   export let tab;
@@ -25,6 +26,12 @@
       <input class=form-check-input type=checkbox id=nfc_reset_enabled bind:checked={$nfc_reset_enabled}>
       <label class=form-check-label for=nfc_reset_enabled>
         Wisknop voor NFC tags
+      </label>
+    </div>
+    <div class=form-check>
+      <input class=form-check-input type=checkbox id=reg_delete_enabled bind:checked={$reg_delete_enabled}>
+      <label class=form-check-label for=reg_delete_enabled>
+        Verwijder-knoppen voor registraties
       </label>
     </div>
     <div class=form-check>

@@ -1,4 +1,5 @@
 <script>
+  import { reg_delete_enabled } from '../../services/store';
   import { selected_person_id } from '../../services/store';
   import RegTimeTag from './RegTimeTag.svelte';
   import PersonTag from '../../render/Person/PersonTag.svelte';
@@ -6,7 +7,6 @@
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
   import { nfc_uid_to_id } from '../../nfc/nfc_id';
-  import { Badge } from 'sveltestrap';
 
   export let reg = undefined;
   export let count = undefined;
@@ -78,14 +78,16 @@
       </div>
     </div>
     <div>
-      <button
-        type=button
-        color=danger
-        class="btn btn-danger"
-        on:click|stopPropagation={handle_remove_reg}
-      >
-        Verwijder
-      </button>
+      {#if $reg_delete_enabled}
+        <button
+          type=button
+          color=danger
+          class="btn btn-danger"
+          on:click|stopPropagation={handle_remove_reg}
+        >
+          Verwijder
+        </button>
+      {/if}
     </div>
   </div>
   {#if reg.blocked_nfc_uid_ary}
