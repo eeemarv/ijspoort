@@ -142,7 +142,7 @@ const mqtt_init = (win) => {
 				win.webContents.send('scan.gate.nfc_not_found', msg);
 				break;
 			case 'scan/gate/nfc_blocked':
-				win.webContents.send('scan.gate.nfc_not_found', msg);
+				win.webContents.send('scan.gate.nfc_blocked', msg);
 				break;
 
 			case 'scan/gate/person_already_registered':
