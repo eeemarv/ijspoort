@@ -46,7 +46,6 @@ const topics_subscr_desk_modus = () => {
 	return [
 		'scan/nfc_not_found',
 		'scan/nfc_blocked',
-		'scan/nfc_blocked_ignored',
 		'scan/person_already_registered',			
 		'scan/person_not_found',
 		'scan/person_not_member',
@@ -167,10 +166,6 @@ const mqtt_init = (win) => {
 				// msg: nfc_id
 				win.webContents.send('scan.nfc_blocked', msg);
 				break;
-			case 'scan/nfc_blocked_ignored':
-				// msg: nfc_id
-				win.webContents.send('scan.nfc_blocked_ignored', msg);
-				break;
 
 			case 'scan/person_already_registered':
 				// msg: nfc_id
@@ -211,7 +206,6 @@ const mqtt_init = (win) => {
 /*
 		on_main_to_mqtt('scan.nfc_not_found', 'scan/nfc_not_found');
 		on_main_to_mqtt('scan.nfc_blocked', 'scan/nfc_blocked');
-		on_main_to_mqtt('scan.nfc_blocked_ignored', 'scan/nfc_blocked_ignored');
 
 		on_main_to_mqtt('scan.person_already_registered', 'scan/person_already_registered');
 		on_main_to_mqtt('scan.person_not_found', 'scan/person_not_found');		

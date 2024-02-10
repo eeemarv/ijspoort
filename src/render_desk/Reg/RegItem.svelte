@@ -6,7 +6,7 @@
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
   import { nfc_uid_to_id } from '../../nfc/nfc_id';
-    import { Badge } from 'sveltestrap';
+  import { Badge } from 'sveltestrap';
 
   export let reg = undefined;
   export let count = undefined;

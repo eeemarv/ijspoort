@@ -4,7 +4,7 @@ import { reg_add_by_desk_auto } from '../db_put/reg_put';
 import { reg_add_by_gate } from '../db_put/reg_put';
 import { ev_nfc_scan } from '../services/events';
 import { sub_nfc_map } from '../services/sub';
-import { sub_nfc_block_enabled } from '../services/sub';
+import { sub_nfc_gate_auto_block_enabled } from '../services/sub';
 import { sub_person_nfc_auto_enabled } from '../services/sub';
 import { sub_reg_nfc_auto_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
@@ -14,6 +14,7 @@ import { person_is_member_this_year } from '../person/person_member';
 import { person_is_already_registered } from '../person/person_already_registered';
 import { nfc_uid_to_id } from './nfc_id';
 import { reg_update_nfc_blocks_already_registered } from '../db_put/reg_put';
+import { nfc_block_others } from '../db_put/nfc_put';
 
 const gate_modus = env.GATE === '1';
 
@@ -74,24 +75,32 @@ const listen_nfc = () => {
     }
 
     if (typeof nfc.blocked !== 'undefined'){
-      if (sub_nfc_block_enabled || !gate_modus){
-        selected_person_id.set(person_id);
-        ev_nfc_scan_dispatch('nfc_blocked', {nfc_id});
-        return;        
-      }
-      ev_nfc_scan_dispatch('nfc_blocked_ignored', {nfc_id});
+      selected_person_id.set(person_id);
+      ev_nfc_scan_dispatch('nfc_blocked', {nfc_id});
+      return;
     }
 
     /** register (if fresh) */
 
+    /** in gate modus, with auto block enabled check if blocks apply */
+    let nfc_block_mixin = {};
+
+    if (gate_modus && sub_nfc_gate_auto_block_enabled){
+      nfc_block_mixin = nfc_block_others(nfc_id);
+    };
+
     if (person_is_already_registered(person_id)){
       ev_nfc_scan_dispatch('person_already_registered', {nfc_id});
+
       if (gate_modus){
-        reg_update_nfc_blocks_already_registered(nfc_id);
+        if (Object.keys(nfc_block_mixin).length){
+          /** add a registration anyway when a nfc tag got blocked */
+          reg_add_by_gate(nfc_id, nfc_block_mixin);
+        }
       }
     } else {
       if (gate_modus){
-        reg_add_by_gate(nfc_id);        
+        reg_add_by_gate(nfc_id, nfc_block_mixin);        
       } else if (sub_reg_nfc_auto_enabled){
         reg_add_by_desk_auto(nfc_id);
       }

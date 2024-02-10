@@ -40,7 +40,6 @@ export const gate_count_enabled = writable(false);
 export const gate_nfc_enabled = writable(false);
 export const gate_nfc_open_time = create_coupled_estore('gate_nfc_open_time', 12, 6, 20);
 export const nfc_reset_enabled = create_coupled_estore('nfc_reset_enabled', false);
-export const nfc_block_enabled = create_coupled_estore('nfc_block_enabled', false);
 export const nfc_gate_auto_block_enabled = create_coupled_estore('nfc_gate_auto_block_enabled', false);
 
 export const nfc_read_test_enabled = create_coupled_estore('nfc_read_test_enabled', false);
