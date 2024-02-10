@@ -23,7 +23,7 @@
       water_temp = parseFloat(temp_str);
     });
 
-    ipcRenderer.on('air_temp', (ev, temp) => {
+    ipcRenderer.on('air_temp', (ev, temp_str) => {
       window.clearTimeout(air_temp_timeout_id);
       air_temp_timeout_id = window.setTimeout(() => {
         air_temp = undefined;
