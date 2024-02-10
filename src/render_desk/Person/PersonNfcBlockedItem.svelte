@@ -33,7 +33,6 @@
   placement=bottom
   target={'blocked_' + nfc_id}
   hideOnOutsideClick
-  
   dismissible
   trigger=click
 >

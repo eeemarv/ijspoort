@@ -20,7 +20,8 @@ $theme-colors: (
   cyan: darken($cyan, 10%),
   grey: $gray-600,
   white: white,
-  maroon: maroon
+  maroon: maroon,
+  deepbrown: rgb(60, 0, 0)
 );
 
 $modal-sm: 300px;

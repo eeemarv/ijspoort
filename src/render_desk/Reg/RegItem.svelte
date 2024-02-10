@@ -68,6 +68,12 @@
       <div>
         <CountBadge {count} />
         <RegTimeTag {reg} />
+        {#if reg.nfc_uid}
+          <NfcTag 
+            nfc_id={nfc_uid_to_id(reg.nfc_uid)} 
+            fetch_abc_index
+          />
+        {/if}
         <PersonTag person_id={reg.person_id} show_member_year show_tags />
       </div>
     </div>
@@ -82,13 +88,8 @@
       </button>
     </div>
   </div>
-</li>
-{#if reg.blocked_nfc_uid_ary}
-  <li class="list-group-item bg-purple"
-    on:click={handle_select_reg}
-    on:keyup={() => {}}  
-  >
-    <Badge color=dark>
+  {#if reg.blocked_nfc_uid_ary}
+    <div class="nfc-blocked mt-1 p-2">
       Geblokkeerd: 
         {#each reg.blocked_nfc_uid_ary as nfc_uid, index(index)}
           <NfcTag 
@@ -96,9 +97,10 @@
             fetch_abc_index 
           />
         {/each}
-    </Badge>
-  </li>
-{/if}
+    </div>
+  {/if}
+</li>
+
 
 <style>
 li:nth-child(even) {
@@ -110,5 +112,11 @@ li {
 li.selectable:hover{
   background-color: darkblue;
   cursor: pointer;
+}
+div.nfc-blocked {
+  background-color: rgb(55, 0, 0);
+}
+li.selectable:hover > div.nfc-blocked {
+  background-color: rgb(45, 0, 103);
 }
 </style>

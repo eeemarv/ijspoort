@@ -42,7 +42,8 @@
   {:else}
     <ListGroupItem active={$selected_nfc_id === nfc_id}>
       <NfcTag {nfc_id} {abc_index}
-        show_ts_epoch show_uid_type
+        show_ts_epoch 
+        show_uid_type
       />
     </ListGroupItem>
   {/if}

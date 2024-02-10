@@ -50,7 +50,8 @@
     {value: 'yellow', label: 'G', title: 'Geel'},
     {value: 'green', label: 'G', title: 'Groen'},
     {value: 'cyan', label: 'C', title: 'Cyaan'},
-    {value: 'grey', label: 'G', title: 'Grijs'}
+    {value: 'grey', label: 'G', title: 'Grijs'},
+    {value: 'maroon', label: 'B', title: 'Kastanjebruin'}
   ];
 
   const handle_click = () => {
