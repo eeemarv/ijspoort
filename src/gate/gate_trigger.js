@@ -87,13 +87,15 @@ const listen_gate_triggers = () => {
     handle_sens_out();
   });
 
-  ev_nfc_scan.addEventListener('gate_open_trigger', (e) => {
+  ev_nfc_scan.addEventListener('gate_open_by_nfc', (e) => {
+    /**
     if (sub_gate_nfc_enabled){
       return;
     }
     if (sub_gate_count_enabled && (sub_gate_count <= 0)){
       return;
     }
+    **/
     nfc_id = e.detail.nfc_id;
     send_gate_open_once_with_timer();
   });

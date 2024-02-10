@@ -123,7 +123,7 @@
     open_down_count = open_start_count;
     if (typeof d.open_gate === 'boolean' && d.open_gate){
       sound_ok();
-      ev_nfc_scan.dispatchEvent(new CustomEvent('gate_open_trigger', {
+      ev_nfc_scan.dispatchEvent(new CustomEvent('gate_open_by_nfc', {
         detail: {nfc_id}
       }));
       return;
