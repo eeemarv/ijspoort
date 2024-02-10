@@ -8,7 +8,7 @@
 
 <TabPane tabId=temp active={tab === 'temp'}>
   <span slot=tab>
-    Temperatuur
+    °C
   </span>
   <Card body>
     <div class=form-check>
