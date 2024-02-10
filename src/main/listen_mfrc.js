@@ -12,7 +12,7 @@ const miso_pin = 21;
 const cs_pin = 24;
 
 const probe_interval = 200;
-const steps_hold_after_uid_found = 8;
+const steps_hold_after_uid_found = 6;
 
 const listen_mfrc = (win, eStore) => {
 	const softSPI = new SoftSPI({

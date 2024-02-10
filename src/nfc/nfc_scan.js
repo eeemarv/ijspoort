@@ -17,6 +17,10 @@ import { nfc_block_others } from '../db_put/nfc_put';
 
 const gate_modus = env.GATE === '1';
 
+let flood_block_same_nfc_id = undefined;
+let flood_timeout_id = undefined;
+const flood_block_time = 3000;
+
 /**
  * local
  * @param {string} name 
@@ -46,6 +50,21 @@ const listen_nfc = () => {
     }
 
     const nfc_id = nfc_uid_to_id(nfc_uid);
+
+    if (gate_modus){
+      if (typeof flood_block_same_nfc_id === 'string'
+        && nfc_id === flood_block_same_nfc_id){
+        console.log('flood blocked scan same nfc_id ' + nfc_id);
+        return;
+      }
+
+      clearTimeout(flood_timeout_id);
+      flood_timeout_id = setTimeout(() => {
+        flood_block_same_nfc_id = undefined;      
+      }, flood_block_time);
+      flood_block_same_nfc_id = nfc_id;      
+    }
+
     selected_nfc_id.set(nfc_id);
 
     if (!sub_nfc_map.has(nfc_id)){
