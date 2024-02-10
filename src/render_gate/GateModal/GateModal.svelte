@@ -135,7 +135,7 @@
     let prsn_id = undefined;
     if (typeof nfc_id === 'string'
       && sub_nfc_map.has(nfc_id)){
-        prsn_id = sub_nfc_map.get(nfc_id).person_id;
+      prsn_id = sub_nfc_map.get(nfc_id).person_id;
     }
     if (ev_name === 'person_already_registered'){
       already_registered_person_id = prsn_id;
@@ -148,7 +148,7 @@
       const og_nfc_id = get_nfc_id_that_opened_gate();
       if (typeof og_nfc_id === 'string'
         && (typeof prsn_id === 'undefined'
-          || prsn_id !== sub_nfc_map.get(og_nfc_id).person 
+          || prsn_id !== sub_nfc_map.get(og_nfc_id).person_id 
       )){
         launch_modal('wait', nfc_id, prsn_id);
         return;
