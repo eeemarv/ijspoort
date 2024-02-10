@@ -13,7 +13,6 @@ import { selected_nfc_id } from '../services/store';
 import { person_is_member_this_year } from '../person/person_member';
 import { person_is_already_registered } from '../person/person_already_registered';
 import { nfc_uid_to_id } from './nfc_id';
-import { reg_update_nfc_blocks_already_registered } from '../db_put/reg_put';
 import { nfc_block_others } from '../db_put/nfc_put';
 
 const gate_modus = env.GATE === '1';

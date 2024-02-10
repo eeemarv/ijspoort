@@ -133,4 +133,3 @@ export { reg_add_by_desk_manual };
 export { reg_add_by_desk_auto };
 export { reg_add_by_gate };
 export { reg_del };
-export { reg_update_nfc_blocks_already_registered };
