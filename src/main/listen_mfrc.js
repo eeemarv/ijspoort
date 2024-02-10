@@ -11,8 +11,8 @@ const mosi_pin = 19;
 const miso_pin = 21;
 const cs_pin = 24;
 
-const probe_interval = 50;
-const steps_hold_after_uid_found = 20; // 20 * 50 ms = 1 sec
+const probe_interval = 200;
+const steps_hold_after_uid_found = 8;
 
 const listen_mfrc = (win, eStore) => {
 	const softSPI = new SoftSPI({
@@ -30,7 +30,7 @@ const listen_mfrc = (win, eStore) => {
 		SELECT2: 0x95,
 		ANTICOL3: 0x97,
 		BitFramingReg: 0x0d
-	}
+	};
 
 	rpio.open(buzzer_pin, rpio.OUTPUT);
 	rpio.write(buzzer_pin, rpio.HIGH);
@@ -171,12 +171,6 @@ const listen_mfrc = (win, eStore) => {
 			no_find_countdown = steps_hold_after_uid_found;
 			return;
 		}
-
-		/*
-		if (tmp_uid !== ''){
-			// nfc.off
-		}
-		*/
 
 		console.log('MFRC522 nfc.on uid: ', res_uid);
 		win.webContents.send('nfc.on', {nfc_uid: res_uid});
