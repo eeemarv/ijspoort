@@ -28,7 +28,7 @@
       air_temp_timeout_id = window.setTimeout(() => {
         air_temp = undefined;
       }, air_temp_valid_time);
-      air_temp = perseFloat(temp_str);
+      air_temp = parseFloat(temp_str);
     });
   });
 </script>
