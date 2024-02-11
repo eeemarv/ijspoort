@@ -35,6 +35,8 @@
   let checked_focus_year = false;
   let checked_has_person = true;
   let checked_has_no_person = true;
+  let checked_is_blocked = true;
+  let checked_is_not_blocked = true;
 
   export const toggle = () => {
     open = !open
@@ -91,6 +93,16 @@
             continue;
           }
         }
+      }
+
+      const is_blocked = typeof nfc.blocked !== 'undefined';
+
+      if (is_blocked && !checked_is_blocked){
+        continue;
+      }
+
+      if (!is_blocked && !checked_is_not_blocked){
+        continue;
       }
 
       if (nfc.uid.length === 8){
@@ -207,6 +219,8 @@
     checked_focus_year;
     checked_has_person;
     checked_has_no_person;
+    checked_is_blocked;
+    checked_is_not_blocked;
     $nfc_map;
     $person_map;
     if (open){
@@ -267,6 +281,20 @@
         >
           Persoon niet gelinkt
         </Checkbox>
+        <Checkbox
+          title="Toon geblokkeerde nfc tags"
+          bind:checked={checked_is_blocked}
+          name=checked_is_blocked
+        > 
+          Geblokkeerd
+        </Checkbox>
+        <Checkbox
+          title="Toon niet geblokkeerde nfc tags"
+          bind:checked={checked_is_not_blocked}
+          name=checked_is_not_blocked
+        > 
+          Niet geblokkeerd
+        </Checkbox>       
       </Col>
       <Col sm=5>
         <Pagination
