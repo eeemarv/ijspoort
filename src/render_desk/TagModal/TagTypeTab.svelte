@@ -12,6 +12,7 @@
   import Pagination from '../../render/Common/Pagination.svelte';
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import TagTypeDelButton from './TagTypeDelButton.svelte';
+  import { person_map } from '../../services/store';
 
   export let tab;
   export let type_id;
@@ -72,6 +73,7 @@
       <SelectableListGroupItem
         active={$selected_person_id === person_id}
         on:click={() => handle_person_select(person_id)}
+        selectable={$person_map.has(person_id)}
       >
         <Row>
           <Col md=5>

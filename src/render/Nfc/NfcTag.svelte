@@ -54,7 +54,7 @@
 {#if $nfc_map.has(nfc_id)}
   <div 
     class="badge bg-{abc_color ?? 'secondary'} position-relative"
-    title="NFC toegangsbadge {nfc.uid}"    
+    title="NFC toegangsbadge {nfc.uid} persoon {nfc.person_id}"    
   >
     {abc_code ?? '-'}
     {#if nfc.blocked}

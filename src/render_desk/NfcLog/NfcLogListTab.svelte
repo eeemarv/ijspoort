@@ -10,6 +10,7 @@
   import PersonTag from '../../render/Person/PersonTag.svelte';
   import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
   import CountBadge from '../../render/Common/CountBadge.svelte';
+  import { person_map } from '../../services/store';
 
   const dispatch = createEventDispatcher();
 
@@ -56,6 +57,7 @@
       <SelectableListGroupItem
         active={$selected_person_id && $selected_person_id === person_id}
         on:click={() => handle_click(person_id)}
+        selectable={$person_map.has(person_id)}
       >
         <Row>
           <Col sm=5>

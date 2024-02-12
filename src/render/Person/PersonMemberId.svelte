@@ -1,11 +1,12 @@
 <script>
-  import { person_map } from '../../services/store';
+  //import { person_map } from '../../services/store';
+  import { person_id_to_member_id } from '../../person/person_id';
 
   export let person_id = undefined;
 </script>
 
 <span class="badge bg-secondary" title="lidnummer">
-  {$person_map.get(person_id)?.member_id ?? '***'}
+  {person_id_to_member_id(person_id)}
 </span>
 
 <style>

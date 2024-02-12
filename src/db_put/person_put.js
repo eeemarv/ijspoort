@@ -4,6 +4,7 @@ import { get_search_str } from '../services/functions';
 import { sub_person_map } from '../services/sub';
 import { person_build_idx_by_text } from '../db_idx/person_idx';
 import { person_build_idx_by_simular } from '../db_idx/person_idx';
+import { member_id_to_person_id } from '../person/person_id';
 
 const XLSX = require('xlsx');
 
@@ -137,7 +138,7 @@ const person_assist_import = (file, assist_import_year) => {
       return;
     }
 
-    const person_id = 'n' + prsn.member_id.padStart(8, '0');
+    const person_id = member_id_to_person_id(prsn.member_id);
     prsn._id = person_id;
 
     if (import_map.has(person_id)){

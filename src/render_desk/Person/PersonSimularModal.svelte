@@ -56,6 +56,7 @@
           <SelectableListGroupItem
             active={p_id === $selected_person_id}
             on:click={handle_select(p_id)}
+            selectable={$person_map.has(p_id)}
           >
             <PersonTag person_id={p_id} show_member_year show_tags />
           </SelectableListGroupItem>

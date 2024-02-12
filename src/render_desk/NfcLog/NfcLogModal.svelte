@@ -129,12 +129,7 @@
         l_nfc_month_count++;
       }
 
-      if (has_person){
-        f_nfc_list.push([nfc_id, nfc.person_id]);
-      } else {
-        f_nfc_list.push([nfc_id]);  
-        continue;
-      }
+      f_nfc_list.push([nfc_id, nfc.person_id]);
 
       const p_nfc_set = $person_nfc_map.get(nfc.person_id);
 
