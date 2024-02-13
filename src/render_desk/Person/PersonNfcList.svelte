@@ -1,9 +1,12 @@
 <script>
-  import { nfc_map, person_nfc_map } from '../../services/store';
-  import { ListGroupItem } from 'sveltestrap';
+  import { nfc_map } from '../../services/store';
+  import { person_nfc_map } from '../../services/store';
+  import { Button } from 'sveltestrap';
+  import { Popover } from 'sveltestrap';
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
   import { selected_nfc_id } from '../../services/store';
-    import PersonNfcBlockedItem from './PersonNfcBlockedItem.svelte';
+  import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
+  import { nfc_deblock } from '../../db_put/nfc_put';
 
   export let person_id = undefined;
 
@@ -34,17 +37,42 @@
     }
   }
 
+  const deblock = () => {
+    nfc_deblock(nfc_id);
+  };
 </script>
 
 {#each nfc_id_list as {nfc_id, abc_index, blocked}(nfc_id)}
+  <SelectableListGroupItem
+    active={$selected_nfc_id === nfc_id}
+    selectable={blocked}
+    id={blocked ? 'blocked_' + nfc_id : undefined}
+  >
+    <NfcTag 
+      {nfc_id} 
+      {abc_index}
+      show_ts_epoch 
+      show_uid_type
+    />
+  </SelectableListGroupItem>
   {#if blocked}
-    <PersonNfcBlockedItem {nfc_id} {abc_index} />
-  {:else}
-    <ListGroupItem active={$selected_nfc_id === nfc_id}>
-      <NfcTag {nfc_id} {abc_index}
-        show_ts_epoch 
-        show_uid_type
-      />
-    </ListGroupItem>
+    <Popover
+      placement=bottom
+      target={'blocked_' + nfc_id}
+      hideOnOutsideClick
+      dismissible
+      trigger=click
+    >
+      <div slot=title>
+        Geblokkeerde NFC tag 
+        <NfcTag {nfc_id} {abc_index} />           
+      </div>
+      <Button 
+        color=warning 
+        on:click={() => {nfc_deblock(nfc_id);}}  
+      >
+        Deblokkeer
+      </Button>          
+    </Popover>
   {/if}
 {/each}
