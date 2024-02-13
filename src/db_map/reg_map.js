@@ -25,12 +25,11 @@ const reg_map_build = async () => {
     reg_map.update((m) => {
       m.clear();
       reg_ary.forEach((v) => {
-        if (typeof v.doc.blocked_nfc_uid_ary === 'undefined'){
-          m.set(v.id, {...v.doc});
-        } else {
-          const blocked_nfc_uid_ary = [...v.doc.blocked_nfc_uid_ary];
-          m.set(v.id, {...v.doc, blocked_nfc_uid_ary});
+        const mx = {};
+        if (typeof v.doc.blocked_nfcs !== 'undefined'){
+          mx.blocked_nfcs = [...v.doc.blocked_nfcs];
         }
+        m.set(v.id, {...v.doc, ...mx});        
         last_ts_epoch = v.doc.ts_epoch;
       });
       return m;
@@ -119,13 +118,11 @@ const reg_map_listen_changes = () => {
       });
 
       reg_map.update((m) => {
-        if (typeof change.doc.blocked_nfc_uid_ary === 'undefined'){
-          m.set(change.id, {...change.doc});
-        } else {
-          const blocked_nfc_uid_ary = [...change.doc.blocked_nfc_uid_ary];
-          m.set(change.id, {...change.doc, blocked_nfc_uid_ary});
+        const mx = {};
+        if (typeof change.doc.blocked_nfcs !== 'undefined'){
+          mx.blocked_nfcs = [...change.doc.blocked_nfcs];
         }
-
+        m.set(change.id, {...change.doc, ...mx});
         last_ts_epoch = change.doc.ts_epoch;
         return m;
       });

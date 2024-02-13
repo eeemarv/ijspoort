@@ -45,7 +45,7 @@ const nfc_add = (person_id, nfc_id) => {
 };
 
 /**
- * @param {string} nfc_id 
+ * @param {string} nfc_id
  * @returns {undefined} 
  */
 const nfc_del = (nfc_id) => {
@@ -62,13 +62,18 @@ const nfc_del = (nfc_id) => {
 
 /**
  * @param {string} nfc_id
- * @returns {Object} mixin for reg_add
+ * @param {int} ts_epoch
+ * @returns {Object} mixin for reg_add (can contain prop blocked_nfcs)
  */
-const nfc_block_others = (nfc_id) => {
+const nfc_block_others = (nfc_id, ts_epoch) => {
   if (!sub_nfc_gate_auto_block_enabled){
     return {};
   }
   if (!sub_nfc_map.has(nfc_id)){
+    return {};
+  }
+  if (!Number.isInteger(ts_epoch) || !ts_epoch){
+    console.log('incorrect ts_epoch', ts_epoch);
     return {};
   }
   const nfc = sub_nfc_map.get(nfc_id);
@@ -83,7 +88,7 @@ const nfc_block_others = (nfc_id) => {
     return {};
   }
   const nfcs_bulk = [];
-  const blocked_nfc_uid_ary = [];
+  const blocked_nfcs = [];
   for (const n_id of nfc_id_set){
     if (n_id === nfc_id){
       continue;
@@ -95,15 +100,25 @@ const nfc_block_others = (nfc_id) => {
     if (typeof bl_nfc.blocked !== 'undefined'){
       continue;
     }
-    nfcs_bulk.push({...bl_nfc, 
-      blocked: {
-        ts_epoch: (new Date()).getTime(),
-        by_nfc_uid: nfc_id_to_uid(nfc_id) 
+    const block_hs = [];
+    if (typeof bl_nfc.block_hs !== 'undefined'){
+      for (const a of bl_nfc.block_hs){
+        block_hs.push({...a});
       }
+    }
+    block_hs.push({
+      blocked: true,
+      ts_epoch,
+      by_nfc_uid: nfc_id_to_uid(nfc_id),   
     });
-    blocked_nfc_uid_ary.push(nfc_id_to_uid(n_id));
+    nfcs_bulk.push({
+      ...bl_nfc, 
+      blocked: true,
+      block_hs
+    });
+    blocked_nfcs.push(nfc_id_to_uid(n_id));
   }
-  if (blocked_nfc_uid_ary.length === 0){
+  if (blocked_nfcs.length === 0){
     return {};
   }
   console.log('-- blocked nfcs, nfcs_bulk:', nfcs_bulk);
@@ -114,7 +129,7 @@ const nfc_block_others = (nfc_id) => {
     console.log(err);
   });
 
-  return {blocked_nfc_uid_ary};
+  return {blocked_nfcs};
 };
 
 /**
@@ -126,11 +141,22 @@ const nfc_block_manually = (nfc_id) => {
   if (!sub_nfc_map.has(nfc_id)){
     return;
   }
-  const nfc = {...sub_nfc_map.get(nfc_id),
-    blocked: {
-      ts_epoch: (new Date()).getTime(),
-      by_manual: true
+  const bl_nfc = sub_nfc_map.get(nfc_id);
+  const block_hs = [];
+  if (typeof bl_nfc.block_hs !== 'undefined'){
+    for (const a of bl_nfc.block_hs){
+      block_hs.push({...a});
     }
+  }
+  block_hs.push({
+    blocked: true,
+    ts_epoch: (new Date()).getTime(),
+    by_manual: true
+  });
+  const nfc = {
+    ...bl_nfc,
+    blocked: true,
+    block_hs
   };
   db_nfc.put(nfc).then((res) => {
     console.log('nfc manually blocked', res);
@@ -147,12 +173,26 @@ const nfc_deblock = (nfc_id) => {
   if (!sub_nfc_map.has(nfc_id)){
     return;
   }
-  const nfc = {...sub_nfc_map.get(nfc_id)};
-  delete nfc.blocked;
-  if (typeof nfc.deblocked === 'undefined'){
-    nfc.deblocked = [];
+  const bl_nfc = {...sub_nfc_map.get(nfc_id)};
+  if (typeof bl_nfc.blocked === 'undefined'){
+    console.log('nfc was not blocked', bl_nfc);
+    return;
   }
-  nfc.deblocked.push((new Date()).getTime());
+  delete bl_nfc.blocked;
+  const block_hs = [];
+  if (typeof bl_nfc.block_hs !== 'undefined'){
+    for (const a of bl_nfc.block_hs){
+      block_hs.push({...a});
+    }
+  }
+  block_hs.push({
+    blocked: false,
+    ts_epoch: (new Date()).getTime()
+  });
+  const nfc = {
+    ...bl_nfc,
+    block_hs
+  };
   db_nfc.put(nfc).then((res) => {
     console.log('nfc deblocked', res);
   }).catch((err) => {

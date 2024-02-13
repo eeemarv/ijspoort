@@ -19,6 +19,13 @@ const get_time_str = (ts) => {
 };
 
 /**
+ * @returns {int}
+ */
+const get_ts_epoch = () => {
+  return (new Date()).getTime();
+};
+
+/**
  * @param {int} ts 
  * @returns {string}
  */
@@ -37,5 +44,6 @@ const get_random_str = (length = 12) => {
 
 export { get_search_str };
 export { get_time_str };
+export { get_ts_epoch };
 export { get_date_str };
 export { get_random_str };

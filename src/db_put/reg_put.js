@@ -1,6 +1,7 @@
 import { db_reg } from '../db/db';
 import { sub_nfc_map } from '../services/sub';
 import { sub_person_map } from '../services/sub';
+import { ts_epoch_to_reg_id } from '../reg/reg_id';
 
 let flood_blocked = false;
 const flood_block_time = 200;
@@ -35,14 +36,14 @@ const reg_put = (reg) => {
 };
 
 /**
- * local function
+ * local func
+ * @param {int} ts_epoch
  * @returns {Object} {ts_epoch, _id}
  */
-const get_new_reg_base = () => {
-  const ts_epoch = (new Date()).getTime();
+const get_new_reg_base = (ts_epoch) => {
   return {
-    ts_epoch: ts_epoch,
-    _id: 't' + ts_epoch.toString()
+    ts_epoch,
+    _id: ts_epoch_to_reg_id(ts_epoch)
   };
 };
 
@@ -60,10 +61,11 @@ const get_from_nfc = (nfc_id) => {
 };
 
 /**
- * @param {string} person_id 
+ * @param {string} person_id
+ * @param {int} ts_epoch
  * @returns {undefined}
  */
-const reg_add_by_desk_manual = (person_id) => {
+const reg_add_by_desk_manual = (person_id, ts_epoch) => {
   if (reg_blocked()){
     return;
   }
@@ -71,7 +73,7 @@ const reg_add_by_desk_manual = (person_id) => {
     return;
   }
   reg_put({
-    ...get_new_reg_base(),
+    ...get_new_reg_base(ts_epoch),
     person_id,
     manual: true,
     desk: true
@@ -82,7 +84,7 @@ const reg_add_by_desk_manual = (person_id) => {
  * @param {string} nfc_id 
  * @returns {undefined}
  */
-const reg_add_by_desk_auto = (nfc_id) => {
+const reg_add_by_desk_auto = (nfc_id, ts_epoch) => {
   if (reg_blocked()){
     return;
   }
@@ -90,7 +92,7 @@ const reg_add_by_desk_auto = (nfc_id) => {
     return;
   }
   reg_put({
-    ...get_new_reg_base(),
+    ...get_new_reg_base(ts_epoch),
     ...get_from_nfc(nfc_id),
     desk: true  
   });
@@ -98,10 +100,11 @@ const reg_add_by_desk_auto = (nfc_id) => {
 
 /**
  * @param {string} nfc_id
- * @param {object} nfc_block_mixin result from nfc_block_others(), can contain property blocked_nfc_uid_ary
+ * @param {int} ts_epoch
+ * @param {object} nfc_block_mixin result from nfc_block_others(), can contain property blocked_nfcs
  * @returns {undefined}
  */
-const reg_add_by_gate = (nfc_id, nfc_block_mixin = {}) => {
+const reg_add_by_gate = (nfc_id, ts_epoch, nfc_block_mixin = {}) => {
   if (reg_blocked()){
     return;
   }
@@ -109,7 +112,7 @@ const reg_add_by_gate = (nfc_id, nfc_block_mixin = {}) => {
     return;
   }
   reg_put({
-    ...get_new_reg_base(),
+    ...get_new_reg_base(ts_epoch),
     ...get_from_nfc(nfc_id),
     ...nfc_block_mixin,
     gate: true

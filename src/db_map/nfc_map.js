@@ -24,12 +24,11 @@ const nfc_map_build = async () => {
     nfc_map.update((m) => {
       m.clear();
       nfc_ary.forEach((v) => {
-        if (typeof v.doc.blocked === 'undefined'){
-          m.set(v.id, {...v.doc});          
-        } else {
-          const blocked = {...v.doc.blocked};
-          m.set(v.id, {...v.doc, blocked});
+        const mx = {};
+        if (typeof v.doc.block_hs !== 'undefined'){
+          mx.block_hs = v.doc.block_hs.map((a) => {return {...a};});         
         }
+        m.set(v.id, {...v.doc, ...mx});
         last_ts_epoch = v.doc.ts_epoch;
       });
       return m;
@@ -102,12 +101,11 @@ const nfc_map_listen_changes = () => {
        * In sequence: add nfc to maps
       */
       nfc_map.update((m) => {
-        if (typeof change.doc.blocked === 'undefined'){
-          m.set(change.id, {...change.doc});          
-        } else {
-          const blocked = {...change.doc.blocked};
-          m.set(change.id, {...change.doc, blocked});
+        const mx = {};
+        if (typeof change.doc.block_hs !== 'undefined'){
+          mx.block_hs = change.doc.block_hs.map((a) => {return {...a};});
         }
+        m.set(change.id, {...change.doc, ...mx})
         last_ts_epoch = change.ts_epoch;
         return m;
       });

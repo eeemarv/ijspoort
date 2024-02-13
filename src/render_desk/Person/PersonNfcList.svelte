@@ -21,7 +21,7 @@
         id_ary.push({
           nfc_id: nfc_id,
           abc_index: s.size - i - 1,
-          blocked: typeof $nfc_map.get(nfc_id).blocked === 'object'
+          blocked: typeof $nfc_map.get(nfc_id).blocked !== 'undefined'
         });
       });
     }
@@ -46,7 +46,7 @@
   <SelectableListGroupItem
     active={$selected_nfc_id === nfc_id}
     selectable={blocked}
-    id={blocked ? 'blocked_' + nfc_id : undefined}
+    id={'tag_' + nfc_id}
   >
     <NfcTag 
       {nfc_id} 
@@ -55,24 +55,22 @@
       show_uid_type
     />
   </SelectableListGroupItem>
-  {#if blocked}
-    <Popover
-      placement=bottom
-      target={'blocked_' + nfc_id}
-      hideOnOutsideClick
-      dismissible
-      trigger=click
+
+  <Popover
+    placement=bottom
+    target={'tag_' + nfc_id}
+    hideOnOutsideClick
+    dismissible
+  >
+    <div slot=title>
+      Geblokkeerde NFC tag 
+      <NfcTag {nfc_id} {abc_index} />           
+    </div>
+    <Button 
+      color=purple 
+      on:click={() => {nfc_deblock(nfc_id);}}  
     >
-      <div slot=title>
-        Geblokkeerde NFC tag 
-        <NfcTag {nfc_id} {abc_index} />           
-      </div>
-      <Button 
-        color=warning 
-        on:click={() => {nfc_deblock(nfc_id);}}  
-      >
-        Deblokkeer
-      </Button>          
-    </Popover>
-  {/if}
+      Deblokkeer
+    </Button>          
+  </Popover>
 {/each}

@@ -113,10 +113,10 @@
                     />
                   {/if}
                   <LocaleDateString ts_epoch={reg.ts_epoch} title="datum" />
-                  {#if reg.blocked_nfc_uid_ary}
+                  {#if reg.blocked_nfcs}
                     <div class="badge bg-deepbrown blocked-badge">
                       Geblokkeerd: 
-                        {#each reg.blocked_nfc_uid_ary as nfc_uid, index(index)}
+                        {#each reg.blocked_nfcs as nfc_uid, index(index)}
                           <NfcTag nfc_id={nfc_uid_to_id(nfc_uid)} 
                             abc_index={res.abc_map.get(nfc_uid_to_id(nfc_uid))}
                           />

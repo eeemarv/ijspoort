@@ -18,6 +18,7 @@
   import { reg_add_by_desk_manual } from '../../db_put/reg_put';
   import { person_last_reg_ts_map } from '../../services/store';
   import { get_time_str } from '../../services/functions';
+  import { get_ts_epoch } from '../../services/functions';
   import { person_is_already_registered } from '../../person/person_already_registered';
 
   let open_reg_list;
@@ -33,7 +34,7 @@
   }, 5000);
 
   const handle_manual_reg = (() => {
-    reg_add_by_desk_manual(person_id);
+    reg_add_by_desk_manual(person_id, get_ts_epoch());
     $selected_person_id = undefined;
   });
 

@@ -14,6 +14,7 @@ import { person_is_member_this_year } from '../person/person_member';
 import { person_is_already_registered } from '../person/person_already_registered';
 import { nfc_uid_to_id } from './nfc_id';
 import { nfc_block_others } from '../db_put/nfc_put';
+import { get_ts_epoch } from '../services/functions';
 
 const gate_modus = env.GATE === '1';
 
@@ -43,6 +44,7 @@ const ev_nfc_scan_dispatch = (name, detail = {}) => {
  */
 const listen_nfc = () => {
   ipcRenderer.on('nfc.on', (ev, {nfc_uid}) => {
+    const ts_epoch = get_ts_epoch();
 
     if (typeof nfc_uid !== 'string'){
       console.log('nfc_uid is not string', nfc_uid);
@@ -104,7 +106,7 @@ const listen_nfc = () => {
     let nfc_block_mixin = {};
 
     if (gate_modus && sub_nfc_gate_auto_block_enabled){
-      nfc_block_mixin = nfc_block_others(nfc_id);
+      nfc_block_mixin = nfc_block_others(nfc_id, ts_epoch);
     };
 
     if (person_is_already_registered(person_id)){
@@ -113,14 +115,14 @@ const listen_nfc = () => {
       if (gate_modus){
         if (Object.keys(nfc_block_mixin).length){
           /** add a registration anyway when a nfc tag got blocked */
-          reg_add_by_gate(nfc_id, nfc_block_mixin);
+          reg_add_by_gate(nfc_id, ts_epoch, nfc_block_mixin);
         }
       }
     } else {
       if (gate_modus){
-        reg_add_by_gate(nfc_id, nfc_block_mixin);        
+        reg_add_by_gate(nfc_id, ts_epoch, nfc_block_mixin);        
       } else if (sub_reg_nfc_auto_enabled){
-        reg_add_by_desk_auto(nfc_id);
+        reg_add_by_desk_auto(nfc_id, ts_epoch);
       }
     }
 

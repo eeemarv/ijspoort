@@ -90,10 +90,10 @@
       {/if}
     </div>
   </div>
-  {#if reg.blocked_nfc_uid_ary}
+  {#if reg.blocked_nfcs}
     <div class="nfc-blocked mt-1 p-2">
       Geblokkeerd: 
-        {#each reg.blocked_nfc_uid_ary as nfc_uid, index(index)}
+        {#each reg.blocked_nfcs as nfc_uid, index(index)}
           <NfcTag 
             nfc_id={nfc_uid_to_id(nfc_uid)} 
             fetch_abc_index 

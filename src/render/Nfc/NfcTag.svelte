@@ -6,6 +6,7 @@
   import { nfc_map } from '../../services/store';
   import { person_nfc_map } from '../../services/store';
   import { get_date_str } from '../../services/functions';
+  import { person_id_to_member_id } from '../../person/person_id';
 
   export let nfc_id;
   export let show_ts_epoch = false;
@@ -54,13 +55,13 @@
 {#if $nfc_map.has(nfc_id)}
   <div 
     class="badge bg-{abc_color ?? 'secondary'} position-relative"
-    title="NFC toegangsbadge {nfc.uid} persoon {nfc.person_id}"    
+    title="NFC toegangsbadge {nfc.uid}, lidnummer {person_id_to_member_id(nfc.person_id)}"    
   >
     {abc_code ?? '-'}
     {#if nfc.blocked}
       <span 
         class="position-absolute top-0 start-100 badge bg-danger border border-light blocked"
-        title="Geblokkeerd sinds {get_date_str(nfc.blocked.ts_epoch)}"    
+        title="Geblokkeerd sinds {get_date_str(nfc.block_hs[nfc.block_hs.length - 1].ts_epoch)}"    
       >
         <Icon icon={banIcon} />
         <span class="visually-hidden">Geblokkeerde tag</span>

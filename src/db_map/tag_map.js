@@ -4,6 +4,7 @@ import { person_tag_map } from '../services/store';
 import { tag_types_enabled } from '../services/store';
 import { tag_map } from '../services/store';
 import { sub_tag_type_map } from '../services/sub';
+import { decompose_tag_id } from '../tag/tag_id';
 
 let last_type_ts_epoch = undefined;
 const last_ts_epoch_map = new Map();
@@ -142,10 +143,7 @@ const tag_map_listen_changes = () => {
 
       console.log('== change delete person_tag_map & tag_map', change);
 
-      const id_ary = change.id.substring(3).split('_');
-      const type_id = '0_' + id_ary[0];
-      const person_id = id_ary[1];
-      const ts_epoch = parseInt(id_ary[2]);
+      const {type_id, person_id, ts_epoch} = decompose_tag_id(change.id);
 
       person_tag_map.update((m) => {
         if (!m.has(person_id)){

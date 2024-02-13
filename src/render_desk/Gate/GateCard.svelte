@@ -1,8 +1,7 @@
 <script>
-  import { Badge, Card, CardHeader } from 'sveltestrap';
+  import { Card, CardHeader } from 'sveltestrap';
   import GateSens from '../../render/Gate/GateSens.svelte';
   import GateGraphModal from '../GateGraph/GateGraphModal.svelte';
-  import { gate_open } from '../../services/store';
   import GateAlert from './GateAlert.svelte';
   import GateBadge from '../../render/Gate/GateBadge.svelte';
 
