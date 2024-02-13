@@ -1,5 +1,5 @@
 <script>
-  import { Badge, Col, Container, Row } from 'sveltestrap';
+  import { Col, Container, Row } from 'sveltestrap';
   import Clock from '../../render/Common/Clock.svelte';
   import SyncBadge from '../../render/Common/SyncBadge.svelte';
   import GateCounterRow from '../GateCounter/GateCounterRow.svelte';
@@ -12,6 +12,7 @@
   import { gate_open } from '../../services/store';
   import { listen_gate_triggers } from '../../gate/gate_trigger';
   import GateSens from '../../render/Gate/GateSens.svelte';
+  import GateBadge from '../../render/Gate/GateBadge.svelte';
 
   listen_gate_triggers();
 
@@ -49,9 +50,7 @@
     {/if}
     <Col class="h-100 p-3 d-flex flex-column">
       <div class="h-50">
-        <Badge color="{$gate_open ? 'success' : 'dark'}">
-          Poort
-        </Badge>
+        <GateBadge />
         <GateSens />
       </div>
       <div class="h-50 d-flex justify-content-right">
