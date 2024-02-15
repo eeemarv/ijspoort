@@ -171,6 +171,7 @@ const nfc_block_manually = (nfc_id) => {
  */
 const nfc_deblock = (nfc_id) => {
   if (!sub_nfc_map.has(nfc_id)){
+    console.log('nfc not found 0 ' + nfc_id);
     return;
   }
   const bl_nfc = {...sub_nfc_map.get(nfc_id)};

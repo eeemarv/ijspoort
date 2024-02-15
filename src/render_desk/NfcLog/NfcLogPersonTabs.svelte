@@ -2,9 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import Icon from '@iconify/svelte';
   import userIcon from '@iconify/icons-fa/user';
-  import { ListGroupItem } from 'sveltestrap';
   import { Row, Col } from 'sveltestrap';
-  import { ListGroup } from 'sveltestrap';
   import { TabPane } from 'sveltestrap';
   import { selected_person_id } from '../../services/store';
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
@@ -12,6 +10,8 @@
   import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import { person_map } from '../../services/store';
+  import ListGroup from '../../render/Common/ListGroup.svelte';
+  import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -72,7 +72,7 @@
         </SelectableListGroupItem>
       {/each}
       {/if}
-    </ListGroup>
+      </ListGroup>
   </TabPane>
 {/each}
 

@@ -1,9 +1,11 @@
 <script>
-    import { ListGroup, ListGroupItem } from "sveltestrap";
+  import ListGroup from '../Common/ListGroup.svelte';
+  import ListGroupItem from '../Common/ListGroupItem.svelte';
+
 </script>
 
 <ListGroup>
-  <ListGroupItem class=bg-primary>
+  <ListGroupItem color=primary>
     <p>Geen resultaten</p>
   </ListGroupItem>
 </ListGroup>

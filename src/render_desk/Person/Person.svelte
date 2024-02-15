@@ -1,7 +1,6 @@
 <script>
   import { Card, CardHeader, CardBody, CardFooter, CardGroup } from 'sveltestrap';
   import { Button } from 'sveltestrap';
-  import { ListGroup, ListGroupItem } from 'sveltestrap';
   import { person_get_count_by_simular } from '../../db_get/person_get';
   import { person_map } from '../../services/store';
   import { selected_person_id } from '../../services/store';
@@ -20,6 +19,8 @@
   import { get_time_str } from '../../services/functions';
   import { get_ts_epoch } from '../../services/functions';
   import { person_is_already_registered } from '../../person/person_already_registered';
+  import ListGroup from '../../render/Common/ListGroup.svelte';
+  import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
 
   let open_reg_list;
   let open_simular;
@@ -59,7 +60,7 @@
       Assist
     </CardHeader>
     <ListGroup>
-      <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+      <ListGroupItem clss="d-flex w-100 justify-content-between py-2">
         <PersonMemberId {person_id} />
         {#if person.member_since }
           <div title="inschrijvingsdatum">
@@ -118,7 +119,7 @@
           <svelte:fragment slot=groups>
           {#if person.group}
             {#each person.group.split(',') as group}
-              <ListGroupItem title="werkgroep" class="d-flex w-100 justify-content-between py-2 bg-info">
+              <ListGroupItem title="werkgroep" clss="d-flex w-100 justify-content-between py-2 bg-info">
                 <div title="werkgroep">
                   {group}
                 </div>

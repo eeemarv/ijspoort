@@ -1,9 +1,11 @@
 <script>
-  import { ListGroup, ListGroupItem, Modal, ModalBody, ModalHeader, Progress } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader, Progress } from 'sveltestrap';
   import { db_init } from '../../db/db_init';
   import { ev_db_init } from '../../services/events';
   import AwaitError from '../Await/AwaitError.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
+  import ListGroup from '../Common/ListGroup.svelte';
+  import ListGroupItem from '../Common/ListGroupItem.svelte';
 
   let step = 0;
   let init_steps = [];
@@ -44,7 +46,7 @@
             {step}..{name}
           </ListGroupItem>
         {/each}
-      </ListGroup>
+        </ListGroup>
     </ModalBody>
   </Modal>
 {:catch error}

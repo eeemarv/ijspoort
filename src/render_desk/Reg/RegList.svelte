@@ -1,8 +1,10 @@
 <script>
-  import { Row, Col, ListGroup, ListGroupItem } from 'sveltestrap';
+  import { Row, Col } from 'sveltestrap';
   import RegItem from './RegItem.svelte';
   import { reg_map } from '../../services/store';
   import RegAlertDesk from './RegAlertDesk.svelte';
+  import ListGroup from '../../render/Common/ListGroup.svelte';
+  import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
 
 </script>
 
@@ -20,7 +22,7 @@
       {/each}
 
       {#if $reg_map.size === 0}
-        <ListGroupItem class=bg-primary>
+        <ListGroupItem color=primary>
           <p>Nog geen registraties</p>
         </ListGroupItem>
       {/if}

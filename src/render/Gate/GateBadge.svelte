@@ -10,7 +10,7 @@
   class:bg-dark={!$gate_open}
   title="Poortstatus"
   on:click
-  on:keyup={() => {}}
+  on:keyup
 >
   Poort
 </span>

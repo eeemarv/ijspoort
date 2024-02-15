@@ -1,5 +1,5 @@
 <script>
-  import { ListGroup } from 'sveltestrap';
+  import ListGroup from '../../render/Common/ListGroup.svelte';
   import { tag_types_enabled } from '../../services/store';
   import { tag_type_map } from '../../services/store';
   import TagCardListItem from './TagCardListItem.svelte';

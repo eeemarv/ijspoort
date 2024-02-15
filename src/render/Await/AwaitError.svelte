@@ -1,10 +1,12 @@
 <script>
-  import { ListGroup, ListGroupItem } from "sveltestrap";
+  import ListGroup from "../Common/ListGroup.svelte";
+  import ListGroupItem from "../Common/ListGroupItem.svelte";
+
   export let error;
 </script>
 
 <ListGroup>
-  <ListGroupItem class=bg-danger>
+  <ListGroupItem color=danger>
     <p>{error}</p>
   </ListGroupItem>
 </ListGroup>

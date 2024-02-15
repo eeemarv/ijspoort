@@ -1,5 +1,4 @@
 <script>
-  import { ListGroupItem } from 'sveltestrap';
   import TagButton from './TagButton.svelte';
   import TagAddButton from './TagAddButton.svelte';
   import { createEventDispatcher } from 'svelte';
@@ -8,6 +7,7 @@
   import { focus_year } from '../../services/store';
   import Checkbox from '../../render/Common/Checkbox.svelte';
   import { auto_tag_on_nfc } from '../../services/store';
+  import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
 
   const dispatch = createEventDispatcher();
 
@@ -20,7 +20,7 @@
 
 {#if type_id && $tag_type_map.has(type_id)}
 
-<ListGroupItem action>
+<ListGroupItem>
   <div class="d-flex w-100 justify-content-between">
     <div>
       <TagButton

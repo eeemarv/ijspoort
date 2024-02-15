@@ -1,12 +1,14 @@
 <script>
-  import { ListGroup, ListGroupItem, Spinner } from 'sveltestrap';
+  import { Spinner } from 'sveltestrap';
+  import ListGroup from '../Common/ListGroup.svelte';
+  import ListGroupItem from '../Common/ListGroupItem.svelte';
 
   export let text = '...data ophalen';
 
 </script>
 
 <ListGroup>
-  <ListGroupItem class=bg-warning>
+  <ListGroupItem color=warning>
     <Spinner color=dark />
     {text}
   </ListGroupItem>

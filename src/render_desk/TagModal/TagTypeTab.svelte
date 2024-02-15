@@ -1,7 +1,6 @@
 <script>
   import { TabPane, Row, Col } from 'sveltestrap';
   import TagTypeEditButton from './TagTypeEditButton.svelte';
-  import { ListGroup } from 'sveltestrap';
   import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
   import LocaleDateString from '../../render/Common/LocaleDateString.svelte';
   import Tag from '../../render/Tag/Tag.svelte';
@@ -13,6 +12,7 @@
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import TagTypeDelButton from './TagTypeDelButton.svelte';
   import { person_map } from '../../services/store';
+  import ListGroup from '../../render/Common/ListGroup.svelte';
 
   export let tab;
   export let type_id;

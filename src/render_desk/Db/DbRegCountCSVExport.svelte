@@ -1,10 +1,12 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { Button, Modal, ModalBody, ModalHeader, ListGroup, ListGroupItem } from 'sveltestrap';
+  import { Button, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
   import { reg_hour_count_csv_export } from '../../db_export/reg_count_csv_export';
   import { reg_month_count_csv_export } from '../../db_export/reg_count_csv_export';
   import { reg_week_count_csv_export } from '../../db_export/reg_count_csv_export';
+  import ListGroup from '../../render/Common/ListGroup.svelte';
+  import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
 
   let open = false;
   const toggle = () => {

@@ -1,10 +1,10 @@
 <script>
   import { Button } from 'sveltestrap';
-  import { ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
   import { person_map } from '../../services/store';
   import PersonName from '../../render/Person/PersonName.svelte';
   import AwaitBadge from '../../render/Await/AwaitBadge.svelte';
+    import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
 
   export let person_id = undefined;
 
@@ -12,7 +12,7 @@
 </script>
 
 {#if person_id}
-  <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+  <ListGroupItem clss="d-flex w-100 justify-content-between py-2">
       <div>
         <PersonName {person_id} />
       </div>
@@ -22,7 +22,7 @@
   </ListGroupItem>
 
   {#if person.gender || person.date_of_birth}
-    <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+    <ListGroupItem clss="d-flex w-100 justify-content-between py-2">
       <div>
       {#if person.gender === 'm'}
         <span class="badge bg-info" title="man">
@@ -49,7 +49,7 @@
   {/if}
 
   {#if person.phone_mobile}
-    <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+    <ListGroupItem clss="d-flex w-100 justify-content-between py-2">
       <div title="gsm">
         {person.phone_mobile}
         &nbsp;
@@ -67,7 +67,7 @@
   {/if}
 
   {#if person.phone_home}
-    <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+    <ListGroupItem clss="d-flex w-100 justify-content-between py-2">
       <div title="telefoon thuis">
         {person.phone_home}
         &nbsp;
@@ -84,7 +84,7 @@
   {/if}
 
   {#if person.phone_work}
-    <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+    <ListGroupItem clss="d-flex w-100 justify-content-between py-2">
       <div title="telefoon werk">
         {person.phone_work}
         &nbsp;
@@ -101,7 +101,7 @@
   {/if}
 
   {#if person.email}
-    <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+    <ListGroupItem clss="d-flex w-100 justify-content-between py-2">
       <div title="email">
         {person.email}
       </div>
@@ -112,7 +112,7 @@
   {/if}
 
   {#if person.address || person.address_zipcode || person.address_municipality}
-    <ListGroupItem class="d-flex w-100 justify-content-between py-2">
+    <ListGroupItem clss="d-flex w-100 justify-content-between py-2">
       <div>
       {#if person.address}
         <div title="straat en nummer">
@@ -142,7 +142,7 @@
   <slot name=groups>
     {#if person.group}
       {#each person.group.split(',') as group}
-        <ListGroupItem title="werkgroep" class="d-flex w-100 justify-content-between py-2 bg-info">
+        <ListGroupItem title="werkgroep" clss="d-flex w-100 justify-content-between py-2 bg-info">
           <div title="werkgroep">
             {group}
           </div>
@@ -152,7 +152,7 @@
     {/if}
   </slot>
   {#if person.team}
-    <ListGroupItem title="ploeg" class="py-2 bg-primary">
+    <ListGroupItem title="ploeg" clss="py-2 bg-primary">
       {person.team}
     </ListGroupItem>
   {/if}

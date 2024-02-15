@@ -1,5 +1,5 @@
 <script>
-  import { ListGroup, Modal, ModalBody, ModalHeader } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import PersonName from '../../render/Person/PersonName.svelte';
   import PersonTag from '../../render/Person/PersonTag.svelte';
   import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
@@ -10,6 +10,7 @@
   import { person_simular_lang_keys } from '../../db_get/person_get';
   import Await from '../../render/Await/Await.svelte';
   import AwaitError from '../../render/Await/AwaitError.svelte';
+    import ListGroup from '../../render/Common/ListGroup.svelte';
 
   export let person_id = undefined;
 

@@ -1,8 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
   import { Row, Col } from 'sveltestrap';
-  import { ListGroup } from 'sveltestrap';
-  import { ListGroupItem } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
   import { TabPane } from 'sveltestrap';
   import { selected_person_id } from '../../services/store';
@@ -11,6 +9,8 @@
   import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import { person_map } from '../../services/store';
+  import ListGroup from '../../render/Common/ListGroup.svelte';
+  import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
 
   const dispatch = createEventDispatcher();
 

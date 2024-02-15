@@ -57,7 +57,7 @@
   class:bg-dark={!triggered_in}
   title="Ingangssensor"
   on:click={() => handle_click_in()}
-  on:keyup={() => {}}
+  on:keyup
 >
   In: {$gate_in_map.size}
 </span>
@@ -68,7 +68,7 @@
   class:bg-dark={!triggered_out}
   title="Uitgangssensor"
   on:click={() => handle_click_out()}
-  on:keyup={() => {}}
+  on:keyup
 >
   Uit: {$gate_out_map.size}
 </span>

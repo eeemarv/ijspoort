@@ -1,5 +1,4 @@
 <script>
-  import { ListGroup, ListGroupItem } from 'sveltestrap';
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { Row, Col, Badge } from 'sveltestrap';
   import LocaleDateString from '../../render/Common/LocaleDateString.svelte';
@@ -16,6 +15,8 @@
   import Await from '../../render/Await/Await.svelte';
   import AwaitError from '../../render/Await/AwaitError.svelte';
   import { nfc_uid_to_id } from '../../nfc/nfc_id';
+  import ListGroup from '../../render/Common/ListGroup.svelte';
+  import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
 
   export let person_id = undefined;
 

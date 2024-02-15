@@ -56,7 +56,7 @@
 
 <li
   on:click={handle_select_reg}
-  on:keyup={() => {}}
+  on:keyup
   class=list-group-item
   class:bg-success={newly_add}
   class:bg-danger={deleted}
