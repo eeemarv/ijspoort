@@ -94,11 +94,18 @@ const nfc_map_listen_changes = () => {
     console.log('db_nfc.changes $nfc_map.set');
     console.log(change);
 
+    const n_rev = parseInt(change.doc._rev.split('-')[0]);
+    const update_nfc = n_rev > 1;
+    console.log('n_rev: ', n_rev);
+    console.log('update_nfc: ', update_nfc);
+
     if (typeof last_ts_epoch === 'undefined'
-      || last_ts_epoch < change.ts_epoch)
+      || last_ts_epoch < change.ts_epoch
+      || update_nfc)
     {
       /**
-       * In sequence: add nfc to maps
+      * add in sequence: add nfc to maps
+      * or update existing (rev > 1, block or deblock nfc)
       */
       nfc_map.update((m) => {
         const mx = {};
@@ -110,13 +117,16 @@ const nfc_map_listen_changes = () => {
         return m;
       });
 
-      person_nfc_map.update((m) => {
-        if (!m.has(change.doc.person_id)){
-          m.set(change.doc.person_id, new Set());
-        }
-        m.get(change.doc.person_id).add(change.id);
-        return m;
-      });
+      if (!update_nfc){
+        person_nfc_map.update((m) => {
+          if (!m.has(change.doc.person_id)){
+            m.set(change.doc.person_id, new Set());
+          }
+          m.get(change.doc.person_id).add(change.id);
+          return m;
+        });
+      }
+
       return;
     } 
 
