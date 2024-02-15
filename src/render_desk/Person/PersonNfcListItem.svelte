@@ -1,8 +1,7 @@
 <script>
   import { Popover } from 'sveltestrap';
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
-  import { selected_nfc_id, tag_display_enabled } from '../../services/store';
-  import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
+  import { selected_nfc_id } from '../../services/store';
   import { nfc_deblock } from '../../db_put/nfc_put';
   import { get_random_str } from '../../services/functions';
 
@@ -28,7 +27,7 @@
 
 <svelte:body on:click={() => {close();}} />
 
-{#if nfc_id}
+{#if nfc_id && id}
   {#if blocked}
     <a
       class="list-group-item list-group-item-action"

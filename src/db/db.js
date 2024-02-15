@@ -1,12 +1,12 @@
 const env = window.require('electron').remote.process.env;
 import PouchDB from 'pouchdb';
 
-if (!env.DB_LOCAL_PREFIX){
+if (!env.DB_PREFIX && !env.DB_LOCAL_PREFIX){
   throw 'env DB_LOCAL_PREFIX not set';
 }
 
-if (!env.DB_REMOTE_PREFIX){
-  throw 'env DB_LOCAL_PREFIX not set';
+if (!env.DB_PREFIX && !env.DB_REMOTE_PREFIX){
+  throw 'env DB_REMOTE_PREFIX not set';
 }
 
 if (!env.DB_URL){
@@ -25,14 +25,19 @@ const db_local_options = {
   auto_compaction: true
 };
 
-const db_local_prefix = env.DB_LOCAL_PREFIX;
+const db_local_prefix = env.DB_PREFIX || env.DB_LOCAL_PREFIX;
+const db_remote_prefix = env.DB_PREFIX || env.DB_REMOTE_PREFIX;
+
+console.log('DB local prefix: ' + db_local_prefix);
+console.log('DB remote prefix: ' + db_remote_prefix);
+
 const db_reg = new PouchDB(db_local_prefix + 'reg', db_local_options);
 const db_nfc = new PouchDB(db_local_prefix + 'nfc', db_local_options);
 const db_person = new PouchDB(db_local_prefix + 'person', db_local_options);
 const db_gate = new PouchDB(db_local_prefix + 'gate', db_local_options);
 const db_tag = new PouchDB(db_local_prefix + 'tag', db_local_options);
 
-const conn_prefix = env.DB_URL + '/' + env.DB_REMOTE_PREFIX;
+const conn_prefix = env.DB_URL + '/' + db_remote_prefix;
 const auth = {
   username: env.DB_USERNAME,
   password: env.DB_PASSWORD

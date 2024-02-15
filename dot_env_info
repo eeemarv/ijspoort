@@ -7,13 +7,16 @@ DB_USERNAME=
 FEED_A=swimming..in..cold..wAter
 FEED_B=iS_.._reFreshinggg_
 
-# Prefixes of remote and local database names.
-# These are preferably the same in normal operation.
-# Only use different for copying
-DB_REMOTE_PREFIX=ijspoort_
-DB_LOCAL_PREFIX=ijspoort_
+# Prefix for local and remote database names.
+DB_PREFIX=ijspoort_
 
-# Set GATE to "1" for gate modus
+# Prefixes of remote and local database names.
+# Only use for copying with different prefix
+# (Do not set DB_PREFIX in this case)
+# DB_REMOTE_PREFIX=ijspoort_
+# DB_LOCAL_PREFIX=ijspoort_
+
+# Set GATE to "1" for gate modus (kiosk)
 GATE=0
 
 # Authorize gate configuration
@@ -23,8 +26,7 @@ GATE=0
 # comma separated)
 # Group names are case and space 
 # insensitive
-GATE_CONFIG_AUTH=poorthouders,dagelijks-bestuur,2050
-GATE_DEBLOCK_AUTH=dagelijks-bestuur,2050
+GATE_AUTH=dagelijks-bestuur,2050
 
 # Set DEBUG to "1" to open developer tools
 DEBUG=0
@@ -35,7 +37,7 @@ DEBUG=0
 MFRC522=0
 
 # Emulate Gate in and out triggers (set to "1")
-EMULATE_SENS_IN_OUT=0
+# EMULATE_SENS_IN_OUT=0
 # Emulate GPIO pins for testing (set to "1")
-EMULATE_GPIO=0
+# EMULATE_GPIO=0
 
