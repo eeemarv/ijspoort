@@ -25,6 +25,7 @@
   };
 
   $: {
+    $nfc_map;
     $person_nfc_map;
     person_id;
     if (person_id){
