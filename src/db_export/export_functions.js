@@ -1,7 +1,6 @@
 const env = window.require('electron').remote.process.env;
 
-const db_local_prefix = env.DB_LOCAL_PREFIX;
-
+const db_prefix = env.DB_PREFIX || env.DB_LOCAL_PREFIX;
 
 /**
  * @returns {string}
@@ -36,7 +35,7 @@ const get_iso_week = (ts) => {
  * @returns {string}
  */
 const get_export_filename = (id, extension) => {
-  return db_local_prefix + id + '_' + get_export_time_str() + '.' + extension;
+  return db_prefix + id + '_' + get_export_time_str() + '.' + extension;
 };
 
 export { get_export_time_str };
