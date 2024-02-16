@@ -94,18 +94,23 @@ const nfc_map_listen_changes = () => {
     console.log('db_nfc.changes $nfc_map.set');
     console.log(change);
 
-    const n_rev = parseInt(change.doc._rev.split('-')[0]);
-    const update_nfc = n_rev > 1;
-    console.log('n_rev: ', n_rev);
-    console.log('update_nfc: ', update_nfc);
+    /**
+     * When block_hs is not undefined the 
+     * change is always an block or deblock update: 
+     * sequence order in nfc_map is then already correct
+     * The revision for a new nfc_id could already be > 1
+     * when it was previously deleted
+     */
+    const nfc_block_updated = typeof change.doc.block_hs !== 'undefined';
+    console.log('nfc_block_updated: ', nfc_block_updated);
 
     if (typeof last_ts_epoch === 'undefined'
       || last_ts_epoch < change.ts_epoch
-      || update_nfc)
+      || nfc_block_updated)
     {
       /**
       * add in sequence: add nfc to maps
-      * or update existing (rev > 1, block or deblock nfc)
+      * or update block/deblock
       */
       nfc_map.update((m) => {
         const mx = {};
@@ -117,7 +122,7 @@ const nfc_map_listen_changes = () => {
         return m;
       });
 
-      if (!update_nfc){
+      if (!nfc_block_updated){
         person_nfc_map.update((m) => {
           if (!m.has(change.doc.person_id)){
             m.set(change.doc.person_id, new Set());
