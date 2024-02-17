@@ -26,6 +26,7 @@
   const open_count_interval_time = 100;
   
   let message = undefined;
+  let message_short = undefined;
   let color = 'primary';
   let person_id = undefined;
   let already_registered_person_id = undefined;
@@ -60,6 +61,7 @@
   const msgs = {
     wait: {
       msg: 'Wacht even tot je voorganger door de poort is en probeer opnieuw.',
+      msg_short: 'Even wachten...',
       color: 'purple',
       person: false,
       gate_auth: true
@@ -108,6 +110,7 @@
     ipcRenderer.send('scan.gate.' + ev_name, nfc_id);
     const d = msgs[ev_name];
     message = d.msg;
+    message_short = typeof d.msg_short === 'undefined' ? d.msg : d.msg_short;
     color = d.color;
     if (d.person){
       person_id = prsn_id;
@@ -194,7 +197,9 @@
   contentClassName="bg-{color}"
 >
   <ModalHeader {toggle}>
-    <h1>{message}</h1>
+    <h1>
+      {gate_auth_enabled ? message_short : message}
+    </h1>
   </ModalHeader>
   {#if person_id}
     <ModalBody>
