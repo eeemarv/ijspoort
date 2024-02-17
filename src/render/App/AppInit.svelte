@@ -1,5 +1,5 @@
 <script>
-  import { Modal, ModalBody, ModalHeader, Progress } from 'sveltestrap';
+  import { Badge, Modal, ModalBody, ModalHeader, Progress } from 'sveltestrap';
   import { db_init } from '../../db/db_init';
   import { ev_db_init } from '../../services/events';
   import AwaitError from '../Await/AwaitError.svelte';
@@ -56,6 +56,23 @@
     </ModalHeader>
     <ModalBody>
       <AwaitError {error} />
+    </ModalBody>
+    <ModalBody class=bg-maroon>
+      <h3>Belangrijk!</h3>
+      <p>
+        Controleer netwerkverbinding en kies
+        hieronder altijd de knop "Opnieuw" (Met netwerk).        
+      </p>
+      <p>
+        Wanneer initialisatie toch niet lukt, herstart
+        dan de computer.        
+      </p>
+      <p>
+        De optie "Opnieuw zonder netwerk" kan enkel 
+        als er echt geen netwerk voorhanden is. 
+        Deze optie is alleen nuttig om data te raadplegen. 
+        Het is dat geval beter om geen nieuwe data aan te maken.        
+      </p>
     </ModalBody>
     <ModalFooterClose>
       <svelte:fragment slot=close>
