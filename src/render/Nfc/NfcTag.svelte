@@ -22,7 +22,7 @@
   let abc_color = undefined;
   let abc_code = undefined;
 
-  const abc_colors = ['blue', 'pink', 'orange', 'yellow', 'green', 'cyan', 'grey'];
+  const abc_colors = ['blue', 'pink', 'orange', 'cyan', 'green', 'grey'];
 
   const set_abc = (abc_index) => {
     if (abc_index === undefined){

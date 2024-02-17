@@ -1,5 +1,5 @@
 <script>
-  import { Badge, Modal, ModalBody, ModalHeader, Progress } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader, Progress } from 'sveltestrap';
   import { db_init } from '../../db/db_init';
   import { ev_db_init } from '../../services/events';
   import AwaitError from '../Await/AwaitError.svelte';
