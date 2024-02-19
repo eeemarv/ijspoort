@@ -12,7 +12,7 @@ const topics_subscr_common = () => {
 	return [
 		'we/water_temp',
 		'we/air_temp',
-		'g/s/in',
+		'g/stat/in',
 		'g/p'
 	];
 };
@@ -22,8 +22,8 @@ const topics_subscr_gate_modus = () => {
 		return [];
 	}
 	return [
-		'g/t/in/p',
-		'g/t/out/p',
+		'g/sens/in',
+		'g/sens/out',
 	];
 };
 
@@ -42,17 +42,6 @@ const topics_subscr_desk_modus = () => {
 		'scan/gate/person_valid_member',
 		'scan/p'	
 	];
-/*
-	return [
-		'scan/nfc_not_found',
-		'scan/nfc_blocked',
-		'scan/person_already_registered',			
-		'scan/person_not_found',
-		'scan/person_not_member',
-		'scan/person_valid_member',
-		'scan/p'	
-	];
-*/
 }
 
 const mqtt_init = (win) => {
@@ -113,7 +102,7 @@ const mqtt_init = (win) => {
 		const msg = message_buff.toString();
 		console.log('mqtt rx -t ' + topic + ' -m ' + msg);
 		switch (topic){
-			case 'g/s/in':
+			case 'g/stat/in':
 				if (msg === 'closed'){
 					win.webContents.send('gate.is_closed');
 				}
@@ -121,10 +110,10 @@ const mqtt_init = (win) => {
 					win.webContents.send('gate.is_open');
 				}
 				break;
-			case 'g/t/in/p':
+			case 'g/sens/in':
 				win.webContents.send('sens.in');				
 				break;
-			case 'g/t/out/p':
+			case 'g/sens/out':
 				win.webContents.send('sens.out');
 				break;
 			case 'g/p':
@@ -158,33 +147,6 @@ const mqtt_init = (win) => {
 				win.webContents.send('scan.gate.person_valid_member', msg);
 				break;
 
-/*
-			case 'scan/nfc_not_found':
-				win.webContents.send('scan.nfc_not_found', msg);
-				break;
-			case 'scan/nfc_blocked':
-				// msg: nfc_id
-				win.webContents.send('scan.nfc_blocked', msg);
-				break;
-
-			case 'scan/person_already_registered':
-				// msg: nfc_id
-				win.webContents.send('scan.person_already_registered', msg);
-				break;
-			case 'scan/person_not_found':
-				// msg: nfc_id
-				win.webContents.send('scan.person_not_found', msg);
-				break;
-			case 'scan/person_not_member':
-				// msg: nfc_id
-				win.webContents.send('scan.person_not_member', msg);
-				break;
-			case 'scan/person_valid_member':
-				// msg: nfc_id
-				win.webContents.send('scan.person_valid_member', msg);
-				break;
-*/
-
 			case 'scan/p':
 				win.webContents.send('scan.pulse');
 				break;
@@ -203,15 +165,7 @@ const mqtt_init = (win) => {
 		on_main_to_mqtt('gate.open', 'g/open/in');
 		on_main_to_mqtt('gate.open_once_with_timer', 'g/once/in');
 		on_main_to_mqtt('gate.close', 'g/close/in');
-/*
-		on_main_to_mqtt('scan.nfc_not_found', 'scan/nfc_not_found');
-		on_main_to_mqtt('scan.nfc_blocked', 'scan/nfc_blocked');
 
-		on_main_to_mqtt('scan.person_already_registered', 'scan/person_already_registered');
-		on_main_to_mqtt('scan.person_not_found', 'scan/person_not_found');		
-		on_main_to_mqtt('scan.person_not_member', 'scan/person_not_member');
-		on_main_to_mqtt('scan.person_valid_member', 'scan/person_valid_member');
-*/
 		on_main_to_mqtt('scan.gate.wait', 'scan/gate/wait');
 		on_main_to_mqtt('scan.gate.full', 'scan/gate/full');
 
