@@ -2,15 +2,15 @@ const MFRC522 = require('mfrc522-rpi');
 const SoftSPI = require('rpi-softspi');
 const rpio = require('rpio');
 
-const buzzer_pin = 18;
-const beep_time = 20; 
-
-// connect to mfrc522
+// connect mfrc522 to Raspberry Pi 4 B
 const clock_pin = 23;
 const mosi_pin = 19;
 const miso_pin = 21;
 const cs_pin = 24;
+const reset_pin = 22;
+const buzzer_pin = 18;
 
+const buzzer_time = 20;
 const probe_interval = 200;
 const steps_hold_after_uid_found = 6;
 
@@ -35,7 +35,7 @@ const listen_mfrc = (win, eStore) => {
 	rpio.open(buzzer_pin, rpio.OUTPUT);
 	rpio.write(buzzer_pin, rpio.HIGH);
 
-	const mfrc522 = new MFRC522(softSPI).setResetPin(22);
+	const mfrc522 = new MFRC522(softSPI).setResetPin(reset_pin);
 
 	console.log('MFRC522 send event dev.nfc.on');
 	win.webContents.send('dev.nfc.on');
@@ -163,7 +163,7 @@ const listen_mfrc = (win, eStore) => {
 			rpio.write(buzzer_pin, rpio.LOW);
 			setTimeout(() => {
 				rpio.write(buzzer_pin, rpio.HIGH);
-			}, beep_time);
+			}, buzzer_time);
 		}
 
 		if (res_uid === tmp_uid){
