@@ -4,26 +4,19 @@
   import PersonTag from '../Person/PersonTag.svelte';
   import { reg_del } from '../services/reg';
   import CountBadge from '../Common/CountBadge.svelte';
+  import { onMount } from 'svelte';
 
   export let reg = undefined;
   export let count = undefined;
 
   let newly_add = false;
-  const newly_add_detect_time = 10000;
+  const newly_add_detect_time = 120000;
   const newly_add_show_time = 1500;
 
   let deleted = false;
   const deleted_show_time = 700
 
-  let selected = false;
-  const selected_show_time = 1000;
-
   const handle_select_reg = () => {
-    selected = true;
-
-    setTimeout(() => {
-      selected = false
-    }, selected_show_time);
 
     $selected_person_id = reg.person_id;
 
@@ -44,10 +37,19 @@
 
   };
 
+  onMount(() => {
+    if (reg.ts_epoch > ((new Date).getTime() - newly_add_detect_time)){
+      newly_add = true;
+      setTimeout(() => newly_add = false, newly_add_show_time);
+    }
+  });
+
+  /*
   $: if (reg.ts_epoch > ((new Date).getTime() - newly_add_detect_time)){
     newly_add = true;
     setTimeout(() => newly_add = false, newly_add_show_time);
   }
+  */
 
 </script>
 
@@ -57,8 +59,8 @@
   class=list-group-item
   class:bg-success={newly_add}
   class:bg-danger={deleted}
-  class:bg-primary={selected}
-  class:selectable={!newly_add && !deleted && !selected}
+  class:bg-primary={!newly_add && !deleted && $selected_person_id === reg.person_id}
+  class:selectable={!newly_add && !deleted && $selected_person_id !== reg.person_id}
 >
   <div class="d-flex w-100 justify-content-between">
     <div>

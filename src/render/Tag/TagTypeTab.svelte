@@ -5,10 +5,9 @@
   import LocaleDateString from '../Common/LocaleDateString.svelte';
   import Tag from './Tag.svelte';
   import PersonTag from '../Person/PersonTag.svelte';
-  import { person } from '../services/store';
   import { db_tag } from '../services/db';
-
-  import { tag_count_table } from '../services/store';
+  import { selected_person_id } from '../services/store';
+  import { tag_count_map } from '../services/store';
 
   export let tab;
   export let type_id;
@@ -43,7 +42,8 @@
   };
 
   $: {
-    $tag_count_table[type_id];
+    $tag_count_map.get(type_id);
+
     if (tab === type_id){
       update_view();
     }
@@ -57,14 +57,14 @@
   </span>
 
   <div>
-    Totaal: {$tag_count_table[type_id] ?? '-'}
+    Totaal: {$tag_count_map.get(type_id) ?? '-'}
   </div>
 
   <ListGroup>
     {#each tag_list as t, index (index)}
       <SelectableListGroupItem
-        active={$person && $person._id === t.person_id}
-        on:click={() => $person = t.person_id}
+        active={$selected_person_id && $selected_person_id === t.person_id}
+        on:click={() => $selected_person_id = t.person_id}
       >
         <Row>
           <Col md=2>

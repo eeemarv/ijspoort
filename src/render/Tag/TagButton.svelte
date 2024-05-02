@@ -1,19 +1,16 @@
 <script>
-  import { tag_type_table } from "../services/store";
-  import TagTypeButton from "./TagTypeButton.svelte";
+  import { tag_type_map } from "../services/store";
 
   export let type_id = undefined;
 
-  let tag = {};
+  $: tag = $tag_type_map.get(type_id);
 
-  $: {
-    $tag_type_table;
-    if (type_id){
-      tag = $tag_type_table[type_id] ?? {};
-    } else {
-      tag = {};
-    }
-  }
 </script>
 
-<TagTypeButton {tag} />
+<button
+  on:click
+  class="badge bg-{tag?.color} me-2"
+  title={tag?.description}
+>
+  {tag?.text}
+</button>

@@ -5,11 +5,18 @@
   import TagTypeListTab from './TagTypeListTab.svelte';
   import TagTypePutTab from './TagTypePutTab.svelte';
   import TagTypeTab from './TagTypeTab.svelte';
-  import { tag_type_enabled_sorted_id_ary } from '../services/store';
+  import { tag_type_map } from '../services/store';
+  import { tag_types_enabled } from '../services/store';
 
-  export let tab = 'type_list';
-  export let open = false;
   export const toggle = () => (open = !open);
+
+  export const open_tab = (select_tab) => {
+    tab = select_tab;
+    open = true;
+  };
+
+  let tab = 'type_list';
+  let open = false;
 
   let edit_tag_id = undefined;
 
@@ -32,8 +39,10 @@
         {tab}
         bind:edit_tag_id
       />
-      {#each $tag_type_enabled_sorted_id_ary as tid(tid)}
-        <TagTypeTab {tab} type_id={tid} />
+      {#each [...$tag_type_map.keys()] as type_id(type_id)}
+        {#if $tag_types_enabled[type_id]}
+          <TagTypeTab {tab} {type_id} />
+        {/if}
       {/each}
     </TabContent>
   </ModalBody>

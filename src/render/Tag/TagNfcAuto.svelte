@@ -8,11 +8,12 @@
   import { tag_type_enabled_sorted_id_ary } from '../services/store';
   import { tag_person_count_by_type } from '../services/store';
   import { tag_types } from '../services/store';
-  import { person } from '../services/store';
+
   import { nfc_uid } from '../services/store';
   import { focus_year } from '../services/store';
-  import { CardFooter, Badge } from 'sveltestrap';
+  import { CardFooter } from 'sveltestrap';
   import Checkbox from '../Common/Checkbox.svelte';
+  import PersonFocusYearTag from '../Person/PersonFocusYearTag.svelte';
 
   let hold = false;
 
@@ -39,6 +40,7 @@
       console.log('tags_add hold');
       return;
     }
+
     setTimeout(() => { hold = false }, 500);
     hold = true;
 
@@ -95,9 +97,7 @@
       bind:checked={$tag_nfc_auto_enabled}
     >
       Auto creatie
-      <Badge color=success title="lid in {$focus_year.toString()}">
-        {$focus_year.toString()}
-      </Badge>
+      <PersonFocusYearTag />
     </Checkbox>
   </CardFooter>
 {/if}

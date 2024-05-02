@@ -28,7 +28,7 @@
         <RegBlockedItem person_id={blocked_reg_person_id} />
       {/if}
 
-      {#each [...$reg_map].reverse() as [reg_id, reg], index(reg._id)}
+      {#each [...$reg_map].sort((a, b) => b[1].ts_epoch - a[1].ts_epoch) as [reg_id, reg], index(reg_id)}
         <RegItem {reg} count={$reg_map.size - index} />
       {/each}
 

@@ -3,7 +3,6 @@
   import { ck_new_tag_id } from '../services/context_keys';
   import Icon from '@iconify/svelte';
   import timesIcon from '@iconify/icons-fa/times';
-  import { onMount } from 'svelte';
   import { Button } from 'sveltestrap';
   import { db_tag } from '../services/db';
   import Tag from '../Tag/Tag.svelte';
@@ -14,28 +13,26 @@
   export let type_id = undefined;
 
   export let tag;
+
   let new_tag_id = getContext(ck_new_tag_id);
 
-  let handle_delete;
   let add = false;
   let del = false;
 
-  onMount(() => {
-    handle_delete = (type_id, person_id, ts_epoch) => {
-      return;
+  const handle_delete = (type_id, person_id, ts_epoch) => {
+    return;
 
-      setTimeout(() => {
-        db_tag.remove(tag).then((res) => {
-          console.log(res);
-        }).catch((err) => {
-          console.log(err);
-        });
-        del = false;
-      }, 700);
+    setTimeout(() => {
+      db_tag.remove(tag).then((res) => {
+        console.log(res);
+      }).catch((err) => {
+        console.log(err);
+      });
+      del = false;
+    }, 700);
 
-      del = true;
-    };
-  });
+    del = true;
+  };
 
   /**
   const show_add = (new_tag_id) => {

@@ -78,7 +78,6 @@ export const reg_nfc_auto_enabled = create_coupled_estore('reg_nfc_auto_enabled'
 
 export const reg_block_time = create_coupled_estore('reg_block_time', 1800000);
 
-
 export const tag_display_enabled = create_coupled_estore('tag_display_enabled', true);
 export const tag_types_enabled = create_coupled_estore('tag_types_enabled', {});
 export const tag_nfc_auto_enabled = create_coupled_estore('tag_nfc_auto_enabled', false);
@@ -100,9 +99,10 @@ export const person_member_year_count_map = writable(new Map());
 export const gate_in_map = writable(new Map());
 export const gate_out_map = writable(new Map());
 
-export const tag_type_table = writable({});
-export const person_tag_table = writable({});
-export const tag_count_table = writable({});
+
+export const tag_type_map = writable(new Map());
+export const tag_count_map = writable(new Map());
+export const person_tag_map = writable(new Map());
 
 export const reg_map = writable(new Map());
 export const person_last_reg_ts_map = writable(new Map());

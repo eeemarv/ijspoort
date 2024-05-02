@@ -47,7 +47,7 @@ const get_person_simular_search_map = (person_id) => {
       const group_ary = person.group.split(',');
       group_ary.forEach((g) => {
         const group = get_search_str(g);
-        res_map.set('group.' + group, 'group.' + g);
+        res_map.set('group.' + group, 'group.' + group);
       });
       return;
     }
