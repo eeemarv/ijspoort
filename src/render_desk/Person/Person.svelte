@@ -6,7 +6,6 @@
   import { selected_person_id } from '../../services/store';
   import { tag_display_enabled } from '../../services/store';
   import PersonMemberId from '../../render/Person/PersonMemberId.svelte';
-  import PersonMemberYearList from './PersonMemberYearList.svelte';
   import PersonTagList from './PersonTagList.svelte';
   import PersonNfcList from './PersonNfcList.svelte';
   import PersonRegList from './PersonRegList.svelte';
@@ -21,6 +20,7 @@
   import { person_is_already_registered } from '../../person/person_already_registered';
   import ListGroup from '../../render/Common/ListGroup.svelte';
   import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
+  import PersonMemberPeriodList from '../../render/Person/PersonMemberPeriodList.svelte';
 
   let open_reg_list;
   let open_simular;
@@ -139,7 +139,7 @@
     </ListGroup>
     <CardBody></CardBody>
     <CardFooter>
-      <PersonMemberYearList {person_id} />
+      <PersonMemberPeriodList {person_id} />
     </CardFooter>
   </Card>
 
@@ -164,7 +164,7 @@
         <Button color=danger
           disabled
         >
-          Geregistreerd {get_time_str($person_last_reg_ts_map.get(person_id))}          
+          Geregistreerd {get_time_str($person_last_reg_ts_map.get(person_id))}
         </Button>
       {:else}
         <Button

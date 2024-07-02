@@ -44,12 +44,12 @@
   <Row>
     <Col md=2>
       <div>
-        Totaal: {total_rows ? total_rows : '-'}        
+        Totaal: {total_rows ? total_rows : '-'}
       </div>
       <div>
         <TagTypeDelButton {type_id} on:del />
-        <TagTypeEditButton {type_id} on:edit />   
-      </div> 
+        <TagTypeEditButton {type_id} on:edit />
+      </div>
     </Col>
     <Col md=5>
       <div>
@@ -82,7 +82,7 @@
             <LocaleDateString ts_epoch={ts_epoch} />
           </Col>
           <Col>
-            <PersonTag person_id={person_id} show_member_year />
+            <PersonTag person_id={person_id} show_member_period />
           </Col>
         </Row>
       </SelectableListGroupItem>

@@ -2,23 +2,25 @@
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { Row, Col } from 'sveltestrap';
   import { TabContent } from 'sveltestrap';
-  import { focus_year, selected_person_id } from '../../services/store';
+  import { selected_person_id } from '../../services/store';
   import { person_map } from '../../services/store';
   import { nfc_map } from '../../services/store';
   import { person_nfc_map } from '../../services/store';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
-  import PersonFocusYearTag from '../../render/Person/PersonFocusYearTag.svelte';
   import Pagination from '../../render/Common/Pagination.svelte';
   import Checkbox from '../../render/Common/Checkbox.svelte';
   import NfcLogListTab from './NfcLogListTab.svelte';
   import NfcLogPersonTabs from './NfcLogPersonTabs.svelte';
+  import PersonMemberPeriodFilterTag from '../../render/Person/PersonMemberPeriodFilterTag.svelte';
+  import { member_period_filter } from '../../services/store';
+  import { member_person_map } from '../../services/store';
 
   let nfc_week_count = 0;
   let nfc_month_count = 0;
   let nfc_4b_count = 0;
   let nfc_7b_count = 0;
 
-  let nfc_list = []; 
+  let nfc_list = [];
   let tab_id_list = [];
   let tab_person_lists = {};
 
@@ -32,7 +34,7 @@
 
   let checked_4b = true;
   let checked_7b = true;
-  let checked_focus_year = false;
+  let checked_member_period_filter = false;
   let checked_has_person = true;
   let checked_has_no_person = true;
   let checked_is_blocked = true;
@@ -51,7 +53,6 @@
     const ts_epoch = new Date();
     const ts_one_week_ago = ts_epoch.getTime() - (86400000 * 7);
     const ts_one_month_ago = ts_epoch.getTime() - (86400000 * 30);
-    const focus_year_key = 'y' + $focus_year;
 
     const f_nfc_list = [];
 
@@ -81,15 +82,15 @@
       }
 
       if (has_person){
-        const person = $person_map.get(nfc.person_id);
+        if (checked_member_period_filter){
 
-        if (checked_focus_year){
-
-          if (person.member_year === undefined){
+          if (typeof $member_period_filter !== 'string'){
             continue;
           }
-
-          if (person.member_year[focus_year_key] === undefined){
+          if (!$member_person_map.has($member_period_filter)){
+            continue;
+          }
+          if (!$member_person_map.get($member_period_filter).has(nfc.person_id)){
             continue;
           }
         }
@@ -146,7 +147,7 @@
 
       if (p_nfc_set.size === 1){
         if (!person_tab_map.has('t1')){
-          person_tab_map.set('t1', []);          
+          person_tab_map.set('t1', []);
         }
         person_tab_map.get('t1').push([nfc_id, nfc.person_id]);
         continue;
@@ -163,9 +164,9 @@
       const p_tab_id = 't' + p_nfc_set.size;
 
       if (!person_tab_map.has(p_tab_id)){
-        person_tab_map.set(p_tab_id, []);          
+        person_tab_map.set(p_tab_id, []);
       }
-      
+
       person_tab_map.get(p_tab_id).push([nfc_id, nfc.person_id]);
       person_handled_set.add(nfc.person_id);
     }
@@ -174,10 +175,10 @@
     nfc_month_count = l_nfc_month_count;
     nfc_4b_count = l_nfc_4b_count;
     nfc_7b_count = l_nfc_7b_count;
-  
+
     nfc_list = [...f_nfc_list.reverse()];
     tab_id_list = [...person_tab_map.keys()].sort();
-    
+
     const f_tab_person_lists = {};
 
     for (const [tab_id, nfc_id_list] of person_tab_map){
@@ -211,7 +212,7 @@
   $: {
     checked_4b;
     checked_7b;
-    checked_focus_year;
+    checked_member_period_filter;
     checked_has_person;
     checked_has_no_person;
     checked_is_blocked;
@@ -254,11 +255,11 @@
           7b uid: {nfc_7b_count}
         </Checkbox>
         <Checkbox
-          title="Filter op leden in lidjaar"
-          name=checked_focus_year
-          bind:checked={checked_focus_year}
+          title="Filter op lidmaatschap"
+          name=checked_member_period_filter
+          bind:checked={checked_member_period_filter}
         >
-          Enkel leden <PersonFocusYearTag />          
+          Enkel leden <PersonMemberPeriodFilterTag />
         </Checkbox>
       </Col>
       <Col>
@@ -280,16 +281,16 @@
           title="Toon geblokkeerde nfc tags"
           bind:checked={checked_is_blocked}
           name=checked_is_blocked
-        > 
+        >
           Geblokkeerd
         </Checkbox>
         <Checkbox
           title="Toon niet geblokkeerde nfc tags"
           bind:checked={checked_is_not_blocked}
           name=checked_is_not_blocked
-        > 
+        >
           Niet geblokkeerd
-        </Checkbox>       
+        </Checkbox>
       </Col>
       <Col sm=5>
         <Pagination
@@ -300,7 +301,7 @@
     </Row>
     <TabContent on:tab={(e) => tab = e.detail} pills>
 
-      <NfcLogListTab 
+      <NfcLogListTab
         {tab}
         {nfc_list}
         {start_row}
@@ -310,7 +311,7 @@
         on:select_person={handle_select_person}
       />
 
-      <NfcLogPersonTabs 
+      <NfcLogPersonTabs
         {tab}
         {tab_id_list}
         {tab_person_lists}

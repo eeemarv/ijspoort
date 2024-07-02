@@ -10,13 +10,13 @@
   import { sub_nfc_map } from '../../services/sub';
   import { sub_person_last_reg_ts_map } from '../../services/sub';
   import { reg_block_time } from '../../db_put/reg_put';
-  import GateModalPersonMemberYearList from './GateModalPersonMemberYearList.svelte';
   import { sub_gate_open } from '../../services/sub';
   import { sound_ok } from '../../services/sound';
   import { sound_error } from '../../services/sound';
   import { ev_nfc_scan } from '../../services/events';
   import { get_nfc_id_that_opened_gate } from '../../gate/gate_trigger';
   import { gate_auth } from '../../gate/gate_auth';
+  import PersonMemberPeriodList from '../../render/Person/PersonMemberPeriodList.svelte';
 
   let open_gate_config = () => {};
   let close_gate_config = () => {};
@@ -24,14 +24,14 @@
   let open_down_count = 0;
   const open_start_count = 50;
   const open_count_interval_time = 100;
-  
+
   let message = undefined;
   let message_short = undefined;
   let color = 'primary';
   let person_id = undefined;
   let already_registered_person_id = undefined;
   let gate_auth_person_id = undefined;
-  
+
   $: gate_auth_enabled = gate_auth(gate_auth_person_id);
 
   let time = (new Date()).getTime();
@@ -142,7 +142,7 @@
     }
     if (ev_name === 'person_already_registered'){
       already_registered_person_id = prsn_id;
-      ipcRenderer.send('scan.gate.person_already_registered', nfc_id);   
+      ipcRenderer.send('scan.gate.person_already_registered', nfc_id);
       return;
     }
     close_gate_config();
@@ -151,7 +151,7 @@
       const og_nfc_id = get_nfc_id_that_opened_gate();
       if (typeof og_nfc_id === 'string'
         && (typeof prsn_id === 'undefined'
-          || prsn_id !== sub_nfc_map.get(og_nfc_id).person_id 
+          || prsn_id !== sub_nfc_map.get(og_nfc_id).person_id
       )){
         launch_modal('wait', nfc_id, prsn_id);
         return;
@@ -159,7 +159,7 @@
     }
 
     if (ev_name === 'person_valid_member'
-      && sub_gate_count_enabled 
+      && sub_gate_count_enabled
       && (sub_gate_count <= 0
     )){
       launch_modal('full', nfc_id, prsn_id);
@@ -184,7 +184,7 @@
 
 </script>
 
-<GateConfig 
+<GateConfig
   bind:open_gate_config
   bind:close_gate_config
 />
@@ -222,7 +222,9 @@
       <div class="d-flex w-100 justify-content-between">
         <div>
           {#if person_id}
-            <GateModalPersonMemberYearList {person_id} />
+            <div class="bg-dark p-2">
+              <PersonMemberPeriodList {person_id} max_items=3 font_size=1em />
+            </div>
           {/if}
         </div>
         <div>

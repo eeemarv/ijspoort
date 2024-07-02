@@ -4,7 +4,7 @@
   import { person_map } from '../../services/store';
   import PersonName from '../../render/Person/PersonName.svelte';
   import AwaitBadge from '../../render/Await/AwaitBadge.svelte';
-    import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
+  import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
 
   export let person_id = undefined;
 
@@ -157,4 +157,3 @@
     </ListGroupItem>
   {/if}
 {/if}
-

@@ -13,7 +13,7 @@
 <div>
   <div class="d-flex w-100 justify-content-between">
     <div>
-      <PersonTag {person_id} show_member_year show_tags />
+      <PersonTag {person_id} show_member_period show_tags />
     </div>
     <div>
       <PersonPhone {person_id} />

@@ -52,9 +52,9 @@ export const focus_year = create_coupled_estore('focus_year', 2022, 2016, 2030);
 export const focus_year_filter_enabled = create_coupled_estore('focus_year_filter_enabled', true);
 export const gate_display_enabled = create_coupled_estore('gate_display_enabled', true);
 
-export const assist_import_member_period = create_coupled_estore('assist_import_member_period', '');
-export const member_period = create_coupled_estore('member_period', '');
-export const member_period_filter_enabled = create_coupled_estore('member_period_filter_enabled', false);
+export const assist_import_member_period = create_coupled_estore('assist_import_member_period', null);
+export const member_period_select = create_coupled_estore('member_period_select', null);
+export const member_period_filter = create_coupled_estore('member_period_filter', null);
 
 export const beep_enabled = create_coupled_estore('beep_enabled', true);
 export const sound_ok_enabled = create_coupled_estore('sound_ok_enabled', false);

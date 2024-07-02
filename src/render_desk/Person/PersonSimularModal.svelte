@@ -59,7 +59,7 @@
             on:click={handle_select(p_id)}
             selectable={$person_map.has(p_id)}
           >
-            <PersonTag person_id={p_id} show_member_year show_tags />
+            <PersonTag person_id={p_id} show_member_period show_tags />
           </SelectableListGroupItem>
         {/each}
       </ListGroup>

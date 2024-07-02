@@ -69,12 +69,12 @@
         <CountBadge {count} />
         <RegTimeTag {reg} />
         {#if reg.nfc_uid}
-          <NfcTag 
-            nfc_id={nfc_uid_to_id(reg.nfc_uid)} 
+          <NfcTag
+            nfc_id={nfc_uid_to_id(reg.nfc_uid)}
             fetch_abc_index
           />
         {/if}
-        <PersonTag person_id={reg.person_id} show_member_year show_tags />
+        <PersonTag person_id={reg.person_id} show_member_period show_tags />
       </div>
     </div>
     <div>
@@ -92,11 +92,11 @@
   </div>
   {#if reg.blocked_nfcs}
     <div class="nfc-blocked mt-1 p-2">
-      Geblokkeerd: 
+      Geblokkeerd:
         {#each reg.blocked_nfcs as nfc_uid, index(index)}
-          <NfcTag 
-            nfc_id={nfc_uid_to_id(nfc_uid)} 
-            fetch_abc_index 
+          <NfcTag
+            nfc_id={nfc_uid_to_id(nfc_uid)}
+            fetch_abc_index
           />
         {/each}
     </div>

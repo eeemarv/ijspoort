@@ -15,6 +15,8 @@ import { person_is_already_registered } from '../person/person_already_registere
 import { nfc_uid_to_id } from './nfc_id';
 import { nfc_block_others } from '../db_put/nfc_put';
 import { get_ts_epoch } from '../services/functions';
+import { sub_member_period_select } from '../services/sub';
+import { sub_member_person_map } from '../services/sub';
 
 const gate_modus = env.GATE === '1';
 
@@ -24,8 +26,8 @@ const flood_block_time = 3000;
 
 /**
  * local
- * @param {string} name 
- * @param {Object} detail 
+ * @param {string} name
+ * @param {Object} detail
  */
 const ev_nfc_scan_dispatch = (name, detail = {}) => {
   console.log('ev_nfc_scan - ' + name, detail);
@@ -35,7 +37,7 @@ const ev_nfc_scan_dispatch = (name, detail = {}) => {
   if (gate_modus){
     const msg = detail.nfc_id ?? '';
     console.log('ipcRenderer.send scan.' + name + ' ' + msg);
-    ipcRenderer.send('scan.' + name, msg);    
+    ipcRenderer.send('scan.' + name, msg);
   }
 };
 
@@ -62,9 +64,9 @@ const listen_nfc = () => {
 
       clearTimeout(flood_timeout_id);
       flood_timeout_id = setTimeout(() => {
-        flood_block_same_nfc_id = undefined;      
+        flood_block_same_nfc_id = undefined;
       }, flood_block_time);
-      flood_block_same_nfc_id = nfc_id;      
+      flood_block_same_nfc_id = nfc_id;
     }
 
     selected_nfc_id.set(nfc_id);
@@ -120,7 +122,7 @@ const listen_nfc = () => {
       }
     } else {
       if (gate_modus){
-        reg_add_by_gate(nfc_id, ts_epoch, nfc_block_mixin);        
+        reg_add_by_gate(nfc_id, ts_epoch, nfc_block_mixin);
       } else if (sub_reg_nfc_auto_enabled){
         reg_add_by_desk_auto(nfc_id, ts_epoch);
       }

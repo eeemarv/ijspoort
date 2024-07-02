@@ -23,6 +23,10 @@ import { sound_error_enabled } from './store';
 import { focus_year } from './store';
 import { focus_year_filter_enabled } from './store';
 
+import { member_period_select } from './store';
+import { member_period_filter } from './store';
+import { member_person_map } from './store';
+
 let sub_person_map = new Map();
 let sub_person_nfc_map = new Map();
 let sub_tag_type_map = new Map();
@@ -47,6 +51,9 @@ let sub_sound_ok_enabled = false;
 let sub_sound_error_enabled = false;
 let sub_focus_year = 0;
 let sub_focus_year_filter_enabled = false;
+let sub_member_period_select = null;
+let sub_member_period_filter = null;
+let sub_member_person_map = new Map();
 
 person_map.subscribe((m) => {
   sub_person_map = m;
@@ -144,6 +151,18 @@ focus_year_filter_enabled.subscribe((b) => {
   sub_focus_year_filter_enabled = b;
 });
 
+member_period_select.subscribe((s) => {
+  sub_member_period_select = s;
+});
+
+member_period_filter.subscribe((b) => {
+  sub_member_period_filter = b;
+});
+
+member_person_map.subscribe((m) => {
+  sub_member_person_map = m;
+});
+
 export { sub_person_map };
 export { sub_person_nfc_map };
 export { sub_tag_type_map};
@@ -168,3 +187,6 @@ export { sub_sound_ok_enabled };
 export { sub_sound_error_enabled };
 export { sub_focus_year };
 export { sub_focus_year_filter_enabled };
+export { sub_member_period_select };
+export { sub_member_period_filter };
+export { sub_member_person_map };

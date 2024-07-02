@@ -26,13 +26,13 @@
     timeout_id = setTimeout(() => {
       person_id = undefined;
     }, show_time);
-    person_id = prsn_id;  
+    person_id = prsn_id;
   });
 </script>
 
 {#if person_id}
   <li class="list-group-item bg-purple">
-    <PersonTag {person_id} show_member_year />
+    <PersonTag {person_id} show_member_period />
     <Badge color=dark>
       Reeds geregistreerd om {get_time_str(sub_person_last_reg_ts_map.get(person_id))}<br/>
       (binnen {Math.floor(reg_block_time / 60000)} minuten)

@@ -69,7 +69,7 @@
             />
           </Col>
           <Col>
-            <PersonTag {person_id} show_member_year show_tags />
+            <PersonTag {person_id} show_member_period show_tags />
           </Col>
         </Row>
       </SelectableListGroupItem>

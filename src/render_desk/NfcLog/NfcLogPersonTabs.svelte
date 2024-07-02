@@ -58,7 +58,7 @@
         <Row>
           <Col sm=8>
             <CountBadge count={tab_person_lists[tab_id].length - start_row - index} />
-            <PersonTag {person_id} show_member_year show_tags />
+            <PersonTag {person_id} show_member_period show_tags />
           </Col>
           <Col>
             <NfcTag
@@ -75,4 +75,3 @@
       </ListGroup>
   </TabPane>
 {/each}
-
