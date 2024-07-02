@@ -1,7 +1,7 @@
 import { db_person } from '../db/db';
 import { person_map } from '../services/store';
 import { sub_person_map } from '../services/sub';
-import { member_year_person_map } from '../services/store';
+import { member_person_map } from '../services/store';
 
 const person_map_build = async () => {
   console.log('- build person map -');
@@ -19,23 +19,22 @@ const person_map_build = async () => {
     person_map.update((m) => {
       m.clear();
       person_ary.forEach((v) => {
-        const member_year = {...v.doc.member_year};
-        m.set(v.id, {...v.doc, member_year});
+        const member_in = [...v.doc.member_in];
+        m.set(v.id, {...v.doc, member_in});
       });
       return m;
     });
 
-    member_year_person_map.update((m) => {
-      m.clear();
-      person_ary.forEach((v) => {
-        Object.keys(v.doc.member_year ?? {}).sort().forEach((yk) => {
-          if (!m.has(yk)){
-            m.set(yk, new Set());
-          }
-          m.get(yk).add(v.doc._id);
-        });
-      });
-      return m;
+    member_person_map.update((m) => {
+     m.clear();
+     person_ary.forEach((v) => {
+      (v.doc.member_in ?? []).forEach((mk) => {
+        if (!m.has(mk)){
+          m.set(mk, new Set());
+        }
+        m.get(mk).add(v.id);
+      })
+     })
     });
 
   }).catch((err) => {
@@ -60,19 +59,22 @@ const person_map_listen_changes = () => {
 
     if (change.deleted){
 
-      member_year_person_map.update((m) => {
+      member_person_map.update((m) => {
         if (!sub_person_map.has(change.id)){
           return m;
         }
-        const {member_year} = sub_person_map.get(change.id); 
-        Object.keys(member_year ?? {}).forEach((yk) => {
-          if (!m.has(yk)){
+        const {member_in} = sub_person_map.get(change.id);
+        (member_in ?? []).forEach((mk) => {
+          if (!m.has(mk)){
             return;
           }
-          m.get(yk).delete(change.id);
-        });       
+          m.get(mk).delete(change.id);
+          if (m.get(mk).size === 0){
+            m.delete(mk);
+          }
+        });
         return m;
-      });        
+      });
 
       person_map.update((m) => {
         m.delete(change.id);
@@ -83,17 +85,17 @@ const person_map_listen_changes = () => {
     }
 
     person_map.update((m) => {
-      const member_year = {...change.doc.member_year};
-      m.set(change.id, {...change.doc, member_year});
+      const member_in = [...change.doc.member_in];
+      m.set(change.id, {...change.doc, member_in});
       return m;
     });
 
-    member_year_person_map.update((m) => {
-      Object.keys(change.doc.member_year ?? {}).sort().forEach((yk) => {
-        if (!m.has(yk)){
-          m.set(yk, new Set());
+    member_person_map.update((m) => {
+      (change.doc.member_in ?? []).sort().forEach((mk) => {
+        if (!m.has(mk)){
+          m.set(mk, new Set());
         }
-        m.get(yk).add(change.id);
+        m.get(mk).add(change.id);
       });
       return m;
     });
@@ -105,4 +107,3 @@ const person_map_listen_changes = () => {
 
 export { person_map_build };
 export { person_map_listen_changes };
-

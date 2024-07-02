@@ -86,31 +86,33 @@ const assist_person_map = {
 };
 
 /**
- * 
- * @param {string} file 
- * @param {string} assist_import_year 
+ *
+ * @param {string} file
+ * @param {string} member_period
  * @returns {undefined}
  */
-const person_assist_import = (file, assist_import_year) => {
-  const year_key = 'y' + assist_import_year.substring(0);
+const person_assist_import = (file, member_period) => {
+  if (!member_period){
+    console.log('- No member_period set error.');
+    return;
+  }
+
+  if (typeof member_period !== 'string'){
+    console.log('- member_period is not a string error.');
+    return;
+  }
+
   const workbook = XLSX.readFile(file);
   const sheet_name_list = workbook.SheetNames;
   const json_sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {defval: '', raw: false});
   const persons_bulk = [];
-  const active_yk_set = new Set();
-  const year_start = parseInt(assist_import_year) - 5;
-  const year_end = parseInt(assist_import_year) + 10;
-  const import_map = new Map();
 
-  for (let yy = year_start; yy < year_end; yy++){
-    console.log('= = active yk y' + yy);
-    active_yk_set.add('y' + yy);
-  }
+  const import_map = new Map();
+  const member_set = new Set();
 
   json_sheet.forEach((a_per) => {
-    const prsn = {
-      member_year: {}
-    };
+    const prsn = {};
+    let is_member = false;
 
     Object.keys(a_per).forEach((a_per_key) => {
       let norm_key = get_search_str(a_per_key);
@@ -126,7 +128,7 @@ const person_assist_import = (file, assist_import_year) => {
 
       if (norm_key === 'openstaandsaldo'){
         if (!a_val.trim().startsWith('-')){
-          prsn.member_year[year_key] = true;
+          is_member = true;
         }
       }
     });
@@ -149,78 +151,69 @@ const person_assist_import = (file, assist_import_year) => {
     }
 
     import_map.set(person_id, {...prsn});
+    if (is_member){
+      member_set.add(person_id);
+    } else {
+      // in case of duplicate person_id error
+      member_set.delete(person_id);
+    }
   });
 
-  for (const [s_p_id, s_prsn] of sub_person_map){
-    const {member_year: s_my, _rev: s_rev} = s_prsn;
-    const sd_my = {...s_my};
+  for (const [p_id, s_prsn] of sub_person_map){
+    const {member_in:comp_member_in, _rev, ...comp_prsn} = s_prsn;
+    const member_in_set = new Set(comp_member_in ?? []);
 
-    for (const yk in s_my){
-      if (active_yk_set.has(yk)){
-        continue;
+    if (!import_map.has(p_id)){
+      if (member_in_set.has(member_period)){
+        member_in_set.delete(member_period);
+        const update_rec = {...comp_prsn, member_in:[...member_in_set].sort(), _rev};
+        console.log('=-1 remove member_period: ' + p_id, update_rec);
+        persons_bulk.push(update_rec);
       }
-      // console.log('-- del yk: ' + s_p_id + ' > ' + yk);
-      delete sd_my[yk];
-    }
-
-    if (import_map.has(s_p_id)){
-
-      const prsn = import_map.get(s_p_id);
-
-      if (prsn.member_year.hasOwnProperty(year_key)){
-        sd_my[year_key] = true;
-      } else {
-        delete sd_my[year_key];
-        if (Object.keys(sd_my).length === 0){
-          persons_bulk.push({...s_prsn, _deleted: true});
-          import_map.delete(s_p_id);        
-          console.log('=-- del aa1, no sd_my ' + s_p_id);
-          continue;
-        }
-      }
-
-      const c_prsn = {...prsn, member_year: sd_my, _rev: s_rev};
-
-      if (lodash.isEqual(c_prsn, s_prsn)){
-        import_map.delete(s_p_id);
-        // console.log('=== no change aa2 for ' + s_p_id);
-        continue;
-      }
-
-      persons_bulk.push({...c_prsn});
-      import_map.delete(s_p_id);
-      console.log('=// update aa3 for ' + s_p_id);
       continue;
     }
 
-    delete sd_my[year_key];
+    const prsn = import_map.get(p_id);
 
-    if (Object.keys(sd_my).length === 0){
-      persons_bulk.push({...s_prsn, _deleted: true});      
-      console.log('=-- del aa4, not imported, no sd_my ' + s_p_id);
-      continue;   
+    if (member_set.has(p_id)){
+      member_in_set.add(member_period);
+    } else {
+      member_in_set.delete(member_period);
     }
 
-    if (lodash.isEqual(sd_my, s_my)){
-      // console.log('no change aa5 (not imported) ' + s_p_id);
-      continue;     
+    const member_in = [...member_in_set].sort();
+    const update_rec = {...prsn, member_in, _rev};
+
+    if (lodash.isEqual(member_in, comp_member_in) === false){
+      console.log('=-2 update member_period: ' + p_id, update_rec);
+      persons_bulk.push(update_rec);
+      import_map.delete(p_id);
+      continue;
     }
 
-    persons_bulk.push({...s_prsn, member_year: sd_my});
-    console.log('=// change my aa6 ' + s_p_id);
+    if (lodash.isEqual(prsn, comp_prsn) === false){
+      console.log('=-3 update person data: ' + p_id, update_rec);
+      persons_bulk.push(update_rec);
+      import_map.delete(p_id);
+      continue;
+    }
+
+    console.log('=-4 no change for ' + p_id, update_rec);
+    import_map.delete(p_id);
   }
 
-  for (const [i_p_id, i_prsn] of import_map){
-    if (i_prsn.member_year.hasOwnProperty(year_key)){
-      console.log('=++ add aa7 ' + i_p_id);
-      persons_bulk.push({...i_prsn});
-      continue;   
+  for (const [p_id, prsn] of import_map){
+    if (!member_set.has(p_id)){
+      console.log('=-5 no add (no membership) ' + p_id, prsn);
+      continue;
     }
 
-    // console.log('not add aa8 ' + i_p_id);
+    const update_rec = {member_in:[member_period], ...prsn};
+    console.log('=-6 add ' + p_id, update_rec);
+    persons_bulk.push(update_rec);
   }
 
-  console.log('*** Assist import version 1.4 ***');
+  console.log('*** Assist import version 1.5 ***');
 
   if (persons_bulk.length === 0){
     console.log('== person: no bulkDocs operation, no change');
@@ -239,4 +232,52 @@ const person_assist_import = (file, assist_import_year) => {
   });
 };
 
+const person_remove_member_period = (member_period) => {
+  const persons_bulk = [];
+
+
+
+
+  if (persons_bulk.length === 0){
+    console.log('RM == person: no bulkDocs operation, no change');
+    return;
+  }
+
+  console.log('RM +++ persons_bulk +++', persons_bulk);
+
+  db_person.bulkDocs(persons_bulk).then((res) => {
+    console.log('RM ++ person bulkDocs ready', res);
+    return person_build_idx_by_text();
+  }).then(() => {
+    return person_build_idx_by_simular();
+  }).catch((err) => {
+    console.log('RM !! person bulk error', err);
+  });
+};
+
+const person_cleanup = () => {
+  const persons_bulk = [];
+
+
+
+
+  if (persons_bulk.length === 0){
+    console.log('RM == person: no bulkDocs operation, no change');
+    return;
+  }
+
+  console.log('RM +++ persons_bulk +++', persons_bulk);
+
+  db_person.bulkDocs(persons_bulk).then((res) => {
+    console.log('RM ++ person bulkDocs ready', res);
+    return person_build_idx_by_text();
+  }).then(() => {
+    return person_build_idx_by_simular();
+  }).catch((err) => {
+    console.log('RM !! person bulk error', err);
+  });
+};
+
 export { person_assist_import };
+export { person_remove_member_period };
+export { person_cleanup };

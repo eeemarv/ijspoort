@@ -7,8 +7,8 @@ const design_doc = {
     count_by_text: {
       map: ((doc) => {
         const prefix_keys = [''];
-        if (doc.member_year !== undefined){
-          Object.keys(doc.member_year).forEach((v) => {
+        if (typeof doc.member_in !== 'undefined'){
+          doc.member_in.forEach((v) => {
             prefix_keys.push(v + '.');
           });
         }
