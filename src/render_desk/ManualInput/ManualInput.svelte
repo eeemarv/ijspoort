@@ -5,11 +5,11 @@
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
   import { selected_person_id } from '../../services/store';
-  import { focus_year } from '../../services/store';
-  import { focus_year_filter_enabled } from '../../services/store';
+  import { member_period_filter } from '../../services/store';
+  import { member_period_filter_enabled } from '../../services/store';
+  import { member_person_map } from '../../services/store';
   import { person_ids_to_func_by_text } from '../../db_get/person_get';
 
-  let select_years = [];
   let el_manual;
   let el_group;
   let dropdown_open = false;
@@ -18,22 +18,12 @@
   const searchUpdateEmitter = new SearchUpdateEmitter();
 
   $: {
-    $focus_year_filter_enabled;
-    $focus_year;
+    $member_period_filter_enabled;
+    $member_period_filter;
     searchUpdateEmitter.emit('update');
   }
 
-  const update_select_years = () => {
-    select_years = [];
-    let year_now = (new Date()).getFullYear();
-    for(let y = year_now - 5; y < year_now + 2; y++){
-      select_years = [...select_years, y];
-    }
-    console.log(select_years);
-  };
-
   onMount(() => {
-    update_select_years();
 
     autocomplete({
       input: el_manual,
@@ -63,7 +53,7 @@
       }
     });
 
-    // new focus_year or year_filter
+    // new member_period_filter
     searchUpdateEmitter.on('update', () => {
       // see https://github.com/kraaden/autocomplete/issues/52
       setTimeout(() => {
@@ -87,25 +77,30 @@
       <div class="form-check ml-2">
         <input class=form-check-input
           type=checkbox
-          id=focus_year_filter_enabled
-          bind:checked={$focus_year_filter_enabled}
-          title="Filter op actief lid in {$focus_year}"
+          id=member_period_filter_enabled
+          bind:checked={$member_period_filter_enabled}
+          title="Filter op actief lid in {$member_period_filter}"
         />
-        <label class=form-check-label for=yaer_filter_enabled>
+        <label class=form-check-label for=member_period_filter_enabled>
           <ButtonDropdown {dropdown_open}>
             <DropdownToggle caret
               color=success
               on:click={() => {dropdown_open = !dropdown_open;}}
-              title="Focus op lidjaar">
-              {$focus_year}
+              title="Filter op lidmaatschap">
+              {$member_period_filter ?? '*Geen*'}
             </DropdownToggle>
             <DropdownMenu>
-              {#each select_years as y}
+              {#if !$member_period_filter}
+                <DropdownItem active title="Geen lidmaatschap filter geselecteerd">
+                  *Geen*
+                </DropdownItem>
+              {/if}
+              {#each [...$member_person_map.keys()].sort() as member_period(member_period)}
                 <DropdownItem
-                  active={y === $focus_year}
-                  on:click={() => {$focus_year = y;}}
+                  active={member_period === $member_period_filter}
+                  on:click={() => {$member_period_filter = member_period;}}
                 >
-                  {y}
+                  {member_period}
                 </DropdownItem>
               {/each}
             </DropdownMenu>

@@ -1,5 +1,6 @@
 const env = window.require('electron').remote.process.env;
 import { sub_nfc_map } from '../services/sub';
+import { sub_member_period_filter } from '../services/sub';
 import { sub_person_tag_map } from '../services/sub';
 import { sub_person_nfc_auto_enabled } from '../services/sub';
 import { sub_auto_tag_on_nfc } from '../services/sub';
@@ -15,6 +16,11 @@ const listen_tag_nfc_auto = () => {
     return;
   }
   ev_nfc_scan.addEventListener('person_valid_member', (e) => {
+    if (typeof sub_member_period_filter !== 'string'){
+      // should not happen
+      console.log('-- ERR member_period_filter is not a string');
+      return;
+    }
     if (!sub_person_nfc_auto_enabled){
       console.log('-- open person data on nfc not enabled');
       return;
@@ -69,12 +75,12 @@ const listen_tag_nfc_auto = () => {
       if (!t_map.size){
         console.log('-- tag add - a3 - ', tag_type);
         tag_add_ary.push(type_id);
-        continue;        
+        continue;
       }
       if (t_map.size < tag_type.max_per_person){
         console.log('-- tag add - a4 - ', tag_type);
         tag_add_ary.push(type_id);
-        continue;         
+        continue;
       }
       console.log('-- tag not add - b1 (max reached)', tag_type);
     }

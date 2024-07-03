@@ -25,6 +25,7 @@ import { focus_year_filter_enabled } from './store';
 
 import { member_period_select } from './store';
 import { member_period_filter } from './store';
+import { member_period_filter_enabled } from './store';
 import { member_person_map } from './store';
 
 let sub_person_map = new Map();
@@ -53,6 +54,7 @@ let sub_focus_year = 0;
 let sub_focus_year_filter_enabled = false;
 let sub_member_period_select = null;
 let sub_member_period_filter = null;
+let sub_member_period_filter_enabled = false;
 let sub_member_person_map = new Map();
 
 person_map.subscribe((m) => {
@@ -155,8 +157,12 @@ member_period_select.subscribe((s) => {
   sub_member_period_select = s;
 });
 
-member_period_filter.subscribe((b) => {
-  sub_member_period_filter = b;
+member_period_filter.subscribe((s) => {
+  sub_member_period_filter = s;
+});
+
+member_period_filter_enabled.subscribe((b) => {
+  sub_member_period_filter_enabled = b;
 });
 
 member_person_map.subscribe((m) => {
@@ -189,4 +195,5 @@ export { sub_focus_year };
 export { sub_focus_year_filter_enabled };
 export { sub_member_period_select };
 export { sub_member_period_filter };
+export { sub_member_period_filter_enabled };
 export { sub_member_person_map };

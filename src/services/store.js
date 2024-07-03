@@ -55,6 +55,7 @@ export const gate_display_enabled = create_coupled_estore('gate_display_enabled'
 export const assist_import_member_period = create_coupled_estore('assist_import_member_period', null);
 export const member_period_select = create_coupled_estore('member_period_select', null);
 export const member_period_filter = create_coupled_estore('member_period_filter', null);
+export const member_period_filter_enabled = create_coupled_estore('member_period_filter_enabled', false);
 
 export const beep_enabled = create_coupled_estore('beep_enabled', true);
 export const sound_ok_enabled = create_coupled_estore('sound_ok_enabled', false);

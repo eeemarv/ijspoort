@@ -28,13 +28,14 @@ const person_map_build = async () => {
     member_person_map.update((m) => {
      m.clear();
      person_ary.forEach((v) => {
-      (v.doc.member_in ?? []).forEach((mk) => {
-        if (!m.has(mk)){
-          m.set(mk, new Set());
+      (v.doc.member_in ?? []).forEach((member_period) => {
+        if (!m.has(member_period)){
+          m.set(member_period, new Set());
         }
-        m.get(mk).add(v.id);
+        m.get(member_period).add(v.id);
       })
-     })
+     });
+     return m;
     });
 
   }).catch((err) => {
@@ -64,13 +65,13 @@ const person_map_listen_changes = () => {
           return m;
         }
         const {member_in} = sub_person_map.get(change.id);
-        (member_in ?? []).forEach((mk) => {
-          if (!m.has(mk)){
+        (member_in ?? []).forEach((member_period) => {
+          if (!m.has(member_period)){
             return;
           }
-          m.get(mk).delete(change.id);
-          if (m.get(mk).size === 0){
-            m.delete(mk);
+          m.get(member_period).delete(change.id);
+          if (m.get(member_period).size === 0){
+            m.delete(member_period);
           }
         });
         return m;
@@ -91,11 +92,11 @@ const person_map_listen_changes = () => {
     });
 
     member_person_map.update((m) => {
-      (change.doc.member_in ?? []).sort().forEach((mk) => {
-        if (!m.has(mk)){
-          m.set(mk, new Set());
+      (change.doc.member_in ?? []).sort().forEach((member_period) => {
+        if (!m.has(member_period)){
+          m.set(member_period, new Set());
         }
-        m.get(mk).add(change.id);
+        m.get(member_period).add(change.id);
       });
       return m;
     });

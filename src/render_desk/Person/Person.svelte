@@ -64,7 +64,7 @@
         <PersonMemberId {person_id} />
         {#if person.member_since }
           <div title="inschrijvingsdatum">
-            {person.member_since}
+            lid sinds {person.member_since}
           </div>
         {:else}
           <div></div>

@@ -4,7 +4,7 @@
   import { createEventDispatcher } from 'svelte';
   import { person_nfc_auto_enabled, tag_type_map } from '../../services/store';
   import { tag_map } from '../../services/store';
-  import { focus_year } from '../../services/store';
+  import { member_period_filter } from '../../services/store';
   import Checkbox from '../../render/Common/Checkbox.svelte';
   import { auto_tag_on_nfc } from '../../services/store';
   import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
@@ -35,8 +35,8 @@
 
       <TagAddButton {type_id} />
 
-      {#if $person_nfc_auto_enabled}
-        <Checkbox title="Voeg tag automatisch toe bij gescand lid in focus jaar {$focus_year}" 
+      {#if $person_nfc_auto_enabled && $member_period_filter}
+        <Checkbox title="Voeg tag automatisch toe bij gescand lidmaatschap in {$member_period_filter}"
           name="auto_reg_{type_id}"
           bind:checked={$auto_tag_on_nfc[type_id]}
           c_class=d-inline-block
@@ -48,4 +48,3 @@
 </ListGroupItem>
 
 {/if}
-
