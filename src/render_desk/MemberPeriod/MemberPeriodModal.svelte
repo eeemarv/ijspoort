@@ -1,10 +1,10 @@
 <script>
-  import { member_year_person_map } from '../../services/store';
+  import { member_person_map } from '../../services/store';
   import { Progress } from 'sveltestrap';
   import { Modal, ModalHeader, ModalBody } from 'sveltestrap';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
 
-  export const open_member_year_modal = () => {
+  export const open_member_period_modal = () => {
     open = true;
   };
 
@@ -14,7 +14,7 @@
     open = !open;
   };
 
-  $: max = [...$member_year_person_map.values()].reduce((mx, p_map) => Math.max(p_map.size, mx), 10);
+  $: max = [...$member_person_map.values()].reduce((mx, p_set) => Math.max(p_set.size, mx), 10);
 
 </script>
 
@@ -23,17 +23,17 @@
     Ledenaantal per jaar
   </ModalHeader>
   <ModalBody>
-    {#each [...$member_year_person_map].sort((a, b) => a[0] - b[0]) as [yk, p_map](yk)}
+    {#each [...$member_person_map].sort((a, b) => a[0] - b[0]) as [member_period, p_set](member_period)}
       <div class="text-center">
-        { yk.substring(1) }
+        { member_period }
       </div>
       <Progress
         color=success
-        title="{p_map.size} leden in {yk.substring(1)}"
-        value={p_map.size}
+        title="{p_set.size} leden in {member_period}"
+        value={p_set.size}
         {max}
       >
-        { p_map.size }
+        { p_set.size }
       </Progress>
     {/each}
   </ModalBody>

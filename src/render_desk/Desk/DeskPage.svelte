@@ -13,7 +13,7 @@
   import { temp_display_enabled } from '../../services/store';
   import { gate_display_enabled } from '../../services/store';
   import { tag_display_enabled } from '../../services/store';
-  import MemberYearCardBody from '../MemberYear/MemberYearCardBody.svelte';
+  import MemberPeriodCardBody from '../MemberPeriod/MemberPeriodCardBody.svelte';
 
 </script>
 
@@ -40,7 +40,7 @@
 
   <div class=my-2>
     <Card>
-      <MemberYearCardBody />
+      <MemberPeriodCardBody />
       <CardBody class="d-flex w-100 justify-content-between">
         <SyncBadge />
         <Clock />
