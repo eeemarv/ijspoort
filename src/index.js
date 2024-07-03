@@ -83,7 +83,7 @@ const createWindow = () => {
 };
 
 app.on('ready', () => {
-	build_menu(win, eStore);
+	build_menu(win);
 	createWindow();
 });
 
@@ -103,5 +103,5 @@ app.on('activate', () => {
 });
 
 ipcMain.on('rebuild_menu', () => {
-	build_menu(win, eStore);
+	build_menu(win);
 });

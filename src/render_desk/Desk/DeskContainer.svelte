@@ -1,12 +1,15 @@
 <script>
+  const { ipcRenderer } = window.require('electron');
   import { Container, Row } from 'sveltestrap';
   import DbRegCSVExport from '../Db/DbRegCSVExport.svelte';
   import DbRegCountCSVExport from '../Db/DbRegCountCSVExport.svelte';
   import DbJSONExport from '../Db/DbJSONExport.svelte';
   import Config from '../Config/Config.svelte';
   import DeskPage from './DeskPage.svelte';
-  import DbAssistImport from '../Db/DbAssistImport.svelte';
   import { listen_tag_nfc_auto } from '../../tag/tag_nfc_auto';
+  import DataUpdateImport from '../DataUpdate/DataUpdateImport.svelte';
+  import DataUpdateRemove from '../DataUpdate/DataUpdateRemove.svelte';
+  import DataUpdateCleanup from '../DataUpdate/DataUpdateCleanup.svelte';
 
   listen_tag_nfc_auto();
 
@@ -29,15 +32,19 @@
     }
   };
 
-  
+  // To ensure menu gets build with win variable
+  ipcRenderer.send('rebuild_menu');
+
 </script>
 
 <svelte:window on:scroll={handle_scroll} bind:scrollY={y}/>
 
+<DataUpdateImport />
+<DataUpdateRemove />
+<DataUpdateCleanup />
 <DbRegCSVExport />
 <DbRegCountCSVExport />
 <DbJSONExport />
-<DbAssistImport />
 <Config />
 
 <Container fluid>
