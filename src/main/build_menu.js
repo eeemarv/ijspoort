@@ -1,36 +1,7 @@
 const { Menu, MenuItem } = require('electron');
-// const { dialog } = require('electron');
-
-/*
-const import_assist_xlsx = (win, eStore) => {
-	const assist_import_year = eStore.get('assist_import_year');
-	if (!assist_import_year){
-		return;
-	}
-	const files = dialog.showOpenDialogSync(win, {
-		properties: ['openFile'],
-      filters: {name: 'MS Excell', extensions: ['xls', 'xlsx']},
-      message: 'Import xlsx leden uit Assist, LIDJAAR ' + assist_import_year
-	});
-	if (!files){
-			return;
-	}
-	win.webContents.send('xls.assist.import', files[0]);
-};
-*/
 
 const build_menu = (win) => {
 	const menu = new Menu();
-
-	/*
-	const assist_import_year = eStore.get('assist_import_year');
-
-	if(assist_import_year){
-		const importMenu = new Menu();
-		importMenu.append(new MenuItem({ label: 'leden Assist Xlsx ' + assist_import_year, click: () => import_assist_xlsx(win, eStore) }));
-		menu.append(new MenuItem({ label: 'Import', submenu: importMenu }));
-	}
-	*/
 
 	const updateDataMenu = new Menu();
 	updateDataMenu.append(new MenuItem({ label: 'Import Assist lidmaatschap', click: () => { win.webContents.send('members.import'); }}));

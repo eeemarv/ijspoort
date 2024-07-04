@@ -1,5 +1,4 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import { Container, Row } from 'sveltestrap';
   import DbRegCSVExport from '../Db/DbRegCSVExport.svelte';
   import DbRegCountCSVExport from '../Db/DbRegCountCSVExport.svelte';
@@ -31,10 +30,6 @@
       el_btn_to_top.style.visibility = 'hidden';
     }
   };
-
-  // To ensure menu gets build with win variable
-  ipcRenderer.send('rebuild_menu');
-
 </script>
 
 <svelte:window on:scroll={handle_scroll} bind:scrollY={y}/>

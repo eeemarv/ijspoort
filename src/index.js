@@ -6,6 +6,7 @@ const path = require('path');
 const listen_pcsc = require('./main/listen_pcsc.js');
 const listen_mfrc = require('./main/listen_mfrc.js');
 const build_menu = require('./main/build_menu.js');
+const listen_import_file_select = require('./main/listen_import_file_select.js');
 const { mqtt_init } = require('./main/mqtt.js');
 
 const eStore = new EStore();
@@ -68,6 +69,10 @@ const createWindow = () => {
 			}
 		}
 		mqtt_init(win);
+		if (!gate_modus){
+			build_menu(win);
+			listen_import_file_select(win);
+		}
   });
 
   if (debug_enabled){
@@ -83,7 +88,6 @@ const createWindow = () => {
 };
 
 app.on('ready', () => {
-	build_menu(win);
 	createWindow();
 });
 
@@ -102,6 +106,8 @@ app.on('activate', () => {
   }
 });
 
+/* menu does not change for now
 ipcMain.on('rebuild_menu', () => {
 	build_menu(win);
 });
+*/
