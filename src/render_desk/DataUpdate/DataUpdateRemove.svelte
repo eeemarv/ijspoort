@@ -1,8 +1,20 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
+  import { Button, ButtonDropdown, Card, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Label } from 'sveltestrap';
+  import { FormText, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
+  import { member_person_map } from '../../services/store';
+  import { member_period_filter } from '../../services/store';
+  import { member_period_import } from '../../services/store';
+  import { member_period_select } from '../../services/store';
+  import Icon from '@iconify/svelte';
+  import exclamationTriangle from '@iconify/icons-fa/exclamation-triangle';
+  import { person_remove_member_period } from '../../db_put/person_put';
+
   let open = false;
+  let dropdown_open = false;
+  let selected_member_period = undefined;
+  let verify = false;
 
   ipcRenderer.on('members.remove', () => {
     open = true;
@@ -16,6 +28,26 @@
     open = !open;
   };
 
+  const handle_remove = () => {
+    console.log('handle_remove');
+    person_remove_member_period(selected_member_period);
+    if (selected_member_period === $member_period_filter){
+      $member_period_filter = '';
+    }
+    if (selected_member_period === $member_period_select){
+      $member_period_select = '';
+    }
+    if (selected_member_period === $member_period_import){
+      $member_period_import = '';
+    }
+    open = false;
+  };
+
+  $: if (open){
+    selected_member_period = undefined;
+    verify = false;
+  }
+
 </script>
 
 <Modal
@@ -23,16 +55,68 @@
   {toggle}
   size=xl
 >
-  <ModalHeader {toggle} color=info>
+  <ModalHeader {toggle}>
     <h1>
       Verwijder lidmaatschapsperiode
     </h1>
   </ModalHeader>
   <ModalBody>
+    <Card body color=primary class=mb-2>
+      <FormText>
+        <Icon icon={exclamationTriangle} />
+        Wis hier oude lidmaatschapperiodes.
+        Persoonsdata wordt niet gewist.
+        Alleen persoonsdata zonder lidmaatschapsperiodes kan
+        gewist worden (zie "Leden data" menu).
+      </FormText>
+    </Card>
+    <FormGroup>
+      <Label for=select_member_period>
+        Lidmaatschapsperiode te verwijderen
+      </Label>
+      <ButtonDropdown {dropdown_open} id=select_member_period>
+        <DropdownToggle caret
+          color=success
+          on:click={() => {dropdown_open = !dropdown_open;}}
+          title="Selecteer te wissen lidmaatschapsperiode">
+          {#if selected_member_period}
+            {selected_member_period}
+          {:else}
+            *Geen*
+          {/if}
+        </DropdownToggle>
+        <DropdownMenu>
+          {#if !selected_member_period}
+            <DropdownItem active title="Geen periode geselecteerd">
+              *Geen*
+            </DropdownItem>
+          {/if}
+          {#each [...$member_person_map.keys()].sort() as member_period(member_period)}
+            <DropdownItem
+              active={selected_member_period === member_period}
+              on:click={() => {selected_member_period = member_period;}}
+            >
+              {member_period} ({$member_person_map.get(member_period).size} leden)
+            </DropdownItem>
+          {/each}
+        </DropdownMenu>
+      </ButtonDropdown>
+    </FormGroup>
+    <FormGroup>
+      <div class=form-check>
+        <input class=form-check-input type=checkbox id=verify_remove_membership bind:checked={verify}>
+        <label class=form-check-label for=verify_remove_membership>
+          Ik ben zeker
+        </label>
+      </div>
+    </FormGroup>
 
-
-
-
+    <Button color=danger
+      disabled={!verify || !selected_member_period}
+      on:click={handle_remove}
+    >
+      Verwijder
+    </Button>
   </ModalBody>
   <ModalFooterClose on:click={toggle} />
 </Modal>

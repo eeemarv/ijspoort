@@ -114,7 +114,9 @@ const person_ids_to_func_by_text = (text, update_func) => {
       update_func([]);
       return;
     }
-    search_text = sub_member_period_filter + '.' + search_text;
+    if (sub_member_period_filter){
+      search_text = sub_member_period_filter + '.' + search_text;
+    }
   }
 
   db_person.query('search/count_by_text', {

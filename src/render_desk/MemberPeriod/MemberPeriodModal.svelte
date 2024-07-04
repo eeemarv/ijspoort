@@ -23,7 +23,7 @@
     Ledenaantal per periode
   </ModalHeader>
   <ModalBody>
-    {#each [...$member_person_map].sort((a, b) => a[0] - b[0]) as [member_period, p_set](member_period)}
+    {#each [...$member_person_map].sort() as [member_period, p_set](member_period)}
       <div class="text-center">
         { member_period }
       </div>

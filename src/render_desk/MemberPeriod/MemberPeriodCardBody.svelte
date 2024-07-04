@@ -10,26 +10,28 @@
 
 <MemberPeriodModal bind:open_member_period_modal />
 
-{#if $member_period_filter}
-  <CardBody>
-    <div>
-      <Button
+<CardBody>
+  <div>
+    <Button
+      size=sm
+      color=white
+      outline
+      on:click={open_member_period_modal}
+    >
+      {$member_person_map.get($member_period_filter)?.size ?? '-'}
+    </Button>
+      leden in
+    <Button
         size=sm
-        color=white
-        outline
+        color=success
+        title="aantal leden in {$member_period_filter}"
         on:click={open_member_period_modal}
-      >
-        {$member_person_map.get($member_period_filter)?.size ?? '-'}
-      </Button>
-        leden in
-      <Button
-          size=sm
-          color=success
-          title="aantal leden in {$member_period_filter}"
-          on:click={open_member_period_modal}
-      >
+    >
+      {#if $member_period_filter}
         {$member_period_filter}
-      </Button>
-    </div>
-  </CardBody>
-{/if}
+      {:else}
+        ***
+      {/if}
+    </Button>
+  </div>
+</CardBody>

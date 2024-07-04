@@ -1,7 +1,7 @@
 import { db_person } from '../db/db';
 import lodash from 'lodash';
 import { get_search_str } from '../services/functions';
-import { sub_person_map } from '../services/sub';
+import { sub_member_person_map, sub_person_map } from '../services/sub';
 import { person_build_idx_by_text } from '../db_idx/person_idx';
 import { person_build_idx_by_simular } from '../db_idx/person_idx';
 import { member_id_to_person_id } from '../person/person_id';
@@ -235,8 +235,39 @@ const person_assist_import = (file, member_period) => {
 const person_remove_member_period = (member_period) => {
   const persons_bulk = [];
 
+  if (!member_period){
+    console.log('member_period empty');
+    return;
+  }
+  if (typeof member_period !== 'string'){
+    console.log('member_period is not string');
+    return;
+  }
+  if (!sub_member_person_map.has(member_period)){
+    console.log('member_period not found');
+  }
 
+  for (const person_id of sub_member_person_map.get(member_period)){
+    if (!sub_person_map.has(person_id)){
+      console.log('person_id ' + person_id + ' not found in sub_person_map');
+      continue;
+    }
+    const s_person = sub_person_map.get(person_id);
+    const {member_in:comp_member_in, ...r_person} = s_person;
+    const member_in_set = new Set(comp_member_in ?? []);
+    member_in_set.delete(member_period);
 
+    const member_in = [...member_in_set].sort();
+    const update_rec = {...r_person, member_in};
+
+    if (lodash.isEqual(member_in, comp_member_in) === false){
+      console.log('=-1 delete member_period: ' + person_id, update_rec);
+      persons_bulk.push(update_rec);
+      continue;
+    }
+
+    console.log('=-2 no change for ' + person_id, update_rec);
+  }
 
   if (persons_bulk.length === 0){
     console.log('RM == person: no bulkDocs operation, no change');

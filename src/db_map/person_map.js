@@ -85,6 +85,17 @@ const person_map_listen_changes = () => {
       return;
     }
 
+    /** find member_periods to remove, if any */
+    const new_member_in_set = new Set(change.doc.member_in);
+    const remove_member_in_set = new Set();
+    if (sub_person_map.has(change.id)){
+      for (const member_period of sub_person_map.get(change.id).member_in ?? []){
+        if (!new_member_in_set.has(member_period)){
+          remove_member_in_set.add(member_period);
+        }
+      }
+    }
+
     person_map.update((m) => {
       const member_in = [...change.doc.member_in];
       m.set(change.id, {...change.doc, member_in});
@@ -98,6 +109,15 @@ const person_map_listen_changes = () => {
         }
         m.get(member_period).add(change.id);
       });
+      for (const member_period of remove_member_in_set){
+        if (!m.has(member_period)){
+          continue;
+        }
+        m.get(member_period).delete(change.id);
+        if (!m.get(member_period).size){
+          m.delete(member_period);
+        }
+      }
       return m;
     });
 

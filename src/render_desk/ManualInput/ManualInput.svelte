@@ -87,7 +87,11 @@
               color=success
               on:click={() => {dropdown_open = !dropdown_open;}}
               title="Filter op lidmaatschap">
-              {$member_period_filter ?? '*Geen*'}
+                {#if $member_period_filter}
+                  {$member_period_filter}
+                {:else}
+                  *Geen*
+                {/if}
             </DropdownToggle>
             <DropdownMenu>
               {#if !$member_period_filter}
@@ -100,7 +104,7 @@
                   active={member_period === $member_period_filter}
                   on:click={() => {$member_period_filter = member_period;}}
                 >
-                  {member_period}
+                  {member_period} ({$member_person_map.get(member_period).size} leden)
                 </DropdownItem>
               {/each}
             </DropdownMenu>
