@@ -64,9 +64,14 @@
 </script>
 
 <div class="form-group">
-  <label for="manual">
-    Manuele selectie lid (Assist database)
-  </label>
+  <div class="d-flex w-100 justify-content-between">
+    <label for="manual">
+      Manuele selectie lid (Assist database)
+    </label>
+    <label for="member_period_filter_enabled">
+      Filter lidmaatschap
+    </label>
+  </div>
   <div class="input-group input-group-lg" bind:this={el_group}>
     <input type="text" id="manual"
       tabindex="0" class="form-control input-lg"
