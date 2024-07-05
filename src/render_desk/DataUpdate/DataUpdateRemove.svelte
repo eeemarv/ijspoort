@@ -4,9 +4,6 @@
   import { FormText, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
   import { member_person_map } from '../../services/store';
-  import { member_period_filter } from '../../services/store';
-  import { member_period_import } from '../../services/store';
-  import { member_period_select } from '../../services/store';
   import Icon from '@iconify/svelte';
   import exclamationTriangle from '@iconify/icons-fa/exclamation-triangle';
   import { person_remove_member_period } from '../../db_put/person_put';
@@ -31,15 +28,7 @@
   const handle_remove = () => {
     console.log('handle_remove');
     person_remove_member_period(selected_member_period);
-    if (selected_member_period === $member_period_filter){
-      $member_period_filter = '';
-    }
-    if (selected_member_period === $member_period_select){
-      $member_period_select = '';
-    }
-    if (selected_member_period === $member_period_import){
-      $member_period_import = '';
-    }
+
     open = false;
   };
 

@@ -9,6 +9,7 @@
   import { person_assist_import } from '../../db_put/person_put';
 
   let open = false;
+  let allow_reset = true;
   let file_path = '';
 
   ipcRenderer.on('members.import', () => {
@@ -39,7 +40,12 @@
       console.log('member_period empty');
       return;
     }
+    allow_reset = false;
     person_assist_import(file_path, member_period);
+    /** delay to prevent reset of $member_period_import */
+    setTimeout(() => {
+      allow_reset = true;
+    }, 5000);
     open = false;
   };
 
@@ -49,6 +55,11 @@
   });
 
   $: $member_period_import = $member_period_import.replace(/[^a-z0-9-]/g, '');
+
+  $: if (allow_reset && !open && !$member_person_map.has($member_period_import)){
+    $member_period_import = '';
+  }
+
   $: if (open){
     file_path = '';
   }
