@@ -5,7 +5,7 @@
   export let title = 'lid in ' + $member_period_filter;
 </script>
 
-{#if $member_period_filter}
+{#if $member_period_filter && $member_period_filter !== '^'}
   <Badge color=success {title}>
     {$member_period_filter}
   </Badge>

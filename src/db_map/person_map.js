@@ -1,7 +1,9 @@
 import { db_person } from '../db/db';
 import { person_map } from '../services/store';
+import { sub_member_person_map } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { member_person_map } from '../services/store';
+import { member_data_update } from '../services/store';
 
 const person_map_build = async () => {
   console.log('- build person map -');
@@ -26,17 +28,29 @@ const person_map_build = async () => {
     });
 
     member_person_map.update((m) => {
-     m.clear();
-     person_ary.forEach((v) => {
-      (v.doc.member_in ?? []).forEach((member_period) => {
-        if (!m.has(member_period)){
-          m.set(member_period, new Set());
+      m.clear();
+      person_ary.forEach((v) => {
+        if (typeof v.doc.member_in === 'undefined'
+          || !(v.doc.member_in instanceof Array)
+          || v.doc.member_in.length === 0
+        ){
+          if (!m.has('^')){
+            m.set('^', new Set());
+          }
+          m.get('^').add(v.id);
+        } else {
+          v.doc.member_in.forEach((member_period) => {
+            if (!m.has(member_period)){
+              m.set(member_period, new Set());
+            }
+            m.get(member_period).add(v.id);
+          });
         }
-        m.get(member_period).add(v.id);
-      })
-     });
-     return m;
+      });
+      return m;
     });
+
+    member_data_update.set(false);
 
   }).catch((err) => {
     console.log(err);
@@ -64,16 +78,16 @@ const person_map_listen_changes = () => {
         if (!sub_person_map.has(change.id)){
           return m;
         }
-        const {member_in} = sub_person_map.get(change.id);
-        (member_in ?? []).forEach((member_period) => {
+        const member_periods = [...sub_member_person_map.keys()];
+        for (const member_period of member_periods){
           if (!m.has(member_period)){
-            return;
+            continue;
           }
           m.get(member_period).delete(change.id);
-          if (m.get(member_period).size === 0){
+          if (!m.get(member_period).size){
             m.delete(member_period);
           }
-        });
+        }
         return m;
       });
 
@@ -103,12 +117,28 @@ const person_map_listen_changes = () => {
     });
 
     member_person_map.update((m) => {
-      (change.doc.member_in ?? []).sort().forEach((member_period) => {
-        if (!m.has(member_period)){
-          m.set(member_period, new Set());
+      if (typeof change.doc.member_in === 'undefined'
+        || !(change.doc.member_in instanceof Array)
+        || change.doc.member_in.length === 0
+      ){
+        if (!m.has('^')){
+          m.set('^', new Set());
         }
-        m.get(member_period).add(change.id);
-      });
+        m.get('^').add(change.id);
+      } else {
+        change.doc.member_in.forEach((member_period) => {
+          if (!m.has(member_period)){
+            m.set(member_period, new Set());
+          }
+          m.get(member_period).add(change.id);
+        });
+        if (m.has('^')){
+          m.get('^').delete(change.id);
+          if (!m.get('^').size){
+            m.delete('^');
+          }
+        }
+      }
       for (const member_period of remove_member_in_set){
         if (!m.has(member_period)){
           continue;
@@ -120,6 +150,11 @@ const person_map_listen_changes = () => {
       }
       return m;
     });
+
+    setTimeout(() => {
+      member_data_update.set(false);
+    }, 5000);
+
 
   }).on('error', (err) => {
     console.log(err);

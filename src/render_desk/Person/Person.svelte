@@ -57,7 +57,7 @@
 <CardGroup>
   <Card>
     <CardHeader class=bg-info>
-      Assist
+      Assist data
     </CardHeader>
     <ListGroup>
       <ListGroupItem clss="d-flex w-100 justify-content-between py-2">

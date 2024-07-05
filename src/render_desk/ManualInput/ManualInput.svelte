@@ -1,7 +1,7 @@
 <script>
   const EventEmitter = require('events');
   import { onMount } from 'svelte';
-  import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'sveltestrap';
+  import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge } from 'sveltestrap';
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
   import { selected_person_id } from '../../services/store';
@@ -89,33 +89,50 @@
         <label class=form-check-label for=member_period_filter_enabled>
           <ButtonDropdown {dropdown_open}>
             <DropdownToggle caret
-              color=success
+              color={$member_period_filter === '^' ? 'warning' : $member_period_filter ? 'success' : 'grey'}
               on:click={() => {dropdown_open = !dropdown_open;}}
               title="Filter op lidmaatschap">
-                {#if $member_period_filter}
+                {#if $member_period_filter === '^'}
+                  Geen lid
+                {:else if $member_period_filter}
                   {$member_period_filter}
                 {:else}
-                  *Geen*
+                  *Geen filter*
                 {/if}
             </DropdownToggle>
             <DropdownMenu>
               {#if !$member_period_filter}
                 <DropdownItem active title="Geen lidmaatschap filter geselecteerd">
-                  *Geen*
+                  <Badge color=grey>
+                    *Geen filter*
+                  </Badge>
                 </DropdownItem>
               {/if}
-              {#each [...$member_person_map.keys()].sort() as member_period(member_period)}
+              {#each [...$member_person_map.keys()].filter(k => k !== '^').sort() as member_period(member_period)}
                 <DropdownItem
                   active={member_period === $member_period_filter}
                   on:click={() => {$member_period_filter = member_period;}}
                 >
-                  {member_period} ({$member_person_map.get(member_period).size} leden)
+                  <Badge color=success class=me-2>
+                    {member_period}
+                  </Badge>
+                  {$member_person_map.get(member_period).size} leden
                 </DropdownItem>
               {/each}
+              {#if $member_person_map.has('^')}
+                <DropdownItem
+                  active={$member_period_filter === '^'}
+                  on:click={() => {$member_period_filter = '^';}}
+                >
+                  <Badge color=warning class=me-2>
+                   Geen lid
+                  </Badge>
+                  {$member_person_map.get('^').size} personen
+                </DropdownItem>
+              {/if}
             </DropdownMenu>
           </ButtonDropdown>
         </label>
-      </div>
     </span>
   </div>
   <span id="manual_help">

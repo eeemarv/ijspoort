@@ -7,7 +7,7 @@
   export let font_size = '1em';
 </script>
 
-{#each [...$member_person_map.keys()].sort().slice(-1 * max_items) as member_period(member_period)}
+{#each [...$member_person_map.keys()].filter((k) => k !== '^').sort().slice(-1 * max_items) as member_period(member_period)}
 
   <PersonMemberPeriod {person_id} {member_period} {font_size} />
 

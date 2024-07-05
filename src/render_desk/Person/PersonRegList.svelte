@@ -116,9 +116,9 @@
                   <LocaleDateString ts_epoch={reg.ts_epoch} title="datum" />
                   {#if reg.blocked_nfcs}
                     <div class="badge bg-deepbrown blocked-badge">
-                      Geblokkeerd: 
+                      Geblokkeerd:
                         {#each reg.blocked_nfcs as nfc_uid, index(index)}
-                          <NfcTag nfc_id={nfc_uid_to_id(nfc_uid)} 
+                          <NfcTag nfc_id={nfc_uid_to_id(nfc_uid)}
                             abc_index={res.abc_map.get(nfc_uid_to_id(nfc_uid))}
                           />
                         {/each}
@@ -135,16 +135,14 @@
   </ModalBody>
   <ModalFooterClose on:click={toggle} >
     <div slot=left>
-      <span>Legende </span>
-      <Badge color=primary>
+      <span>Legende (kleur tijd)</span>
+      <Badge color=primary class=me-2>
         NFC-desk
       </Badge>
-      &nbsp;
-      <Badge color=accent>
+      <Badge color=accent class=me-2>
         NFC-poort
       </Badge>
-      &nbsp;
-      <Badge color=warning>
+      <Badge color=warning class=me-2>
         Manueel
       </Badge>
     </div>

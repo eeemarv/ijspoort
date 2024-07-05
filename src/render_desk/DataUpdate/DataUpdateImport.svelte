@@ -7,9 +7,9 @@
   import { member_period_import } from '../../services/store';
   import { member_person_map } from '../../services/store';
   import { person_assist_import } from '../../db_put/person_put';
+  import { member_data_update } from '../../services/store';
 
   let open = false;
-  let allow_reset = true;
   let file_path = '';
 
   ipcRenderer.on('members.import', () => {
@@ -40,12 +40,8 @@
       console.log('member_period empty');
       return;
     }
-    allow_reset = false;
+    $member_data_update = false;
     person_assist_import(file_path, member_period);
-    /** delay to prevent reset of $member_period_import */
-    setTimeout(() => {
-      allow_reset = true;
-    }, 5000);
     open = false;
   };
 
@@ -56,7 +52,7 @@
 
   $: $member_period_import = $member_period_import.replace(/[^a-z0-9-]/g, '');
 
-  $: if (allow_reset && !open && !$member_person_map.has($member_period_import)){
+  $: if (!$member_data_update && !open && !$member_person_map.has($member_period_import)){
     $member_period_import = '';
   }
 
@@ -95,12 +91,12 @@
       </FormText>
     </FormGroup>
     <div class=mb-2>
-    {#each [...$member_person_map.keys()].sort() as member_period(member_period)}
-      <Button color=success
+    {#each [...$member_person_map.keys()].filter((k) => k !== '^').sort() as member_period(member_period)}
+      <Button color=success class=me-2
         on:click={() => $member_period_import = member_period}
       >
         {member_period}
-      </Button>&nbsp;
+      </Button>
     {/each}
     </div>
     <Card body color=primary>

@@ -1,6 +1,6 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { Button, ButtonDropdown, Card, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Label } from 'sveltestrap';
+  import { Badge, Button, ButtonDropdown, Card, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Label } from 'sveltestrap';
   import { FormText, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
   import { member_person_map } from '../../services/store';
@@ -65,27 +65,25 @@
       </Label>
       <ButtonDropdown {dropdown_open} id=select_member_period>
         <DropdownToggle caret
-          color=success
+          color={selected_member_period ? 'success' : 'grey'}
           on:click={() => {dropdown_open = !dropdown_open;}}
           title="Selecteer te wissen lidmaatschapsperiode">
           {#if selected_member_period}
             {selected_member_period}
           {:else}
-            *Geen*
+            *Geen geselecteerd*
           {/if}
         </DropdownToggle>
         <DropdownMenu>
-          {#if !selected_member_period}
-            <DropdownItem active title="Geen periode geselecteerd">
-              *Geen*
-            </DropdownItem>
-          {/if}
-          {#each [...$member_person_map.keys()].sort() as member_period(member_period)}
+          {#each [...$member_person_map.keys()].filter((k) => k !== '^').sort() as member_period(member_period)}
             <DropdownItem
               active={selected_member_period === member_period}
               on:click={() => {selected_member_period = member_period;}}
             >
-              {member_period} ({$member_person_map.get(member_period).size} leden)
+              <Badge color=success class=me-2>
+                {member_period}
+              </Badge>
+              {$member_person_map.get(member_period).size} leden
             </DropdownItem>
           {/each}
         </DropdownMenu>

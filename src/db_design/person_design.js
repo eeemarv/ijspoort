@@ -7,7 +7,12 @@ const design_doc = {
     count_by_text: {
       map: ((doc) => {
         const prefix_keys = [''];
-        if (typeof doc.member_in !== 'undefined'){
+        if (typeof doc.member_in === 'undefined'
+          || !(doc.member_in instanceof Array)
+          || doc.member_in.length === 0
+        ){
+          prefix_keys.push('^.');
+        } else {
           doc.member_in.forEach((v) => {
             prefix_keys.push(v + '.');
           });

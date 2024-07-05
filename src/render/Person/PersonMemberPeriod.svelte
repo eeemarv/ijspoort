@@ -7,6 +7,7 @@
   export let font_size = '1em';
 
   $: is_member = person_id && member_period
+    && member_period !== '^'
     && $member_person_map.has(member_period)
     && $member_person_map.get(member_period).has(person_id);
 

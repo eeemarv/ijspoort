@@ -1,6 +1,6 @@
 <script>
-  import { member_person_map } from '../../services/store';
-  import { Progress } from 'sveltestrap';
+  import { member_person_map, person_map } from '../../services/store';
+  import { Badge, Progress } from 'sveltestrap';
   import { Modal, ModalHeader, ModalBody } from 'sveltestrap';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
 
@@ -14,7 +14,7 @@
     open = !open;
   };
 
-  $: max = [...$member_person_map.values()].reduce((mx, p_set) => Math.max(p_set.size, mx), 10);
+  $: max = [...$member_person_map].filter(([k]) => k !== '^').reduce((mx, e) => Math.max(e[1].size, mx), 10);
 
 </script>
 
@@ -23,7 +23,7 @@
     Ledenaantal per periode
   </ModalHeader>
   <ModalBody>
-    {#each [...$member_person_map].sort() as [member_period, p_set](member_period)}
+    {#each [...$member_person_map].filter(([k]) => k !== '^').sort() as [member_period, p_set](member_period)}
       <div class="text-center">
         { member_period }
       </div>
@@ -37,5 +37,16 @@
       </Progress>
     {/each}
   </ModalBody>
-  <ModalFooterClose on:click={toggle} />
+  <ModalFooterClose on:click={toggle} >
+    <div slot=left>
+      {$person_map.size} personen in totaal
+      {#if $member_person_map.has('^')}
+        ,
+        <Badge color=warning>
+          Geen lid
+        </Badge>
+        {$member_person_map.get('^').size} personen
+      {/if}
+    </div>
+  </ModalFooterClose>
 </Modal>
