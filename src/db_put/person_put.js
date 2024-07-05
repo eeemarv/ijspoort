@@ -289,8 +289,18 @@ const person_remove_member_period = (member_period) => {
 const person_cleanup = () => {
   const persons_bulk = [];
 
+  if (!sub_member_person_map.has('^')){
+    console.log('no persons without membership');
+    return;
+  }
 
-
+  for (const person_id of sub_member_person_map.get('^')){
+    if (!sub_person_map.has(person_id)){
+      console.log('person_id ' + person_id + ' not found');
+      continue;
+    }
+    persons_bulk.push({...sub_person_map.get(person_id), _deleted: true});
+  }
 
   if (persons_bulk.length === 0){
     console.log('RM == person: no bulkDocs operation, no change');
