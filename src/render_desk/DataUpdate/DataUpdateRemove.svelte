@@ -91,7 +91,13 @@
     </FormGroup>
     <FormGroup>
       <div class=form-check>
-        <input class=form-check-input type=checkbox id=verify_remove_membership bind:checked={verify}>
+        <input
+          class=form-check-input
+          type=checkbox
+          id=verify_remove_membership
+          bind:checked={verify}
+          disabled={!selected_member_period}
+        >
         <label class=form-check-label for=verify_remove_membership>
           Ik ben zeker
         </label>

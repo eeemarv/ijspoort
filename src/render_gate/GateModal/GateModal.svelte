@@ -83,7 +83,7 @@
       msg: 'Lidmaatschap niet in orde',
       color: 'purple',
       person: true,
-      gate_auth: false
+      gate_auth: true
     },
     nfc_not_found: {
       msg: 'Tag niet herkend',

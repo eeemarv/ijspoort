@@ -40,7 +40,7 @@
       console.log('member_period empty');
       return;
     }
-    $member_data_update = false;
+    $member_data_update = true;
     person_assist_import(file_path, member_period);
     open = false;
   };

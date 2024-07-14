@@ -153,8 +153,7 @@ const person_map_listen_changes = () => {
 
     setTimeout(() => {
       member_data_update.set(false);
-    }, 5000);
-
+    }, 1000);
 
   }).on('error', (err) => {
     console.log(err);
