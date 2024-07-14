@@ -16,8 +16,8 @@ import { person_nfc_auto_enabled } from './store';
 import { gate_count_enabled } from './store';
 import { gate_count } from './store';
 import { gate_open } from './store';
-import { gate_nfc_enabled } from './store';
-import { gate_nfc_open_time } from './store';
+import { gate_members_only_enabled } from './store';
+import { gate_member_open_time } from './store';
 import { sound_ok_enabled } from './store';
 import { sound_error_enabled } from './store';
 import { focus_year } from './store';
@@ -46,8 +46,8 @@ let sub_person_nfc_auto_enabled = false;
 let sub_gate_count_enabled = false;
 let sub_gate_count = 0;
 let sub_gate_open = true;
-let sub_gate_nfc_enabled = false;
-let sub_gate_nfc_open_time = 12;
+let sub_gate_members_only_enabled = false;
+let sub_gate_member_open_time = 12;
 let sub_sound_ok_enabled = false;
 let sub_sound_error_enabled = false;
 let sub_focus_year = 0;
@@ -129,12 +129,12 @@ gate_open.subscribe((b) => {
   sub_gate_open = b;
 });
 
-gate_nfc_enabled.subscribe((b) => {
-  sub_gate_nfc_enabled = b;
+gate_members_only_enabled.subscribe((b) => {
+  sub_gate_members_only_enabled = b;
 });
 
-gate_nfc_open_time.subscribe((i) => {
-  sub_gate_nfc_open_time = i;
+gate_member_open_time.subscribe((i) => {
+  sub_gate_member_open_time = i;
 });
 
 sound_ok_enabled.subscribe((b) => {
@@ -187,8 +187,8 @@ export { sub_person_nfc_auto_enabled };
 export { sub_gate_count_enabled };
 export { sub_gate_count };
 export { sub_gate_open };
-export { sub_gate_nfc_enabled };
-export { sub_gate_nfc_open_time };
+export { sub_gate_members_only_enabled };
+export { sub_gate_member_open_time };
 export { sub_sound_ok_enabled };
 export { sub_sound_error_enabled };
 export { sub_focus_year };

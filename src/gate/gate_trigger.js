@@ -2,10 +2,10 @@ const { ipcRenderer } = window.require('electron');
 import { ev_nfc_scan } from '../services/events';
 import { gate_count } from '../services/store';
 import { gate_count_enabled } from '../services/store';
-import { gate_nfc_enabled } from '../services/store';
+import { gate_members_only_enabled } from '../services/store';
 import { sub_gate_count } from '../services/sub';
 import { sub_gate_count_enabled } from '../services/sub';
-import { sub_gate_nfc_enabled } from '../services/sub';
+import { sub_gate_members_only_enabled } from '../services/sub';
 import { gate_in_add } from '../db_put/gate_put';
 import { gate_out_add } from '../db_put/gate_put';
 import { send_gate_open } from './gate_command';
@@ -18,7 +18,7 @@ import { send_gate_open_once_with_timer } from './gate_command';
 let nfc_id = undefined;
 
 const open_trigger = () => {
-  if (sub_gate_nfc_enabled){
+  if (sub_gate_members_only_enabled){
     return;
   }
   if (sub_gate_count_enabled && (sub_gate_count <= 0)){
@@ -28,7 +28,7 @@ const open_trigger = () => {
 };
 
 const close_trigger = () => {
-  if (sub_gate_nfc_enabled){
+  if (sub_gate_members_only_enabled){
     send_gate_close();
     return;
   }
@@ -71,7 +71,7 @@ const listen_gate_triggers = () => {
     open_trigger();
   });
 
-  gate_nfc_enabled.subscribe((b) => {
+  gate_members_only_enabled.subscribe((b) => {
     if (b){
       close_trigger();
       return;
@@ -89,24 +89,24 @@ const listen_gate_triggers = () => {
 
   ev_nfc_scan.addEventListener('gate_open_by_nfc', (e) => {
     /*
-    if (sub_gate_nfc_enabled){
+    if (sub_gate_members_only_enabled){
       return;
     }
     */
     if (sub_gate_count_enabled && (sub_gate_count <= 0)){
       return;
     }
-    nfc_id = e.detail.nfc_id;    
-    if (sub_gate_nfc_enabled){
-      send_gate_open_once_with_timer(); 
-      return;     
+    nfc_id = e.detail.nfc_id;
+    if (sub_gate_members_only_enabled){
+      send_gate_open_once_with_timer();
+      return;
     }
     open_trigger();
   });
 };
 
 /**
- * @returns {string|undefined} 
+ * @returns {string|undefined}
  */
 const get_nfc_id_that_opened_gate = () => {
   return nfc_id;

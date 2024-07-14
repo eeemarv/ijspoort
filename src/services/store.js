@@ -37,8 +37,8 @@ const create_coupled_estore = (key, default_value, min_value, max_value) => {
 export const gate_open = writable(true);
 export const gate_count = create_coupled_estore('gate_count', 50, -99, 999);
 export const gate_count_enabled = writable(false);
-export const gate_nfc_enabled = writable(false);
-export const gate_nfc_open_time = create_coupled_estore('gate_nfc_open_time', 12, 6, 20);
+export const gate_members_only_enabled = writable(false);
+export const gate_member_open_time = create_coupled_estore('gate_member_open_time', 12, 6, 20);
 export const nfc_reset_enabled = create_coupled_estore('nfc_reset_enabled', false);
 export const nfc_gate_auto_block_enabled = create_coupled_estore('nfc_gate_auto_block_enabled', false);
 

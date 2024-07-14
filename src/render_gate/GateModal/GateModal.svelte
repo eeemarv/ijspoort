@@ -6,7 +6,7 @@
   import { get_time_str } from '../../services/functions';
   import { sub_gate_count } from '../../services/sub';
   import { sub_gate_count_enabled } from '../../services/sub';
-  import { sub_gate_nfc_enabled } from '../../services/sub';
+  import { sub_gate_members_only_enabled } from '../../services/sub';
   import { sub_nfc_map } from '../../services/sub';
   import { sub_person_last_reg_ts_map } from '../../services/sub';
   import { reg_block_time } from '../../db_put/reg_put';
@@ -147,7 +147,7 @@
     }
     close_gate_config();
 
-    if (sub_gate_open && sub_gate_nfc_enabled){
+    if (sub_gate_open && sub_gate_members_only_enabled){
       const og_nfc_id = get_nfc_id_that_opened_gate();
       if (typeof og_nfc_id === 'string'
         && (typeof prsn_id === 'undefined'
