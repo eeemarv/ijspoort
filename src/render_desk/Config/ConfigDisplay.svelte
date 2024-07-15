@@ -1,11 +1,11 @@
 <script>
   import { TabPane, Card } from 'sveltestrap';
-  import { temp_display_enabled } from '../../services/store';
-  import { gate_display_enabled } from '../../services/store';
-  import { tag_display_enabled } from '../../services/store';
-  import { nfc_reset_enabled } from '../../services/store';
-  import { nfc_read_test_enabled } from '../../services/store';
-  import { reg_delete_enabled } from '../../services/store';
+  import { temperature_card_enabled } from '../../services/store';
+  import { desk_gate_card_enabled } from '../../services/store';
+  import { desk_tag_card_enabled } from '../../services/store';
+  import { desk_nfc_reset_button_enabled } from '../../services/store';
+  import { desk_nfc_read_test_button_enabled } from '../../services/store';
+  import { desk_reg_delete_buttons_enabled } from '../../services/store';
   import TemperatureCard from '../../render/Common/TemperatureCard.svelte';
 
   export let tab;
@@ -17,38 +17,38 @@
   </span>
   <Card body>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=nfc_read_test_enabled bind:checked={$nfc_read_test_enabled}>
-      <label class=form-check-label for=nfc_read_test_enabled>
+      <input class=form-check-input type=checkbox id=desk_nfc_read_test_button_enabled bind:checked={$desk_nfc_read_test_button_enabled}>
+      <label class=form-check-label for=desk_nfc_read_test_button_enabled>
         Leesknop voor NFC tags
       </label>
     </div>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=nfc_reset_enabled bind:checked={$nfc_reset_enabled}>
-      <label class=form-check-label for=nfc_reset_enabled>
+      <input class=form-check-input type=checkbox id=desk_nfc_reset_button_enabled bind:checked={$desk_nfc_reset_button_enabled}>
+      <label class=form-check-label for=desk_nfc_reset_button_enabled>
         Wisknop voor NFC tags
       </label>
     </div>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=reg_delete_enabled bind:checked={$reg_delete_enabled}>
-      <label class=form-check-label for=reg_delete_enabled>
+      <input class=form-check-input type=checkbox id=desk_reg_delete_buttons_enabled bind:checked={$desk_reg_delete_buttons_enabled}>
+      <label class=form-check-label for=desk_reg_delete_buttons_enabled>
         Verwijder-knoppen voor registraties
       </label>
     </div>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=tag_display_enabled bind:checked={$tag_display_enabled}>
-      <label class=form-check-label for=tag_display_enabled>
+      <input class=form-check-input type=checkbox id=desk_tag_card_enabled bind:checked={$desk_tag_card_enabled}>
+      <label class=form-check-label for=desk_tag_card_enabled>
         Tags
       </label>
     </div>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=gate_display_enabled bind:checked={$gate_display_enabled}>
-      <label class=form-check-label for=gate_display_enabled>
+      <input class=form-check-input type=checkbox id=desk_gate_card_enabled bind:checked={$desk_gate_card_enabled}>
+      <label class=form-check-label for=desk_gate_card_enabled>
         Poort in/uit
       </label>
     </div>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=temp_display_enabled bind:checked={$temp_display_enabled}>
-      <label class=form-check-label for=temp_display_enabled>
+      <input class=form-check-input type=checkbox id=temperature_card_enabled bind:checked={$temperature_card_enabled}>
+      <label class=form-check-label for=temperature_card_enabled>
         Water- en luchttemperatuur
       </label>
     </div>

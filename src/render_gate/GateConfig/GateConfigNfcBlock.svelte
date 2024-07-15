@@ -1,6 +1,6 @@
 <script>
   import { TabPane, Card } from 'sveltestrap';
-  import { nfc_gate_auto_block_enabled } from '../../services/store';
+  import { gate_nfc_auto_block_enabled } from '../../services/store';
 
   export let tab;
 </script>
@@ -9,13 +9,13 @@
   <span slot=tab>
     NFC blok
   </span>
-  <Card body>  
+  <Card body>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=nfc_gate_auto_block_enabled bind:checked={$nfc_gate_auto_block_enabled}>
-      <label class=form-check-label for=nfc_gate_auto_block_enabled>
+      <input class=form-check-input type=checkbox id=gate_nfc_auto_block_enabled bind:checked={$gate_nfc_auto_block_enabled}>
+      <label class=form-check-label for=gate_nfc_auto_block_enabled>
         Blokkeer automatisch andere NFC tags van een persoon bij scannen van een NFC tag.
       </label>
-    </div>    
+    </div>
   </Card>
 </TabPane>
 

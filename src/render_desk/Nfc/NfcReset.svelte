@@ -2,8 +2,8 @@
   const { ipcRenderer } = window.require('electron');
   import { Button } from 'sveltestrap';
   import { nfc_del } from '../../db_put/nfc_put';
-  import { nfc_reset_enabled } from '../../services/store';
-  import { reg_nfc_auto_enabled } from '../../services/store';
+  import { desk_nfc_reset_button_enabled } from '../../services/store';
+  import { desk_nfc_auto_reg_enabled } from '../../services/store';
   import NfcInfoModal from './NfcInfoModal.svelte';
   import { en_nfc_status } from '../../services/enum';
   import { nfc_id_to_uid } from '../../nfc/nfc_id';
@@ -29,9 +29,9 @@
 
   ipcRenderer.on('nfc.reset.ok', (ev, data) => {
     setTimeout(() => {
-      open = false; 
+      open = false;
     }, 1000);
-    progress = 100; 
+    progress = 100;
     message = 'Wissen voltooid, test transport sleutel.';
     contentClassName = 'bg-success';
 
@@ -47,9 +47,9 @@
   });
 </script>
 
-<NfcInfoModal 
-  bind:open 
-  {progress} 
+<NfcInfoModal
+  bind:open
+  {progress}
   {contentClassName}
 >
   <h1 slot=title>
@@ -60,14 +60,14 @@
   </p>
 </NfcInfoModal>
 
-{#if !$reg_nfc_auto_enabled 
-  && $nfc_reset_enabled 
-  && nfc_id 
+{#if !$desk_nfc_auto_reg_enabled
+  && $desk_nfc_reset_button_enabled
+  && nfc_id
   && nfc_status === en_nfc_status.FOUND
 }
-  <Button 
-    color=danger 
-    on:click={handle_nfc_reset} 
+  <Button
+    color=danger
+    on:click={handle_nfc_reset}
     title="Wis deze NFC tag"
   >
     Wis

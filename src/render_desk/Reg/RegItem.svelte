@@ -1,6 +1,6 @@
 <script>
-  import { reg_delete_enabled } from '../../services/store';
-  import { selected_person_id } from '../../services/store';
+  import { desk_reg_delete_buttons_enabled } from '../../services/store';
+  import { desk_selected_person_id } from '../../services/store';
   import RegTimeTag from './RegTimeTag.svelte';
   import PersonTag from '../../render/Person/PersonTag.svelte';
   import { reg_del } from '../../db_put/reg_put';
@@ -28,7 +28,7 @@
       selected = false
     }, selected_show_time);
 
-    $selected_person_id = reg.person_id;
+    $desk_selected_person_id = reg.person_id;
 
     window.scroll({
       top: 0,
@@ -78,7 +78,7 @@
       </div>
     </div>
     <div>
-      {#if $reg_delete_enabled}
+      {#if $desk_reg_delete_buttons_enabled}
         <button
           type=button
           color=danger

@@ -3,8 +3,8 @@
   import { Button } from 'sveltestrap';
   import { person_get_count_by_simular } from '../../db_get/person_get';
   import { person_map } from '../../services/store';
-  import { selected_person_id } from '../../services/store';
-  import { tag_display_enabled } from '../../services/store';
+  import { desk_selected_person_id } from '../../services/store';
+  import { desk_tag_card_enabled } from '../../services/store';
   import PersonMemberId from '../../render/Person/PersonMemberId.svelte';
   import PersonTagList from './PersonTagList.svelte';
   import PersonNfcList from './PersonNfcList.svelte';
@@ -26,7 +26,7 @@
   let open_simular;
   let refresh_switch = false;
 
-  $: person_id = $selected_person_id;
+  $: person_id = $desk_selected_person_id;
   $: person = $person_map.get(person_id) ?? {};
   $: already_registered = person_is_already_registered(person_id, refresh_switch);
 
@@ -36,11 +36,11 @@
 
   const handle_manual_reg = (() => {
     reg_add_by_desk_manual(person_id, get_ts_epoch());
-    $selected_person_id = undefined;
+    $desk_selected_person_id = undefined;
   });
 
-  $: if ($selected_person_id){
-    console.log('selected_person_id', $selected_person_id);
+  $: if ($desk_selected_person_id){
+    console.log('desk_selected_person_id', $desk_selected_person_id);
     window.scroll({
       top: 0,
       left: 0,
@@ -153,7 +153,7 @@
       {person_id}
       on:click={open_reg_list}
     />
-    {#if $tag_display_enabled}
+    {#if $desk_tag_card_enabled}
       <PersonTagList {person_id} />
     {/if}
     </ListGroup>
@@ -178,7 +178,7 @@
       <Button
         color=primary
         class=ms-3
-        on:click={() => $selected_person_id = undefined}
+        on:click={() => $desk_selected_person_id = undefined}
       >
         Sluiten
       </Button>

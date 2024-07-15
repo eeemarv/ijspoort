@@ -2,11 +2,12 @@
   import TagButton from './TagButton.svelte';
   import TagAddButton from './TagAddButton.svelte';
   import { createEventDispatcher } from 'svelte';
-  import { person_nfc_auto_enabled, tag_type_map } from '../../services/store';
+  import { desk_nfc_auto_open_person_data_enabled } from '../../services/store';
+  import { tag_type_map } from '../../services/store';
   import { tag_map } from '../../services/store';
-  import { member_period_filter } from '../../services/store';
+  import { desk_member_period_filter } from '../../services/store';
   import Checkbox from '../../render/Common/Checkbox.svelte';
-  import { auto_tag_on_nfc } from '../../services/store';
+  import { desk_nfc_auto_tags } from '../../services/store';
   import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
 
   const dispatch = createEventDispatcher();
@@ -35,10 +36,10 @@
 
       <TagAddButton {type_id} />
 
-      {#if $person_nfc_auto_enabled && $member_period_filter}
-        <Checkbox title="Voeg tag automatisch toe bij gescand lidmaatschap in {$member_period_filter}"
+      {#if $desk_nfc_auto_open_person_data_enabled && $desk_member_period_filter}
+        <Checkbox title="Voeg tag automatisch toe bij gescand lidmaatschap in {$desk_member_period_filter}"
           name="auto_reg_{type_id}"
-          bind:checked={$auto_tag_on_nfc[type_id]}
+          bind:checked={$desk_nfc_auto_tags[type_id]}
           c_class=d-inline-block
         />
       {/if}

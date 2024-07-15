@@ -5,12 +5,12 @@
   import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
   import { person_map } from '../../services/store';
-  import { selected_person_id } from '../../services/store';
+  import { desk_selected_person_id } from '../../services/store';
   import { person_get_ids_by_simular } from '../../db_get/person_get';
   import { person_simular_lang_keys } from '../../db_get/person_get';
   import Await from '../../render/Await/Await.svelte';
   import AwaitError from '../../render/Await/AwaitError.svelte';
-    import ListGroup from '../../render/Common/ListGroup.svelte';
+  import ListGroup from '../../render/Common/ListGroup.svelte';
 
   export let person_id = undefined;
 
@@ -32,7 +32,7 @@
 
   const handle_select = (person_id) => {
     open = false;
-    $selected_person_id = person_id;
+    $desk_selected_person_id = person_id;
   };
 
 </script>
@@ -55,7 +55,7 @@
       <ListGroup>
         {#each person_ids as p_id(p_id)}
           <SelectableListGroupItem
-            active={p_id === $selected_person_id}
+            active={p_id === $desk_selected_person_id}
             on:click={handle_select(p_id)}
             selectable={$person_map.has(p_id)}
           >

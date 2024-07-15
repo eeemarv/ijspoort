@@ -1,12 +1,12 @@
 <script>
   import { Badge } from 'sveltestrap';
-  import { member_period_filter } from '../../services/store';
+  import { desk_member_period_filter } from '../../services/store';
 
-  export let title = 'lid in ' + $member_period_filter;
+  export let title = 'lid in ' + $desk_member_period_filter;
 </script>
 
-{#if $member_period_filter && $member_period_filter !== '^'}
+{#if $desk_member_period_filter && $desk_member_period_filter !== '^'}
   <Badge color=success {title}>
-    {$member_period_filter}
+    {$desk_member_period_filter}
   </Badge>
 {/if}

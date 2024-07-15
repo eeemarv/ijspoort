@@ -1,12 +1,12 @@
 <script>
   import Checkbox from '../../render/Common/Checkbox.svelte';
-  import { tag_types_enabled } from '../../services/store';
+  import { desk_tag_types_enabled } from '../../services/store';
 
   export let type_id;
 
-  let checked = $tag_types_enabled[type_id] ?? false;
+  let checked = $desk_tag_types_enabled[type_id] ?? false;
 
-  $: $tag_types_enabled[type_id] = checked;
+  $: $desk_tag_types_enabled[type_id] = checked;
 
 </script>
 

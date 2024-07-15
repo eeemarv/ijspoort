@@ -1,8 +1,8 @@
 <script>
   import { TabPane, Card } from 'sveltestrap';
-  import { sound_ok_enabled } from '../../services/store';
-  import { sound_error_enabled } from '../../services/store';
-  import { beep_enabled } from '../../services/store';
+  import { gate_sound_ok_enabled } from '../../services/store';
+  import { gate_sound_error_enabled } from '../../services/store';
+  import { gate_beep_enabled } from '../../services/store';
 
   export let tab;
 </script>
@@ -12,22 +12,22 @@
     Geluid
   </span>
   <Card body>
-    <h2>Geluid bij scannen tag</h2>
+    <h2>Geluid bij scannen</h2>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=beep_enabled bind:checked={$beep_enabled}>
-      <label class=form-check-label for=beep_enabled>
+      <input class=form-check-input type=checkbox id=gate_beep_enabled bind:checked={$gate_beep_enabled}>
+      <label class=form-check-label for=gate_beep_enabled>
         Bieper aan
       </label>
     </div>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=sound_ok_enabled bind:checked={$sound_ok_enabled}>
-      <label class=form-check-label for=sound_ok_enabled>
+      <input class=form-check-input type=checkbox id=gate_sound_ok_enabled bind:checked={$gate_sound_ok_enabled}>
+      <label class=form-check-label for=gate_sound_ok_enabled>
         Geluid "OK" aan
       </label>
     </div>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=sound_error_enabled bind:checked={$sound_error_enabled}>
-      <label class=form-check-label for=sound_error_enabled>
+      <input class=form-check-input type=checkbox id=gate_sound_error_enabled bind:checked={$gate_sound_error_enabled}>
+      <label class=form-check-label for=gate_sound_error_enabled>
         Geluid "Fout" aan
       </label>
     </div>

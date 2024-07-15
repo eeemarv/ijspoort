@@ -47,7 +47,7 @@ const listen_mfrc = (win, eStore) => {
 		if (no_find_countdown){
 			no_find_countdown--;
 		}
-	
+
 		mfrc522.reset();
 
 		let resp0 = mfrc522.findCard();
@@ -159,7 +159,7 @@ const listen_mfrc = (win, eStore) => {
 		}
 
 		// beep
-		if (eStore.get('beep_enabled')){
+		if (eStore.get('gate_beep_enabled')){
 			rpio.write(buzzer_pin, rpio.LOW);
 			setTimeout(() => {
 				rpio.write(buzzer_pin, rpio.HIGH);

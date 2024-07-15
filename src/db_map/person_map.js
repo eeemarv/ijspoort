@@ -3,7 +3,7 @@ import { person_map } from '../services/store';
 import { sub_member_person_map } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { member_person_map } from '../services/store';
-import { member_data_update } from '../services/store';
+import { desk_member_data_update } from '../services/store';
 
 const person_map_build = async () => {
   console.log('- build person map -');
@@ -50,7 +50,7 @@ const person_map_build = async () => {
       return m;
     });
 
-    member_data_update.set(false);
+    desk_member_data_update.set(false);
 
   }).catch((err) => {
     console.log(err);
@@ -152,7 +152,7 @@ const person_map_listen_changes = () => {
     });
 
     setTimeout(() => {
-      member_data_update.set(false);
+      desk_member_data_update.set(false);
     }, 1000);
 
   }).on('error', (err) => {

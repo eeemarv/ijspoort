@@ -1,12 +1,12 @@
 <script>
   import { Input } from 'sveltestrap';
-  import { person_nfc_auto_enabled } from '../../services/store';
+  import { desk_nfc_auto_open_person_data_enabled } from '../../services/store';
 
 </script>
 
 <Input
-  id=person_nfc_auto_enabled
+  id=desk_nfc_auto_open_person_data_enabled
   type=checkbox
   label="Auto open persoonsdata"
-  bind:checked={$person_nfc_auto_enabled}
+  bind:checked={$desk_nfc_auto_open_person_data_enabled}
 />

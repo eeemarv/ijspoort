@@ -4,9 +4,9 @@
   import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge } from 'sveltestrap';
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
-  import { selected_person_id } from '../../services/store';
-  import { member_period_filter } from '../../services/store';
-  import { member_period_filter_enabled } from '../../services/store';
+  import { desk_selected_person_id } from '../../services/store';
+  import { desk_member_period_filter } from '../../services/store';
+  import { desk_member_period_filter_enabled } from '../../services/store';
   import { member_person_map } from '../../services/store';
   import { person_ids_to_func_by_text } from '../../db_get/person_get';
 
@@ -18,8 +18,8 @@
   const searchUpdateEmitter = new SearchUpdateEmitter();
 
   $: {
-    $member_period_filter_enabled;
-    $member_period_filter;
+    $desk_member_period_filter_enabled;
+    $desk_member_period_filter;
     searchUpdateEmitter.emit('update');
   }
 
@@ -33,7 +33,7 @@
       className: 'autocomplete',
       fetch: person_ids_to_func_by_text,
       onSelect: (person_id) => {
-        $selected_person_id = person_id;
+        $desk_selected_person_id = person_id;
         el_manual.value = '';
       },
       render: (item) => {
@@ -53,7 +53,7 @@
       }
     });
 
-    // new member_period_filter
+    // new desk_member_period_filter
     searchUpdateEmitter.on('update', () => {
       // see https://github.com/kraaden/autocomplete/issues/52
       setTimeout(() => {
@@ -68,7 +68,7 @@
     <label for="manual">
       Manuele selectie lid (Assist database)
     </label>
-    <label for="member_period_filter_enabled">
+    <label for="desk_member_period_filter_enabled">
       Filter lidmaatschap
     </label>
   </div>
@@ -82,26 +82,26 @@
       <div class="form-check ml-2">
         <input class=form-check-input
           type=checkbox
-          id=member_period_filter_enabled
-          bind:checked={$member_period_filter_enabled}
-          title="Filter op actief lid in {$member_period_filter}"
+          id=desk_member_period_filter_enabled
+          bind:checked={$desk_member_period_filter_enabled}
+          title="Filter op actief lid in {$desk_member_period_filter}"
         />
-        <label class=form-check-label for=member_period_filter_enabled>
+        <label class=form-check-label for=desk_member_period_filter_enabled>
           <ButtonDropdown {dropdown_open}>
             <DropdownToggle caret
-              color={$member_period_filter === '^' ? 'warning' : $member_period_filter ? 'success' : 'grey'}
+              color={$desk_member_period_filter === '^' ? 'warning' : $desk_member_period_filter ? 'success' : 'grey'}
               on:click={() => {dropdown_open = !dropdown_open;}}
               title="Filter op lidmaatschap">
-                {#if $member_period_filter === '^'}
+                {#if $desk_member_period_filter === '^'}
                   Geen lid
-                {:else if $member_period_filter}
-                  {$member_period_filter}
+                {:else if $desk_member_period_filter}
+                  {$desk_member_period_filter}
                 {:else}
                   *Geen filter*
                 {/if}
             </DropdownToggle>
             <DropdownMenu>
-              {#if !$member_period_filter}
+              {#if !$desk_member_period_filter}
                 <DropdownItem active title="Geen lidmaatschap filter geselecteerd">
                   <Badge color=grey>
                     *Geen filter*
@@ -110,8 +110,8 @@
               {/if}
               {#each [...$member_person_map.keys()].filter(k => k !== '^').sort() as member_period(member_period)}
                 <DropdownItem
-                  active={member_period === $member_period_filter}
-                  on:click={() => {$member_period_filter = member_period;}}
+                  active={member_period === $desk_member_period_filter}
+                  on:click={() => {$desk_member_period_filter = member_period;}}
                 >
                   <Badge color=success class=me-2>
                     {member_period}
@@ -121,8 +121,8 @@
               {/each}
               {#if $member_person_map.has('^')}
                 <DropdownItem
-                  active={$member_period_filter === '^'}
-                  on:click={() => {$member_period_filter = '^';}}
+                  active={$desk_member_period_filter === '^'}
+                  on:click={() => {$desk_member_period_filter = '^';}}
                 >
                   <Badge color=warning class=me-2>
                    Geen lid

@@ -6,8 +6,8 @@
   import TagTypePutTab from './TagTypePutTab.svelte';
   import TagTypeTab from './TagTypeTab.svelte';
   import { tag_type_map } from '../../services/store';
-  import { tag_types_enabled } from '../../services/store';
-  import { selected_person_id } from '../../services/store';
+  import { desk_tag_types_enabled } from '../../services/store';
+  import { desk_selected_person_id } from '../../services/store';
 
   export let tab = 'type_list';
   export let open = false;
@@ -20,7 +20,7 @@
   $: if (tab !== 'type_put'){
     edit_type_id = undefined;
   }
-  $: if ($selected_person_id){
+  $: if ($desk_selected_person_id){
     open = false;
   }
 </script>
@@ -43,10 +43,10 @@
         on:updated={(e) => updated_id = e.detail}
       />
       {#each [...$tag_type_map.keys()].reverse() as type_id(type_id)}
-        {#if $tag_types_enabled[type_id]}
-          <TagTypeTab 
-            {tab} 
-            {type_id} 
+        {#if $desk_tag_types_enabled[type_id]}
+          <TagTypeTab
+            {tab}
+            {type_id}
             on:edit={() => {edit_type_id = type_id;}}
             on:del={() => {deleted_id = type_id;}}
           />

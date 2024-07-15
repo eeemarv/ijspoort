@@ -4,19 +4,17 @@ import { reg_add_by_desk_auto } from '../db_put/reg_put';
 import { reg_add_by_gate } from '../db_put/reg_put';
 import { ev_nfc_scan } from '../services/events';
 import { sub_nfc_map } from '../services/sub';
-import { sub_nfc_gate_auto_block_enabled } from '../services/sub';
-import { sub_person_nfc_auto_enabled } from '../services/sub';
-import { sub_reg_nfc_auto_enabled } from '../services/sub';
+import { sub_gate_nfc_auto_block_enabled } from '../services/sub';
+import { sub_desk_nfc_auto_open_person_data_enabled } from '../services/sub';
+import { sub_desk_nfc_auto_reg_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
-import { selected_person_id } from '../services/store';
-import { selected_nfc_id } from '../services/store';
+import { desk_selected_person_id } from '../services/store';
+import { desk_selected_nfc_id } from '../services/store';
 import { person_is_member_this_year } from '../person/person_member';
 import { person_is_already_registered } from '../person/person_already_registered';
 import { nfc_uid_to_id } from './nfc_id';
 import { nfc_block_others } from '../db_put/nfc_put';
 import { get_ts_epoch } from '../services/functions';
-import { sub_member_period_select } from '../services/sub';
-import { sub_member_person_map } from '../services/sub';
 
 const gate_modus = env.GATE === '1';
 
@@ -69,7 +67,7 @@ const listen_nfc = () => {
       flood_block_same_nfc_id = nfc_id;
     }
 
-    selected_nfc_id.set(nfc_id);
+    desk_selected_nfc_id.set(nfc_id);
 
     if (!sub_nfc_map.has(nfc_id)){
       ev_nfc_scan_dispatch('nfc_not_found', {nfc_id});
@@ -91,13 +89,13 @@ const listen_nfc = () => {
     ev_nfc_scan_dispatch('person_found', {nfc_id});
 
     if (!person_is_member_this_year(person_id)){
-      selected_person_id.set(person_id);
+      desk_selected_person_id.set(person_id);
       ev_nfc_scan_dispatch('person_not_member', {nfc_id});
       return;
     }
 
     if (typeof nfc.blocked !== 'undefined'){
-      selected_person_id.set(person_id);
+      desk_selected_person_id.set(person_id);
       ev_nfc_scan_dispatch('nfc_blocked', {nfc_id});
       return;
     }
@@ -107,7 +105,7 @@ const listen_nfc = () => {
     /** in gate modus, with auto block enabled check if blocks apply */
     let nfc_block_mixin = {};
 
-    if (gate_modus && sub_nfc_gate_auto_block_enabled){
+    if (gate_modus && sub_gate_nfc_auto_block_enabled){
       nfc_block_mixin = nfc_block_others(nfc_id, ts_epoch);
     };
 
@@ -123,15 +121,15 @@ const listen_nfc = () => {
     } else {
       if (gate_modus){
         reg_add_by_gate(nfc_id, ts_epoch, nfc_block_mixin);
-      } else if (sub_reg_nfc_auto_enabled){
+      } else if (sub_desk_nfc_auto_reg_enabled){
         reg_add_by_desk_auto(nfc_id, ts_epoch);
       }
     }
 
     ev_nfc_scan_dispatch('person_valid_member', {nfc_id});
 
-    if (sub_person_nfc_auto_enabled){
-      selected_person_id.set(person_id);
+    if (sub_desk_nfc_auto_open_person_data_enabled){
+      desk_selected_person_id.set(person_id);
     }
   });
 
@@ -172,7 +170,7 @@ const listen_nfc = () => {
 
   ipcRenderer.on('nfc.off', (ev) => {
     ev_nfc_scan_dispatch('nfc_off');
-    selected_nfc_id.set(undefined);
+    desk_selected_nfc_id.set(undefined);
   });
 };
 

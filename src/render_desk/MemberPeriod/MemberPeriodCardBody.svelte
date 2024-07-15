@@ -1,5 +1,5 @@
 <script>
-  import { member_period_filter } from '../../services/store';
+  import { desk_member_period_filter } from '../../services/store';
   import { member_person_map } from '../../services/store';
   import { Button, CardBody } from 'sveltestrap';
   import MemberPeriodModal from './MemberPeriodModal.svelte';
@@ -12,7 +12,7 @@
 
 <CardBody>
   <div>
-    {#if $member_period_filter === '^'}
+    {#if $desk_member_period_filter === '^'}
       <Button
         size=sm
         color=warning
@@ -21,23 +21,23 @@
       >
         {$member_person_map.get('^')?.size ?? '-'} niet-leden
       </Button>
-    {:else if $member_period_filter}
+    {:else if $desk_member_period_filter}
       <Button
         size=sm
         color=white
         outline
         on:click={open_member_period_modal}
       >
-        {$member_person_map.get($member_period_filter)?.size ?? '-'}
+        {$member_person_map.get($desk_member_period_filter)?.size ?? '-'}
       </Button>
         leden in
       <Button
           size=sm
           color=success
-          title="aantal leden in {$member_period_filter}"
+          title="aantal leden in {$desk_member_period_filter}"
           on:click={open_member_period_modal}
       >
-        {$member_period_filter}
+        {$desk_member_period_filter}
       </Button>
     {:else}
       <Button

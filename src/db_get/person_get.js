@@ -1,8 +1,8 @@
 import { db_person } from '../db/db';
 import { get_search_str } from '../services/functions';
 import { sub_person_map } from '../services/sub';
-import { sub_member_period_filter } from '../services/sub';
-import { sub_member_period_filter_enabled } from '../services/sub';
+import { sub_desk_member_period_filter } from '../services/sub';
+import { sub_desk_member_period_filter_enabled } from '../services/sub';
 
 const person_simular_lang_keys = {
   name: 'Gelijke naam',
@@ -109,13 +109,13 @@ const person_ids_to_func_by_text = (text, update_func) => {
     return;
   }
 
-  if (sub_member_period_filter_enabled){
-    if (typeof sub_member_period_filter !== 'string'){
+  if (sub_desk_member_period_filter_enabled){
+    if (typeof sub_desk_member_period_filter !== 'string'){
       update_func([]);
       return;
     }
-    if (sub_member_period_filter){
-      search_text = sub_member_period_filter + '.' + search_text;
+    if (sub_desk_member_period_filter){
+      search_text = sub_desk_member_period_filter + '.' + search_text;
     }
   }
 

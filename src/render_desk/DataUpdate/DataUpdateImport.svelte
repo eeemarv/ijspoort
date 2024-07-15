@@ -4,10 +4,10 @@
   import Icon from '@iconify/svelte';
   import exclamationTriangle from '@iconify/icons-fa/exclamation-triangle';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
-  import { member_period_import } from '../../services/store';
+  import { desk_member_period_import } from '../../services/store';
   import { member_person_map } from '../../services/store';
   import { person_assist_import } from '../../db_put/person_put';
-  import { member_data_update } from '../../services/store';
+  import { desk_member_data_update } from '../../services/store';
 
   let open = false;
   let file_path = '';
@@ -30,7 +30,7 @@
   };
 
   const handle_import_file = () => {
-    const member_period = $member_period_import;
+    const member_period = $desk_member_period_import;
     console.log('handle_import_file');
     if (!file_path){
       console.log('file_path empty');
@@ -40,7 +40,7 @@
       console.log('member_period empty');
       return;
     }
-    $member_data_update = true;
+    $desk_member_data_update = true;
     person_assist_import(file_path, member_period);
     open = false;
   };
@@ -50,10 +50,10 @@
     file_path = selected_file_path;
   });
 
-  $: $member_period_import = $member_period_import.replace(/[^a-z0-9-]/g, '');
+  $: $desk_member_period_import = $desk_member_period_import.replace(/[^a-z0-9-]/g, '');
 
-  $: if (!$member_data_update && !open && !$member_person_map.has($member_period_import)){
-    $member_period_import = '';
+  $: if (!$desk_member_data_update && !open && !$member_person_map.has($desk_member_period_import)){
+    $desk_member_period_import = '';
   }
 
   $: if (open){
@@ -75,11 +75,11 @@
   </ModalHeader>
   <ModalBody>
     <FormGroup>
-      <Label for=member_period_import>Naam lidmaatschapsperiode</Label>
+      <Label for=desk_member_period_import>Naam lidmaatschapsperiode</Label>
       <div class="input-group">
         <input type=text
-          id=member_period_import class=form-control
-          bind:value={$member_period_import}
+          id=desk_member_period_import class=form-control
+          bind:value={$desk_member_period_import}
           pattern="[a-z0-9-]*"
         />
       </div>
@@ -93,7 +93,7 @@
     <div class=mb-2>
     {#each [...$member_person_map.keys()].filter((k) => k !== '^').sort() as member_period(member_period)}
       <Button color=success class=me-2
-        on:click={() => $member_period_import = member_period}
+        on:click={() => $desk_member_period_import = member_period}
       >
         {member_period}
       </Button>
@@ -133,7 +133,7 @@
       </FormText>
     </FormGroup>
     <Button color=primary
-      disabled={!file_path || !$member_period_import}
+      disabled={!file_path || !$desk_member_period_import}
       on:click={handle_import_file}
     >
       Importeer

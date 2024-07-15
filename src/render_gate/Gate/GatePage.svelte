@@ -6,7 +6,7 @@
   import NfcCountBadge from '../Nfc/NfcCountBadge.svelte';
   import NfcDeviceBadge from '../Nfc/NfcDeviceBadge.svelte';
   import { gate_count_enabled } from '../../services/store';
-  import { temp_display_enabled } from '../../services/store';
+  import { temperature_card_enabled } from '../../services/store';
   import GateModal from '../GateModal/GateModal.svelte';
   import TemperatureCard from '../../render/Common/TemperatureCard.svelte';
   import { gate_open } from '../../services/store';
@@ -32,7 +32,7 @@
   {/if}
 
   <Row class="h-25 bg-primary">
-    {#if $temp_display_enabled}
+    {#if $temperature_card_enabled}
       <Col md=3 class="h-100 d-flex justify-content-center align-items-center">
         <TemperatureCard font_size=.9em />
       </Col>

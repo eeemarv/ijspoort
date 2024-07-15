@@ -2,7 +2,7 @@
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { Row, Col } from 'sveltestrap';
   import { TabContent } from 'sveltestrap';
-  import { selected_person_id } from '../../services/store';
+  import { desk_selected_person_id } from '../../services/store';
   import { person_map } from '../../services/store';
   import { nfc_map } from '../../services/store';
   import { person_nfc_map } from '../../services/store';
@@ -12,7 +12,7 @@
   import NfcLogListTab from './NfcLogListTab.svelte';
   import NfcLogPersonTabs from './NfcLogPersonTabs.svelte';
   import PersonMemberPeriodFilterTag from '../../render/Person/PersonMemberPeriodFilterTag.svelte';
-  import { member_period_filter } from '../../services/store';
+  import { desk_member_period_filter } from '../../services/store';
   import { member_person_map } from '../../services/store';
 
   let nfc_week_count = 0;
@@ -34,7 +34,7 @@
 
   let checked_4b = true;
   let checked_7b = true;
-  let checked_member_period_filter = false;
+  let checked_desk_member_period_filter = false;
   let checked_has_person = true;
   let checked_has_no_person = true;
   let checked_is_blocked = true;
@@ -45,7 +45,7 @@
   };
 
   const handle_select_person = (e) => {
-    $selected_person_id = e.detail;
+    $desk_selected_person_id = e.detail;
     open = false;
   };
 
@@ -82,15 +82,15 @@
       }
 
       if (has_person){
-        if (checked_member_period_filter){
+        if (checked_desk_member_period_filter){
 
-          if (typeof $member_period_filter !== 'string'){
+          if (typeof $desk_member_period_filter !== 'string'){
             continue;
           }
-          if (!$member_person_map.has($member_period_filter)){
+          if (!$member_person_map.has($desk_member_period_filter)){
             continue;
           }
-          if (!$member_person_map.get($member_period_filter).has(nfc.person_id)){
+          if (!$member_person_map.get($desk_member_period_filter).has(nfc.person_id)){
             continue;
           }
         }
@@ -212,7 +212,7 @@
   $: {
     checked_4b;
     checked_7b;
-    checked_member_period_filter;
+    checked_desk_member_period_filter;
     checked_has_person;
     checked_has_no_person;
     checked_is_blocked;
@@ -230,7 +230,7 @@
     set_total_rows(total_rows);
   }
 
-  $: if ($selected_person_id){
+  $: if ($desk_selected_person_id){
     open = false;
   }
 </script>
@@ -256,8 +256,8 @@
         </Checkbox>
         <Checkbox
           title="Filter op lidmaatschap"
-          name=checked_member_period_filter
-          bind:checked={checked_member_period_filter}
+          name=checked_desk_member_period_filter
+          bind:checked={checked_desk_member_period_filter}
         >
           Enkel leden <PersonMemberPeriodFilterTag />
         </Checkbox>

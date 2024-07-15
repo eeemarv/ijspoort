@@ -2,8 +2,8 @@
   const { ipcRenderer } = window.require('electron');
   import { Button } from 'sveltestrap';
   import NfcInfoModal from './NfcInfoModal.svelte';
-  import { nfc_read_test_enabled } from '../../services/store';
-  import { reg_nfc_auto_enabled } from '../../services/store';
+  import { desk_nfc_read_test_button_enabled } from '../../services/store';
+  import { desk_nfc_auto_reg_enabled } from '../../services/store';
   import { en_nfc_status } from '../../services/enum';
   import { nfc_id_to_uid } from '../../nfc/nfc_id';
 
@@ -39,9 +39,9 @@
   });
 </script>
 
-<NfcInfoModal 
+<NfcInfoModal
   bind:open
-  {progress} 
+  {progress}
   {contentClassName}
 >
   <h1 slot=title>
@@ -52,11 +52,11 @@
   </p>
 </NfcInfoModal>
 
-{#if $nfc_read_test_enabled
-  && !$reg_nfc_auto_enabled 
+{#if $desk_nfc_read_test_button_enabled
+  && !$desk_nfc_auto_reg_enabled
   && nfc_id
   && (nfc_status === en_nfc_status.WRITABLE || nfc_status === en_nfc_status.FOUND)}
-  <Button 
+  <Button
     color=info
     title="Lees inhoud van NFC tag"
     on:click={handle_nfc_read}
@@ -64,4 +64,3 @@
     Lees
   </Button>
 {/if}
-

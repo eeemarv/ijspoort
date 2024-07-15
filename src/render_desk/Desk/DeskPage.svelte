@@ -10,9 +10,9 @@
   import NfcCard from '../Nfc/NfcCard.svelte';
   import TagCard from '../Tag/TagCard.svelte';
   import GateCard from '../Gate/GateCard.svelte';
-  import { temp_display_enabled } from '../../services/store';
-  import { gate_display_enabled } from '../../services/store';
-  import { tag_display_enabled } from '../../services/store';
+  import { temperature_card_enabled } from '../../services/store';
+  import { desk_gate_card_enabled } from '../../services/store';
+  import { desk_tag_card_enabled } from '../../services/store';
   import MemberPeriodCardBody from '../MemberPeriod/MemberPeriodCardBody.svelte';
 
 </script>
@@ -26,15 +26,15 @@
 <Col class="bg-primary min-vh-100">
   <NfcCard />
 
-  {#if $tag_display_enabled}
+  {#if $desk_tag_card_enabled}
     <TagCard />
   {/if}
 
-  {#if $gate_display_enabled}
+  {#if $desk_gate_card_enabled}
     <GateCard />
   {/if}
 
-  {#if $temp_display_enabled}
+  {#if $temperature_card_enabled}
     <TemperatureCard horizontal />
   {/if}
 

@@ -1,10 +1,10 @@
 const env = window.require('electron').remote.process.env;
 import { sub_nfc_map } from '../services/sub';
-import { sub_member_period_filter } from '../services/sub';
+import { sub_desk_member_period_filter } from '../services/sub';
 import { sub_person_tag_map } from '../services/sub';
-import { sub_person_nfc_auto_enabled } from '../services/sub';
-import { sub_auto_tag_on_nfc } from '../services/sub';
-import { sub_tag_types_enabled } from '../services/sub';
+import { sub_desk_nfc_auto_open_person_data_enabled } from '../services/sub';
+import { sub_desk_nfc_auto_tags } from '../services/sub';
+import { sub_desk_tag_types_enabled } from '../services/sub';
 import { sub_tag_type_map } from '../services/sub';
 import { ev_nfc_scan } from '../services/events';
 import { tag_add_bulk } from '../db_put/tag_put';
@@ -16,16 +16,16 @@ const listen_tag_nfc_auto = () => {
     return;
   }
   ev_nfc_scan.addEventListener('person_valid_member', (e) => {
-    if (typeof sub_member_period_filter !== 'string'){
+    if (typeof sub_desk_member_period_filter !== 'string'){
       // should not happen
-      console.log('-- ERR member_period_filter is not a string');
+      console.log('-- ERR desk_member_period_filter is not a string');
       return;
     }
-    if (!sub_person_nfc_auto_enabled){
+    if (!sub_desk_nfc_auto_open_person_data_enabled){
       console.log('-- open person data on nfc not enabled');
       return;
     }
-    if (!Object.keys(sub_tag_types_enabled).length){
+    if (!Object.keys(sub_desk_tag_types_enabled).length){
       console.log('--no tag types enabled');
       return;
     }
@@ -45,16 +45,16 @@ const listen_tag_nfc_auto = () => {
     }
     const tag_add_ary = [];
     for (const [type_id, tag_type] of sub_tag_type_map){
-      if (typeof sub_tag_types_enabled[type_id] !== 'boolean'){
+      if (typeof sub_desk_tag_types_enabled[type_id] !== 'boolean'){
         continue;
       }
-      if (!sub_tag_types_enabled[type_id]){
+      if (!sub_desk_tag_types_enabled[type_id]){
         continue;
       }
-      if (typeof sub_auto_tag_on_nfc[type_id] !== 'boolean'){
+      if (typeof sub_desk_nfc_auto_tags[type_id] !== 'boolean'){
         continue;
       }
-      if (!sub_auto_tag_on_nfc[type_id]){
+      if (!sub_desk_nfc_auto_tags[type_id]){
         continue;
       }
       if (tag_type.max_per_person < 1){

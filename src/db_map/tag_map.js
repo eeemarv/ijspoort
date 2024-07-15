@@ -1,7 +1,7 @@
 import { db_tag } from '../db/db';
 import { tag_type_map } from '../services/store';
 import { person_tag_map } from '../services/store';
-import { tag_types_enabled } from '../services/store';
+import { desk_tag_types_enabled } from '../services/store';
 import { tag_map } from '../services/store';
 import { sub_tag_type_map } from '../services/sub';
 import { decompose_tag_id } from '../tag/tag_id';
@@ -24,7 +24,7 @@ const tag_type_map_build = async () => {
     tag_type_map.update((m) => {
       m.clear();
       last_type_ts_epoch = undefined;
-          
+
       type_ary.forEach((v) => {
         m.set(v.id, {...v.doc});
         last_type_ts_epoch = v.doc.ts_epoch;
@@ -33,16 +33,16 @@ const tag_type_map_build = async () => {
       return m;
     });
 
-    /** cleanup tag_types_enabled */
+    /** cleanup desk_tag_types_enabled */
 
-    tag_types_enabled.update((m) => {
+    desk_tag_types_enabled.update((m) => {
       for (const type_id in m){
         if (!m.hasOwnProperty(type_id)){
           continue;
         }
         if (!sub_tag_type_map.has(type_id)){
           delete m[type_id];
-        }          
+        }
       }
       return m;
     });
@@ -72,7 +72,7 @@ const tag_map_build = async (type_id = undefined) => {
 
     tag_map.update((m) => {
       if (typeof type_id === 'undefined'){
-        m.clear();          
+        m.clear();
       } else {
         m.delete(type_id);
       }
@@ -90,12 +90,12 @@ const tag_map_build = async (type_id = undefined) => {
     person_tag_map.update((m) => {
       if (typeof type_id === 'undefined'){
         m.clear();
-        last_ts_epoch_map.clear();        
-      } else {     
+        last_ts_epoch_map.clear();
+      } else {
         m.forEach((p_map) => {
           p_map.delete(type_id);
         });
-        last_ts_epoch_map.delete(type_id);   
+        last_ts_epoch_map.delete(type_id);
       }
 
       res.rows.forEach((v) => {
@@ -180,7 +180,7 @@ const tag_map_listen_changes = () => {
 
         /**
          * in sequence, add to tag_type_map
-        */ 
+        */
         console.log('=// change $tag_type_map ', change);
 
         tag_type_map.update((m) => {
@@ -189,8 +189,8 @@ const tag_map_listen_changes = () => {
           return m;
         });
 
-        return;  
-    
+        return;
+
       }
 
       /**
@@ -210,11 +210,11 @@ const tag_map_listen_changes = () => {
 
       if (!last_ts_epoch_map.has(change.doc.type_id)
         || last_ts_epoch_map.get(change.doc.type_id) < change.doc.ts_epoch){
-      
-        /** 
-         * in sequence 
+
+        /**
+         * in sequence
          */
-      
+
         console.log('=// change $person_tag_map & $tag_map', change);
 
         person_tag_map.update((m) => {
@@ -237,15 +237,15 @@ const tag_map_listen_changes = () => {
           last_ts_epoch_map.set(change.doc.type_id, change.doc.ts_epoch);
           return m;
         });
-        
-        return;  
+
+        return;
       }
 
       /**
        * out sequence
       */
       console.log('- change tag_map, out sequence, rebuild type_id ' + change.doc.type_id);
-      
+
       tag_map_build(chnage.doc.type_id).then(() => {
         console.log('- tap map rebuild, type_id ' + change.doc.type_id);
       }).catch((err) => {

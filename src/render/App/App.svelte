@@ -6,20 +6,20 @@
   import { listen_nfc } from '../../nfc/nfc_scan';
   import { listen_nfc_device } from '../../nfc/nfc_device';
   import { listen_gate_open } from '../../gate/gate_monitor';
-  import { member_period_filter } from '../../services/store';
-  import { member_period_select } from '../../services/store';
-  import { member_data_update } from '../../services/store';
+  import { desk_member_period_filter } from '../../services/store';
+  import { gate_member_period_select } from '../../services/store';
+  import { desk_member_data_update } from '../../services/store';
   import { member_person_map } from '../../services/store';
 
   listen_nfc();
   listen_nfc_device();
   listen_gate_open();
 
-  $: if (!$member_data_update && !$member_person_map.has($member_period_filter)){
-    $member_period_filter = '';
+  $: if (!$desk_member_data_update && !$member_person_map.has($desk_member_period_filter)){
+    $desk_member_period_filter = '';
   }
-  $: if (!$member_data_update && !$member_person_map.has($member_period_select)){
-    $member_period_select = '';
+  $: if (!$desk_member_data_update && !$member_person_map.has($gate_member_period_select)){
+    $gate_member_period_select = '';
   }
 
 </script>

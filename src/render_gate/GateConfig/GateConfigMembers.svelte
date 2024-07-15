@@ -3,7 +3,10 @@
   import plusIcon from '@iconify/icons-fa/plus';
   import minusIcon from '@iconify/icons-fa/minus';
   import { TabPane, Card, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge } from 'sveltestrap';
-  import { gate_members_only_enabled, gate_member_open_time, member_period_select, member_person_map } from '../../services/store';
+  import { gate_members_only_enabled } from '../../services/store';
+  import { gate_member_open_time } from '../../services/store';
+  import { gate_member_period_select } from '../../services/store';
+  import { member_person_map } from '../../services/store';
 
   export let tab;
   let dropdown_open = false;
@@ -25,34 +28,34 @@
             type=checkbox
             id=gate_members_only_enabled
             bind:checked={$gate_members_only_enabled}
-            title="Enkel leden in {$member_period_select}"
+            title="Enkel leden in {$gate_member_period_select}"
           />
-          <label class=form-check-label for=member_period_filter_enabled>
+          <label class=form-check-label for=gate_member_period_select>
             <ButtonDropdown {dropdown_open}>
               <DropdownToggle caret
-                color={$member_period_select === '^' ? 'warning' : $member_period_select ? 'success' : 'grey'}
+                color={$gate_member_period_select === '^' ? 'warning' : $gate_member_period_select ? 'success' : 'grey'}
                 on:click={() => {dropdown_open = !dropdown_open;}}
                 title="Lidmaatschap periode">
-                  {#if $member_period_select === '^'}
+                  {#if $gate_member_period_select === '^'}
                     Geen lid
-                  {:else if $member_period_select}
-                    {$member_period_select}
+                  {:else if $gate_member_period_select}
+                    {$gate_member_period_select}
                   {:else}
                     *Geen selectie*
                   {/if}
               </DropdownToggle>
               <DropdownMenu>
-                {#if !$member_period_select}
+                {#if !$gate_member_period_select}
                   <DropdownItem active title="Geen lidmaatschap filter geselecteerd">
                     <Badge color=grey>
-                      *Geen filter*
+                      *Geen selectie*
                     </Badge>
                   </DropdownItem>
                 {/if}
                 {#each [...$member_person_map.keys()].filter(k => k !== '^').sort().reverse() as member_period(member_period)}
                   <DropdownItem
-                    active={member_period === $member_period_select}
-                    on:click={() => {$member_period_select = member_period;}}
+                    active={member_period === $gate_member_period_select}
+                    on:click={() => {$gate_member_period_select = member_period;}}
                   >
                     <Badge color=success class=me-2>
                       {member_period}

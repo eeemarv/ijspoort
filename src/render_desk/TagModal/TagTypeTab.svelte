@@ -5,7 +5,7 @@
   import LocaleDateString from '../../render/Common/LocaleDateString.svelte';
   import Tag from '../../render/Tag/Tag.svelte';
   import PersonTag from '../../render/Person/PersonTag.svelte';
-  import { selected_person_id } from '../../services/store';
+  import { desk_selected_person_id } from '../../services/store';
   import { tag_map } from '../../services/store';
   import { tag_type_map } from '../../services/store';
   import Pagination from '../../render/Common/Pagination.svelte';
@@ -22,7 +22,7 @@
   let set_total_rows = () => {};
 
   const handle_person_select = (person_id) => {
-    $selected_person_id = person_id;
+    $desk_selected_person_id = person_id;
   };
 
   const handle_paginate_results = (e) => {
@@ -71,7 +71,7 @@
   <ListGroup>
     {#each [...$tag_map.get(type_id)].reverse().slice(start_row, end_row) as [ts_epoch, person_id], index (ts_epoch)}
       <SelectableListGroupItem
-        active={$selected_person_id === person_id}
+        active={$desk_selected_person_id === person_id}
         on:click={() => handle_person_select(person_id)}
         selectable={$person_map.has(person_id)}
       >

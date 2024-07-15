@@ -1,7 +1,7 @@
 <script>
   import { Popover } from 'sveltestrap';
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
-  import { selected_nfc_id } from '../../services/store';
+  import { desk_selected_nfc_id } from '../../services/store';
   import { nfc_deblock } from '../../db_put/nfc_put';
   import { get_random_str } from '../../services/functions';
 
@@ -21,7 +21,7 @@
     nfc_deblock(nfc_id);
   };
 
-  $:active = $selected_nfc_id === nfc_id;
+  $:active = $desk_selected_nfc_id === nfc_id;
   $:id = get_random_str(12);
 </script>
 
@@ -37,10 +37,10 @@
       tabindex=-1
       {id}
     >
-      <NfcTag 
-        {nfc_id} 
+      <NfcTag
+        {nfc_id}
         {abc_index}
-        show_ts_epoch 
+        show_ts_epoch
         show_uid_type
       />
     </a>
@@ -50,24 +50,24 @@
       target={id}
     >
       <div slot=title>
-        Geblokkeerde NFC tag 
-        <NfcTag {nfc_id} {abc_index} />           
+        Geblokkeerde NFC tag
+        <NfcTag {nfc_id} {abc_index} />
       </div>
       <span class="btn btn-purple"
-        on:click|stopPropagation={() => {deblock(nfc_id);}}  
+        on:click|stopPropagation={() => {deblock(nfc_id);}}
         on:keyup
       >
         Deblokkeer
-      </span>          
+      </span>
     </Popover>
   {:else}
     <div class=list-group-item
       class:active
     >
-      <NfcTag 
-        {nfc_id} 
+      <NfcTag
+        {nfc_id}
         {abc_index}
-        show_ts_epoch 
+        show_ts_epoch
         show_uid_type
       />
     </div>

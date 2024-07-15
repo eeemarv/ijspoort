@@ -9,10 +9,10 @@
   import NfcPersonAuto from './NfcPersonAuto.svelte';
   import { en_nfc_status } from '../../services/enum';
   import { ev_nfc_scan } from '../../services/events';
-  import { selected_nfc_id } from '../../services/store';
+  import { desk_selected_nfc_id } from '../../services/store';
 
   let nfc_status = en_nfc_status.OFF;
-  $: nfc_id = $selected_nfc_id;
+  $: nfc_id = $desk_selected_nfc_id;
 
   for (const k in en_nfc_status){
     ev_nfc_scan.addEventListener(en_nfc_status[k], (e) => {
@@ -26,7 +26,7 @@
 
   ev_nfc_scan.addEventListener('nfc_device_off', () => {
     nfc_status = en_nfc_status.OFF;
-  }); 
+  });
 </script>
 
 <Card class=my-2>
@@ -45,8 +45,8 @@
       <div>
         <NfcActivate
           {nfc_id}
-          {nfc_status} 
-          on:activated={() => { nfc_status = en_nfc_status.FOUND; }} 
+          {nfc_status}
+          on:activated={() => { nfc_status = en_nfc_status.FOUND; }}
         />
       </div>
     </div>

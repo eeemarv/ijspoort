@@ -4,7 +4,7 @@
   import userIcon from '@iconify/icons-fa/user';
   import { Row, Col } from 'sveltestrap';
   import { TabPane } from 'sveltestrap';
-  import { selected_person_id } from '../../services/store';
+  import { desk_selected_person_id } from '../../services/store';
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
   import PersonTag from '../../render/Person/PersonTag.svelte';
   import SelectableListGroupItem from '../../render/Common/SelectableListGroupItem.svelte';
@@ -51,7 +51,7 @@
       {#if tab === tab_id}
       {#each (tab_person_lists[tab_id] ?? []).slice(start_row, end_row) ?? [] as [nfc_id, person_id], index(nfc_id)}
         <SelectableListGroupItem
-          active={$selected_person_id && $selected_person_id === person_id}
+          active={$desk_selected_person_id && $desk_selected_person_id === person_id}
           on:click={() => handle_click(person_id)}
           selectable={$person_map.has(person_id)}
         >

@@ -1,6 +1,6 @@
 <script>
   import { TabPane, Card } from 'sveltestrap';
-  import { temp_display_enabled } from '../../services/store';
+  import { temperature_card_enabled } from '../../services/store';
   import TemperatureCard from '../../render/Common/TemperatureCard.svelte';
 
   export let tab;
@@ -12,8 +12,8 @@
   </span>
   <Card body>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=temp_display_enabled bind:checked={$temp_display_enabled}>
-      <label class=form-check-label for=temp_display_enabled>
+      <input class=form-check-input type=checkbox id=temperature_card_enabled bind:checked={$temperature_card_enabled}>
+      <label class=form-check-label for=temperature_card_enabled>
         Geef water- en luchttemperatuur weer
       </label>
     </div>

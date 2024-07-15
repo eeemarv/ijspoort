@@ -1,7 +1,7 @@
 import { db_tag } from '../db/db';
 import { sub_person_tag_map, sub_tag_type_map } from '../services/sub';
 import { sub_tag_map } from '../services/sub';
-import { tag_types_enabled } from '../services/store'; 
+import { desk_tag_types_enabled } from '../services/store';
 import lodash from 'lodash';
 
 let tag_add_flood_blocked = false;
@@ -11,8 +11,8 @@ let tag_type_put_flood_blocked = false;
 const tag_type_put_flood_block_time = 1000;
 
 /**
- * @param {Array} type_id_ary 
- * @param {string} person_id 
+ * @param {Array} type_id_ary
+ * @param {string} person_id
  * @returns {undefined}
  */
 const tag_add_bulk = (type_id_ary, person_id) => {
@@ -49,7 +49,7 @@ const tag_add_bulk = (type_id_ary, person_id) => {
   console.log('-- tags_bulk', tags_bulk);
 
   if (!tags_bulk.length){
-    tag_add_flood_blocked = false;    
+    tag_add_flood_blocked = false;
     return;
   }
 
@@ -66,7 +66,7 @@ const tag_add_bulk = (type_id_ary, person_id) => {
 };
 
 /**
- * @param {Object} tag_type 
+ * @param {Object} tag_type
  * @returns {undefined}
  */
 const tag_type_put = (tag_type) => {
@@ -102,7 +102,7 @@ const tag_type_put = (tag_type) => {
     console.log('-- db_tag.put tag type --');
     console.log(res);
 
-    tag_types_enabled.update((t) => {
+    desk_tag_types_enabled.update((t) => {
       t[tag_type._id] = true;
       return t;
     });
@@ -117,12 +117,12 @@ const tag_type_put = (tag_type) => {
 };
 
 /**
- * @param {string} type_id 
+ * @param {string} type_id
  * @returns {undefined}
  */
 const tag_type_del = (type_id) => {
   if (sub_tag_map.has(type_id)
-    && sub_tag_map.get(type_id).size > 0 
+    && sub_tag_map.get(type_id).size > 0
   ){
     console.log('== Can not delete tag type ' + type_id + ', tags exist');
     return;

@@ -1,7 +1,7 @@
 import { db_nfc } from '../db/db';
 import { nfc_id_to_uid } from '../nfc/nfc_id';
 import { sub_nfc_map } from '../services/sub';
-import { sub_nfc_gate_auto_block_enabled } from '../services/sub';
+import { sub_gate_nfc_auto_block_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { sub_person_nfc_map } from '../services/sub';
 
@@ -9,8 +9,8 @@ let flood_blocked = false;
 const flood_block_time = 500;
 
 /**
- * @param {string} person_id 
- * @param {string} nfc_id 
+ * @param {string} person_id
+ * @param {string} nfc_id
  * @returns {undefined}
  */
 const nfc_add = (person_id, nfc_id) => {
@@ -46,7 +46,7 @@ const nfc_add = (person_id, nfc_id) => {
 
 /**
  * @param {string} nfc_id
- * @returns {undefined} 
+ * @returns {undefined}
  */
 const nfc_del = (nfc_id) => {
   if (!sub_nfc_map.has(nfc_id)){
@@ -66,7 +66,7 @@ const nfc_del = (nfc_id) => {
  * @returns {Object} mixin for reg_add (can contain prop blocked_nfcs)
  */
 const nfc_block_others = (nfc_id, ts_epoch) => {
-  if (!sub_nfc_gate_auto_block_enabled){
+  if (!sub_gate_nfc_auto_block_enabled){
     return {};
   }
   if (!sub_nfc_map.has(nfc_id)){
@@ -109,10 +109,10 @@ const nfc_block_others = (nfc_id, ts_epoch) => {
     block_hs.push({
       blocked: true,
       ts_epoch,
-      by_nfc_uid: nfc_id_to_uid(nfc_id),   
+      by_nfc_uid: nfc_id_to_uid(nfc_id),
     });
     nfcs_bulk.push({
-      ...bl_nfc, 
+      ...bl_nfc,
       blocked: true,
       block_hs
     });
@@ -134,7 +134,7 @@ const nfc_block_others = (nfc_id, ts_epoch) => {
 
 /**
  * not used
- * @param {string} nfc_id 
+ * @param {string} nfc_id
  * @returns {undefined}
  */
 const nfc_block_manually = (nfc_id) => {
@@ -166,7 +166,7 @@ const nfc_block_manually = (nfc_id) => {
 };
 
 /**
- * @param {string} nfc_id 
+ * @param {string} nfc_id
  * @returns {undefined}
  */
 const nfc_deblock = (nfc_id) => {
