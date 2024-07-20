@@ -7,7 +7,7 @@
   export let nfc_id;
 </script>
 
-<div class="card-body py-2"
+<div class="list-group-item"
   class:bg-success={nfc_status === en_nfc_status.FOUND}
   class:bg-warning={nfc_status === en_nfc_status.WRITABLE}
   class:bg-info={nfc_status === en_nfc_status.TRANSPORT_KEY_OK}

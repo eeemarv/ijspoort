@@ -1,14 +1,9 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { Button } from 'sveltestrap';
   import { nfc_del } from '../../db_put/nfc_put';
-  import { desk_nfc_reset_button_enabled } from '../../services/store';
-  import { desk_nfc_auto_reg_enabled } from '../../services/store';
   import NfcInfoModal from './NfcInfoModal.svelte';
-  import { en_nfc_status } from '../../services/enum';
   import { nfc_id_to_uid } from '../../nfc/nfc_id';
 
-  export let nfc_status;
   export let nfc_id;
 
   let open = false;
@@ -16,7 +11,7 @@
   let message = '';
   let contentClassName = 'bg-default';
 
-  const handle_nfc_reset = () => {
+  export const handle_nfc_clear = () => {
     message = 'Wis uit database';
     contentClassName = 'bg-default';
     progress = 0;
@@ -59,17 +54,3 @@
     {message}
   </p>
 </NfcInfoModal>
-
-{#if !$desk_nfc_auto_reg_enabled
-  && $desk_nfc_reset_button_enabled
-  && nfc_id
-  && nfc_status === en_nfc_status.FOUND
-}
-  <Button
-    color=danger
-    on:click={handle_nfc_reset}
-    title="Wis deze NFC tag"
-  >
-    Wis
-  </Button>
-{/if}

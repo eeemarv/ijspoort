@@ -1,7 +1,7 @@
 <script>
   import { Col } from 'sveltestrap';
   import { gate_count } from '../../services/store';
-  import { gate_members_only_enabled } from '../../services/store';
+  import { members_only_enabled } from '../../services/store';
   import { gate_open } from '../../services/store';
   import GateCounter from './GateCounter.svelte';
   import GateCounterOutLimit from './GateCounterOutLimit.svelte';
@@ -10,7 +10,7 @@
 </script>
 
 {#if $gate_count > 0}
-  <div class="row h-75" class:bg-success={$gate_members_only_enabled && $gate_open}>
+  <div class="row h-75" class:bg-success={$members_only_enabled && $gate_open}>
     <Col class="h-100 d-flex justify-content-center align-items-center" >
       <GateCounter font_size=16em />
     </Col>

@@ -4,7 +4,7 @@
   import { ev_nfc_scan } from '../../services/events';
   import PersonTag from '../../render/Person/PersonTag.svelte';
   import { Badge } from 'sveltestrap';
-  import { reg_block_time } from '../../db_put/reg_put';
+  import { reg_valid_time } from '../../db_put/reg_put';
   import { get_time_str } from '../../services/functions';
 
   let timeout_id = undefined;
@@ -35,7 +35,7 @@
     <PersonTag {person_id} show_member_period />
     <Badge color=dark>
       Reeds geregistreerd om {get_time_str(sub_person_last_reg_ts_map.get(person_id))}<br/>
-      (binnen {Math.floor(reg_block_time / 60000)} minuten)
+      (binnen {Math.floor(reg_valid_time / 60000)} minuten)
     </Badge>
   </li>
 {/if}

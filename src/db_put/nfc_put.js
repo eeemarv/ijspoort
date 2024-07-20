@@ -63,13 +63,14 @@ const nfc_del = (nfc_id) => {
 /**
  * @param {string} nfc_id
  * @param {int} ts_epoch
- * @returns {Object} mixin for reg_add (can contain prop blocked_nfcs)
+ * @returns {Object} mixin for reg_add_by_gate_nfc (can contain prop blocked_nfcs)
  */
 const nfc_block_others = (nfc_id, ts_epoch) => {
   if (!sub_gate_nfc_auto_block_enabled){
     return {};
   }
   if (!sub_nfc_map.has(nfc_id)){
+    console.log('nfc ' + nfc_id + ' not found');
     return {};
   }
   if (!Number.isInteger(ts_epoch) || !ts_epoch){
@@ -77,10 +78,16 @@ const nfc_block_others = (nfc_id, ts_epoch) => {
     return {};
   }
   const nfc = sub_nfc_map.get(nfc_id);
+  if (typeof nfc.blocked !== 'undefined'){
+    console.log('nfc ' + nfc_id + ' is blocked, can not block other nfcs.');
+    return {};
+  }
   if (!sub_person_map.has(nfc.person_id)){
+    console.log('person ' + nfc.person_id + ' not found');
     return {};
   }
   if (!sub_person_nfc_map.has(nfc.person_id)){
+    console.log('error: no nfc ' + nfc_id + ' found for person ' + nfc.person_id);
     return {};
   }
   const nfc_id_set = sub_person_nfc_map.get(nfc.person_id);

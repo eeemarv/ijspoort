@@ -3,8 +3,8 @@ import { reg_map } from '../services/store';
 import { person_last_reg_ts_map } from '../services/store';
 import { sub_reg_map } from '../services/sub';
 import { sub_person_last_reg_ts_map } from '../services/sub';
+import { reg_valid_time } from '../db_put/reg_put';
 
-const reg_period = 18000000; // view regs last 5 hours
 const cleanup_interval = 60000; // cleanup view regs every minute
 
 let last_ts_epoch = undefined;
@@ -13,7 +13,7 @@ const reg_map_build = async () => {
 
   return await db_reg.allDocs({
     include_docs: true,
-    startkey: 't' + ((new Date()).getTime() - reg_period)
+    startkey: 't' + ((new Date()).getTime() - reg_valid_time)
   }).then((res) => {
 
     console.log('load $reg_map map t RES', res);
@@ -29,7 +29,10 @@ const reg_map_build = async () => {
         if (typeof v.doc.blocked_nfcs !== 'undefined'){
           mx.blocked_nfcs = [...v.doc.blocked_nfcs];
         }
-        m.set(v.id, {...v.doc, ...mx});        
+        if (typeof v.doc.invalid !== 'undefined'){
+          mx.invalid = {...v.doc.invalid};
+        }
+        m.set(v.id, {...v.doc, ...mx});
         last_ts_epoch = v.doc.ts_epoch;
       });
       return m;
@@ -38,6 +41,9 @@ const reg_map_build = async () => {
     person_last_reg_ts_map.update((m) => {
       m.clear();
       reg_ary.forEach((v) => {
+        if (typeof v.doc.invalid !== 'undefined'){
+          return;
+        }
         m.set(v.doc.person_id, v.doc.ts_epoch);
       });
       return m;
@@ -79,12 +85,15 @@ const reg_map_listen_changes = () => {
         let new_person_last_reg_set = false;
 
         for (const reg of [...sub_reg_map.values()].reverse()){
+          if (typeof reg.invalid !== 'undefined'){
+            continue;
+          }
           if (reg.person_id === person_id){
             person_last_reg_ts_map.update((m) => {
               m.set(person_id, reg.ts_epoch);
               return m;
-            });  
-            new_person_last_reg_set = true;          
+            });
+            new_person_last_reg_set = true;
             break;
           }
         }
@@ -100,27 +109,32 @@ const reg_map_listen_changes = () => {
       return;
     }
 
-    const ts_start = (new Date()).getTime() - reg_period;
+    const ts_start = (new Date()).getTime() - reg_valid_time;
 
     if (change.doc.ts_epoch < ts_start){
       console.log('== db_reg.changes, reg too old, do not map', change);
       return;
     }
 
-    if (typeof last_ts_epoch === 'undefined' 
+    if (typeof last_ts_epoch === 'undefined'
       || last_ts_epoch < change.doc.ts_epoch){
       /*
       * in sequence, just add to map
       */
-      person_last_reg_ts_map.update((m) => {
-        m.set(change.doc.person_id, change.doc.ts_epoch);
-        return m;
-      });
+      if (typeof change.doc.invalid === 'undefined'){
+        person_last_reg_ts_map.update((m) => {
+          m.set(change.doc.person_id, change.doc.ts_epoch);
+          return m;
+        });
+      }
 
       reg_map.update((m) => {
         const mx = {};
         if (typeof change.doc.blocked_nfcs !== 'undefined'){
           mx.blocked_nfcs = [...change.doc.blocked_nfcs];
+        }
+        if (typeof change.doc.invalid !== 'undefined'){
+          mx.invalid = {...change.doc.invalid};
         }
         m.set(change.id, {...change.doc, ...mx});
         last_ts_epoch = change.doc.ts_epoch;
@@ -148,7 +162,7 @@ const reg_map_cleanup = () => {
   console.log('- setInterval reg map cleanup -');
 
   setInterval(() => {
-    const ts_start = (new Date()).getTime() - reg_period;
+    const ts_start = (new Date()).getTime() - reg_valid_time;
     const delete_keys = [];
 
     for (const [k, v] of sub_reg_map){
@@ -179,7 +193,6 @@ const reg_map_cleanup = () => {
   }, cleanup_interval);
 };
 
-export { reg_period };
 export { reg_map_build };
 export { reg_map_listen_changes };
 export { reg_map_cleanup };

@@ -72,9 +72,9 @@
       Filter lidmaatschap
     </label>
   </div>
-  <div class="input-group input-group-lg" bind:this={el_group}>
+  <div class="input-group" bind:this={el_group}>
     <input type="text" id="manual"
-      tabindex="0" class="form-control input-lg"
+      tabindex="0" class="form-control"
       aria-describedby="manual_help"
       value="" bind:this={el_manual}
     />

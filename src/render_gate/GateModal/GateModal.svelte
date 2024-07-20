@@ -6,10 +6,10 @@
   import { get_time_str } from '../../services/functions';
   import { sub_gate_count } from '../../services/sub';
   import { sub_gate_count_enabled } from '../../services/sub';
-  import { sub_gate_members_only_enabled } from '../../services/sub';
+  import { sub_members_only_enabled } from '../../services/sub';
   import { sub_nfc_map } from '../../services/sub';
   import { sub_person_last_reg_ts_map } from '../../services/sub';
-  import { reg_block_time } from '../../db_put/reg_put';
+  import { reg_valid_time } from '../../db_put/reg_put';
   import { sub_gate_open } from '../../services/sub';
   import { sound_ok } from '../../services/sound';
   import { sound_error } from '../../services/sound';
@@ -147,7 +147,7 @@
     }
     close_gate_config();
 
-    if (sub_gate_open && sub_gate_members_only_enabled){
+    if (sub_gate_open && sub_members_only_enabled){
       const og_nfc_id = get_nfc_id_that_opened_gate();
       if (typeof og_nfc_id === 'string'
         && (typeof prsn_id === 'undefined'
@@ -209,7 +209,7 @@
       {#if typeof already_registered_person_id === 'string'
         && already_registered_person_id === person_id
         && sub_person_last_reg_ts_map.has(person_id)
-        && sub_person_last_reg_ts_map.get(person_id) > (time - reg_block_time)
+        && sub_person_last_reg_ts_map.get(person_id) > (time - reg_valid_time)
       }
         <p>
           Reeds geregistreerd om {get_time_str(sub_person_last_reg_ts_map.get(person_id))}

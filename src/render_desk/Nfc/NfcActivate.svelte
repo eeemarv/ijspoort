@@ -86,13 +86,15 @@
   </p>
 </NfcInfoModal>
 
-<Button
-  color={person_nfc_count > 0 ? 'warning' : 'success'}
-  title="Activeer deze NFC-tag voor deze persoon"
-  disabled={!nfc_id || !$desk_selected_person_id || nfc_status !== en_nfc_status.TRANSPORT_KEY_OK || $nfc_map.has(nfc_id)}
-  on:click={handle_activate_nfc}>
-  Activeer
-  {#if person_nfc_count > 0}
-    extra
-  {/if}
-</Button>
+<div class="list-group-item">
+  <Button
+    color={person_nfc_count > 0 ? 'warning' : 'success'}
+    title="Activeer deze NFC-tag voor deze persoon"
+    disabled={!nfc_id || !$desk_selected_person_id || nfc_status !== en_nfc_status.TRANSPORT_KEY_OK || $nfc_map.has(nfc_id)}
+    on:click={handle_activate_nfc}>
+    Activeer
+    {#if person_nfc_count > 0}
+      extra
+    {/if}
+  </Button>
+</div>

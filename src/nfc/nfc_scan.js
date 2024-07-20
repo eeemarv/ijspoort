@@ -1,8 +1,10 @@
 const env = window.require('electron').remote.process.env;
 const { ipcRenderer } = window.require('electron');
-import { reg_add_by_desk_auto } from '../db_put/reg_put';
-import { reg_add_by_gate } from '../db_put/reg_put';
+import { reg_add_by_desk_nfc } from '../db_put/reg_put';
+import { reg_add_by_gate_nfc } from '../db_put/reg_put';
 import { ev_nfc_scan } from '../services/events';
+import { sub_desk_member_period_filter } from '../services/sub';
+import { sub_member_period_select } from '../services/sub';
 import { sub_nfc_map } from '../services/sub';
 import { sub_gate_nfc_auto_block_enabled } from '../services/sub';
 import { sub_desk_nfc_auto_open_person_data_enabled } from '../services/sub';
@@ -10,7 +12,7 @@ import { sub_desk_nfc_auto_reg_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { desk_selected_person_id } from '../services/store';
 import { desk_selected_nfc_id } from '../services/store';
-import { person_is_member_this_year } from '../person/person_member';
+import { person_is_member } from '../person/person_member';
 import { person_is_already_registered } from '../person/person_already_registered';
 import { nfc_uid_to_id } from './nfc_id';
 import { nfc_block_others } from '../db_put/nfc_put';
@@ -18,9 +20,9 @@ import { get_ts_epoch } from '../services/functions';
 
 const gate_modus = env.GATE === '1';
 
-let flood_block_same_nfc_id = undefined;
-let flood_timeout_id = undefined;
-const flood_block_time = 3000;
+let gate_flood_block_same_nfc_id = undefined;
+let gate_flood_timeout_id = undefined;
+const gate_flood_block_time = 3000;
 
 /**
  * local
@@ -54,17 +56,17 @@ const listen_nfc = () => {
     const nfc_id = nfc_uid_to_id(nfc_uid);
 
     if (gate_modus){
-      if (typeof flood_block_same_nfc_id === 'string'
-        && nfc_id === flood_block_same_nfc_id){
+      if (typeof gate_flood_block_same_nfc_id === 'string'
+        && nfc_id === gate_flood_block_same_nfc_id){
         console.log('flood blocked scan same nfc_id ' + nfc_id);
         return;
       }
 
-      clearTimeout(flood_timeout_id);
-      flood_timeout_id = setTimeout(() => {
-        flood_block_same_nfc_id = undefined;
-      }, flood_block_time);
-      flood_block_same_nfc_id = nfc_id;
+      clearTimeout(gate_flood_timeout_id);
+      gate_flood_timeout_id = setTimeout(() => {
+        gate_flood_block_same_nfc_id = undefined;
+      }, gate_flood_block_time);
+      gate_flood_block_same_nfc_id = nfc_id;
     }
 
     desk_selected_nfc_id.set(nfc_id);
@@ -86,19 +88,31 @@ const listen_nfc = () => {
     }
 
     const person_id = nfc.person_id;
+
     ev_nfc_scan_dispatch('person_found', {nfc_id});
 
-    if (!person_is_member_this_year(person_id)){
+    const member_period = gate_modus ? sub_member_period_select : sub_desk_member_period_filter;
+
+    if (!person_is_member(person_id, member_period)){
       desk_selected_person_id.set(person_id);
       ev_nfc_scan_dispatch('person_not_member', {nfc_id});
+      // reg invalid.not_member_in
       return;
     }
 
     if (typeof nfc.blocked !== 'undefined'){
       desk_selected_person_id.set(person_id);
       ev_nfc_scan_dispatch('nfc_blocked', {nfc_id});
+      // reg invalid.nfc_blocked
       return;
     }
+
+    // gate modus: auto block
+
+    // person_member
+
+    // reg.invalid.not_fresh
+    // reg ... valid
 
     /** register (if fresh) */
 
@@ -115,14 +129,14 @@ const listen_nfc = () => {
       if (gate_modus){
         if (Object.keys(nfc_block_mixin).length){
           /** add a registration anyway when a nfc tag got blocked */
-          reg_add_by_gate(nfc_id, ts_epoch, nfc_block_mixin);
+          reg_add_by_gate_nfc(nfc_id, ts_epoch, nfc_block_mixin);
         }
       }
     } else {
       if (gate_modus){
-        reg_add_by_gate(nfc_id, ts_epoch, nfc_block_mixin);
+        reg_add_by_gate_nfc(nfc_id, ts_epoch, nfc_block_mixin);
       } else if (sub_desk_nfc_auto_reg_enabled){
-        reg_add_by_desk_auto(nfc_id, ts_epoch);
+        reg_add_by_desk_nfc(nfc_id, ts_epoch);
       }
     }
 

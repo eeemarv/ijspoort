@@ -3,7 +3,7 @@
   import { temperature_card_enabled } from '../../services/store';
   import { desk_gate_card_enabled } from '../../services/store';
   import { desk_tag_card_enabled } from '../../services/store';
-  import { desk_nfc_reset_button_enabled } from '../../services/store';
+  import { desk_nfc_clear_button_enabled } from '../../services/store';
   import { desk_nfc_read_test_button_enabled } from '../../services/store';
   import { desk_reg_delete_buttons_enabled } from '../../services/store';
   import TemperatureCard from '../../render/Common/TemperatureCard.svelte';
@@ -23,8 +23,8 @@
       </label>
     </div>
     <div class=form-check>
-      <input class=form-check-input type=checkbox id=desk_nfc_reset_button_enabled bind:checked={$desk_nfc_reset_button_enabled}>
-      <label class=form-check-label for=desk_nfc_reset_button_enabled>
+      <input class=form-check-input type=checkbox id=desk_nfc_clear_button_enabled bind:checked={$desk_nfc_clear_button_enabled}>
+      <label class=form-check-label for=desk_nfc_clear_button_enabled>
         Wisknop voor NFC tags
       </label>
     </div>

@@ -16,14 +16,11 @@ import { desk_nfc_auto_open_person_data_enabled } from './store';
 import { gate_count_enabled } from './store';
 import { gate_count } from './store';
 import { gate_open } from './store';
-import { gate_members_only_enabled } from './store';
+import { members_only_enabled } from './store';
 import { gate_member_open_time } from './store';
 import { gate_sound_ok_enabled } from './store';
 import { gate_sound_error_enabled } from './store';
-import { focus_year } from './store';
-import { focus_year_filter_enabled } from './store';
-
-import { gate_member_period_select } from './store';
+import { member_period_select } from './store';
 import { desk_member_period_filter } from './store';
 import { desk_member_period_filter_enabled } from './store';
 import { member_person_map } from './store';
@@ -46,13 +43,11 @@ let sub_desk_nfc_auto_open_person_data_enabled = false;
 let sub_gate_count_enabled = false;
 let sub_gate_count = 0;
 let sub_gate_open = true;
-let sub_gate_members_only_enabled = false;
+let sub_members_only_enabled = false;
 let sub_gate_member_open_time = 12;
 let sub_gate_sound_ok_enabled = false;
 let sub_gate_sound_error_enabled = false;
-let sub_focus_year = 0;
-let sub_focus_year_filter_enabled = false;
-let sub_gate_member_period_select = null;
+let sub_member_period_select = null;
 let sub_desk_member_period_filter = null;
 let sub_desk_member_period_filter_enabled = false;
 let sub_member_person_map = new Map();
@@ -129,8 +124,8 @@ gate_open.subscribe((b) => {
   sub_gate_open = b;
 });
 
-gate_members_only_enabled.subscribe((b) => {
-  sub_gate_members_only_enabled = b;
+members_only_enabled.subscribe((b) => {
+  sub_members_only_enabled = b;
 });
 
 gate_member_open_time.subscribe((i) => {
@@ -145,16 +140,8 @@ gate_sound_error_enabled.subscribe((b) => {
   sub_gate_sound_error_enabled = b;
 });
 
-focus_year.subscribe((i) => {
-  sub_focus_year = i;
-});
-
-focus_year_filter_enabled.subscribe((b) => {
-  sub_focus_year_filter_enabled = b;
-});
-
-gate_member_period_select.subscribe((s) => {
-  sub_gate_member_period_select = s;
+member_period_select.subscribe((s) => {
+  sub_member_period_select = s;
 });
 
 desk_member_period_filter.subscribe((s) => {
@@ -187,13 +174,11 @@ export { sub_desk_nfc_auto_open_person_data_enabled };
 export { sub_gate_count_enabled };
 export { sub_gate_count };
 export { sub_gate_open };
-export { sub_gate_members_only_enabled };
+export { sub_members_only_enabled };
 export { sub_gate_member_open_time };
 export { sub_gate_sound_ok_enabled };
 export { sub_gate_sound_error_enabled };
-export { sub_focus_year };
-export { sub_focus_year_filter_enabled };
-export { sub_gate_member_period_select };
+export { sub_member_period_select };
 export { sub_desk_member_period_filter };
 export { sub_desk_member_period_filter_enabled };
 export { sub_member_person_map };

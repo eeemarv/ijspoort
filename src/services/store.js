@@ -37,24 +37,21 @@ const create_coupled_estore = (key, default_value, min_value, max_value) => {
 export const gate_open = writable(true);
 export const gate_count = create_coupled_estore('gate_count', 50, -99, 999);
 export const gate_count_enabled = writable(false);
-export const gate_members_only_enabled = writable(false);
 export const gate_member_open_time = create_coupled_estore('gate_member_open_time', 12, 6, 20);
 export const gate_nfc_auto_block_enabled = create_coupled_estore('gate_nfc_auto_block_enabled', false);
 
-export const desk_nfc_reset_button_enabled = create_coupled_estore('desk_nfc_reset_button_enabled', false);
+export const members_only_enabled = create_coupled_estore('members_only_enabled', false);
+export const member_period_select = create_coupled_estore('member_period_select', '');
+
+export const desk_nfc_clear_button_enabled = create_coupled_estore('desk_nfc_clear_button_enabled', false);
 export const desk_nfc_read_test_button_enabled = create_coupled_estore('desk_nfc_read_test_button_enabled', false);
 export const temperature_card_enabled = create_coupled_estore('temperature_card_enabled', false);
 //rm
-export const assist_import_year = create_coupled_estore('assist_import_year', 2022, 2016, 2030);
-//rm
 export const focus_year = create_coupled_estore('focus_year', 2022, 2016, 2030);
-//rm
-export const focus_year_filter_enabled = create_coupled_estore('focus_year_filter_enabled', true);
 
 export const desk_gate_card_enabled = create_coupled_estore('desk_gate_card_enabled', true);
 
 export const desk_member_period_import = create_coupled_estore('desk_member_period_import', '');
-export const gate_member_period_select = create_coupled_estore('gate_member_period_select', '');
 export const desk_member_period_filter = create_coupled_estore('desk_member_period_filter', '');
 export const desk_member_data_update = writable(true);
 export const desk_member_period_filter_enabled = create_coupled_estore('desk_member_period_filter_enabled', false);
