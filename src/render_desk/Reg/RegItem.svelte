@@ -1,5 +1,5 @@
 <script>
-  import { desk_reg_delete_buttons_enabled } from '../../services/store';
+  import { desk_reg_delete_buttons_enabled, reg_map } from '../../services/store';
   import { desk_selected_person_id } from '../../services/store';
   import RegTimeTag from './RegTimeTag.svelte';
   import PersonTag from '../../render/Person/PersonTag.svelte';
@@ -7,6 +7,7 @@
   import CountBadge from '../../render/Common/CountBadge.svelte';
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
   import { nfc_uid_to_id } from '../../nfc/nfc_id';
+  import { Badge } from 'sveltestrap';
 
   export let reg = undefined;
   export let count = undefined;
@@ -52,12 +53,15 @@
     setTimeout(() => newly_add = false, newly_add_show_time);
   }
 
+  $: invalid = typeof reg.invalid !== 'undefined';
+
 </script>
 
 <li
   on:click={handle_select_reg}
   on:keyup
   class=list-group-item
+  class:invalid
   class:bg-success={newly_add}
   class:bg-danger={deleted}
   class:bg-primary={selected}
@@ -66,7 +70,13 @@
   <div class="d-flex w-100 justify-content-between">
     <div>
       <div>
-        <CountBadge {count} />
+        {#if count}
+          <CountBadge {count} />
+        {:else}
+          <Badge color=danger title="Ongeldig, niet meegeteld">
+            -
+          </Badge>
+        {/if}
         <RegTimeTag {reg} />
         {#if reg.nfc_uid}
           <NfcTag
@@ -110,6 +120,9 @@ li:nth-child(even) {
 }
 li {
   border-bottom:  1px solid lightgrey;
+}
+li.invalid {
+  background-color: rgb(70, 10, 10);
 }
 li.selectable:hover{
   background-color: darkblue;

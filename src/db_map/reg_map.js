@@ -83,19 +83,22 @@ const reg_map_listen_changes = () => {
 
     if (change.deleted){
 
-      const person_id = sub_reg_map.get(change.id)?.person_id ?? undefined;
+      const deleted_reg = {...sub_reg_map.get(change.id)};
 
       reg_map.update((m) => {
         m.delete(change.id);
         return m;
       });
 
-      if (typeof person_id !== 'undefined'){
-        // let new_person_last_reg_set = false;
+      if (typeof deleted_reg.person_id !== 'undefined'){
+        let new_person_last_reg_set = false;
         let fresh_reg_set = false;
 
         for (const reg of [...sub_reg_map.values()].reverse()){
-          if (!fresh_reg_set && reg.person_id === person_id){
+          if (reg._id === change.id){
+            continue;
+          }
+          if (!fresh_reg_set && reg.person_id === deleted_reg.person_id){
             fresh_reg_ts_map.update((m) => {
               m.set(person_id, reg.ts_epoch);
               return m;
@@ -105,23 +108,24 @@ const reg_map_listen_changes = () => {
           if (typeof reg.invalid !== 'undefined'){
             continue;
           }
-          if (reg.person_id === person_id){
+          if (reg.person_id === deleted_reg.person_id){
             person_last_reg_ts_map.update((m) => {
               m.set(person_id, reg.ts_epoch);
               return m;
             });
-            // new_person_last_reg_set = true;
+            new_person_last_reg_set = true;
             break;
           }
         }
-        /**
+
         if (!new_person_last_reg_set){
           person_last_reg_ts_map.update((m) => {
-            m.delete(person_id);
+            m.delete(deleted_reg.person_id);
             return m;
           });
         }
-        */
+
+
       }
 
       console.log('== db_reg.changes delete ' + change.id);
