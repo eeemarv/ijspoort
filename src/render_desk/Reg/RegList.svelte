@@ -8,7 +8,7 @@
   import Checkbox from '../../render/Common/Checkbox.svelte';
 
   let show_valid = true;
-  let show_unvalid = true;
+  let show_invalid = true;
 
   $: valid_index_map = new Map([...$reg_map.values()].filter((r) => typeof r.invalid === 'undefined').map((r, i) => [r._id, i + 1]));
 </script>
@@ -32,9 +32,9 @@
             </Checkbox>
           </Col>
           <Col>
-            <Checkbox name=show_unvalid
+            <Checkbox name=show_invalid
               title="Toon ongeldige registraties"
-              bind:checked={show_unvalid}
+              bind:checked={show_invalid}
             >
               Ongeldig: {$reg_map.size - valid_index_map.size}
             </Checkbox>
@@ -45,9 +45,9 @@
       <RegAlertDesk />
 
       {#each [...$reg_map].reverse() as [reg_id, reg](reg._id)}
-        {#if (show_valid && show_unvalid)
+        {#if (show_valid && show_invalid)
           || (valid_index_map.has(reg_id) && show_valid)
-          || (!valid_index_map.has(reg_id) && show_unvalid)
+          || (!valid_index_map.has(reg_id) && show_invalid)
         }
         <RegItem {reg} count={valid_index_map.get(reg_id)} />
         {/if}

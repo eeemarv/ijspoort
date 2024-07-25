@@ -253,9 +253,58 @@ const reg_del = (reg) => {
   });
 };
 
+/**
+ * to update older regs without invalid prop
+ */
+const reg_update_invalid_ts_recent = () => {
+  db_reg.allDocs({
+    include_docs: true
+  }).then((res) => {
+    console.log(res);
+    const reg_bulk = [];
+    const person_reg_map = new Map();
+    for (const r of res.rows){
+      if (typeof r.doc.ts_epoch === 'undefined'){
+        console.log('ts_epoch undefined', r.doc);
+        continue;
+      }
+      if (typeof r.doc.person_id === 'undefined'){
+        console.log('person_id undefined', r.doc);
+        continue;
+      }
+      if (typeof r.doc.invalid !== 'undefined'){
+        console.log('== invalid ', r.doc);
+        continue;
+      }
+      if (person_reg_map.has(r.doc.person_id)){
+        const last_ts = person_reg_map.get(r.doc.person_id);
+        if (r.doc.ts_epoch < (last_ts + reg_valid_time)){
+          const invalid = {ts_recent: last_ts};
+          reg_bulk.push({...r.doc, invalid});
+          continue;
+        }
+      }
+      person_reg_map.set(r.doc.person_id, r.doc.ts_epoch);
+    }
+
+    console.log('reg_bulk ', reg_bulk);
+
+    if (reg_bulk.length === 0){
+      throw 'reg_bulk empty';
+    }
+
+    return db_reg.bulkDocs(reg_bulk);
+  }).then((res) => {
+    console.log('reg_bulk...RES', res);
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
 export { reg_block_time };
 export { reg_valid_time };
 export { reg_add_by_desk_manual };
 export { reg_add_by_desk_nfc };
 export { reg_add_by_gate_nfc };
 export { reg_del };
+export { reg_update_invalid_ts_recent };
