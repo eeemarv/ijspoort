@@ -36,11 +36,10 @@ const topics_subscr_desk_modus = () => {
 		'scan/gate/full',
 		'scan/gate/nfc_not_found',
 		'scan/gate/nfc_blocked',
-		'scan/gate/person_already_registered',			
 		'scan/gate/person_not_found',
 		'scan/gate/person_not_member',
 		'scan/gate/person_valid_member',
-		'scan/p'	
+		'scan/p'
 	];
 }
 
@@ -48,7 +47,7 @@ const mqtt_init = (win) => {
 
 	console.log('mqtt_init, client_id: ' + mqtt_client_id);
 
-	// local network, not secured 
+	// local network, not secured
 	const mqtt_client = mqtt.connect('mqtt://' + env_mqtt_host, {
 		clientId: mqtt_client_id,
 		clean: true,
@@ -111,7 +110,7 @@ const mqtt_init = (win) => {
 				}
 				break;
 			case 'g/sens/in':
-				win.webContents.send('sens.in');				
+				win.webContents.send('sens.in');
 				break;
 			case 'g/sens/out':
 				win.webContents.send('sens.out');
@@ -134,9 +133,6 @@ const mqtt_init = (win) => {
 				win.webContents.send('scan.gate.nfc_blocked', msg);
 				break;
 
-			case 'scan/gate/person_already_registered':
-					win.webContents.send('scan.gate.person_already_registered', msg);
-					break;
 			case 'scan/gate/person_not_found':
 				win.webContents.send('scan.gate.person_not_found', msg);
 				break;
@@ -150,10 +146,10 @@ const mqtt_init = (win) => {
 			case 'scan/p':
 				win.webContents.send('scan.pulse');
 				break;
-			case 'we/water_temp': 
+			case 'we/water_temp':
 				win.webContents.send('water_temp', msg);
 				break;
-			case 'we/air_temp': 
+			case 'we/air_temp':
 				win.webContents.send('air_temp', msg);
 				break;
 			default:
@@ -172,8 +168,7 @@ const mqtt_init = (win) => {
 		on_main_to_mqtt('scan.gate.nfc_not_found', 'scan/gate/nfc_not_found');
 		on_main_to_mqtt('scan.gate.nfc_blocked', 'scan/gate/nfc_blocked');
 
-		on_main_to_mqtt('scan.gate.person_already_registered', 'scan/gate/person_already_registered');
-		on_main_to_mqtt('scan.gate.person_not_found', 'scan/gate/person_not_found');		
+		on_main_to_mqtt('scan.gate.person_not_found', 'scan/gate/person_not_found');
 		on_main_to_mqtt('scan.gate.person_not_member', 'scan/gate/person_not_member');
 		on_main_to_mqtt('scan.gate.person_valid_member', 'scan/gate/person_valid_member');
 

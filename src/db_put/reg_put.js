@@ -1,8 +1,12 @@
 import { db_reg } from '../db/db';
-import { sub_desk_member_period_filter, sub_member_period_select, sub_members_only_enabled, sub_nfc_map } from '../services/sub';
+import { sub_member_period_select } from '../services/sub';
+import { sub_members_only_enabled } from '../services/sub';
+import { sub_nfc_map } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { sub_person_last_reg_ts_map } from '../services/sub';
-import { reg_id_to_ts_epoch, ts_epoch_to_reg_id } from '../reg/reg_id';
+import { sub_fresh_reg_ts_map } from '../services/sub';
+import { ts_epoch_to_reg_id } from '../reg/reg_id';
+import { ev_reg } from '../services/events';
 
 let flood_blocked = false;
 const flood_block_time = 200;
@@ -18,6 +22,10 @@ const reg_flood_blocked = () => {
     console.log('flood blocked reg_add_*');
     return true;
   }
+  setTimeout(() => {
+    flood_blocked = false;
+  }, flood_block_time);
+
   flood_blocked = true;
   return false;
 };
@@ -28,11 +36,34 @@ const reg_flood_blocked = () => {
  * @returns {undefined}
  */
 const reg_put = (reg) => {
+  if (typeof reg._id === 'undefined'){
+    console.log('no reg id error');
+    return;
+  }
+  if (typeof reg.person_id === 'undefined'){
+    console.log('no person_id error');
+    return;
+  }
+  if (typeof reg.ts_epoch === 'undefined'){
+    console.log('no ts_epoch error');
+    return;
+  }
+
+  /** person registration too fresh gets blocked */
+  if (sub_fresh_reg_ts_map.has(reg.person_id)){
+    const ts_last_reg = sub_fresh_reg_ts_map.get(reg.person_id);
+    console.log('+++ ts_last_reg', ts_last_reg);
+    console.log('+++ reg.ts_epoch', reg.ts_epoch);
+    if (reg.ts_epoch < (ts_last_reg + reg_block_time)){
+      console.log('ev_reg too_fresh person_id ' + reg.person_id);
+      ev_reg.dispatchEvent(new CustomEvent('too_fresh', {detail: {...reg}}));
+      return;
+    }
+  }
+
   db_reg.put(reg).then((res) => {
-    setTimeout(() => {
-      flood_blocked = false;
-    }, flood_block_time);
     console.log('db_reg.put', res);
+
   }).catch((err) => {
     console.log(err);
   });

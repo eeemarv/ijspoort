@@ -29,7 +29,6 @@
   let message_short = undefined;
   let color = 'primary';
   let person_id = undefined;
-  let already_registered_person_id = undefined;
   let gate_auth_person_id = undefined;
 
   $: gate_auth_enabled = gate_auth(gate_auth_person_id);
@@ -102,8 +101,7 @@
       color: 'purple',
       person: true,
       gate_auth: false
-    },
-    person_already_registered: {}
+    }
   };
 
   const launch_modal = (ev_name, nfc_id = undefined, prsn_id = undefined) => {
@@ -116,7 +114,6 @@
       person_id = prsn_id;
     } else {
       person_id = undefined;
-      already_registered_person_id = undefined;
     }
     if (d.gate_auth){
       gate_auth_person_id = prsn_id;
@@ -140,11 +137,7 @@
       && sub_nfc_map.has(nfc_id)){
       prsn_id = sub_nfc_map.get(nfc_id).person_id;
     }
-    if (ev_name === 'person_already_registered'){
-      already_registered_person_id = prsn_id;
-      ipcRenderer.send('scan.gate.person_already_registered', nfc_id);
-      return;
-    }
+
     close_gate_config();
 
     if (sub_gate_open && sub_members_only_enabled){
@@ -206,9 +199,7 @@
       <h2>
         <PersonTag {person_id} />
       </h2>
-      {#if typeof already_registered_person_id === 'string'
-        && already_registered_person_id === person_id
-        && sub_person_last_reg_ts_map.has(person_id)
+      {#if sub_person_last_reg_ts_map.has(person_id)
         && sub_person_last_reg_ts_map.get(person_id) > (time - reg_valid_time)
       }
         <p>

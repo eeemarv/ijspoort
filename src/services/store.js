@@ -85,6 +85,7 @@ export const desk_nfc_auto_tags = writable({});
 
 export const reg_map = writable(new Map());
 export const person_last_reg_ts_map = writable(new Map());
+export const fresh_reg_ts_map = writable(new Map());
 
 export const desk_selected_person_id = writable();
 export const desk_selected_nfc_id = writable();

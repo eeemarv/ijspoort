@@ -3,17 +3,14 @@ const { ipcRenderer } = window.require('electron');
 import { reg_add_by_desk_nfc } from '../db_put/reg_put';
 import { reg_add_by_gate_nfc } from '../db_put/reg_put';
 import { ev_nfc_scan } from '../services/events';
-import { sub_desk_member_period_filter } from '../services/sub';
 import { sub_member_period_select } from '../services/sub';
 import { sub_nfc_map } from '../services/sub';
-import { sub_gate_nfc_auto_block_enabled } from '../services/sub';
 import { sub_desk_nfc_auto_open_person_data_enabled } from '../services/sub';
 import { sub_desk_nfc_auto_reg_enabled } from '../services/sub';
 import { sub_person_map } from '../services/sub';
 import { desk_selected_person_id } from '../services/store';
 import { desk_selected_nfc_id } from '../services/store';
 import { person_is_member } from '../person/person_member';
-import { person_is_already_registered } from '../person/person_already_registered';
 import { nfc_uid_to_id } from './nfc_id';
 import { nfc_block_others } from '../db_put/nfc_put';
 import { get_ts_epoch } from '../services/functions';
@@ -88,59 +85,38 @@ const listen_nfc = () => {
     }
 
     const person_id = nfc.person_id;
+    let invalid_msg_sent = false;
 
-    ev_nfc_scan_dispatch('person_found', {nfc_id});
-
-    const member_period = gate_modus ? sub_member_period_select : sub_desk_member_period_filter;
-
-    if (!person_is_member(person_id, member_period)){
+    if (!person_is_member(person_id, sub_member_period_select)){
       desk_selected_person_id.set(person_id);
       ev_nfc_scan_dispatch('person_not_member', {nfc_id});
       // reg invalid.not_member_in
-      return;
+      invalid_msg_sent = true;
     }
 
     if (typeof nfc.blocked !== 'undefined'){
       desk_selected_person_id.set(person_id);
-      ev_nfc_scan_dispatch('nfc_blocked', {nfc_id});
+      if (!invalid_msg_sent){
+        ev_nfc_scan_dispatch('nfc_blocked', {nfc_id});
+      }
+
       // reg invalid.nfc_blocked
+      invalid_msg_sent =  true;
+    }
+
+    if (gate_modus){
+      const nfc_block_mixin = nfc_block_others(nfc_id, ts_epoch);
+      reg_add_by_gate_nfc(nfc_id, ts_epoch, nfc_block_mixin);
       return;
     }
 
-    // gate modus: auto block
-
-    // person_member
-
-    // reg.invalid.not_fresh
-    // reg ... valid
-
-    /** register (if fresh) */
-
-    /** in gate modus, with auto block enabled check if blocks apply */
-    let nfc_block_mixin = {};
-
-    if (gate_modus && sub_gate_nfc_auto_block_enabled){
-      nfc_block_mixin = nfc_block_others(nfc_id, ts_epoch);
-    };
-
-    if (person_is_already_registered(person_id)){
-      ev_nfc_scan_dispatch('person_already_registered', {nfc_id});
-
-      if (gate_modus){
-        if (Object.keys(nfc_block_mixin).length){
-          /** add a registration anyway when a nfc tag got blocked */
-          reg_add_by_gate_nfc(nfc_id, ts_epoch, nfc_block_mixin);
-        }
-      }
-    } else {
-      if (gate_modus){
-        reg_add_by_gate_nfc(nfc_id, ts_epoch, nfc_block_mixin);
-      } else if (sub_desk_nfc_auto_reg_enabled){
-        reg_add_by_desk_nfc(nfc_id, ts_epoch);
-      }
+    if (sub_desk_nfc_auto_reg_enabled){
+      reg_add_by_desk_nfc(nfc_id, ts_epoch);
     }
 
-    ev_nfc_scan_dispatch('person_valid_member', {nfc_id});
+    if (!invalid_msg_sent){
+      ev_nfc_scan_dispatch('person_valid_member', {nfc_id});
+    }
 
     if (sub_desk_nfc_auto_open_person_data_enabled){
       desk_selected_person_id.set(person_id);

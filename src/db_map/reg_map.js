@@ -1,6 +1,7 @@
 import { db_reg } from '../db/db';
 import { reg_map } from '../services/store';
 import { person_last_reg_ts_map } from '../services/store';
+import { fresh_reg_ts_map } from '../services/store';
 import { sub_reg_map } from '../services/sub';
 import { sub_person_last_reg_ts_map } from '../services/sub';
 import { reg_valid_time } from '../db_put/reg_put';
@@ -49,6 +50,14 @@ const reg_map_build = async () => {
       return m;
     });
 
+    fresh_reg_ts_map.update((m) => {
+      m.clear();
+      reg_ary.forEach((v) => {
+        m.set(v.doc.person_id, v.doc.ts_epoch);
+      });
+      return m;
+    });
+
     console.log('=====sub_reg_map====', sub_reg_map);
     console.log('=====sub_person_last_reg_ts_map====', sub_person_last_reg_ts_map);
 
@@ -82,9 +91,17 @@ const reg_map_listen_changes = () => {
       });
 
       if (typeof person_id !== 'undefined'){
-        let new_person_last_reg_set = false;
+        // let new_person_last_reg_set = false;
+        let fresh_reg_set = false;
 
         for (const reg of [...sub_reg_map.values()].reverse()){
+          if (!fresh_reg_set && reg.person_id === person_id){
+            fresh_reg_ts_map.update((m) => {
+              m.set(person_id, reg.ts_epoch);
+              return m;
+            });
+            fresh_reg_set = true;
+          }
           if (typeof reg.invalid !== 'undefined'){
             continue;
           }
@@ -93,16 +110,18 @@ const reg_map_listen_changes = () => {
               m.set(person_id, reg.ts_epoch);
               return m;
             });
-            new_person_last_reg_set = true;
+            // new_person_last_reg_set = true;
             break;
           }
         }
+        /**
         if (!new_person_last_reg_set){
           person_last_reg_ts_map.update((m) => {
             m.delete(person_id);
             return m;
           });
         }
+        */
       }
 
       console.log('== db_reg.changes delete ' + change.id);
@@ -121,6 +140,12 @@ const reg_map_listen_changes = () => {
       /*
       * in sequence, just add to map
       */
+
+      fresh_reg_ts_map.update((m) => {
+        m.set(change.doc.person_id, change.doc.ts_epoch);
+        return m;
+      });
+
       if (typeof change.doc.invalid === 'undefined'){
         person_last_reg_ts_map.update((m) => {
           m.set(change.doc.person_id, change.doc.ts_epoch);
