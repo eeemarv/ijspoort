@@ -5,7 +5,11 @@ import { get_iso_week } from './export_functions';
 import { download } from '../services/download';
 import Papa from 'papaparse';
 
-const reg_hour_count_csv_export = () => {
+/**
+ * @param {number|undefined} filter_weekday
+ * @param {boolean|undefined} filter_after_3pm
+ */
+const reg_hour_count_csv_export = (filter_weekday = undefined, filter_after_3pm = undefined) => {
   let reg_max = 0;
   let reg_count = 0;
   let ts_start_hour = 0;
@@ -38,6 +42,26 @@ const reg_hour_count_csv_export = () => {
     include_docs: true
   }).then((res) => {
     res.rows.forEach((v) => {
+      if (typeof v.doc.invalid !== 'undefined'){
+        return;
+      }
+      if (typeof filter_weekday !== 'undefined'){
+        const ts_datetime = new Date(v.doc.ts_epoch);
+        if (filter_weekday !== ts_datetime.getDay()){
+          return;
+        }
+        if (typeof filter_after_3pm !== 'undefined'){
+          if (filter_after_3pm){
+            if (ts_datetime.getHours() < 15){
+              return;
+            }
+          } else {
+            if (ts_datetime.getHours() > 14){
+              return;
+            }
+          }
+        }
+      }
       const ts_hour = Math.floor(v.doc.ts_epoch / 3_600_000) * 3_600_000;
       if (reg_hour_map.has(ts_hour)){
         reg_hour_map.set(ts_hour, reg_hour_map.get(ts_hour) + 1);
@@ -72,8 +96,16 @@ const reg_hour_count_csv_export = () => {
 
     return Papa.unparse(exp);
   }).then((csv) => {
+    let file_id = 'total';
+    if (typeof filter_weekday !== 'undefined'){
+      file_id = ['zondag', 'maandag', 'dinsdag', 'woensdag', 'donderdag', 'vrijdag', 'zaterdag', 'zondag'][filter_weekday];
+      if (typeof filter_after_3pm !== 'undefined'){
+        file_id += '_';
+        file_id += filter_after_3pm ? 'avond' : 'ochtend';
+      }
+    }
     download(csv,
-      get_export_filename('reg_total', 'csv'),
+      get_export_filename('reg_' + file_id, 'csv'),
       'text/csv'
     );
   }).catch((err) => {
@@ -91,7 +123,7 @@ const reg_week_count_csv_export = () => {
   const reg_week_map = new Map();
 
   console.log('CLICKED (week)');
-  
+
   db_reg.allDocs({
     startkey: 't',
     endkey: 't\uffff',
@@ -100,12 +132,15 @@ const reg_week_count_csv_export = () => {
     console.log('RES', res);
 
     res.rows.forEach((v) => {
+      if (typeof v.doc.invalid !== 'undefined'){
+        return;
+      }
       const ts_week = (Math.floor((v.doc.ts_epoch + 259_200_000) / 604_800_000) * 604_800_000) - 259_200_000;
       if (reg_week_map.has(ts_week)){
         reg_week_map.set(ts_week, reg_week_map.get(ts_week) + 1);
         return;
       }
-      reg_week_map.set(ts_week, 1);      
+      reg_week_map.set(ts_week, 1);
     });
 
     for (const [ts_week, r_count] of reg_week_map){
@@ -137,7 +172,7 @@ const reg_month_count_csv_export = () => {
   const reg_month_map = new Map();
 
   console.log('CLICKED (month)');
-  
+
   db_reg.allDocs({
     startkey: 't',
     endkey: 't\uffff',
@@ -146,6 +181,10 @@ const reg_month_count_csv_export = () => {
     console.log('RES', res);
 
     res.rows.forEach((v) => {
+      if (typeof v.doc.invalid !== 'undefined'){
+        return;
+      }
+
       const dt = new Date(v.doc.ts_epoch);
       dt.setDate(1);
       dt.setHours(0, 0, 0, 0);
@@ -154,7 +193,7 @@ const reg_month_count_csv_export = () => {
         reg_month_map.set(ts_month, reg_month_map.get(ts_month) + 1);
         return;
       }
-      reg_month_map.set(ts_month, 1);      
+      reg_month_map.set(ts_month, 1);
     });
 
     for (const [ts_month, r_count] of reg_month_map){
@@ -179,5 +218,3 @@ const reg_month_count_csv_export = () => {
 export { reg_hour_count_csv_export };
 export { reg_week_count_csv_export };
 export { reg_month_count_csv_export };
-
-

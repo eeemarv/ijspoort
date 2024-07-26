@@ -1,5 +1,5 @@
 <script>
-  import { Button, Card, CardBody, Col } from 'sveltestrap';
+  import { Card, CardBody, Col } from 'sveltestrap';
   import ManualInput from '../ManualInput/ManualInput.svelte';
   import Person from '../Person/Person.svelte';
   import RegList from '../Reg/RegList.svelte';
@@ -14,14 +14,10 @@
   import { desk_gate_card_enabled } from '../../services/store';
   import { desk_tag_card_enabled } from '../../services/store';
   import MemberPeriodCardBody from '../MemberPeriod/MemberPeriodCardBody.svelte';
-  import { reg_update_invalid_ts_recent } from '../../db_put/reg_put';
 
 </script>
 
 <Col md=9 class=min-vh-100>
-<Button on:click={reg_update_invalid_ts_recent}>
-  REG update
-</Button>
   <ManualInput />
   <Person />
   <RegList />

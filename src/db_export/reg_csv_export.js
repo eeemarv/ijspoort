@@ -15,6 +15,9 @@ const get_reg_csv_export_buttons = async (period_in_days) => {
     include_docs: true
   }).then((res) => {
     res.rows.forEach((v) => {
+      if (typeof v.doc.invalid !== 'undefined'){
+        return;
+      }
       const ts_day = Math.floor(v.doc.ts_epoch / 86_400_000) * 86_400_000;
       if (reg_day_count_map.has(ts_day)){
         reg_day_count_map.set(ts_day, reg_day_count_map.get(ts_day) + 1);
@@ -26,7 +29,7 @@ const get_reg_csv_export_buttons = async (period_in_days) => {
     console.log('reg_day_count_map', reg_day_count_map);
 
     const cols = [[], [], []];
-    const col_size = Math.ceil(reg_day_count_map.size / cols.length);    
+    const col_size = Math.ceil(reg_day_count_map.size / cols.length);
     let index = 0;
     for (const [ts_day, reg_count] of reg_day_count_map){
       const n_col = Math.floor(index / col_size);
@@ -49,6 +52,9 @@ const reg_csv_export = (ts_day) => {
     include_docs: true
   }).then((res) => {
     res.rows.forEach((v) => {
+      if (typeof v.doc.invalid !== 'undefined'){
+        return;
+      }
       const person = sub_person_map.get(v.doc.person_id);
       const d = [];
       d.push(get_time_str(v.doc.ts_epoch));

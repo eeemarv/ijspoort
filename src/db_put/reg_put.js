@@ -307,4 +307,4 @@ export { reg_add_by_desk_manual };
 export { reg_add_by_desk_nfc };
 export { reg_add_by_gate_nfc };
 export { reg_del };
-export { reg_update_invalid_ts_recent };
+// export { reg_update_invalid_ts_recent };
