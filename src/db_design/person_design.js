@@ -89,7 +89,7 @@ const person_put_design = async () => {
     if (res === 'put'){
       return design_doc;
     }
-    let compare_design_doc = {...res};
+    const compare_design_doc = {...res};
     delete compare_design_doc._rev;
     if (lodash.isEqual(compare_design_doc, design_doc)){
       throw 'no change for person design_doc';

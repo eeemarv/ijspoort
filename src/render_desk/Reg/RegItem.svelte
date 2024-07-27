@@ -70,13 +70,7 @@
   <div class="d-flex w-100 justify-content-between">
     <div>
       <div>
-        {#if count}
-          <CountBadge {count} />
-        {:else}
-          <Badge color=danger title="Ongeldig, niet meegeteld">
-            -
-          </Badge>
-        {/if}
+        <CountBadge {count} valid={!!count} />
         <RegTimeTag {reg} />
         {#if reg.nfc_uid}
           <NfcTag

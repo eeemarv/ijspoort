@@ -16,7 +16,7 @@
   import AwaitError from '../../render/Await/AwaitError.svelte';
   import { nfc_uid_to_id } from '../../nfc/nfc_id';
   import ListGroup from '../../render/Common/ListGroup.svelte';
-  import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
+  import Checkbox from '../../render/Common/Checkbox.svelte';
 
   export let person_id = undefined;
 
@@ -27,20 +27,19 @@
   let open = false;
   const toggle = () => (open = !open);
 
+  let show_valid = true;
+  let show_invalid = true;
+
   let start_row = 0;
   let rows_per_page = 10;
   let set_total_rows = () => {};
 
   let row_count = 0;
+  let valid_count = 0;
+  let invalid_count = 0;
 
-  const reg_get_count = async (person_id) => {
-    row_count = await reg_get_count_by_person_id(person_id);
-    set_total_rows(row_count);
-    return row_count;
-  };
-
-  const reg_get_list = async (person_id, rows_per_page, start_row) => {
-    const regs = await reg_get_list_by_person_id(person_id, rows_per_page, start_row);
+  const reg_get_list = async (person_id, rows_per_page, start_row, show_valid, show_invalid) => {
+    const regs = await reg_get_list_by_person_id(person_id, rows_per_page, start_row, show_valid, show_invalid);
 
     console.log('regs', regs);
 
@@ -65,10 +64,29 @@
     rows_per_page = e.detail.rows_per_page;
   };
 
+  const calc_counts = async () => {
+    valid_count = await reg_get_count_by_person_id(person_id, true, false);
+    invalid_count = await reg_get_count_by_person_id(person_id, false, true);
+    row_count = (show_valid ? valid_count : 0) + (show_invalid ? invalid_count : 0);
+    set_total_rows(row_count);
+  };
+
   $: if (!person_id){
     open = false;
   }
 
+  $: {
+    person_id;
+    $reg_map;
+    show_valid;
+    show_invalid;
+    calc_counts();
+  }
+
+  $: if (open){
+    show_valid = true;
+    show_invalid = true;
+  }
 </script>
 
 <Modal isOpen={open} {toggle} size=xl>
@@ -81,13 +99,21 @@
   <ModalBody>
     <Row>
       <Col>
-        {#await reg_get_count(person_id, $reg_map)}
-          <Await />
-        {:then reg_count}
-          Totaal: {reg_count}
-        {:catch error}
-          <AwaitError {error} />
-        {/await}
+        <div>
+          Totaal: {valid_count + invalid_count}
+        </div>
+        <Checkbox name=show_valid_check
+          title="Toon geldige registraties"
+          bind:checked={show_valid}
+        >
+          Geldig: {valid_count}
+        </Checkbox>
+        <Checkbox name=show_invalid_check
+          title="Toon ongeldige registraties"
+          bind:checked={show_invalid}
+        >
+          Ongeldig: {invalid_count}
+        </Checkbox>
       </Col>
       <Col>
         <Pagination
@@ -98,14 +124,19 @@
       </Col>
     </Row>
     <Row>
-      {#await reg_get_list(person_id, rows_per_page, start_row, $reg_map)}
+      {#await reg_get_list(person_id, rows_per_page, start_row, show_valid, show_invalid, $reg_map)}
         <Await />
       {:then res}
           <Col>
             <ListGroup>
               {#each res.regs as reg, reg_index(reg._id)}
-                <ListGroupItem>
-                  <CountBadge count={row_count - res.start_row - reg_index} />
+                <li class="list-group-item"
+                  class:invalid={typeof reg.invalid !== 'undefined'}
+                >
+                  <CountBadge
+                    count={row_count - res.start_row - reg_index}
+                    valid={typeof reg.invalid === 'undefined'}
+                  />
                   <RegTimeTag {reg} />
                   {#if reg.nfc_uid}
                     <NfcTag nfc_id={nfc_uid_to_id(reg.nfc_uid)}
@@ -124,7 +155,7 @@
                         {/each}
                     </div>
                   {/if}
-                </ListGroupItem>
+                </li>
               {/each}
             </ListGroup>
           </Col>
@@ -150,6 +181,15 @@
 </Modal>
 
 <style>
+li:nth-child(even) {
+  background-color: black;
+}
+li {
+  border-bottom:  1px solid lightgrey;
+}
+li.invalid {
+  background-color: rgb(70, 10, 10);
+}
 div.blocked-badge {
   border: 1px solid grey;
 }

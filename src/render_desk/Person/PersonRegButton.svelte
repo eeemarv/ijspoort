@@ -2,14 +2,14 @@
   import { Button } from 'sveltestrap';
   import { reg_get_count_by_person_id } from '../../db_get/reg_get';
   import AwaitBadge from '../../render/Await/AwaitBadge.svelte';
-    import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
+  import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
 
   export let person_id;
 
 </script>
 
 <ListGroupItem>
-  {#await reg_get_count_by_person_id(person_id)}
+  {#await reg_get_count_by_person_id(person_id, true, true)}
     <AwaitBadge text="...data ophalen" />
   {:then reg_count}
     <Button
