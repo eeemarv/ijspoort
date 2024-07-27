@@ -7,5 +7,5 @@
 
 
 <Badge color={ valid ? 'info' : 'danger'} title="teller">
-  {count}
+  {count ?? '-'}
 </Badge>

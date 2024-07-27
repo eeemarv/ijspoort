@@ -17,6 +17,7 @@
   import { nfc_uid_to_id } from '../../nfc/nfc_id';
   import ListGroup from '../../render/Common/ListGroup.svelte';
   import Checkbox from '../../render/Common/Checkbox.svelte';
+    import RegInvalid from '../Reg/RegInvalid.svelte';
 
   export let person_id = undefined;
 
@@ -155,6 +156,7 @@
                         {/each}
                     </div>
                   {/if}
+                  <RegInvalid {reg} />
                 </li>
               {/each}
             </ListGroup>

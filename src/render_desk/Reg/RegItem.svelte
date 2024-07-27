@@ -8,6 +8,7 @@
   import NfcTag from '../../render/Nfc/NfcTag.svelte';
   import { nfc_uid_to_id } from '../../nfc/nfc_id';
   import { Badge } from 'sveltestrap';
+    import RegInvalid from './RegInvalid.svelte';
 
   export let reg = undefined;
   export let count = undefined;
@@ -79,6 +80,7 @@
           />
         {/if}
         <PersonTag person_id={reg.person_id} show_member_period show_tags />
+        <RegInvalid {reg} />
       </div>
     </div>
     <div>
