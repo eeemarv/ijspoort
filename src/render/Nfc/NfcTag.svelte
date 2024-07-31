@@ -53,15 +53,15 @@
 </script>
 
 {#if $nfc_map.has(nfc_id)}
-  <div 
+  <div
     class="badge bg-{abc_color ?? 'secondary'} position-relative"
-    title="NFC toegangsbadge {nfc.uid}, lidnummer {person_id_to_member_id(nfc.person_id)}"    
+    title="NFC toegangsbadge {nfc.uid}, lidnummer {person_id_to_member_id(nfc.person_id)}"
   >
     {abc_code ?? '-'}
     {#if nfc.blocked}
-      <span 
+      <span
         class="position-absolute top-0 start-100 badge bg-danger border border-light blocked"
-        title="Geblokkeerd sinds {get_date_str(nfc.block_hs[nfc.block_hs.length - 1].ts_epoch)}"    
+        title="Geblokkeerd sinds {get_date_str(nfc.block_hs[nfc.block_hs.length - 1].ts_epoch)}"
       >
         <Icon icon={banIcon} />
         <span class="visually-hidden">Geblokkeerde tag</span>
@@ -90,6 +90,10 @@
     &nbsp;
     <LocaleDateString ts_epoch={nfc?.ts_epoch} title="datum van activatie" />
   {/if}
+{:else}
+  <Badge color=danger title="nfc tag niet (meer) geregistreerd">
+    nfc <Icon icon={banIcon} />
+  </Badge>
 {/if}
 
 <style>

@@ -7,6 +7,7 @@
     paused: 'warning',
     error: 'danger',
     active: 'success',
+    change: 'success',
     complete: 'success',
     denied: 'danger'
   };

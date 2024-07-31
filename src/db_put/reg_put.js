@@ -254,7 +254,7 @@ const reg_del = (reg) => {
 };
 
 /**
- * to update older regs without invalid prop
+ * temporal func to update older regs without invalid prop
  */
 const reg_update_invalid_ts_recent = () => {
   db_reg.allDocs({
@@ -301,6 +301,55 @@ const reg_update_invalid_ts_recent = () => {
   });
 };
 
+/**
+ * temporal func to update older regs without desk prop
+ */
+const reg_update_props = () => {
+  db_reg.allDocs({
+    startkey: 't',
+    endkey: 't\uffff',
+    include_docs: true
+  }).then((res) => {
+    console.log(res);
+    const reg_bulk = [];
+    for (const r of res.rows){
+      if (typeof r.doc.gate !== 'undefined'){
+        continue;
+      }
+      if (typeof r.doc.desk !== 'undefined'){
+        continue;
+      }
+
+      const reg = {...r.doc};
+      // changes here
+
+      //
+      const mx = {};
+      if (typeof r.doc.blocked_nfcs !== 'undefined'){
+        mx.blocked_nfcs = [...change.doc.blocked_nfcs];
+      }
+      if (typeof r.doc.invalid !== 'undefined'){
+        mx.invalid = {...r.doc.invalid};
+      }
+      reg_bulk.push({...reg, ...mx});
+    }
+
+    console.log('reg_bulk ', reg_bulk);
+
+    if (reg_bulk.length === 0){
+      throw 'reg_bulk empty';
+    }
+
+    return;
+
+    return db_reg.bulkDocs(reg_bulk);
+  }).then((res) => {
+    console.log('reg_bulk...RES', res);
+  }).catch((err) => {
+    console.log(err);
+  });
+};
+
 export { reg_block_time };
 export { reg_valid_time };
 export { reg_add_by_desk_manual };
@@ -308,3 +357,4 @@ export { reg_add_by_desk_nfc };
 export { reg_add_by_gate_nfc };
 export { reg_del };
 // export { reg_update_invalid_ts_recent };
+// export { reg_update_props };
