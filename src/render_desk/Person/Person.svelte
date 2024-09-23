@@ -24,15 +24,9 @@
 
   let open_reg_list;
   let open_simular;
-  let refresh_switch = false;
 
   $: person_id = $desk_selected_person_id;
   $: person = $person_map.get(person_id) ?? {};
-  $: already_registered = person_is_already_registered(person_id, refresh_switch);
-
-  setInterval(() => {
-    refresh_switch = !refresh_switch;
-  }, 5000);
 
   const handle_manual_reg = (() => {
     reg_add_by_desk_manual(person_id, get_ts_epoch());
@@ -47,6 +41,7 @@
       behavior: 'smooth'
     });
   }
+
 </script>
 
 {#if person_id}
@@ -160,7 +155,7 @@
     <CardBody>
     </CardBody>
     <div class="card-footer d-flex w-100 justify-content-between">
-      {#if already_registered}
+      {#if person_is_already_registered(person_id, $person_last_reg_ts_map)}
         <Button color=danger
           disabled
         >

@@ -10,32 +10,6 @@ const cleanup_interval = 60000; // cleanup view regs every minute
 
 let last_ts_epoch = undefined;
 
-/**
- * includes invalid regs
- */
-const person_last_reg_ts_map_build = () => {
-  person_last_reg_ts_map.update((m) => {
-    m.clear();
-    for (const v of sub_reg_map.values()){
-      if (typeof v.doc.invalid !== 'undefined'){
-        continue;
-      }
-      m.set(v.doc.person_id, v.doc.ts_epoch);
-    }
-    return m;
-  });
-};
-
-const fresh_reg_ts_map_build = () => {
-  fresh_reg_ts_map.update((m) => {
-    m.clear();
-    for (const v of sub_reg_map.values()){
-      m.set(v.doc.person_id, v.doc.ts_epoch);
-    }
-    return m;
-  });
-};
-
 const reg_map_build = async () => {
 
   return await db_reg.allDocs({
@@ -65,8 +39,24 @@ const reg_map_build = async () => {
       return m;
     });
 
-    person_last_reg_ts_map_build();
-    fresh_reg_ts_map_build();
+    fresh_reg_ts_map.update((m) => {
+      m.clear();
+      for (const v of reg_ary){
+        m.set(v.doc.person_id, v.doc.ts_epoch);
+      }
+      return m;
+    });
+
+    person_last_reg_ts_map.update((m) => {
+      m.clear();
+      for (const v of reg_ary){
+        if (typeof v.doc.invalid !== 'undefined'){
+          continue;
+        }
+        m.set(v.doc.person_id, v.doc.ts_epoch);
+      }
+      return m;
+    });
 
     console.log('=====sub_reg_map====', sub_reg_map);
     console.log('=====sub_person_last_reg_ts_map====', sub_person_last_reg_ts_map);
@@ -98,8 +88,32 @@ const reg_map_listen_changes = () => {
         return m;
       });
 
-      person_last_reg_ts_map_build();
-      fresh_reg_ts_map_build();
+      // rebuild
+
+      fresh_reg_ts_map.update((m) => {
+        m.clear();
+        for (const [rid, v] of sub_reg_map){
+          if (rid === change.id){
+            continue;
+          }
+          m.set(v.doc.person_id, v.doc.ts_epoch);
+        }
+        return m;
+      });
+
+      person_last_reg_ts_map.update((m) => {
+        m.clear();
+        for (const [rid, v] of sub_reg_map){
+          if (typeof v.doc.invalid !== 'undefined'){
+            continue;
+          }
+          if (rid === change.id){
+            continue;
+          }
+          m.set(v.doc.person_id, v.doc.ts_epoch);
+        }
+        return m;
+      });
 
       console.log('== db_reg.changes delete ' + change.id);
       return;
