@@ -10,6 +10,32 @@ const cleanup_interval = 60000; // cleanup view regs every minute
 
 let last_ts_epoch = undefined;
 
+/**
+ * includes invalid regs
+ */
+const person_last_reg_ts_map_build = () => {
+  person_last_reg_ts_map.update((m) => {
+    m.clear();
+    for (const v of sub_reg_map.values()){
+      if (typeof v.doc.invalid !== 'undefined'){
+        continue;
+      }
+      m.set(v.doc.person_id, v.doc.ts_epoch);
+    }
+    return m;
+  });
+};
+
+const fresh_reg_ts_map_build = () => {
+  fresh_reg_ts_map.update((m) => {
+    m.clear();
+    for (const v of sub_reg_map.values()){
+      m.set(v.doc.person_id, v.doc.ts_epoch);
+    }
+    return m;
+  });
+};
+
 const reg_map_build = async () => {
 
   return await db_reg.allDocs({
@@ -39,24 +65,8 @@ const reg_map_build = async () => {
       return m;
     });
 
-    person_last_reg_ts_map.update((m) => {
-      m.clear();
-      reg_ary.forEach((v) => {
-        if (typeof v.doc.invalid !== 'undefined'){
-          return;
-        }
-        m.set(v.doc.person_id, v.doc.ts_epoch);
-      });
-      return m;
-    });
-
-    fresh_reg_ts_map.update((m) => {
-      m.clear();
-      reg_ary.forEach((v) => {
-        m.set(v.doc.person_id, v.doc.ts_epoch);
-      });
-      return m;
-    });
+    person_last_reg_ts_map_build();
+    fresh_reg_ts_map_build();
 
     console.log('=====sub_reg_map====', sub_reg_map);
     console.log('=====sub_person_last_reg_ts_map====', sub_person_last_reg_ts_map);
@@ -83,50 +93,13 @@ const reg_map_listen_changes = () => {
 
     if (change.deleted){
 
-      const deleted_reg = {...sub_reg_map.get(change.id)};
-
       reg_map.update((m) => {
         m.delete(change.id);
         return m;
       });
 
-      if (typeof deleted_reg.person_id !== 'undefined'){
-        let new_person_last_reg_set = false;
-        let fresh_reg_set = false;
-
-        for (const reg of [...sub_reg_map.values()].reverse()){
-          if (reg._id === change.id){
-            continue;
-          }
-          if (!fresh_reg_set && reg.person_id === deleted_reg.person_id){
-            fresh_reg_ts_map.update((m) => {
-              m.set(person_id, reg.ts_epoch);
-              return m;
-            });
-            fresh_reg_set = true;
-          }
-          if (typeof reg.invalid !== 'undefined'){
-            continue;
-          }
-          if (reg.person_id === deleted_reg.person_id){
-            person_last_reg_ts_map.update((m) => {
-              m.set(person_id, reg.ts_epoch);
-              return m;
-            });
-            new_person_last_reg_set = true;
-            break;
-          }
-        }
-
-        if (!new_person_last_reg_set){
-          person_last_reg_ts_map.update((m) => {
-            m.delete(deleted_reg.person_id);
-            return m;
-          });
-        }
-
-
-      }
+      person_last_reg_ts_map_build();
+      fresh_reg_ts_map_build();
 
       console.log('== db_reg.changes delete ' + change.id);
       return;
