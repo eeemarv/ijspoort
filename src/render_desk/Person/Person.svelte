@@ -15,6 +15,7 @@
   import PersonData from './PersonData.svelte';
   import { reg_add_by_desk_manual } from '../../db_put/reg_put';
   import { person_last_reg_ts_map } from '../../services/store';
+  import { fresh_reg_ts_map } from '../../services/store';
   import { get_time_str } from '../../services/functions';
   import { get_ts_epoch } from '../../services/functions';
   import { person_is_already_registered } from '../../person/person_already_registered';
@@ -40,6 +41,11 @@
       left: 0,
       behavior: 'smooth'
     });
+  }
+
+  $: {
+    console.log('person_last_reg_ts_map', $person_last_reg_ts_map);
+    console.log('fresh_reg_ts_map', $fresh_reg_ts_map);
   }
 
 </script>

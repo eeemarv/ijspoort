@@ -83,12 +83,16 @@ const reg_map_listen_changes = () => {
 
     if (change.deleted){
 
+      if (last_ts_epoch === change.doc.ts_epoch){
+        last_ts_epoch = undefined;
+      }
+
       reg_map.update((m) => {
         m.delete(change.id);
         return m;
       });
 
-      // rebuild
+      console.log('rebuild fresh_reg_ts_map');
 
       fresh_reg_ts_map.update((m) => {
         m.clear();
@@ -96,21 +100,24 @@ const reg_map_listen_changes = () => {
           if (rid === change.id){
             continue;
           }
-          m.set(v.doc.person_id, v.doc.ts_epoch);
+          m.set(v.person_id, v.ts_epoch);
+          last_ts_epoch = v.ts_epoch;
         }
         return m;
       });
 
+      console.log('rebuild person_last_reg_ts_map');
+
       person_last_reg_ts_map.update((m) => {
         m.clear();
         for (const [rid, v] of sub_reg_map){
-          if (typeof v.doc.invalid !== 'undefined'){
+          if (typeof v.invalid !== 'undefined'){
             continue;
           }
           if (rid === change.id){
             continue;
           }
-          m.set(v.doc.person_id, v.doc.ts_epoch);
+          m.set(v.person_id, v.ts_epoch);
         }
         return m;
       });
