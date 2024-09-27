@@ -107,7 +107,6 @@ const listen_nfc = () => {
     if (gate_modus){
       const nfc_block_mixin = nfc_block_others(nfc_id, ts_epoch);
       reg_add_by_gate_nfc(nfc_id, ts_epoch, nfc_block_mixin);
-      return;
     }
 
     if (sub_desk_nfc_auto_reg_enabled){

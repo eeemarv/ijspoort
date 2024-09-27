@@ -170,7 +170,7 @@
     }
     console.log('..GateModal ev_nfc_scan listen ' + ev_name);
     ev_nfc_scan.addEventListener(ev_name, (e) => {
-      console.log('..GateModal ev_nfc_scah ' + ev_name + ' ' + e.detail.nfc_id);
+      console.log('..GateModal ev_nfc_scan ' + ev_name + ' ' + e.detail.nfc_id);
       process_ev_nfc_scan(ev_name, e.detail.nfc_id ?? undefined);
     });
   }
