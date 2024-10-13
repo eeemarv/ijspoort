@@ -5,6 +5,7 @@ import { fresh_reg_ts_map } from '../services/store';
 import { sub_reg_map } from '../services/sub';
 import { sub_person_last_reg_ts_map } from '../services/sub';
 import { reg_valid_time } from '../db_put/reg_put';
+import { ev_reg } from '../services/events';
 
 const cleanup_interval = 60000; // cleanup view regs every minute
 
@@ -132,6 +133,10 @@ const reg_map_listen_changes = () => {
       console.log('== db_reg.changes, reg too old, do not map', change);
       return;
     }
+
+    // used to display "already registered"
+    console.log('ev_reg change_add ', change.doc);
+    ev_reg.dispatchEvent(new CustomEvent('change_add', {detail: {...change.doc}}));
 
     if (typeof last_ts_epoch === 'undefined'
       || last_ts_epoch < change.doc.ts_epoch){

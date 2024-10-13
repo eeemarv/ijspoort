@@ -2,7 +2,7 @@
   const { ipcRenderer } = window.require('electron');
   import { CardText } from 'sveltestrap';
   import { sub_nfc_map } from '../../services/sub';
-  import { person_is_already_registered } from '../../person/person_already_registered';
+  import { ev_reg } from '../../services/events';
 
   let show_down_count = 0;
   const show_start_count = 50;
@@ -26,6 +26,7 @@
 
   let sev = undefined;
   let person_id = undefined;
+  let person_id_already_registered = undefined;
 
   for (const ev of listen_ary){
     ipcRenderer.on('scan.gate.' + ev, (e, nfc_id) => {
@@ -43,9 +44,30 @@
     });
   }
 
+  ev_reg.addEventListener('change_add', (e) => {
+    console.log('---- ev_reg change_add', e);
+    if (typeof e.detail.person_id !== 'string'){
+      return;
+    }
+    if (typeof person_id === 'undefined'){
+      return;
+    }
+    if (person_id !== e.detail.person_id){
+      return;
+    }
+    if (typeof e.detail.invalid === 'undefined'){
+      return;
+    }
+    if (typeof e.detail.invalid.ts_recent === 'undefined'){
+      return;
+    }
+    person_id_already_registered = person_id;
+  });
+
   $: if (show_down_count === 0){
     person_id = undefined;
     sev = undefined;
+    person_id_already_registered = undefined;
   }
 </script>
 
@@ -58,7 +80,10 @@
     {#if show_down_count}
       {#if sev === 'person_valid_member'}
         Ok
-          {#if person_id && person_is_already_registered(person_id) }
+          {#if person_id
+            && person_id_already_registered
+            && person_id === person_id_already_registered
+          }
             - <i>Reeds geregistreerd</i>
           {/if}
       {:else if sev === 'person_not_member'}

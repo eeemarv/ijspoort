@@ -9,11 +9,11 @@
   import { sub_members_only_enabled } from '../../services/sub';
   import { sub_nfc_map } from '../../services/sub';
   import { sub_person_last_reg_ts_map } from '../../services/sub';
-  import { reg_valid_time } from '../../db_put/reg_put';
   import { sub_gate_open } from '../../services/sub';
   import { sound_ok } from '../../services/sound';
   import { sound_error } from '../../services/sound';
   import { ev_nfc_scan } from '../../services/events';
+  import { ev_reg } from '../../services/events';
   import { get_nfc_id_that_opened_gate } from '../../gate/gate_trigger';
   import { gate_auth } from '../../gate/gate_auth';
   import PersonMemberPeriodList from '../../render/Person/PersonMemberPeriodList.svelte';
@@ -30,6 +30,7 @@
   let color = 'primary';
   let person_id = undefined;
   let gate_auth_person_id = undefined;
+  let person_id_already_registered = undefined;
 
   $: gate_auth_enabled = gate_auth(gate_auth_person_id);
 
@@ -175,6 +176,30 @@
     });
   }
 
+  ev_reg.addEventListener('change_add', (e) => {
+    console.log('---- ev_reg change_add', e);
+    if (typeof e.detail.person_id !== 'string'){
+      return;
+    }
+    if (typeof person_id === 'undefined'){
+      return;
+    }
+    if (person_id !== e.detail.person_id){
+      return;
+    }
+    if (typeof e.detail.invalid === 'undefined'){
+      return;
+    }
+    if (typeof e.detail.invalid.ts_recent === 'undefined'){
+      return;
+    }
+    person_id_already_registered = person_id;
+  });
+
+  $: if (!open_down_count){
+    person_id_already_registered = undefined;
+  }
+
 </script>
 
 <GateConfig
@@ -199,8 +224,8 @@
       <h2>
         <PersonTag {person_id} />
       </h2>
-      {#if sub_person_last_reg_ts_map.has(person_id)
-        && sub_person_last_reg_ts_map.get(person_id) > (time - reg_valid_time)
+      {#if person_id_already_registered
+        && person_id_already_registered === person_id
       }
         <p>
           Reeds geregistreerd om {get_time_str(sub_person_last_reg_ts_map.get(person_id))}

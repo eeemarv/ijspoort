@@ -24,7 +24,7 @@
   <li class="list-group-item bg-purple">
     <PersonTag {person_id} show_member_period />
     <Badge color=dark>
-      Reeds geregistreerd
+      Te recent om opnieuW te registreren
     </Badge>
   </li>
 {/if}
