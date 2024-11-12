@@ -9,7 +9,7 @@
   import { sub_members_only_enabled } from '../../services/sub';
   import { sub_nfc_map } from '../../services/sub';
   import { sub_person_last_reg_ts_map } from '../../services/sub';
-  import { sub_gate_open } from '../../services/sub';
+  import { gate_open } from '../../services/store';
   import { sound_ok } from '../../services/sound';
   import { sound_error } from '../../services/sound';
   import { ev_nfc_scan } from '../../services/events';
@@ -141,7 +141,7 @@
 
     close_gate_config();
 
-    if (sub_gate_open && sub_members_only_enabled){
+    if ($gate_open && sub_members_only_enabled){
       const og_nfc_id = get_nfc_id_that_opened_gate();
       if (typeof og_nfc_id === 'string'
         && (typeof prsn_id === 'undefined'

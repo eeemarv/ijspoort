@@ -16,7 +16,6 @@ import { gate_nfc_auto_block_enabled } from './store';
 import { desk_nfc_auto_open_person_data_enabled } from './store';
 import { gate_count_enabled } from './store';
 import { gate_count } from './store';
-import { gate_open } from './store';
 import { members_only_enabled } from './store';
 import { gate_member_open_time } from './store';
 import { gate_sound_ok_enabled } from './store';
@@ -44,7 +43,6 @@ let sub_gate_nfc_auto_block_enabled = false;
 let sub_desk_nfc_auto_open_person_data_enabled = false;
 let sub_gate_count_enabled = false;
 let sub_gate_count = 0;
-let sub_gate_open = true;
 let sub_members_only_enabled = false;
 let sub_gate_member_open_time = 12;
 let sub_gate_sound_ok_enabled = false;
@@ -126,10 +124,6 @@ gate_count.subscribe((i) => {
   sub_gate_count = i;
 });
 
-gate_open.subscribe((b) => {
-  sub_gate_open = b;
-});
-
 members_only_enabled.subscribe((b) => {
   sub_members_only_enabled = b;
 });
@@ -180,7 +174,6 @@ export { sub_gate_nfc_auto_block_enabled };
 export { sub_desk_nfc_auto_open_person_data_enabled };
 export { sub_gate_count_enabled };
 export { sub_gate_count };
-export { sub_gate_open };
 export { sub_members_only_enabled };
 export { sub_gate_member_open_time };
 export { sub_gate_sound_ok_enabled };
