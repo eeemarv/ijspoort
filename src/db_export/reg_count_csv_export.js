@@ -10,31 +10,16 @@ import Papa from 'papaparse';
  * @param {boolean|undefined} filter_after_3pm
  */
 const reg_hour_count_csv_export = (filter_weekday = undefined, filter_after_3pm = undefined) => {
-  let reg_max = 0;
-  let reg_count = 0;
-  let ts_start_hour = 0;
-  let ts_prev_hour = -10;
-  let hour_count = 0;
-  let next = false;
+
+  const day_map = new Map();
+  const hour_set = new Set();
 
   const exp = {
-    fields: ['dag', 'aanvang', 'aantal uren', 'registraties', 'max aantal reg./uur'],
+    fields: ['dag', 'registraties'],
     data: []
   };
 
-  const push_hour_rec = () => {
-    const d = [];
-    d.push(get_date_str(ts_start_hour));
-    d.push((new Date(ts_start_hour)).getHours().toString() + 'u');
-    d.push(hour_count.toString());
-    d.push(reg_count.toString());
-    d.push(reg_max.toString());
-    exp.data.push(d);
-  };
-
   console.log('CLICKED (tot)');
-
-  const reg_hour_map = new Map();
 
   db_reg.allDocs({
     startkey: 't',
@@ -45,53 +30,65 @@ const reg_hour_count_csv_export = (filter_weekday = undefined, filter_after_3pm 
       if (typeof v.doc.invalid !== 'undefined'){
         return;
       }
+
+      const ts_datetime = new Date(v.doc.ts_epoch);
+      const hour = ts_datetime.getHours();
+
       if (typeof filter_weekday !== 'undefined'){
-        const ts_datetime = new Date(v.doc.ts_epoch);
+
         if (filter_weekday !== ts_datetime.getDay()){
           return;
         }
+
         if (typeof filter_after_3pm !== 'undefined'){
           if (filter_after_3pm){
-            if (ts_datetime.getHours() < 15){
+            if (hour < 15){
               return;
             }
           } else {
-            if (ts_datetime.getHours() > 14){
+            if (hour > 14){
               return;
             }
           }
         }
       }
-      const ts_hour = Math.floor(v.doc.ts_epoch / 3_600_000) * 3_600_000;
-      if (reg_hour_map.has(ts_hour)){
-        reg_hour_map.set(ts_hour, reg_hour_map.get(ts_hour) + 1);
-        return;
+
+      const date_string = ts_datetime.toLocaleDateString('nl-BE', {weekday: 'short', month: 'short', year: 'numeric', day:'numeric'});
+
+      if (!day_map.has(date_string)){
+        day_map.set(date_string, new Map());
       }
-      reg_hour_map.set(ts_hour, 1);
+
+      const hour_map = day_map.get(date_string);
+
+      if (!hour_map.has(hour)){
+        hour_map.set(hour, 0);
+      }
+
+      hour_map.set(hour, hour_map.get(hour) + 1);
+
+      hour_set.add(hour);
     });
 
-    for (const [ts_hour, r_count] of reg_hour_map){
-      if (ts_hour > ts_prev_hour + 3_600_000){
-        next = true;
-      }
-      if (next && hour_count && reg_count > 9){
-        push_hour_rec();
-      }
-      if (next){
-        ts_start_hour = ts_hour;
-        reg_count = 0;
-        reg_max = 0;
-        hour_count = 0;
-        next = false;
-      }
-      hour_count++;
-      reg_count += r_count;
-      reg_max = Math.max(reg_max, r_count);
-      ts_prev_hour = ts_hour;
+    const hour_ary = [...hour_set].sort((a, b) => a - b);
+
+    for (const hour of hour_ary){
+      exp.fields.push(hour + 'u');
     }
 
-    if (hour_count > 0 && reg_count > 9){
-      push_hour_rec();
+    for (const [date_string, hour_map] of day_map){
+      const d = [];
+      d.push(date_string);
+      d.push([...hour_map].reduce((s, n) => s + n[1], 0));
+
+      for (const hour of hour_ary){
+        if (hour_map.has(hour)){
+          d.push(hour_map.get(hour));
+          continue;
+        }
+        d.push('');
+      }
+      exp.data.push(d);
     }
 
     return Papa.unparse(exp);
