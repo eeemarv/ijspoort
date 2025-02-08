@@ -11,6 +11,7 @@ const build_menu = (win) => {
 	const exportMenu = new Menu();
 	exportMenu.append(new MenuItem({ label: 'Registraties CSV', click: () => { win.webContents.send('reg.csv.export'); }}));
 	exportMenu.append(new MenuItem({ label: 'Registratie Aantallen CSV', click: () => { win.webContents.send('reg.count.csv.export'); }}));
+	exportMenu.append(new MenuItem({ label: 'Registraties verdeling personen CSV', click: () => { win.webContents.send('person.reg.count.csv.export'); }}));
 	exportMenu.append(new MenuItem({ label: 'Database JSON', click: () => { win.webContents.send('db.json.export'); }}));
 
 	menu.append(new MenuItem({ label: 'Leden data', submenu: updateDataMenu }));

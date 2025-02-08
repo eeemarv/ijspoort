@@ -9,6 +9,7 @@
   import DataUpdateImport from '../DataUpdate/DataUpdateImport.svelte';
   import DataUpdateRemove from '../DataUpdate/DataUpdateRemove.svelte';
   import DataUpdateCleanup from '../DataUpdate/DataUpdateCleanup.svelte';
+  import DbPersonRegCountCsvExport from '../Db/DbPersonRegCountCSVExport.svelte';
 
   listen_tag_nfc_auto();
 
@@ -39,6 +40,7 @@
 <DataUpdateCleanup />
 <DbRegCSVExport />
 <DbRegCountCSVExport />
+<DbPersonRegCountCsvExport />
 <DbJSONExport />
 <Config />
 
