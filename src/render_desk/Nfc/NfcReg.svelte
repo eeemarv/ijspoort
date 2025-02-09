@@ -1,9 +1,9 @@
 <script>
-  import { Badge, ButtonDropdown, DropdownItem, DropdownMenu, DropdownToggle, Input } from 'sveltestrap';
+  import { Input } from 'sveltestrap';
   import { desk_nfc_auto_reg_enabled } from '../../services/store';
   import { member_period_select } from '../../services/store';
   import { members_only_enabled } from '../../services/store';
-  import { member_person_map } from '../../services/store';
+  import MemberPeriodDropdown from '../../render/Common/MemberPeriodDropdown.svelte';
 
   let dropdown_open = false;
 
@@ -27,40 +27,10 @@
       <span>
         geldig in
       </span>
-      <ButtonDropdown {dropdown_open}>
-        <DropdownToggle caret
-          color={$member_period_select === '^' ? 'warning' : $member_period_select ? 'success' : 'grey'}
-          on:click={() => {dropdown_open = !dropdown_open;}}
-          title="Lidmaatschap periode">
-            {#if $member_period_select === '^'}
-              Geen lid
-            {:else if $member_period_select}
-              {$member_period_select}
-            {:else}
-              *Geen selectie*
-            {/if}
-        </DropdownToggle>
-        <DropdownMenu>
-          {#if !$member_period_select}
-            <DropdownItem active title="Geen lidmaatschap filter geselecteerd">
-              <Badge color=grey>
-                *Geen selectie*
-              </Badge>
-            </DropdownItem>
-          {/if}
-          {#each [...$member_person_map.keys()].filter(k => k !== '^').sort().reverse() as member_period(member_period)}
-            <DropdownItem
-              active={member_period === $member_period_select}
-              on:click={() => {$member_period_select = member_period;}}
-            >
-              <Badge color=success class=me-2>
-                {member_period}
-              </Badge>
-              {$member_person_map.get(member_period).size} leden
-            </DropdownItem>
-          {/each}
-        </DropdownMenu>
-      </ButtonDropdown>
+      <MemberPeriodDropdown {dropdown_open}
+        bind:member_period={$member_period_select}
+        id=members_only_enabled
+      />
     </label>
   </div>
 </div>

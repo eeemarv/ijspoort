@@ -1,14 +1,13 @@
 <script>
   const EventEmitter = require('events');
   import { onMount } from 'svelte';
-  import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Badge } from 'sveltestrap';
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
   import { desk_selected_person_id } from '../../services/store';
   import { desk_member_period_filter } from '../../services/store';
   import { desk_member_period_filter_enabled } from '../../services/store';
-  import { member_person_map } from '../../services/store';
   import { person_ids_to_func_by_text } from '../../db_get/person_get';
+  import MemberPeriodDropdown from '../../render/Common/MemberPeriodDropdown.svelte';
 
   let el_manual;
   let el_group;
@@ -87,51 +86,11 @@
           title="Filter op actief lid in {$desk_member_period_filter}"
         />
         <label class=form-check-label for=desk_member_period_filter_enabled>
-          <ButtonDropdown {dropdown_open}>
-            <DropdownToggle caret
-              color={$desk_member_period_filter === '^' ? 'warning' : $desk_member_period_filter ? 'success' : 'grey'}
-              on:click={() => {dropdown_open = !dropdown_open;}}
-              title="Filter op lidmaatschap">
-                {#if $desk_member_period_filter === '^'}
-                  Geen lid
-                {:else if $desk_member_period_filter}
-                  {$desk_member_period_filter}
-                {:else}
-                  *Geen filter*
-                {/if}
-            </DropdownToggle>
-            <DropdownMenu>
-              {#if !$desk_member_period_filter}
-                <DropdownItem active title="Geen lidmaatschap filter geselecteerd">
-                  <Badge color=grey>
-                    *Geen filter*
-                  </Badge>
-                </DropdownItem>
-              {/if}
-              {#each [...$member_person_map.keys()].filter(k => k !== '^').sort() as member_period(member_period)}
-                <DropdownItem
-                  active={member_period === $desk_member_period_filter}
-                  on:click={() => {$desk_member_period_filter = member_period;}}
-                >
-                  <Badge color=success class=me-2>
-                    {member_period}
-                  </Badge>
-                  {$member_person_map.get(member_period).size} leden
-                </DropdownItem>
-              {/each}
-              {#if $member_person_map.has('^')}
-                <DropdownItem
-                  active={$desk_member_period_filter === '^'}
-                  on:click={() => {$desk_member_period_filter = '^';}}
-                >
-                  <Badge color=warning class=me-2>
-                   Geen lid
-                  </Badge>
-                  {$member_person_map.get('^').size} personen
-                </DropdownItem>
-              {/if}
-            </DropdownMenu>
-          </ButtonDropdown>
+          <MemberPeriodDropdown
+            {dropdown_open}
+            bind:member_period={$desk_member_period_filter}
+            show_not_member
+          />
         </label>
     </span>
   </div>

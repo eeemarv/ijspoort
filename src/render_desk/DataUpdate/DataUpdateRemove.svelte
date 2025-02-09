@@ -1,12 +1,12 @@
 <script>
   const { ipcRenderer } = window.require('electron');
-  import { Badge, Button, ButtonDropdown, Card, DropdownItem, DropdownMenu, DropdownToggle, FormGroup, Label } from 'sveltestrap';
+  import { Button, Card, FormGroup, Label } from 'sveltestrap';
   import { FormText, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import ModalFooterClose from '../../render/Common/ModalFooterClose.svelte';
-  import { member_person_map } from '../../services/store';
   import Icon from '@iconify/svelte';
   import exclamationTriangle from '@iconify/icons-fa/exclamation-triangle';
   import { person_remove_member_period } from '../../db_put/person_put';
+  import MemberPeriodDropdown from '../../render/Common/MemberPeriodDropdown.svelte';
 
   let open = false;
   let dropdown_open = false;
@@ -63,31 +63,11 @@
       <Label for=select_member_period>
         Lidmaatschapsperiode te verwijderen
       </Label>
-      <ButtonDropdown {dropdown_open} id=select_member_period>
-        <DropdownToggle caret
-          color={selected_member_period ? 'success' : 'grey'}
-          on:click={() => {dropdown_open = !dropdown_open;}}
-          title="Selecteer te wissen lidmaatschapsperiode">
-          {#if selected_member_period}
-            {selected_member_period}
-          {:else}
-            *Geen geselecteerd*
-          {/if}
-        </DropdownToggle>
-        <DropdownMenu>
-          {#each [...$member_person_map.keys()].filter((k) => k !== '^').sort() as member_period(member_period)}
-            <DropdownItem
-              active={selected_member_period === member_period}
-              on:click={() => {selected_member_period = member_period;}}
-            >
-              <Badge color=success class=me-2>
-                {member_period}
-              </Badge>
-              {$member_person_map.get(member_period).size} leden
-            </DropdownItem>
-          {/each}
-        </DropdownMenu>
-      </ButtonDropdown>
+      <MemberPeriodDropdown
+        {dropdown_open}
+        bind:member_period={selected_member_period}
+        id=select_member_period
+      />
     </FormGroup>
     <FormGroup>
       <div class=form-check>

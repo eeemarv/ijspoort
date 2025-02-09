@@ -134,6 +134,18 @@ const person_reg_count_csv_export = (ts_start = undefined, ts_end = undefined, m
 
     for (const [person_id, person] of sub_person_map){
 
+      if (typeof member_period !== 'undefined'){
+        if (typeof person.member_in === 'undefined'
+          || !(person.member_in instanceof Array)
+          || person.member_in.length === 0){
+          continue;
+        }
+
+        if (!person.member_in.includes(member_period)){
+          continue;
+        }
+      }
+
       const count_map = person_reg_count_map.get(person_id) ?? new Map([['total', 0]]);
       const d = [];
 
