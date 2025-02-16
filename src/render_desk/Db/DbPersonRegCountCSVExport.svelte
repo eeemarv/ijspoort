@@ -7,6 +7,8 @@
   import ListGroupItem from '../../render/Common/ListGroupItem.svelte';
   import Checkbox from '../../render/Common/Checkbox.svelte';
   import MemberPeriodDropdown from '../../render/Common/MemberPeriodDropdown.svelte';
+  import { onMount } from 'svelte';
+  import DateRangePicker from '../../render/Common/DateRangePicker.svelte';
 
   let open = false;
   const toggle = () => {
@@ -14,24 +16,21 @@
   };
   let dropdown_open = false;
 
-  let ts_start = 1704063600000;
-  let ts_end = 1735682400000;
-  let member_period = undefined;
-  let anonymize = false;
+  let el_start;
+  let el_end;
+  let pick_start;
+  let pick_end;
 
-/*
-
-  let ts_start = 1735686000000;
-  let ts_end = 1738360800000;
-  let member_period = '25';
-  let anonymize = false;
-*/
-/*
   let ts_start = undefined;
   let ts_end = undefined;
   let member_period = undefined;
   let anonymize = false;
-*/
+
+  onMount(() => {
+
+  });
+
+
 
   const export_csv = () => {
     person_reg_count_csv_export(ts_start, ts_end, member_period, anonymize);
@@ -48,8 +47,7 @@
     CSV Export registraties verdeling personen over zwemmomenten
   </ModalHeader>
   <ModalBody>
-
-
+    <DateRangePicker />
 
     <FormGroup>
       <Label for=member_period>Leden</Label>
