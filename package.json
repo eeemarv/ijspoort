@@ -3,7 +3,7 @@
   "productName": "ijspoort",
   "version": "1.0.0",
   "description": "Entrance identification and registration of club members",
-  "main": "src/index.js",
+  "main": "src/main/index.js",
   "scripts": {
     "start": "concurrently \"npm:svelte-dev\" \"electron-forge start\"",
     "start_el": "electron-forge start",

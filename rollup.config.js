@@ -9,7 +9,7 @@ import scss from 'rollup-plugin-scss';
 const production = !process.env.ROLLUP_WATCH;
 
 export default {
-	input: 'src/svelte.js',
+	input: 'src/renderer/svelte.js',
 	output: {
 		sourcemap: true,
 		format: 'cjs', // iife
