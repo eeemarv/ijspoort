@@ -1,5 +1,4 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import { Button, Col, Modal, ModalBody, ModalHeader, Row } from 'sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
   import { reg_hour_count_csv_export } from '../../db_export/reg_count_csv_export';
@@ -13,7 +12,7 @@
     open = !open;
   };
 
-  ipcRenderer.on('reg.count.csv.export', () => {
+  window.bridge.onMenuRegCountCsvExport(() => {
     open = true;
   });
 </script>

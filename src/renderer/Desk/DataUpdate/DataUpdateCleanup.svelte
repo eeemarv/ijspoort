@@ -1,5 +1,4 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import Icon from '@iconify/svelte';
   import exclamationTriangle from '@iconify/icons-fa/exclamation-triangle';
   import { Button, Card, FormGroup, FormText, Modal, ModalBody, ModalHeader } from 'sveltestrap';
@@ -10,7 +9,7 @@
   let open = false;
   let verify = false;
 
-  ipcRenderer.on('members.cleanup', () => {
+  window.bridge.onMenuMembersCleanup(() => {
     open = true;
   });
 

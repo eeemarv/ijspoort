@@ -1,5 +1,4 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import { Button, Card, FormGroup, FormText, Label, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import Icon from '@iconify/svelte';
   import exclamationTriangle from '@iconify/icons-fa/exclamation-triangle';
@@ -12,7 +11,7 @@
   let open = false;
   let file_path = '';
 
-  ipcRenderer.on('members.import', () => {
+  window.bridge.onMenuMembersImport(() => {
     open = true;
   });
 
@@ -26,7 +25,7 @@
 
   const handle_file_select = () => {
     console.log('import_file.select');
-    ipcRenderer.send('import_file.select');
+    window.bridge.sendImportFileSelect();
   };
 
   const handle_import_file = () => {
@@ -45,7 +44,8 @@
     open = false;
   };
 
-  ipcRenderer.on('import_file.selected', (ev, selected_file_path) => {
+  window.bridge.onImportFileSelected((selected_file_path) => {
+//  ipcRenderer.on('import_file.selected', (ev, selected_file_path) => {
     console.log('import_file.selected', selected_file_path);
     file_path = selected_file_path;
   });

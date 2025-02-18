@@ -1,5 +1,4 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import { Button, FormGroup, Label, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
   import { person_reg_count_csv_export } from '../../db_export/person_reg_count_csv_export';
@@ -28,14 +27,12 @@
 
   });
 
-
-
   const export_csv = () => {
     person_reg_count_csv_export(ts_start, ts_end, member_period, anonymize);
     toggle();
   };
 
-  ipcRenderer.on('person.reg.count.csv.export', () => {
+  window.bridge.onMenuPersonRegCountCsvExport(() => {
     open = true;
   });
 </script>

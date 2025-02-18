@@ -1,5 +1,5 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
+//  const { ipcRenderer } = window.require('electron');
   import { createEventDispatcher } from 'svelte';
   import { Button } from 'sveltestrap';
   import { nfc_map } from '../../services/store';
@@ -50,9 +50,10 @@
       nfc_uid: nfc_id_to_uid(nfc_id)
     };
     ipcRenderer.send('nfc.init', data);
+    window.bridge.sendNfcInit(data);
   };
 
-  ipcRenderer.on('nfc.init.ok', (ev, data) => {
+  window.bridge.onNfcInitOk((data) => {
     nfc_add($desk_selected_person_id, nfc_uid_to_id(data.nfc_uid));
     dispatch('activated');
     setTimeout(() => {
@@ -63,7 +64,7 @@
     progress = 100;
   });
 
-  ipcRenderer.on('nfc.init.fail', (ev, data) => {
+  window.bridge.onNfcInitFail((data) => {
     setTimeout(() => {
       open = false;
     }, 5000);

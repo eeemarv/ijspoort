@@ -1,5 +1,4 @@
 <script>
-  const env = window.require('electron').remote.process.env;
   import { createEventDispatcher } from 'svelte';
   import { gate_in_map } from '../services/store';
   import { gate_out_map } from '../services/store';
@@ -10,10 +9,6 @@
 
   export let font_size = '1em';
 
-  const debug_enabled = env.DEBUG === '1';
-  const gate_enabled = env.GATE === '1';
-  const emulate_sens = env.EMULATE_SENS === '1';
-
   const fresh_triggered_time = 10000;
   const show_triggered_time = 1000;
 
@@ -21,17 +16,17 @@
   let triggered_out = false;
 
   const handle_click_in = () => {
-    if (debug_enabled && emulate_sens){
+    if (window.bridge.envDebugEnabled() && window.bridge.envEmulateSensEnabled()){
       handle_sens_in();
-    } else if (!gate_enabled){
+    } else if (!window.bridge.envKioskEnabled()){
       dispatch('click');
     }
   };
 
   const handle_click_out = () => {
-    if (debug_enabled && emulate_sens){
+    if (window.bridge.envDebugEnabled() && window.bridge.envEmulateSensEnabled()){
       handle_sens_out();
-    } else if (!gate_enabled){
+    } else if (!window.bridge.envKioskEnabled()){
       dispatch('click');
     }
   };

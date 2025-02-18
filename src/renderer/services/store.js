@@ -1,9 +1,7 @@
-const EStore = require('electron-store');
 import { writable } from 'svelte/store';
 
 const create_coupled_estore = (key, default_value, min_value, max_value) => {
-  const eStore = new EStore();
-  let val = eStore.get(key, default_value);
+  const val = window.bridge.getFromStore(key, default_value);
 	const { subscribe, set, update } = writable(val);
   const store = (n) => {
     if (max_value){
@@ -12,7 +10,7 @@ const create_coupled_estore = (key, default_value, min_value, max_value) => {
     if (min_value){
       n = n < min_value ? min_value : n;
     }
-    eStore.set(key, n);
+    window.bridge.setToStore(key, n);
     return n;
   };
 	return {

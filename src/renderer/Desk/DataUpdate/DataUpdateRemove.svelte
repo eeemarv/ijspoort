@@ -1,5 +1,4 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import { Button, Card, FormGroup, Label } from 'sveltestrap';
   import { FormText, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
@@ -13,7 +12,7 @@
   let selected_member_period = undefined;
   let verify = false;
 
-  ipcRenderer.on('members.remove', () => {
+  window.bridge.onMenuMembersRemove(() => {
     open = true;
   });
 

@@ -1,21 +1,21 @@
-const { ipcRenderer } = window.require('electron');
+// const { ipcRenderer } = window.require('electron');
 import { gate_open } from '../services/store';
 
 const listen_gate_open = () => {
-  ipcRenderer.on('gate.is_open', (ev) => {
+  window.bridge.onGateIsOpen(() => {
     gate_open.set(true);
   });
 
-  ipcRenderer.on('gate.open.err', (ev) => {
+  window.bridge.onGateOpenErr(() => {
     console.log('gate.open.err');
     gate_open.set(true);
   });
 
-  ipcRenderer.on('gate.is_closed', (ev) => {
+  window.bridge.onGateIsClosed(() => {
     gate_open.set(false);
   });
 
-  ipcRenderer.on('gate.close.err', (ev) => {
+  window.bridge.onGateCloseErr(() => {
     console.log('gate.close.err');
     gate_open.set(false);
   });

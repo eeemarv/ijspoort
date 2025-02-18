@@ -1,7 +1,5 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import { Card } from 'sveltestrap';
-  import { onMount } from 'svelte';
 
   export let horizontal = false;
   export let font_size = '1em';
@@ -13,23 +11,20 @@
   let water_temp_timeout_id;
   let air_temp_timeout_id;
 
-  onMount(() => {
+  window.bridge.onWaterTemp((temp_str) => {
+    window.clearTimeout(water_temp_timeout_id);
+    water_temp_timeout_id = window.setTimeout(() => {
+      water_temp = undefined;
+    }, water_temp_valid_time);
+    water_temp = parseFloat(temp_str);
+  });
 
-    ipcRenderer.on('water_temp', (ev, temp_str) => {
-      window.clearTimeout(water_temp_timeout_id);
-      water_temp_timeout_id = window.setTimeout(() => {
-        water_temp = undefined;
-      }, water_temp_valid_time);
-      water_temp = parseFloat(temp_str);
-    });
-
-    ipcRenderer.on('air_temp', (ev, temp_str) => {
-      window.clearTimeout(air_temp_timeout_id);
-      air_temp_timeout_id = window.setTimeout(() => {
-        air_temp = undefined;
-      }, air_temp_valid_time);
-      air_temp = parseFloat(temp_str);
-    });
+  window.bridge.onAirTemp((temp_str) => {
+    window.clearTimeout(air_temp_timeout_id);
+    air_temp_timeout_id = window.setTimeout(() => {
+      air_temp = undefined;
+    }, air_temp_valid_time);
+    air_temp = parseFloat(temp_str);
   });
 </script>
 

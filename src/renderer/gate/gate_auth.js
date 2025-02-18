@@ -1,11 +1,10 @@
-const env = window.require('electron').remote.process.env;
 import { sub_person_map } from '../services/sub';
 import { get_search_str } from '../services/functions';
 
-const auth_ary = env.GATE_AUTH.split(',');
+const auth_ary = window.bridge.getEnvKioskAuth().split(',');
 
 /**
- * @param {string} person_id 
+ * @param {string} person_id
  * @returns {boolean}
  */
 const gate_auth = (person_id) => {

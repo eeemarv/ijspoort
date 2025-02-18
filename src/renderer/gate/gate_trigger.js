@@ -1,4 +1,4 @@
-const { ipcRenderer } = window.require('electron');
+// const { ipcRenderer } = window.require('electron');
 import { ev_nfc_scan } from '../services/events';
 import { gate_count } from '../services/store';
 import { gate_count_enabled } from '../services/store';
@@ -79,11 +79,11 @@ const listen_gate_triggers = () => {
     open_trigger();
   });
 
-  ipcRenderer.on('sens.in', (ev) => {
+  window.bridge.onSensIn(() => {
     handle_sens_in();
   });
 
-  ipcRenderer.on('sens.out', (ev) => {
+  window.bridge.onSensOut(() => {
     handle_sens_out();
   });
 

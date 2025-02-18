@@ -1,5 +1,4 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import { CardText } from 'sveltestrap';
   import { sub_nfc_map } from '../../services/sub';
   import { ev_reg } from '../../services/events';
@@ -14,22 +13,22 @@
     }
   }, show_count_interval_time);
 
-  const listen_ary = [
-    'wait',
-    'full',
-    'person_valid_member',
-    'person_not_member',
-    'person_not_found',
-    'nfc_not_found',
-    'nfc_blocked'
-  ];
+  const listen_events = {
+    wait: window.bridge.onScanGateWait,
+    full: window.bridge.onScanGateFull,
+    person_valid_member: window.bridge.onScanGatePersonValidMember,
+    person_not_member: window.bridge.onScanGatePersonNotMember,
+    person_not_found: window.bridge.onScanGatePersonNotFound,
+    nfc_not_found: window.bridge.onScanGateNfcNotFound,
+    nfc_blocked: window.bridge.onScanGateNfcBlocked
+  };
 
   let sev = undefined;
   let person_id = undefined;
   let person_id_already_registered = undefined;
 
-  for (const ev of listen_ary){
-    ipcRenderer.on('scan.gate.' + ev, (e, nfc_id) => {
+  for (const [ev, onEv] of Object.entries(listen_events)){
+    onEv((nfc_id) => {
       if (typeof nfc_id === 'string'){
         if (sub_nfc_map.has(nfc_id)){
           person_id = sub_nfc_map.get(nfc_id).person_id;

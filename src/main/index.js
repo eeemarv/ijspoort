@@ -1,15 +1,15 @@
 require('dotenv').config();
-const { app, BrowserWindow, ipcMain } = require('electron');
-const EStore = require('electron-store');
+const { app, BrowserWindow } = require('electron');
+// const EStore = require('electron-store');
 const path = require('path');
-
 const listen_pcsc = require('./listen_pcsc.js');
 const listen_mfrc = require('./listen_mfrc.js');
 const build_menu = require('./build_menu.js');
 const listen_import_file_select = require('./listen_import_file_select.js');
+//const { e_store_handle } = require('./e_store.js');
 const { mqtt_init } = require('./mqtt.js');
 
-const eStore = new EStore();
+// const eStore = new EStore();
 let win;
 
 const env = process.env;
@@ -42,10 +42,12 @@ const createWindow = () => {
 		backgroundColor: '#000000',
 		icon: path.join(__dirname, '/../../icon/512x512.png'),
     webPreferences: {
+			preload: path.join(__dirname, '/../preload/preload.js'),
 			// to_remove
-      nodeIntegration: true,
-			nodeIntegrationInWorker: true,
-			enableRemoteModule: true
+			contextIsolation: true,
+      nodeIntegration: false,
+			nodeIntegrationInWorker: false,
+			enableRemoteModule: false
     }
   });
 
@@ -62,9 +64,10 @@ const createWindow = () => {
   .then(() => {
 		console.log('win then');
 		listen_pcsc(win);
+		//e_store_handle();
 		if (mfrc522_enabled){
 			try {
-				listen_mfrc(win, eStore);
+				listen_mfrc(win);
 			} catch (err) {
 				console.log(err);
 			}

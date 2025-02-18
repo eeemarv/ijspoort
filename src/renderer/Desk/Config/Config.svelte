@@ -1,5 +1,4 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { TabContent } from 'sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
@@ -12,7 +11,7 @@
     tab = 'display';
   }
 
-  ipcRenderer.on('open_config', () => {
+  window.bridge.onMenuOpenConfig(() => {
     open = true;
   });
 

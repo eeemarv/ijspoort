@@ -1,4 +1,4 @@
-const { ipcRenderer } = window.require('electron');
+// const { ipcRenderer } = window.require('electron');
 import { ev_nfc_scan } from '../services/events';
 
 let on = false;
@@ -6,17 +6,17 @@ let error = false;
 let timeout_id = undefined;
 
 const listen_nfc_device = () => {
-  ipcRenderer.on('dev.nfc.on', (ev) => {
+  window.bridge.onDevNfcOn(() => {
     ev_nfc_scan.dispatchEvent(new Event('nfc_device_on'));
     on = true;
   });
 
-  ipcRenderer.on('dev.nfc.off', (ev) => {
+  window.bridge.onDevNfcOff(() => {
     ev_nfc_scan.dispatchEvent(new Event('nfc_device_off'));
     on = false;
   });
 
-  ipcRenderer.on('dev.nfc.error', (ev) => {
+  window.bridge.onDevNfcError(() => {
     ev_nfc_scan.dispatchEvent(new Event('nfc_device_error'));
     error = true;
     clearTimeout(timeout_id);
@@ -33,4 +33,3 @@ const listen_nfc_device = () => {
 };
 
 export { listen_nfc_device };
-

@@ -1,4 +1,3 @@
-const env = window.require('electron').remote.process.env;
 import { db_remote_reg } from './db';
 import { db_remote_nfc } from './db';
 import { db_remote_person } from './db';
@@ -91,9 +90,9 @@ const db_init = async (trig) => {
     await dispatch_step(15, 'tag.replicate.out');
   }
 
-  if (env.GATE === '1'){
+  if (window.bridge.envKioskEnabled()){
     for (let j = 16; j < 21; j++){
-      await dispatch_step(16, 'skip step in gate modus');
+      await dispatch_step(16, 'skip step in kiosk modus');
     }
   } else {
     await person_put_design();

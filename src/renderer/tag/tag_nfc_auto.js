@@ -1,4 +1,3 @@
-const env = window.require('electron').remote.process.env;
 import { sub_nfc_map } from '../services/sub';
 import { sub_desk_member_period_filter } from '../services/sub';
 import { sub_person_tag_map } from '../services/sub';
@@ -9,10 +8,8 @@ import { sub_tag_type_map } from '../services/sub';
 import { ev_nfc_scan } from '../services/events';
 import { tag_add_bulk } from '../db_put/tag_put';
 
-const gate_modus = env.GATE === '1';
-
 const listen_tag_nfc_auto = () => {
-  if (gate_modus){
+  if (window.bridge.envKioskEnabled()){
     return;
   }
   ev_nfc_scan.addEventListener('person_valid_member', (e) => {

@@ -1,5 +1,4 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
   import { Button, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
   import { db_json_export } from '../../db_export/db_json_export';
@@ -8,8 +7,8 @@
 
   const toggle = () => (open = !open);
 
-  ipcRenderer.on('db.json.export', () => {
-    open = true
+  window.bridge.onMenuDbJsonExport(() => {
+    open = true;
   });
 </script>
 

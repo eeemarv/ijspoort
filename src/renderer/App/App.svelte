@@ -1,5 +1,4 @@
 <script>
-  const env = window.require('electron').remote.process.env;
   import DeskContainer from '../Desk/Desk/DeskContainer.svelte';
   import GatePage from '../Kiosk/Gate/GatePage.svelte';
   import AppInit from './AppInit.svelte';
@@ -26,7 +25,7 @@
 
 <AppInit />
 
-{#if env.GATE === '1'}
+{#if window.bridge.envKioskEnabled() }
   <GatePage />
 {:else}
   <DeskContainer />

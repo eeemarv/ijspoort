@@ -1,5 +1,5 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
+//  const { ipcRenderer } = window.require('electron');
   import { Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
   import PersonTag from '../../Person/PersonTag.svelte';
   import GateConfig from '../GateConfig/GateConfig.svelte';
@@ -64,50 +64,57 @@
       msg_short: 'Even wachten...',
       color: 'purple',
       person: false,
-      gate_auth: true
+      gate_auth: true,
+      send: window.bridge.sendScanGateWait
     },
     full: {
       msg: 'Volzet',
       color: 'purple',
       person: true,
-      gate_auth: true
+      gate_auth: true,
+      send: window.bridge.sendScanGateFull
     },
     person_valid_member: {
       msg: 'Ok',
       color: 'success',
       person: true,
       open_gate: true,
-      gate_auth: true
+      gate_auth: true,
+      send: window.bridge.sendScanGateValidMember
     },
     person_not_member: {
       msg: 'Lidmaatschap niet in orde',
       color: 'purple',
       person: true,
-      gate_auth: true
+      gate_auth: true,
+      send: window.bridge.sendScanPersonNotMember
     },
     nfc_not_found: {
       msg: 'Tag niet herkend',
       color: 'danger',
       person: false,
-      gate_auth: false
+      gate_auth: false,
+      send: window.bridge.sendScanGateNfcNotFound
     },
     person_not_found: {
       msg: 'Geen personsdata gevonden',
       color: 'danger',
       person: false,
-      gate_auth: false
+      gate_auth: false,
+      send: window.bridge.sendScanGatePersonNotFound
     },
     nfc_blocked: {
       msg: 'Tag geblokkeerd',
       color: 'purple',
       person: true,
-      gate_auth: false
+      gate_auth: false,
+      send: window.bridge.sendScanGateNfcBlocked
     }
   };
 
   const launch_modal = (ev_name, nfc_id = undefined, prsn_id = undefined) => {
-    ipcRenderer.send('scan.gate.' + ev_name, nfc_id);
     const d = msgs[ev_name];
+    d.send(nfc_id);
     message = d.msg;
     message_short = typeof d.msg_short === 'undefined' ? d.msg : d.msg_short;
     color = d.color;

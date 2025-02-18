@@ -1,6 +1,7 @@
 const MFRC522 = require('mfrc522-rpi');
 const SoftSPI = require('rpi-softspi');
 const rpio = require('rpio');
+const { e_store_get } = require('./e_store');
 
 // connect mfrc522 to Raspberry Pi 4 B
 const clock_pin = 23;
@@ -14,7 +15,7 @@ const buzzer_time = 20;
 const probe_interval = 200;
 const steps_hold_after_uid_found = 6;
 
-const listen_mfrc = (win, eStore) => {
+const listen_mfrc = (win) => {
 	const softSPI = new SoftSPI({
 		clock: clock_pin,
 		mosi: mosi_pin,
@@ -159,7 +160,7 @@ const listen_mfrc = (win, eStore) => {
 		}
 
 		// beep
-		if (eStore.get('gate_beep_enabled')){
+		if (e_store_get('gate_beep_enabled', false)){
 			rpio.write(buzzer_pin, rpio.LOW);
 			setTimeout(() => {
 				rpio.write(buzzer_pin, rpio.HIGH);

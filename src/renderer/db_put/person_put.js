@@ -6,8 +6,6 @@ import { person_build_idx_by_text } from '../db_idx/person_idx';
 import { person_build_idx_by_simular } from '../db_idx/person_idx';
 import { member_id_to_person_id } from '../person/person_id';
 
-const XLSX = require('xlsx');
-
 const assist_person_map = {
   lidnummer: {
     key: "member_id"
@@ -102,9 +100,7 @@ const person_assist_import = (file, member_period) => {
     return;
   }
 
-  const workbook = XLSX.readFile(file);
-  const sheet_name_list = workbook.SheetNames;
-  const json_sheet = XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {defval: '', raw: false});
+  const json_sheet = window.bridge.getJsonFromXlsxFile(file);
   const persons_bulk = [];
 
   const import_map = new Map();

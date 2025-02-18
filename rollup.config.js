@@ -14,6 +14,7 @@ export default {
 		sourcemap: true,
 		format: 'cjs', // iife
 		name: 'app',
+		// dir: 'public/build',
 		file: 'public/build/bundle.js',
 		exports: 'auto'
 	},

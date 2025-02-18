@@ -1,5 +1,5 @@
 <script>
-  const { ipcRenderer } = window.require('electron');
+//  const { ipcRenderer } = window.require('electron');
   import { nfc_del } from '../../db_put/nfc_put';
   import NfcInfoModal from './NfcInfoModal.svelte';
   import { nfc_id_to_uid } from '../../nfc/nfc_id';
@@ -19,10 +19,10 @@
 
     nfc_del(nfc_id);
     const nfc_uid = nfc_id_to_uid(nfc_id);
-    ipcRenderer.send('nfc.reset', {nfc_uid});
+    window.bridge.sendNfcReset({nfc_uid});
   };
 
-  ipcRenderer.on('nfc.reset.ok', (ev, data) => {
+  window.bridge.onNfcResetOk((data) => {
     setTimeout(() => {
       open = false;
     }, 1000);
@@ -34,7 +34,7 @@
     console.log('nfc.reset.ok');
   });
 
-  ipcRenderer.on('nfc.reset.fail', (ev, data) => {
+  window.bridge.onNfcResetFail((data) => {
     message = 'Gewist uit database, doch fout bij wissen NFC tag.';
     contentClassName = 'bg-danger';
     progress = 50;

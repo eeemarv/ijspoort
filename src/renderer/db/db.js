@@ -1,23 +1,22 @@
-const env = window.require('electron').remote.process.env;
 import PouchDB from 'pouchdb';
 
-if (!env.DB_PREFIX && !env.DB_LOCAL_PREFIX){
+if (!window.bridge.getEnvDbPrefix() && !window.bridge.getEnvDbLocalPrefix()){
   throw 'env DB_LOCAL_PREFIX not set';
 }
 
-if (!env.DB_PREFIX && !env.DB_REMOTE_PREFIX){
+if (!window.bridge.getEnvDbPrefix() && !window.bridge.getEnvDbRemotePrefix()){
   throw 'env DB_REMOTE_PREFIX not set';
 }
 
-if (!env.DB_URL){
+if (!window.bridge.getEnvDbUrl()){
   throw 'env DB_URL not set';
 }
 
-if (!env.DB_USERNAME){
+if (!window.bridge.getEnvDbUsername()){
   throw 'env DB_USERNAME not set';
 }
 
-if (!env.DB_PASSWORD){
+if (!window.bridge.getEnvDbPassword()){
   throw 'env DB_PASSWORD not set';
 }
 
@@ -25,8 +24,8 @@ const db_local_options = {
   auto_compaction: true
 };
 
-const db_local_prefix = env.DB_PREFIX || env.DB_LOCAL_PREFIX;
-const db_remote_prefix = env.DB_PREFIX || env.DB_REMOTE_PREFIX;
+const db_local_prefix = window.bridge.getEnvDbPrefix() || window.bridge.getEnvDbLocalPrefix();
+const db_remote_prefix = window.bridge.getEnvDbPrefix() || window.bridge.getEnvDbRemotePrefix();
 
 console.log('DB local prefix: ' + db_local_prefix);
 console.log('DB remote prefix: ' + db_remote_prefix);
@@ -37,10 +36,10 @@ const db_person = new PouchDB(db_local_prefix + 'person', db_local_options);
 const db_gate = new PouchDB(db_local_prefix + 'gate', db_local_options);
 const db_tag = new PouchDB(db_local_prefix + 'tag', db_local_options);
 
-const conn_prefix = env.DB_URL + '/' + db_remote_prefix;
+const conn_prefix = window.bridge.getEnvDbUrl() + '/' + db_remote_prefix;
 const auth = {
-  username: env.DB_USERNAME,
-  password: env.DB_PASSWORD
+  username: window.bridge.getEnvDbUsername(),
+  password: window.bridge.getEnvDbPassword()
 };
 
 const db_remote_reg = new PouchDB(conn_prefix + 'reg', {auth: auth});

@@ -1,5 +1,4 @@
 <script>
-  const EventEmitter = require('events');
   import { onMount } from 'svelte';
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
@@ -8,18 +7,16 @@
   import { desk_member_period_filter_enabled } from '../../services/store';
   import { person_ids_to_func_by_text } from '../../db_get/person_get';
   import MemberPeriodDropdown from '../../Common/MemberPeriodDropdown.svelte';
+  import { ev_manual } from '../../services/events';
 
   let el_manual;
   let el_group;
   let dropdown_open = false;
 
-  class SearchUpdateEmitter extends EventEmitter {};
-  const searchUpdateEmitter = new SearchUpdateEmitter();
-
   $: {
     $desk_member_period_filter_enabled;
     $desk_member_period_filter;
-    searchUpdateEmitter.emit('update');
+    ev_manual.dispatchEvent(new Event('update'));
   }
 
   onMount(() => {
@@ -53,7 +50,7 @@
     });
 
     // new desk_member_period_filter
-    searchUpdateEmitter.on('update', () => {
+    ev_manual.addEventListener('update', () => {
       // see https://github.com/kraaden/autocomplete/issues/52
       setTimeout(() => {
         el_manual.dispatchEvent(new KeyboardEvent('keyup'));
