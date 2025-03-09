@@ -1,22 +1,19 @@
 require('dotenv').config();
 const { app, BrowserWindow } = require('electron');
-// const EStore = require('electron-store');
 const path = require('path');
 const listen_pcsc = require('./listen_pcsc.js');
-const listen_mfrc = require('./listen_mfrc.js');
+//const listen_mfrc = require('./listen_mfrc.js');
 const build_menu = require('./build_menu.js');
 const listen_import_file_select = require('./listen_import_file_select.js');
-//const { e_store_handle } = require('./e_store.js');
 const { mqtt_init } = require('./mqtt.js');
 
-// const eStore = new EStore();
 let win;
 
 const env = process.env;
 
-const debug_enabled = env?.DEBUG === '1';
-const gate_modus = env?.GATE === '1';
-const mfrc522_enabled = env?.MFRC522 === '1';
+const debug_enabled = env.DEBUG === '1';
+const gate_modus = env.GATE === '1';
+const mfrc522_enabled = env.MFRC522 === '1';
 
 // https://stackoverflow.com/questions/68874940/gpu-process-isnt-usable-goodbye
 app.commandLine.appendSwitch('in-process-gpu');
@@ -67,7 +64,8 @@ const createWindow = () => {
 		//e_store_handle();
 		if (mfrc522_enabled){
 			try {
-				listen_mfrc(win);
+				// disabled for now, to write own mfrc522 interface
+				// listen_mfrc(win);
 			} catch (err) {
 				console.log(err);
 			}

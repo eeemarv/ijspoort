@@ -22,7 +22,7 @@ const assist_person_map = {
   roepnaam: {
     key: "nickname"
   },
-  adres: {
+  straat: { // Assist export changed adres to straat!
     key: "address"
   },
   postcode: {
