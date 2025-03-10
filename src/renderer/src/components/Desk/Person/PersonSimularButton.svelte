@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { Button } from 'sveltestrap';
+  import { Button } from '@sveltestrap/sveltestrap';
   import { person_simular_lang_keys } from '../../../db_get/person_get';
   import { get_search_str } from '../../../services/functions';
   import { person_map } from '../../../services/store';

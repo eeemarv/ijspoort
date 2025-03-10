@@ -1,5 +1,5 @@
 <script>
-  import { Card } from 'sveltestrap';
+  import { Card } from '@sveltestrap/sveltestrap';
 
   export let horizontal = false;
   export let font_size = '1em';

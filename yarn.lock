@@ -933,6 +933,13 @@
     magic-string "^0.30.15"
     vitefu "^1.0.4"
 
+"@sveltestrap/sveltestrap@^7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@sveltestrap/sveltestrap/-/sveltestrap-7.1.0.tgz#7226d9396f23323cb5464fd9ce2e508bba5041c3"
+  integrity sha512-TpIx25kqLV+z+VD3yfqYayOI1IaCeWFbT0uqM6NfA4vQgDs9PjFwmjkU4YEAlV/ngs9e7xPmaRWE7lkrg4Miow==
+  dependencies:
+    "@popperjs/core" "^2.11.8"
+
 "@szmarczak/http-timer@^4.0.5":
   version "4.0.6"
   resolved "https://registry.npmjs.org/@szmarczak/http-timer/-/http-timer-4.0.6.tgz"
@@ -4899,13 +4906,6 @@ svelte@^5.20.1:
     locate-character "^3.0.0"
     magic-string "^0.30.11"
     zimmerframe "^1.1.2"
-
-sveltestrap@^5.11.3:
-  version "5.11.3"
-  resolved "https://registry.yarnpkg.com/sveltestrap/-/sveltestrap-5.11.3.tgz#55b24faa63cc8b394cb07c96ac3daac5d185af47"
-  integrity sha512-R7vIyzqaXT8dKUytZRrU1sPdhinglRXJb43LKfGcR9Tc+71icg3onhniJARbokCkICiGxpgbgKNQRS3gGyQNXw==
-  dependencies:
-    "@popperjs/core" "^2.11.8"
 
 synckit@^0.9.1:
   version "0.9.2"

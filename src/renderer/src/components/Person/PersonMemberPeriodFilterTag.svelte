@@ -1,5 +1,5 @@
 <script>
-  import { Badge } from 'sveltestrap';
+  import { Badge } from '@sveltestrap/sveltestrap';
   import { desk_member_period_filter } from '../../services/store';
 
   export let title = 'lid in ' + $desk_member_period_filter;

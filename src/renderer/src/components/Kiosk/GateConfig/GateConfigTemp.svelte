@@ -1,5 +1,5 @@
 <script>
-  import { TabPane, Card } from 'sveltestrap';
+  import { TabPane, Card } from '@sveltestrap/sveltestrap';
   import { temperature_card_enabled } from '../../../services/store';
   import TemperatureCard from '../../Common/TemperatureCard.svelte';
 

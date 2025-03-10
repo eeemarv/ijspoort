@@ -3,7 +3,7 @@
   import { desk_nfc_read_test_button_enabled } from '../../../services/store';
   import { desk_nfc_clear_button_enabled } from '../../../services/store';
   import { en_nfc_status } from '../../../services/enum';
-  import { Button } from 'sveltestrap';
+  import { Button } from '@sveltestrap/sveltestrap';
   import NfcReadTestModal from './NfcReadTestModal.svelte';
   import NfcClearModal from './NfcClearModal.svelte';
 

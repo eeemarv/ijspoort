@@ -1,5 +1,5 @@
 <script>
-  import { Col, Container, Row } from 'sveltestrap';
+  import { Col, Container, Row } from '@sveltestrap/sveltestrap';
   import Clock from '../../Common/Clock.svelte';
   import SyncBadge from '../../Common/SyncBadge.svelte';
   import GateCounterRow from '../GateCounter/GateCounterRow.svelte';

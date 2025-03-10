@@ -1,7 +1,7 @@
 <script>
   import Icon from '@iconify/svelte';
   import githubIcon from '@iconify/icons-fa/github';
-  import { Card } from 'sveltestrap';
+  import { Card } from '@sveltestrap/sveltestrap';
 
 </script>
 

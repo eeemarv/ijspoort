@@ -1,6 +1,6 @@
 <script>
-  import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
-  import { Row, Col, Badge } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader } from '@sveltestrap/sveltestrap';
+  import { Row, Col, Badge } from '@sveltestrap/sveltestrap';
   import LocaleDateString from '../../Common/LocaleDateString.svelte';
   import PersonTag from '../../Person/PersonTag.svelte';
   import RegTimeTag from '../Reg/RegTimeTag.svelte';

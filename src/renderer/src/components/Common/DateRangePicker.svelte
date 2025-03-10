@@ -1,8 +1,8 @@
 <script>
   import { DateRangePicker } from 'vanillajs-datepicker';
   import { onMount } from 'svelte';
-  import { FormGroup } from 'sveltestrap';
-  import { Label } from 'sveltestrap';
+  import { FormGroup } from '@sveltestrap/sveltestrap';
+  import { Label } from '@sveltestrap/sveltestrap';
 
   let elem;
   let date_range_picker;

@@ -1,7 +1,7 @@
 <script>
 //  const { ipcRenderer } = window.require('electron');
   import { createEventDispatcher } from 'svelte';
-  import { Button } from 'sveltestrap';
+  import { Button } from '@sveltestrap/sveltestrap';
   import { nfc_map } from '../../../services/store';
   import { person_map } from '../../../services/store';
   import { person_nfc_map } from '../../../services/store';

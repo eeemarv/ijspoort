@@ -1,7 +1,7 @@
 <script>
   import { member_person_map, person_map } from '../../../services/store';
-  import { Badge, Progress } from 'sveltestrap';
-  import { Modal, ModalHeader, ModalBody } from 'sveltestrap';
+  import { Badge, Progress } from '@sveltestrap/sveltestrap';
+  import { Modal, ModalHeader, ModalBody } from '@sveltestrap/sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
 
   export const open_member_period_modal = () => {

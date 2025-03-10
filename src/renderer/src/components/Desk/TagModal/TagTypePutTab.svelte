@@ -4,10 +4,10 @@
   import plusIcon from '@iconify/icons-fa/plus';
   import pencilIcon from '@iconify/icons-fa/pencil';
   import { createEventDispatcher } from 'svelte';
-  import { Row, Col } from 'sveltestrap';
-  import { Button } from 'sveltestrap';
-  import { TabPane } from 'sveltestrap';
-  import { FormGroup } from 'sveltestrap';
+  import { Row, Col } from '@sveltestrap/sveltestrap';
+  import { Button } from '@sveltestrap/sveltestrap';
+  import { TabPane } from '@sveltestrap/sveltestrap';
+  import { FormGroup } from '@sveltestrap/sveltestrap';
   import Radio from '../../Common/Radio.svelte';
   import { tag_type_map } from '../../../services/store';
   import TagSpan from '../../Tag/TagSpan.svelte';

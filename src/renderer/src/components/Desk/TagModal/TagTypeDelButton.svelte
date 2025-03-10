@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { Button } from 'sveltestrap';
+  import { Button } from '@sveltestrap/sveltestrap';
   import Icon from '@iconify/svelte';
   import timesIcon from '@iconify/icons-fa/times';
   import { getContext } from 'svelte';

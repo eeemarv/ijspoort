@@ -1,7 +1,7 @@
 <script>
   import { createEventDispatcher, onMount } from 'svelte';
-  import { FormGroup } from 'sveltestrap';
-  import { Label } from 'sveltestrap';
+  import { FormGroup } from '@sveltestrap/sveltestrap';
+  import { Label } from '@sveltestrap/sveltestrap';
   import Icon from '@iconify/svelte';
   import angleLeft from '@iconify/icons-fa/angle-left';
   import angleRight from '@iconify/icons-fa/angle-right';

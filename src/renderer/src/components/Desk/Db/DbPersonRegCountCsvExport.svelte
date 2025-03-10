@@ -1,5 +1,5 @@
 <script>
-  import { Button, FormGroup, Label, Modal, ModalBody, ModalHeader } from 'sveltestrap';
+  import { Button, FormGroup, Label, Modal, ModalBody, ModalHeader } from '@sveltestrap/sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
   import { person_reg_count_csv_export } from '../../../db_export/person_reg_count_csv_export';
   import Checkbox from '../../Common/Checkbox.svelte';

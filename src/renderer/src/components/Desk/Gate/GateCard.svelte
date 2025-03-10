@@ -1,5 +1,5 @@
 <script>
-  import { Card, CardHeader } from 'sveltestrap';
+  import { Card, CardHeader } from '@sveltestrap/sveltestrap';
   import GateSens from '../../Gate/GateSens.svelte';
   import GateGraphModal from '../GateGraph/GateGraphModal.svelte';
   import GateAlert from './GateAlert.svelte';

@@ -1,5 +1,5 @@
 <script>
-  import { Button } from 'sveltestrap';
+  import { Button } from '@sveltestrap/sveltestrap';
   import { tag_map } from '../../../services/store';
 
   $: total_count = [...$tag_map.values()].reduce((acc, t_map) => acc + t_map.size, 0);

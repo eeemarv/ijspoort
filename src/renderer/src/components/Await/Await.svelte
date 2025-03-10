@@ -1,5 +1,5 @@
 <script>
-  import { Spinner } from 'sveltestrap';
+  import { Spinner } from '@sveltestrap/sveltestrap';
   import ListGroup from '../Common/ListGroup.svelte';
   import ListGroupItem from '../Common/ListGroupItem.svelte';
 

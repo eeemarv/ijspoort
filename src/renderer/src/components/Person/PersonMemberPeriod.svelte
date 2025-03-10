@@ -1,5 +1,5 @@
 <script>
-  import { Badge } from 'sveltestrap';
+  import { Badge } from '@sveltestrap/sveltestrap';
   import { member_person_map } from '../../services/store';
 
   export let member_period = undefined;

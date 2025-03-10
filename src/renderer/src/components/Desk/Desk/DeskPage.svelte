@@ -1,5 +1,5 @@
 <script>
-  import { Card, CardBody, Col } from 'sveltestrap';
+  import { Card, CardBody, Col } from '@sveltestrap/sveltestrap';
   import ManualInput from '../ManualInput/ManualInput.svelte';
   import Person from '../Person/Person.svelte';
   import RegList from '../Reg/RegList.svelte';

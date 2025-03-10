@@ -1,6 +1,6 @@
 <script>
-  import { Row, Col } from 'sveltestrap';
-  import { TabPane } from 'sveltestrap';
+  import { Row, Col } from '@sveltestrap/sveltestrap';
+  import { TabPane } from '@sveltestrap/sveltestrap';
   import LocaleDateString from '../../Common/LocaleDateString.svelte';
   import TimeTag from '../../Common/TimeTag.svelte';
   import * as Pancake from '@sveltejs/pancake';

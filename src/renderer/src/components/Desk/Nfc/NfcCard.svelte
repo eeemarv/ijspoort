@@ -1,5 +1,5 @@
 <script>
-  import { Card } from 'sveltestrap';
+  import { Card } from '@sveltestrap/sveltestrap';
   import NfcActivate from './NfcActivate.svelte';
   import NfcDeviceCardHeader from './NfcDeviceCardHeader.svelte';
   import { en_nfc_status } from '../../../services/enum';

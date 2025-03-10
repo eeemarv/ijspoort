@@ -1,6 +1,6 @@
 <script>
-  import { Button } from 'sveltestrap';
-  import { Badge } from 'sveltestrap';
+  import { Button } from '@sveltestrap/sveltestrap';
+  import { Badge } from '@sveltestrap/sveltestrap';
   import { person_map } from '../../../services/store';
   import PersonName from '../../Person/PersonName.svelte';
   import AwaitBadge from '../../Await/AwaitBadge.svelte';

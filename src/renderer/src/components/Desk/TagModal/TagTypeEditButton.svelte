@@ -1,5 +1,5 @@
 <script>
-  import { Button } from 'sveltestrap';
+  import { Button } from '@sveltestrap/sveltestrap';
   import Icon from '@iconify/svelte';
   import { getContext } from 'svelte';
   import pencilIcon from '@iconify/icons-fa/pencil';
@@ -7,7 +7,7 @@
 
   const { setActiveTab } = getContext('tabContent');
   const dispatch = createEventDispatcher();
-  export let type_id = undefined;  
+  export let type_id = undefined;
 
   const handle_click = () => {
     dispatch('edit', type_id);

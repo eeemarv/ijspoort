@@ -1,9 +1,9 @@
 <script>
-  import { Badge } from 'sveltestrap';
-  import { ButtonDropdown } from 'sveltestrap';
-  import { DropdownItem } from 'sveltestrap';
-  import { DropdownMenu } from 'sveltestrap';
-  import { DropdownToggle } from 'sveltestrap';
+  import { Badge } from '@sveltestrap/sveltestrap';
+  import { ButtonDropdown } from '@sveltestrap/sveltestrap';
+  import { DropdownItem } from '@sveltestrap/sveltestrap';
+  import { DropdownMenu } from '@sveltestrap/sveltestrap';
+  import { DropdownToggle } from '@sveltestrap/sveltestrap';
   import { member_person_map } from '../../services/store';
 
   export let dropdown_open = false;

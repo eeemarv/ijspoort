@@ -1,5 +1,5 @@
 <script>
-  import { FormGroup, Label } from "sveltestrap";
+  import { FormGroup, Label } from '@sveltestrap/sveltestrap';
   export let days_offset;
 </script>
 

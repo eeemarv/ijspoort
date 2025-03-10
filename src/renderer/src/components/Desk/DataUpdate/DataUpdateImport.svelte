@@ -1,5 +1,5 @@
 <script>
-  import { Button, Card, FormGroup, FormText, Label, Modal, ModalBody, ModalHeader } from 'sveltestrap';
+  import { Button, Card, FormGroup, FormText, Label, Modal, ModalBody, ModalHeader } from '@sveltestrap/sveltestrap';
   import Icon from '@iconify/svelte';
   import exclamationTriangle from '@iconify/icons-fa/exclamation-triangle';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';

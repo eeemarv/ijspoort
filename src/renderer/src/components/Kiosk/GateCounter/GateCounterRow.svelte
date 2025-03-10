@@ -1,5 +1,5 @@
 <script>
-  import { Col } from 'sveltestrap';
+  import { Col } from '@sveltestrap/sveltestrap';
   import { gate_count } from '../../../services/store';
   import { members_only_enabled } from '../../../services/store';
   import { gate_open } from '../../../services/store';

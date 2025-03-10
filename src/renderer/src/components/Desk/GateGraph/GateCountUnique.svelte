@@ -1,6 +1,6 @@
 <script>
-  import { Row, Col } from 'sveltestrap';
-  import { TabPane } from 'sveltestrap';
+  import { Row, Col } from '@sveltestrap/sveltestrap';
+  import { TabPane } from '@sveltestrap/sveltestrap';
   import DaysPeriodInput from './DaysPeriodInput.svelte';
   import DaysOffsetInput from './DaysOffsetInput.svelte';
   import AwaitError from '../../Await/AwaitError.svelte';

@@ -1,5 +1,5 @@
 <script>
-  import { Badge } from 'sveltestrap';
+  import { Badge } from '@sveltestrap/sveltestrap';
   import Icon from '@iconify/svelte';
   import banIcon from '@iconify/icons-fa/ban';
   import LocaleDateString from '../Common/LocaleDateString.svelte';

@@ -1,7 +1,7 @@
 <script>
   import { ev_reg } from '../../../services/events';
   import PersonTag from '../../Person/PersonTag.svelte';
-  import { Badge } from 'sveltestrap';
+  import { Badge } from '@sveltestrap/sveltestrap';
 
   let timeout_id = undefined;
   const show_time = 3000;

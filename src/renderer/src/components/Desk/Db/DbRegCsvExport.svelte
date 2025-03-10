@@ -1,5 +1,5 @@
 <script>
-  import { Button, Modal, ModalBody, ModalHeader, Row, Col } from 'sveltestrap';
+  import { Button, Modal, ModalBody, ModalHeader, Row, Col } from '@sveltestrap/sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
   import { get_reg_csv_export_buttons, reg_csv_export } from '../../../db_export/reg_csv_export';
   import Await from '../../Await/Await.svelte';

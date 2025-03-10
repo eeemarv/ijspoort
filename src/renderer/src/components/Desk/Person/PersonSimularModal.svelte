@@ -1,5 +1,5 @@
 <script>
-  import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader } from '@sveltestrap/sveltestrap';
   import PersonName from '../../Person/PersonName.svelte';
   import PersonTag from '../../Person/PersonTag.svelte';
   import SelectableListGroupItem from '../../Common/SelectableListGroupItem.svelte';

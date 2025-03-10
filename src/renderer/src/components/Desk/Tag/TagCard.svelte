@@ -1,5 +1,5 @@
 <script>
-  import { Card, CardBody } from 'sveltestrap';
+  import { Card, CardBody } from '@sveltestrap/sveltestrap';
   import TagCardHeader from './TagCardHeader.svelte';
   import TagCardList from './TagCardList.svelte';
   import TagNfcAuto from './TagNfcAuto.svelte';

@@ -4,7 +4,7 @@
   import { desk_nfc_auto_open_person_data_enabled } from '../../../services/store';
   import { desk_tag_types_enabled } from '../../../services/store';
   import { desk_member_period_filter } from '../../../services/store';
-  import { Badge } from 'sveltestrap';
+  import { Badge } from '@sveltestrap/sveltestrap';
 
   $: tag_enabled_count = Object.values($desk_tag_types_enabled).reduce((acc, v) => {return v ? acc + 1 : acc;}, 0);
 </script>

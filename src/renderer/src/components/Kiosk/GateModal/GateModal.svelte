@@ -1,6 +1,6 @@
 <script>
 //  const { ipcRenderer } = window.require('electron');
-  import { Modal, ModalBody, ModalFooter, ModalHeader } from 'sveltestrap';
+  import { Modal, ModalBody, ModalFooter, ModalHeader } from '@sveltestrap/sveltestrap';
   import PersonTag from '../../Person/PersonTag.svelte';
   import GateConfig from '../GateConfig/GateConfig.svelte';
   import { get_time_str } from '../../../services/functions';

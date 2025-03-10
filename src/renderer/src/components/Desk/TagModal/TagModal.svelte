@@ -1,6 +1,6 @@
 <script>
-  import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
-  import { TabContent } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader } from '@sveltestrap/sveltestrap';
+  import { TabContent } from '@sveltestrap/sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
   import TagTypeListTab from './TagTypeListTab.svelte';
   import TagTypePutTab from './TagTypePutTab.svelte';

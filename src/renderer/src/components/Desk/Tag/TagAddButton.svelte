@@ -2,7 +2,7 @@
   import Icon from '@iconify/svelte';
   import plusIcon from '@iconify/icons-fa/plus';
   import { tag_add_bulk } from '../../../db_put/tag_put';
-  import { Button } from 'sveltestrap';
+  import { Button } from '@sveltestrap/sveltestrap';
   import { desk_selected_person_id } from '../../../services/store';
   import { tag_type_map } from '../../../services/store';
   import { person_tag_map } from '../../../services/store';

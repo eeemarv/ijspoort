@@ -1,7 +1,7 @@
 <script>
   import Icon from '@iconify/svelte';
   import timesIcon from '@iconify/icons-fa/times';
-  import { Button } from 'sveltestrap';
+  import { Button } from '@sveltestrap/sveltestrap';
   import Tag from '../../Tag/Tag.svelte';
   import LocaleDateString from '../../Common/LocaleDateString.svelte';
   import { tag_del } from '../../../db_put/tag_put';

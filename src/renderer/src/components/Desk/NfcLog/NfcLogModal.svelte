@@ -1,7 +1,7 @@
 <script>
-  import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
-  import { Row, Col } from 'sveltestrap';
-  import { TabContent } from 'sveltestrap';
+  import { Modal, ModalBody, ModalHeader } from '@sveltestrap/sveltestrap';
+  import { Row, Col } from '@sveltestrap/sveltestrap';
+  import { TabContent } from '@sveltestrap/sveltestrap';
   import { desk_selected_person_id } from '../../../services/store';
   import { person_map } from '../../../services/store';
   import { nfc_map } from '../../../services/store';

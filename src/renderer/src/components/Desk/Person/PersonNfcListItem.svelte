@@ -1,5 +1,5 @@
 <script>
-  import { Popover } from 'sveltestrap';
+  import { Popover } from '@sveltestrap/sveltestrap';
   import NfcTag from '../../Nfc/NfcTag.svelte';
   import { desk_selected_nfc_id } from '../../../services/store';
   import { nfc_deblock } from '../../../db_put/nfc_put';

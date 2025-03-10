@@ -1,7 +1,7 @@
 <script>
   import { Datepicker } from 'vanillajs-datepicker';
   import { onMount } from 'svelte';
-  import { FormGroup, Label } from 'sveltestrap';
+  import { FormGroup, Label } from '@sveltestrap/sveltestrap';
 
   export let name = 'date';
   export let label = 'Datum';

@@ -2,8 +2,8 @@
   import { createEventDispatcher } from 'svelte';
   import Icon from '@iconify/svelte';
   import userIcon from '@iconify/icons-fa/user';
-  import { Row, Col } from 'sveltestrap';
-  import { TabPane } from 'sveltestrap';
+  import { Row, Col } from '@sveltestrap/sveltestrap';
+  import { TabPane } from '@sveltestrap/sveltestrap';
   import { desk_selected_person_id } from '../../../services/store';
   import NfcTag from '../../Nfc/NfcTag.svelte';
   import PersonTag from '../../Person/PersonTag.svelte';

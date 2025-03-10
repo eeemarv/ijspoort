@@ -1,7 +1,7 @@
 <script>
   import Icon from '@iconify/svelte';
   import exclamationTriangle from '@iconify/icons-fa/exclamation-triangle';
-  import { Button, Card, FormGroup, FormText, Modal, ModalBody, ModalHeader } from 'sveltestrap';
+  import { Button, Card, FormGroup, FormText, Modal, ModalBody, ModalHeader } from '@sveltestrap/sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
   import { member_person_map } from '../../../services/store';
   import { person_cleanup } from '../../../db_put/person_put';

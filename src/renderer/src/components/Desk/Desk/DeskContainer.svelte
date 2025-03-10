@@ -1,5 +1,5 @@
 <script>
-  import { Container, Row } from 'sveltestrap';
+  import { Container, Row } from '@sveltestrap/sveltestrap';
   import DbRegCsvExport from '../Db/DbRegCsvExport.svelte';
   import DbRegCountCsvExport from '../Db/DbRegCountCsvExport.svelte';
   import DbJsonExport from '../Db/DbJsonExport.svelte';

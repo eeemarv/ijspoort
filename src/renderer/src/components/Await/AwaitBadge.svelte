@@ -1,6 +1,6 @@
 <script>
-  import {Badge} from 'sveltestrap';
-  import { Spinner } from 'sveltestrap';
+  import {Badge} from '@sveltestrap/sveltestrap';
+  import { Spinner } from '@sveltestrap/sveltestrap';
   export let text = '';
 </script>
 

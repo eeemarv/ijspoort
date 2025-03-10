@@ -1,5 +1,5 @@
 <script>
-  import { ModalFooter } from 'sveltestrap';
+  import { ModalFooter } from '@sveltestrap/sveltestrap';
 	export let font_size = '1em';
   export let btn_lg = false;
 </script>

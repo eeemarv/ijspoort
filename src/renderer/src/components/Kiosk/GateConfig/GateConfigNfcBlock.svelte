@@ -1,5 +1,5 @@
 <script>
-  import { TabPane, Card } from 'sveltestrap';
+  import { TabPane, Card } from '@sveltestrap/sveltestrap';
   import { gate_nfc_auto_block_enabled } from '../../../services/store';
 
   export let tab;

@@ -1,5 +1,5 @@
 <script>
-  import { TabPane, Row, Col } from 'sveltestrap';
+  import { TabPane, Row, Col } from '@sveltestrap/sveltestrap';
   import TagTypeEditButton from './TagTypeEditButton.svelte';
   import SelectableListGroupItem from '../../Common/SelectableListGroupItem.svelte';
   import LocaleDateString from '../../Common/LocaleDateString.svelte';

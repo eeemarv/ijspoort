@@ -1,5 +1,5 @@
 <script>
-  import { Row, Col } from 'sveltestrap';
+  import { Row, Col } from '@sveltestrap/sveltestrap';
   import RegItem from './RegItem.svelte';
   import { reg_map } from '../../../services/store';
   import RegAlertDesk from './RegAlertDesk.svelte';

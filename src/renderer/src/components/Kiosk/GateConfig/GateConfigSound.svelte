@@ -1,5 +1,5 @@
 <script>
-  import { TabPane, Card } from 'sveltestrap';
+  import { TabPane, Card } from '@sveltestrap/sveltestrap';
   import { gate_sound_ok_enabled } from '../../../services/store';
   import { gate_sound_error_enabled } from '../../../services/store';
   import { gate_beep_enabled } from '../../../services/store';

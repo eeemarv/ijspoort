@@ -1,5 +1,5 @@
 <script>
-  import { CardText } from 'sveltestrap';
+  import { CardText } from '@sveltestrap/sveltestrap';
   import { sub_nfc_map } from '../../../services/sub';
   import { ev_reg } from '../../../services/events';
 

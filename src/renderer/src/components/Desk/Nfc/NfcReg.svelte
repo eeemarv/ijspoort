@@ -1,5 +1,5 @@
 <script>
-  import { Input } from 'sveltestrap';
+  import { Input } from '@sveltestrap/sveltestrap';
   import { desk_nfc_auto_reg_enabled } from '../../../services/store';
   import { member_period_select } from '../../../services/store';
   import { members_only_enabled } from '../../../services/store';

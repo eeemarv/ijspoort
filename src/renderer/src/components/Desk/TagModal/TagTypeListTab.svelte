@@ -1,5 +1,5 @@
 <script>
-  import { TabPane } from 'sveltestrap';
+  import { TabPane } from '@sveltestrap/sveltestrap';
   import TagTypeRow from './TagTypeRow.svelte';
   import { tag_type_map } from '../../../services/store';
 

@@ -1,6 +1,6 @@
 <script>
-  import { Card, CardHeader, CardBody, CardFooter, CardGroup } from 'sveltestrap';
-  import { Button } from 'sveltestrap';
+  import { Card, CardHeader, CardBody, CardFooter, CardGroup } from '@sveltestrap/sveltestrap';
+  import { Button } from '@sveltestrap/sveltestrap';
   import { person_get_count_by_simular } from '../../../db_get/person_get';
   import { person_map } from '../../../services/store';
   import { desk_selected_person_id } from '../../../services/store';

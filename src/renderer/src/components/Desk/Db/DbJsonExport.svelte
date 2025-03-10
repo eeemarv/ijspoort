@@ -1,5 +1,5 @@
 <script>
-  import { Button, Modal, ModalBody, ModalHeader } from 'sveltestrap';
+  import { Button, Modal, ModalBody, ModalHeader } from '@sveltestrap/sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
   import { db_json_export } from '../../../db_export/db_json_export';
 

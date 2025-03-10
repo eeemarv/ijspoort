@@ -1,5 +1,5 @@
 <script>
-  import { CardText } from 'sveltestrap';
+  import { CardText } from '@sveltestrap/sveltestrap';
   import { en_nfc_status } from '../../../services/enum';
   import { nfc_id_to_uid } from '../../../nfc/nfc_id';
 
