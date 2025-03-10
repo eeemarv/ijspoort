@@ -2,12 +2,12 @@
   import TagButton from './TagButton.svelte';
   import TagAddButton from './TagAddButton.svelte';
   import { createEventDispatcher } from 'svelte';
-  import { desk_nfc_auto_open_person_data_enabled } from '../../services/store';
-  import { tag_type_map } from '../../services/store';
-  import { tag_map } from '../../services/store';
-  import { desk_member_period_filter } from '../../services/store';
+  import { desk_nfc_auto_open_person_data_enabled } from '../../../services/store';
+  import { tag_type_map } from '../../../services/store';
+  import { tag_map } from '../../../services/store';
+  import { desk_member_period_filter } from '../../../services/store';
   import Checkbox from '../../Common/Checkbox.svelte';
-  import { desk_nfc_auto_tags } from '../../services/store';
+  import { desk_nfc_auto_tags } from '../../../services/store';
   import ListGroupItem from '../../Common/ListGroupItem.svelte';
 
   const dispatch = createEventDispatcher();

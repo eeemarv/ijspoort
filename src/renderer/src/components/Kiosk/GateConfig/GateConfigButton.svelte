@@ -1,5 +1,5 @@
 <script>
-  import { gate_auth } from '../../gate/gate_auth';
+  import { gate_auth } from '../../../gate/gate_auth';
 
   export let person_id = undefined;
 </script>

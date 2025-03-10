@@ -1,7 +1,7 @@
 <script>
   import PersonPhone from '../Person/PersonPhone.svelte';
   import PersonTag from '../../Person/PersonTag.svelte';
-  import { person_map } from '../../services/store';
+  import { person_map } from '../../../services/store';
 
 
   export let person_id;

@@ -9,8 +9,8 @@
   import AwaitNoResults from '../../Await/AwaitNoResults.svelte';
   import AwaitError from '../../Await/AwaitError.svelte';
   import Await from '../../Await/Await.svelte';
-  import { gate_get_step_count } from '../../db_get/gate_get';
-  import { reg_map } from '../../services/store';
+  import { gate_get_step_count } from '../../../db_get/gate_get';
+  import { reg_map } from '../../../services/store';
 
   export let tab;
 

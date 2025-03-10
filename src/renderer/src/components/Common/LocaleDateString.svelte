@@ -1,5 +1,5 @@
 <script>
-  import { get_date_str } from '../services/functions';
+  import { get_date_str } from '../../services/functions';
   export let ts_epoch = undefined;
   export let title = 'datum';
 </script>

@@ -3,9 +3,9 @@
   import plusIcon from '@iconify/icons-fa/plus';
   import minusIcon from '@iconify/icons-fa/minus';
   import { TabPane, Card } from 'sveltestrap';
-  import { members_only_enabled } from '../../services/store';
-  import { gate_member_open_time } from '../../services/store';
-  import { member_period_select } from '../../services/store';
+  import { members_only_enabled } from '../../../services/store';
+  import { gate_member_open_time } from '../../../services/store';
+  import { member_period_select } from '../../../services/store';
   import MemberPeriodDropdown from '../../Common/MemberPeriodDropdown.svelte';
 
   export let tab;

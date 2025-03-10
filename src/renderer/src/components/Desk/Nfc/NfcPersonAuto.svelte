@@ -1,6 +1,6 @@
 <script>
   import { Input } from 'sveltestrap';
-  import { desk_nfc_auto_open_person_data_enabled } from '../../services/store';
+  import { desk_nfc_auto_open_person_data_enabled } from '../../../services/store';
 
 </script>
 

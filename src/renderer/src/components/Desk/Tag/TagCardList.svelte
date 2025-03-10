@@ -1,7 +1,7 @@
 <script>
   import ListGroup from '../../Common/ListGroup.svelte';
-  import { desk_tag_types_enabled } from '../../services/store';
-  import { tag_type_map } from '../../services/store';
+  import { desk_tag_types_enabled } from '../../../services/store';
+  import { tag_type_map } from '../../../services/store';
   import TagCardListItem from './TagCardListItem.svelte';
 
 </script>

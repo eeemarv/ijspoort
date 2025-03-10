@@ -1,80 +1,65 @@
 {
-  "name": "ijspoort",
-  "productName": "ijspoort",
+  "name": "vite-ijs",
   "version": "1.0.0",
-  "description": "Entrance identification and registration of club members",
-  "main": "src/main/index.js",
+  "description": "An Electron application with Svelte",
+  "main": "./out/main/index.js",
+  "author": "example.com",
+  "homepage": "https://electron-vite.org",
   "scripts": {
-    "start": "concurrently \"npm:svelte-dev\" \"electron-forge start\"",
-    "start_el": "electron-forge start",
-    "package": "electron-forge package",
-    "make": "electron-forge make",
-    "publish": "electron-forge publish",
-    "lint": "echo \"No linting configured\"",
-    "re": "./node_modules/.bin/electron-rebuild",
-    "svelte-build": "rollup -c",
-    "sv": "rollup -c",
-    "svelte-dev": "rollup -c -w",
-    "svelte-start": "sirv public"
+    "format": "prettier --plugin prettier-plugin-svelte --write .",
+    "lint": "eslint --cache .",
+    "start": "electron-vite preview",
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "postinstall": "electron-builder install-app-deps",
+    "build:unpack": "npm run build && electron-builder --dir",
+    "build:win": "npm run build && electron-builder --win",
+    "build:mac": "npm run build && electron-builder --mac",
+    "build:linux": "npm run build && electron-builder --linux"
   },
-  "keywords": [],
-  "author": {
-    "name": "Maarten Vandekeybus",
-    "email": "info@martti.be"
-  },
-  "license": "MIT",
-  "config": {
-    "forge": {
-      "packagerConfig": {},
-      "makers": [
-        {
-          "name": "@electron-forge/maker-squirrel",
-          "config": {
-            "name": "i"
-          }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
-        }
-      ]
-    }
+  "dependencies": {
+    "@electron-toolkit/preload": "^3.0.1",
+    "@electron-toolkit/utils": "^4.0.0",
+    "nfc-pcsc": "^0.8.1",
+    "rpio": "^2.4.2"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.3",
-    "@babel/plugin-proposal-class-properties": "^7.12.1",
-    "@babel/preset-env": "^7.12.1",
-    "@babel/runtime": "^7.12.1",
-    "@iconify/icons-fa": "^1.1.0",
-    "@iconify/svelte": "^2.0.0",
+    "@electron-toolkit/eslint-config": "^2.0.0",
+    "@electron-toolkit/eslint-config-prettier": "^3.0.0",
+    "@iconify/icons-fa": "^1.2.3",
+    "@iconify/svelte": "^4.2.0",
     "@sveltejs/pancake": "^0.0.18",
+    "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "autocompleter": "^9.3.2",
     "axios": "^1.7.9",
-    "bootstrap": "^5",
+    "bootstrap": "^5.3.3",
     "bootswatch": "^5.3.3",
     "dotenv": "^16.4.7",
-    "electron": "~34",
+    "electron": "^34.2.0",
+    "electron-builder": "^25.1.8",
+    "electron-rebuild": "^3.2.9",
     "electron-store": "^10.0.1",
+    "electron-vite": "^3.0.0",
+    "eslint": "^9.20.1",
+    "eslint-plugin-svelte": "^2.46.1",
+    "git": "^0.1.5",
     "lodash": "^4.17.21",
     "mqtt": "^5.10.3",
-    "nfc-pcsc": "^0.8.1",
     "node-gyp": "^11.1.0",
     "papaparse": "^5.5.2",
-    "rpio": "^2.4.2",
-    "svelte": "^3.29.4",
-    "sveltestrap": "^5.4.1-0",
+    "pouchdb": "^9.0.0",
+    "prettier": "^3.5.1",
+    "prettier-plugin-svelte": "^3.3.3",
+    "svelte": "^5.20.1",
+    "sveltestrap": "^5.11.3",
     "vanillajs-datepicker": "^1.3.4",
+    "vite": "^6.1.0",
+    "vite-plugin-electron": "^0.29.0",
+    "vite-plugin-native": "^2.2.2",
     "xlsx": "^0.18.5"
   },
-  "dependencies": {}
+  "optionalDependencies": {
+    "bufferutil": "^4.0.9",
+    "utf-8-validate": "^6.0.5"
+  }
 }

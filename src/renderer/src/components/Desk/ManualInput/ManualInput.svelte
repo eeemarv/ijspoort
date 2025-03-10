@@ -1,13 +1,14 @@
 <script>
+  import { mount } from 'svelte';
   import { onMount } from 'svelte';
   import autocomplete from 'autocompleter';
   import AutocompleteSuggestion from './AutocompleteSuggestion.svelte';
-  import { desk_selected_person_id } from '../../services/store';
-  import { desk_member_period_filter } from '../../services/store';
-  import { desk_member_period_filter_enabled } from '../../services/store';
-  import { person_ids_to_func_by_text } from '../../db_get/person_get';
+  import { desk_selected_person_id } from '../../../services/store';
+  import { desk_member_period_filter } from '../../../services/store';
+  import { desk_member_period_filter_enabled } from '../../../services/store';
+  import { person_ids_to_func_by_text } from '../../../db_get/person_get';
   import MemberPeriodDropdown from '../../Common/MemberPeriodDropdown.svelte';
-  import { ev_manual } from '../../services/events';
+  import { ev_manual } from '../../../services/events';
 
   let el_manual;
   let el_group;
@@ -35,7 +36,7 @@
       render: (item) => {
         const div = document.createElement("div");
         div.setAttribute('class', 'autocomplete-suggestion');
-        new AutocompleteSuggestion({
+        mount(AutocompleteSuggestion, {
           target: div,
           props: {
             person_id: item

@@ -2,18 +2,18 @@
   import { Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import { Row, Col } from 'sveltestrap';
   import { TabContent } from 'sveltestrap';
-  import { desk_selected_person_id } from '../../services/store';
-  import { person_map } from '../../services/store';
-  import { nfc_map } from '../../services/store';
-  import { person_nfc_map } from '../../services/store';
+  import { desk_selected_person_id } from '../../../services/store';
+  import { person_map } from '../../../services/store';
+  import { nfc_map } from '../../../services/store';
+  import { person_nfc_map } from '../../../services/store';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
   import Pagination from '../../Common/Pagination.svelte';
   import Checkbox from '../../Common/Checkbox.svelte';
   import NfcLogListTab from './NfcLogListTab.svelte';
   import NfcLogPersonTabs from './NfcLogPersonTabs.svelte';
   import PersonMemberPeriodFilterTag from '../../Person/PersonMemberPeriodFilterTag.svelte';
-  import { desk_member_period_filter } from '../../services/store';
-  import { member_person_map } from '../../services/store';
+  import { desk_member_period_filter } from '../../../services/store';
+  import { member_person_map } from '../../../services/store';
 
   let nfc_week_count = 0;
   let nfc_month_count = 0;

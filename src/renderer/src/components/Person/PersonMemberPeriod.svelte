@@ -1,6 +1,6 @@
 <script>
   import { Badge } from 'sveltestrap';
-  import { member_person_map } from '../services/store';
+  import { member_person_map } from '../../services/store';
 
   export let member_period = undefined;
   export let person_id = undefined;

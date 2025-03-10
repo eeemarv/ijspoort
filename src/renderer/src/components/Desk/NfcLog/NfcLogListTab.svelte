@@ -3,12 +3,12 @@
   import { Row, Col } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
   import { TabPane } from 'sveltestrap';
-  import { desk_selected_person_id } from '../../services/store';
+  import { desk_selected_person_id } from '../../../services/store';
   import NfcTag from '../../Nfc/NfcTag.svelte';
   import PersonTag from '../../Person/PersonTag.svelte';
   import SelectableListGroupItem from '../../Common/SelectableListGroupItem.svelte';
   import CountBadge from '../../Common/CountBadge.svelte';
-  import { person_map } from '../../services/store';
+  import { person_map } from '../../../services/store';
   import ListGroup from '../../Common/ListGroup.svelte';
   import ListGroupItem from '../../Common/ListGroupItem.svelte';
 

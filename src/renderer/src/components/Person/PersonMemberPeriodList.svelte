@@ -1,5 +1,5 @@
 <script>
-  import { member_person_map } from '../services/store';
+  import { member_person_map } from '../../services/store';
   import PersonMemberPeriod from './PersonMemberPeriod.svelte';
 
   export let person_id = undefined;

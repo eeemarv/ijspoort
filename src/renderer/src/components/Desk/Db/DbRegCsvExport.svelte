@@ -1,11 +1,11 @@
 <script>
   import { Button, Modal, ModalBody, ModalHeader, Row, Col } from 'sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
-  import { get_reg_csv_export_buttons, reg_csv_export } from '../../db_export/reg_csv_export';
+  import { get_reg_csv_export_buttons, reg_csv_export } from '../../../db_export/reg_csv_export';
   import Await from '../../Await/Await.svelte';
   import AwaitError from '../../Await/AwaitError.svelte';
   import AwaitNoResults from '../../Await/AwaitNoResults.svelte';
-  import { get_date_str } from '../../services/functions';
+  import { get_date_str } from '../../../services/functions';
   import ListGroup from '../../Common/ListGroup.svelte';
   import ListGroupItem from '../../Common/ListGroupItem.svelte';
 

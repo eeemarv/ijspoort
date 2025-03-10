@@ -1,5 +1,5 @@
 <script>
-  import { ev_reg } from '../../services/events';
+  import { ev_reg } from '../../../services/events';
   import PersonTag from '../../Person/PersonTag.svelte';
   import { Badge } from 'sveltestrap';
 

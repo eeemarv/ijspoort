@@ -1,6 +1,6 @@
 <script>
   import { TabPane, Card } from 'sveltestrap';
-  import { gate_nfc_auto_block_enabled } from '../../services/store';
+  import { gate_nfc_auto_block_enabled } from '../../../services/store';
 
   export let tab;
 </script>

@@ -1,7 +1,7 @@
 <script>
   import { Row, Col } from 'sveltestrap';
   import RegItem from './RegItem.svelte';
-  import { reg_map } from '../../services/store';
+  import { reg_map } from '../../../services/store';
   import RegAlertDesk from './RegAlertDesk.svelte';
   import ListGroup from '../../Common/ListGroup.svelte';
   import ListGroupItem from '../../Common/ListGroupItem.svelte';

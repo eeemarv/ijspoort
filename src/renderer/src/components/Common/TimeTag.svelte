@@ -1,6 +1,6 @@
 <script>
   import { Badge } from 'sveltestrap';
-  import { get_time_str } from '../services/functions';
+  import { get_time_str } from '../../services/functions';
 
   export let ts;
   export let title = 'tijdstip';

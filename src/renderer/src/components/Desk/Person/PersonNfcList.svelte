@@ -1,6 +1,6 @@
 <script>
-  import { nfc_map } from '../../services/store';
-  import { person_nfc_map } from '../../services/store';
+  import { nfc_map } from '../../../services/store';
+  import { person_nfc_map } from '../../../services/store';
   import PersonNfcListItem from './PersonNfcListItem.svelte';
 
   export let person_id = undefined;
@@ -35,7 +35,7 @@
 </script>
 
 {#each nfc_id_list as {nfc_id, abc_index, blocked}(nfc_id)}
-  <PersonNfcListItem 
+  <PersonNfcListItem
     {nfc_id}
     {abc_index}
     {blocked}

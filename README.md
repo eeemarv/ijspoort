@@ -52,13 +52,13 @@ Installatie:
 ```
 yarn install
 ```
-Compileer Svelte naar Javascript:
+Build:
 ```
-yarn sv
+yarn build
 ```
 Start app (dev mode):
 ```
-yarn start
+yarn dev
 ```
 
 Zie [dot_env_info](./dot_env_info) voor informatie over alle omgevingsvariabelen waarmee de applicatie opgestart wordt.

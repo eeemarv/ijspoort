@@ -2,15 +2,15 @@
 //  const { ipcRenderer } = window.require('electron');
   import { createEventDispatcher } from 'svelte';
   import { Button } from 'sveltestrap';
-  import { nfc_map } from '../../services/store';
-  import { person_map } from '../../services/store';
-  import { person_nfc_map } from '../../services/store';
-  import { desk_selected_person_id } from '../../services/store';
+  import { nfc_map } from '../../../services/store';
+  import { person_map } from '../../../services/store';
+  import { person_nfc_map } from '../../../services/store';
+  import { desk_selected_person_id } from '../../../services/store';
   import NfcInfoModal from './NfcInfoModal.svelte';
-  import { nfc_add } from '../../db_put/nfc_put';
-  import { en_nfc_status } from '../../services/enum';
-  import { nfc_uid_to_id } from '../../nfc/nfc_id';
-  import { nfc_id_to_uid } from '../../nfc/nfc_id';
+  import { nfc_add } from '../../../db_put/nfc_put';
+  import { en_nfc_status } from '../../../services/enum';
+  import { nfc_uid_to_id } from '../../../nfc/nfc_id';
+  import { nfc_id_to_uid } from '../../../nfc/nfc_id';
 
   const dispatch = createEventDispatcher();
 

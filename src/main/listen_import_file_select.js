@@ -1,4 +1,4 @@
-const { dialog, ipcMain } = require('electron');
+import { dialog, ipcMain } from 'electron';
 
 const listen_import_file_select = (win) => {
 	console.log('listen import_file.select');
@@ -31,4 +31,4 @@ const listen_import_file_select = (win) => {
 	});
 };
 
-module.exports = listen_import_file_select;
+export default listen_import_file_select;

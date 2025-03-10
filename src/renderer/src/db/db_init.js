@@ -43,7 +43,7 @@ const dispatch_step = async (step, name) => {
 
 const replicate_options = {
   batch_size: 1000,
-  batch_limit: 10,
+  batches_limit: 1,
   checkpoint: 'source',
   filter: (doc) => {
     return !doc._id.startsWith('_design');
@@ -103,8 +103,8 @@ const db_init = async (trig) => {
     await dispatch_step(18, 'person.build_idx.by_text');
     await person_build_idx_by_simular();
     await dispatch_step(19, 'person.build_idx.by_simular');
-    // await reg_build_idx_by_person_id();
-    // await dispatch_step(20, 'reg.build_idx.by_person_id');
+    await reg_build_idx_by_person_id();
+    await dispatch_step(20, 'reg.build_idx.by_person_id');
   }
 
   await nfc_map_build();

@@ -1,7 +1,7 @@
 <script>
   import { CardText } from 'sveltestrap';
-  import { sub_nfc_map } from '../../services/sub';
-  import { ev_reg } from '../../services/events';
+  import { sub_nfc_map } from '../../../services/sub';
+  import { ev_reg } from '../../../services/events';
 
   let show_down_count = 0;
   const show_start_count = 50;

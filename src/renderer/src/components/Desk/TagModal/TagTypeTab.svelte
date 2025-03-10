@@ -5,13 +5,13 @@
   import LocaleDateString from '../../Common/LocaleDateString.svelte';
   import Tag from '../../Tag/Tag.svelte';
   import PersonTag from '../../Person/PersonTag.svelte';
-  import { desk_selected_person_id } from '../../services/store';
-  import { tag_map } from '../../services/store';
-  import { tag_type_map } from '../../services/store';
+  import { desk_selected_person_id } from '../../../services/store';
+  import { tag_map } from '../../../services/store';
+  import { tag_type_map } from '../../../services/store';
   import Pagination from '../../Common/Pagination.svelte';
   import CountBadge from '../../Common/CountBadge.svelte';
   import TagTypeDelButton from './TagTypeDelButton.svelte';
-  import { person_map } from '../../services/store';
+  import { person_map } from '../../../services/store';
   import ListGroup from '../../Common/ListGroup.svelte';
 
   export let tab;

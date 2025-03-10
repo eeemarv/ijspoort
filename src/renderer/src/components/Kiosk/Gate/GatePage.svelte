@@ -5,12 +5,12 @@
   import GateCounterRow from '../GateCounter/GateCounterRow.svelte';
   import NfcCountBadge from '../Nfc/NfcCountBadge.svelte';
   import NfcDeviceBadge from '../Nfc/NfcDeviceBadge.svelte';
-  import { gate_count_enabled } from '../../services/store';
-  import { temperature_card_enabled } from '../../services/store';
+  import { gate_count_enabled } from '../../../services/store';
+  import { temperature_card_enabled } from '../../../services/store';
   import GateModal from '../GateModal/GateModal.svelte';
   import TemperatureCard from '../../Common/TemperatureCard.svelte';
-  import { gate_open } from '../../services/store';
-  import { listen_gate_triggers } from '../../gate/gate_trigger';
+  import { gate_open } from '../../../services/store';
+  import { listen_gate_triggers } from '../../../gate/gate_trigger';
   import GateSens from '../../Gate/GateSens.svelte';
   import GateBadge from '../../Gate/GateBadge.svelte';
 

@@ -1,8 +1,8 @@
 <script>
   import { Col } from 'sveltestrap';
-  import { gate_count } from '../../services/store';
-  import { members_only_enabled } from '../../services/store';
-  import { gate_open } from '../../services/store';
+  import { gate_count } from '../../../services/store';
+  import { members_only_enabled } from '../../../services/store';
+  import { gate_open } from '../../../services/store';
   import GateCounter from './GateCounter.svelte';
   import GateCounterOutLimit from './GateCounterOutLimit.svelte';
   import GateCounterStatus from './GateCounterStatus.svelte';

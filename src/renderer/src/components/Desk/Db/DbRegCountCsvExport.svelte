@@ -1,9 +1,9 @@
 <script>
   import { Button, Col, Modal, ModalBody, ModalHeader, Row } from 'sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
-  import { reg_hour_count_csv_export } from '../../db_export/reg_count_csv_export';
-  import { reg_month_count_csv_export } from '../../db_export/reg_count_csv_export';
-  import { reg_week_count_csv_export } from '../../db_export/reg_count_csv_export';
+  import { reg_hour_count_csv_export } from '../../../db_export/reg_count_csv_export';
+  import { reg_month_count_csv_export } from '../../../db_export/reg_count_csv_export';
+  import { reg_week_count_csv_export } from '../../../db_export/reg_count_csv_export';
   import ListGroup from '../../Common/ListGroup.svelte';
   import ListGroupItem from '../../Common/ListGroupItem.svelte';
 

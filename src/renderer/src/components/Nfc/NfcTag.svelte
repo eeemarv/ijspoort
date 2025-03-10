@@ -3,10 +3,10 @@
   import Icon from '@iconify/svelte';
   import banIcon from '@iconify/icons-fa/ban';
   import LocaleDateString from '../Common/LocaleDateString.svelte';
-  import { nfc_map } from '../services/store';
-  import { person_nfc_map } from '../services/store';
-  import { get_date_str } from '../services/functions';
-  import { person_id_to_member_id } from '../person/person_id';
+  import { nfc_map } from '../../services/store';
+  import { person_nfc_map } from '../../services/store';
+  import { get_date_str } from '../../services/functions';
+  import { person_id_to_member_id } from '../../person/person_id';
 
   export let nfc_id;
   export let show_ts_epoch = false;

@@ -5,7 +5,7 @@
   import DbJsonExport from '../Db/DbJsonExport.svelte';
   import Config from '../Config/Config.svelte';
   import DeskPage from './DeskPage.svelte';
-  import { listen_tag_nfc_auto } from '../../tag/tag_nfc_auto';
+  import { listen_tag_nfc_auto } from '../../../tag/tag_nfc_auto';
   import DataUpdateImport from '../DataUpdate/DataUpdateImport.svelte';
   import DataUpdateRemove from '../DataUpdate/DataUpdateRemove.svelte';
   import DataUpdateCleanup from '../DataUpdate/DataUpdateCleanup.svelte';

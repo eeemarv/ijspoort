@@ -1,6 +1,6 @@
 <script>
-  import { desk_member_period_filter } from '../../services/store';
-  import { member_person_map } from '../../services/store';
+  import { desk_member_period_filter } from '../../../services/store';
+  import { member_person_map } from '../../../services/store';
   import { Button, CardBody } from 'sveltestrap';
   import MemberPeriodModal from './MemberPeriodModal.svelte';
 

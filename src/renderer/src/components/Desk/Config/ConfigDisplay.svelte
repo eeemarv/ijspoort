@@ -1,11 +1,11 @@
 <script>
   import { TabPane, Card } from 'sveltestrap';
-  import { temperature_card_enabled } from '../../services/store';
-  import { desk_gate_card_enabled } from '../../services/store';
-  import { desk_tag_card_enabled } from '../../services/store';
-  import { desk_nfc_clear_button_enabled } from '../../services/store';
-  import { desk_nfc_read_test_button_enabled } from '../../services/store';
-  import { desk_reg_delete_buttons_enabled } from '../../services/store';
+  import { temperature_card_enabled } from '../../../services/store';
+  import { desk_gate_card_enabled } from '../../../services/store';
+  import { desk_tag_card_enabled } from '../../../services/store';
+  import { desk_nfc_clear_button_enabled } from '../../../services/store';
+  import { desk_nfc_read_test_button_enabled } from '../../../services/store';
+  import { desk_reg_delete_buttons_enabled } from '../../../services/store';
   import TemperatureCard from '../../Common/TemperatureCard.svelte';
 
   export let tab;

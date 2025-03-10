@@ -1,7 +1,7 @@
 <script>
 //  const { ipcRenderer } = window.require('electron');
   import NfcInfoModal from './NfcInfoModal.svelte';
-  import { nfc_id_to_uid } from '../../nfc/nfc_id';
+  import { nfc_id_to_uid } from '../../../nfc/nfc_id';
 
   export let nfc_id;
 

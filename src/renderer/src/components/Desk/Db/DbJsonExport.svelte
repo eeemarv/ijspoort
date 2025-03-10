@@ -1,7 +1,7 @@
 <script>
   import { Button, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
-  import { db_json_export } from '../../db_export/db_json_export';
+  import { db_json_export } from '../../../db_export/db_json_export';
 
   let open = false;
 

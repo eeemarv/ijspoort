@@ -1,12 +1,12 @@
 <script>
-  import { desk_reg_delete_buttons_enabled, reg_map } from '../../services/store';
-  import { desk_selected_person_id } from '../../services/store';
+  import { desk_reg_delete_buttons_enabled, reg_map } from '../../../services/store';
+  import { desk_selected_person_id } from '../../../services/store';
   import RegTimeTag from './RegTimeTag.svelte';
   import PersonTag from '../../Person/PersonTag.svelte';
-  import { reg_del } from '../../db_put/reg_put';
+  import { reg_del } from '../../../db_put/reg_put';
   import CountBadge from '../../Common/CountBadge.svelte';
   import NfcTag from '../../Nfc/NfcTag.svelte';
-  import { nfc_uid_to_id } from '../../nfc/nfc_id';
+  import { nfc_uid_to_id } from '../../../nfc/nfc_id';
   import RegInvalid from './RegInvalid.svelte';
 
   export let reg = undefined;
@@ -58,8 +58,6 @@
 </script>
 
 <li
-  on:click={handle_select_reg}
-  on:keyup
   class=list-group-item
   class:invalid
   class:bg-success={newly_add}
@@ -67,7 +65,12 @@
   class:bg-primary={selected}
   class:selectable={!newly_add && !deleted && !selected}
 >
-  <div class="d-flex w-100 justify-content-between">
+  <div class="d-flex w-100 justify-content-between"
+    on:click={handle_select_reg}
+    on:keyup
+    role="button"
+    tabindex="-1"
+  >
     <div>
       <div>
         <CountBadge {count} valid={!!count} />

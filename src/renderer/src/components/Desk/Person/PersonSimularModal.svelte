@@ -4,10 +4,10 @@
   import PersonTag from '../../Person/PersonTag.svelte';
   import SelectableListGroupItem from '../../Common/SelectableListGroupItem.svelte';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
-  import { person_map } from '../../services/store';
-  import { desk_selected_person_id } from '../../services/store';
-  import { person_get_ids_by_simular } from '../../db_get/person_get';
-  import { person_simular_lang_keys } from '../../db_get/person_get';
+  import { person_map } from '../../../services/store';
+  import { desk_selected_person_id } from '../../../services/store';
+  import { person_get_ids_by_simular } from '../../../db_get/person_get';
+  import { person_simular_lang_keys } from '../../../db_get/person_get';
   import Await from '../../Await/Await.svelte';
   import AwaitError from '../../Await/AwaitError.svelte';
   import ListGroup from '../../Common/ListGroup.svelte';

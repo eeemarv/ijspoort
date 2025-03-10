@@ -1,8 +1,8 @@
 <script>
   import { Input } from 'sveltestrap';
-  import { desk_nfc_auto_reg_enabled } from '../../services/store';
-  import { member_period_select } from '../../services/store';
-  import { members_only_enabled } from '../../services/store';
+  import { desk_nfc_auto_reg_enabled } from '../../../services/store';
+  import { member_period_select } from '../../../services/store';
+  import { members_only_enabled } from '../../../services/store';
   import MemberPeriodDropdown from '../../Common/MemberPeriodDropdown.svelte';
 
   let dropdown_open = false;

@@ -1,5 +1,5 @@
 <script>
-  import { gate_open } from '../services/store';
+  import { gate_open } from '../../services/store';
 
   export let font_size = '1em';
 </script>
@@ -11,6 +11,8 @@
   title="Poortstatus"
   on:click
   on:keyup
+  role="button"
+  tabindex="-1"
 >
   Poort
 </span>

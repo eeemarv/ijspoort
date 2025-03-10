@@ -4,14 +4,14 @@
   import Icon from '@iconify/svelte';
   import timesIcon from '@iconify/icons-fa/times';
   import { getContext } from 'svelte';
-  import { tag_map } from '../../services/store';
-  import { tag_type_del } from '../../db_put/tag_put';
+  import { tag_map } from '../../../services/store';
+  import { tag_type_del } from '../../../db_put/tag_put';
 
   const { setActiveTab } = getContext('tabContent');
   const dispatch = createEventDispatcher();
   export let type_id = undefined;
 
-  const show_del_time = 1000; 
+  const show_del_time = 1000;
 
   const handle_click = () => {
     dispatch('del', type_id);

@@ -1,7 +1,7 @@
 <script>
   import { Button } from 'sveltestrap';
   import { Badge } from 'sveltestrap';
-  import { person_map } from '../../services/store';
+  import { person_map } from '../../../services/store';
   import PersonName from '../../Person/PersonName.svelte';
   import AwaitBadge from '../../Await/AwaitBadge.svelte';
   import ListGroupItem from '../../Common/ListGroupItem.svelte';

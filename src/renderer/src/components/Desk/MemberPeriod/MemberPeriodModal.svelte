@@ -1,5 +1,5 @@
 <script>
-  import { member_person_map, person_map } from '../../services/store';
+  import { member_person_map, person_map } from '../../../services/store';
   import { Badge, Progress } from 'sveltestrap';
   import { Modal, ModalHeader, ModalBody } from 'sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';

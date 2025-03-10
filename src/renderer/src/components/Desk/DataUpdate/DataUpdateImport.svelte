@@ -3,10 +3,10 @@
   import Icon from '@iconify/svelte';
   import exclamationTriangle from '@iconify/icons-fa/exclamation-triangle';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
-  import { desk_member_period_import } from '../../services/store';
-  import { member_person_map } from '../../services/store';
-  import { person_assist_import } from '../../db_put/person_put';
-  import { desk_member_data_update } from '../../services/store';
+  import { desk_member_period_import } from '../../../services/store';
+  import { member_person_map } from '../../../services/store';
+  import { person_assist_import } from '../../../db_put/person_put';
+  import { desk_member_data_update } from '../../../services/store';
 
   let open = false;
   let file_path = '';
@@ -112,6 +112,8 @@
       <div class="input-group"
         on:click={handle_file_select}
         on:keydown={() => {}}
+        role="button"
+        tabindex="0"
       >
         <Button color=primary>
           Selecteer bestand

@@ -5,9 +5,9 @@
   import TagTypeListTab from './TagTypeListTab.svelte';
   import TagTypePutTab from './TagTypePutTab.svelte';
   import TagTypeTab from './TagTypeTab.svelte';
-  import { tag_type_map } from '../../services/store';
-  import { desk_tag_types_enabled } from '../../services/store';
-  import { desk_selected_person_id } from '../../services/store';
+  import { tag_type_map } from '../../../services/store';
+  import { desk_tag_types_enabled } from '../../../services/store';
+  import { desk_selected_person_id } from '../../../services/store';
 
   export let tab = 'type_list';
   export let open = false;

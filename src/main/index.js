@@ -1,11 +1,14 @@
-require('dotenv').config();
-const { app, BrowserWindow } = require('electron');
-const path = require('path');
-const listen_pcsc = require('./listen_pcsc.js');
-//const listen_mfrc = require('./listen_mfrc.js');
-const build_menu = require('./build_menu.js');
-const listen_import_file_select = require('./listen_import_file_select.js');
-const { mqtt_init } = require('./mqtt.js');
+import 'dotenv/config';
+import { app, BrowserWindow } from 'electron';
+import path from 'path';
+//import listen_mfrc from './listen_mfrc.js';
+import build_menu from './build_menu.js';
+import listen_import_file_select from './listen_import_file_select.js';
+import { mqtt_init } from './mqtt.js';
+import listen_pcsc from './listen_pcsc.js';
+import EStore from 'electron-store';
+
+EStore.initRenderer();
 
 let win;
 
@@ -16,19 +19,23 @@ const gate_modus = env.GATE === '1';
 const mfrc522_enabled = env.MFRC522 === '1';
 
 // https://stackoverflow.com/questions/68874940/gpu-process-isnt-usable-goodbye
-app.commandLine.appendSwitch('in-process-gpu');
-app.commandLine.appendSwitch('no-sandbox');
+//app.commandLine.appendSwitch('in-process-gpu');
+//app.commandLine.appendSwitch('no-sandbox');
 
 // Live Reload
+/**
 require('electron-reload')(__dirname, {
   electron: path.join(__dirname, '../node_modules', '.bin', 'electron'),
   awaitWriteFinish: true
 });
+**/
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
+/**
 if (require('electron-squirrel-startup')) { // eslint-disable-line global-require
   app.quit();
 }
+*/
 
 const createWindow = () => {
   win = new BrowserWindow({
@@ -36,15 +43,19 @@ const createWindow = () => {
 		height: 768,
 		show: false,
 		darkTheme: true,
-		backgroundColor: '#000000',
+		backgroundColor: '#000010',
 		icon: path.join(__dirname, '/../../icon/512x512.png'),
     webPreferences: {
 			preload: path.join(__dirname, '/../preload/preload.js'),
-			// to_remove
+			sandbox: false,
 			contextIsolation: true,
+
+			// to_remove
+			/*
       nodeIntegration: false,
 			nodeIntegrationInWorker: false,
 			enableRemoteModule: false
+			*/
     }
   });
 

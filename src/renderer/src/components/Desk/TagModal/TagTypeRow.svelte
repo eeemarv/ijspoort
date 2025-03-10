@@ -1,8 +1,8 @@
 <script>
   import LocaleDateString from '../../Common/LocaleDateString.svelte';
   import TagEnableCheckbox from '../Tag/TagEnableCheckbox.svelte';
-  import { tag_type_map } from '../../services/store';
-  import { tag_map } from '../../services/store';
+  import { tag_type_map } from '../../../services/store';
+  import { tag_map } from '../../../services/store';
   import Tag from '../../Tag/Tag.svelte';
   import TagTypeEditButton from './TagTypeEditButton.svelte';
   import TagTypeDelButton from './TagTypeDelButton.svelte';

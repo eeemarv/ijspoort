@@ -4,7 +4,7 @@
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
   import Icon from '@iconify/svelte';
   import exclamationTriangle from '@iconify/icons-fa/exclamation-triangle';
-  import { person_remove_member_period } from '../../db_put/person_put';
+  import { person_remove_member_period } from '../../../db_put/person_put';
   import MemberPeriodDropdown from '../../Common/MemberPeriodDropdown.svelte';
 
   let open = false;

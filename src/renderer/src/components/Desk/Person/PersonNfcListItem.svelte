@@ -1,9 +1,9 @@
 <script>
   import { Popover } from 'sveltestrap';
   import NfcTag from '../../Nfc/NfcTag.svelte';
-  import { desk_selected_nfc_id } from '../../services/store';
-  import { nfc_deblock } from '../../db_put/nfc_put';
-  import { get_random_str } from '../../services/functions';
+  import { desk_selected_nfc_id } from '../../../services/store';
+  import { nfc_deblock } from '../../../db_put/nfc_put';
+  import { get_random_str } from '../../../services/functions';
 
   export let nfc_id = undefined;
   export let blocked = false;
@@ -29,12 +29,15 @@
 
 {#if nfc_id && id}
   {#if blocked}
+    <!-- review "a" tag, use li? -->
     <a
       class="list-group-item list-group-item-action"
       class:active
       on:click|stopPropagation
       on:keyup
       tabindex=-1
+      role="button"
+      href="#{id}"
       {id}
     >
       <NfcTag
@@ -56,6 +59,8 @@
       <span class="btn btn-purple"
         on:click|stopPropagation={() => {deblock(nfc_id);}}
         on:keyup
+        role="button"
+        tabindex="-1"
       >
         Deblokkeer
       </span>

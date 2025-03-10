@@ -42,11 +42,11 @@ const auth = {
   password: window.bridge.getEnvDbPassword()
 };
 
-const db_remote_reg = new PouchDB(conn_prefix + 'reg', {auth: auth});
-const db_remote_nfc = new PouchDB(conn_prefix + 'nfc', {auth: auth});
-const db_remote_person = new PouchDB(conn_prefix + 'person', {auth: auth});
-const db_remote_gate = new PouchDB(conn_prefix + 'gate', {auth: auth});
-const db_remote_tag = new PouchDB(conn_prefix + 'tag', {auth: auth});
+const db_remote_reg = new PouchDB(conn_prefix + 'reg', {auth});
+const db_remote_nfc = new PouchDB(conn_prefix + 'nfc', {auth});
+const db_remote_person = new PouchDB(conn_prefix + 'person', {auth});
+const db_remote_gate = new PouchDB(conn_prefix + 'gate', {auth});
+const db_remote_tag = new PouchDB(conn_prefix + 'tag', {auth});
 
 export {
   db_remote_reg,

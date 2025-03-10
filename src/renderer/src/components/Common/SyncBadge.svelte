@@ -1,5 +1,5 @@
 <script>
-  import { ev_db_sync } from '../services/events';
+  import { ev_db_sync } from '../../services/events';
 
   export let font_size = '1em';
 

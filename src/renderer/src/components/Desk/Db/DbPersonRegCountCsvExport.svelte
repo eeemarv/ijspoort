@@ -1,7 +1,7 @@
 <script>
   import { Button, FormGroup, Label, Modal, ModalBody, ModalHeader } from 'sveltestrap';
   import ModalFooterClose from '../../Common/ModalFooterClose.svelte';
-  import { person_reg_count_csv_export } from '../../db_export/person_reg_count_csv_export';
+  import { person_reg_count_csv_export } from '../../../db_export/person_reg_count_csv_export';
   import Checkbox from '../../Common/Checkbox.svelte';
   import MemberPeriodDropdown from '../../Common/MemberPeriodDropdown.svelte';
   import { onMount } from 'svelte';

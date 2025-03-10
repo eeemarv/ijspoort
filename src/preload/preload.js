@@ -1,8 +1,8 @@
-require('dotenv').config();
-const { shell } = require('electron');
-const { contextBridge, ipcRenderer } = require('electron/renderer');
-const { e_store_get, e_store_set } = require('./../main/e_store');
-const XLSX = require('xlsx');
+import 'dotenv/config';
+import { shell } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron/renderer';
+import { e_store_get, e_store_set } from './../main/e_store';
+import * as XLSX from 'xlsx/xlsx.mjs';
 const env = process.env;
 
 console.log('PRELOAD PRELOAD PRELOAD');

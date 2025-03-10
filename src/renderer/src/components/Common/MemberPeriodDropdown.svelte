@@ -4,8 +4,7 @@
   import { DropdownItem } from 'sveltestrap';
   import { DropdownMenu } from 'sveltestrap';
   import { DropdownToggle } from 'sveltestrap';
-
-  import { member_person_map } from '../services/store';
+  import { member_person_map } from '../../services/store';
 
   export let dropdown_open = false;
   export let member_period = undefined;

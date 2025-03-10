@@ -1,6 +1,6 @@
 <script>
   import GateSens from '../../Gate/GateSens.svelte';
-  import { gate_open } from '../../services/store';
+  import { gate_open } from '../../../services/store';
 
   export let font_size = '1.2em';
 

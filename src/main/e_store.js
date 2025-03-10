@@ -1,4 +1,4 @@
-const EStore = require('electron-store');
+import EStore from 'electron-store';
 
 const eStore = new EStore();
 
@@ -10,4 +10,4 @@ const e_store_set = (key, value) => {
   eStore.get(key, value);
 };
 
-module.exports = { e_store_get, e_store_set };
+export { e_store_get, e_store_set };

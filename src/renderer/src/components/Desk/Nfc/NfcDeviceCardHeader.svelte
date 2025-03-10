@@ -1,6 +1,6 @@
 <script>
   import NfcCountButton from './NfcCountButton.svelte';
-  import { ev_nfc_scan } from '../../services/events';
+  import { ev_nfc_scan } from '../../../services/events';
 
   let on;
   let error;

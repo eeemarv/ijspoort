@@ -10,9 +10,9 @@
   import NfcCard from '../Nfc/NfcCard.svelte';
   import TagCard from '../Tag/TagCard.svelte';
   import GateCard from '../Gate/GateCard.svelte';
-  import { temperature_card_enabled } from '../../services/store';
-  import { desk_gate_card_enabled } from '../../services/store';
-  import { desk_tag_card_enabled } from '../../services/store';
+  import { temperature_card_enabled } from '../../../services/store';
+  import { desk_gate_card_enabled } from '../../../services/store';
+  import { desk_tag_card_enabled } from '../../../services/store';
   import MemberPeriodCardBody from '../MemberPeriod/MemberPeriodCardBody.svelte';
 
 </script>

@@ -1,4 +1,4 @@
-const { Menu, MenuItem } = require('electron');
+import { Menu, MenuItem } from 'electron';
 
 const build_menu = (win) => {
 	const menu = new Menu();
@@ -23,4 +23,4 @@ const build_menu = (win) => {
 	Menu.setApplicationMenu(menu);
 }
 
-module.exports = build_menu;
+export default build_menu;

@@ -1,7 +1,7 @@
 <script>
   import { Modal, ModalBody, ModalHeader, Progress } from 'sveltestrap';
-  import { db_init } from '../db/db_init';
-  import { ev_db_init } from '../services/events';
+  import { db_init } from '../../db/db_init';
+  import { ev_db_init } from '../../services/events';
   import AwaitError from '../Await/AwaitError.svelte';
   import ModalFooterClose from '../Common/ModalFooterClose.svelte';
   import ListGroup from '../Common/ListGroup.svelte';

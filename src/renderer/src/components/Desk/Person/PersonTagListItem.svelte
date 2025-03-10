@@ -4,7 +4,7 @@
   import { Button } from 'sveltestrap';
   import Tag from '../../Tag/Tag.svelte';
   import LocaleDateString from '../../Common/LocaleDateString.svelte';
-  import { tag_del } from '../../db_put/tag_put';
+  import { tag_del } from '../../../db_put/tag_put';
 
   const add_detect_time = 10000;
   const show_add_time = 1000;

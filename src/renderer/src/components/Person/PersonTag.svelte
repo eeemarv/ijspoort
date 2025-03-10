@@ -1,14 +1,14 @@
 <script>
   import PersonName from './PersonName.svelte';
   import PersonMemberId from './PersonMemberId.svelte';
-  import { desk_tag_types_enabled } from '../services/store';
-  import { desk_tag_card_enabled } from '../services/store';
-  import { person_tag_map } from '../services/store';
-  import { tag_type_map } from '../services/store';
+  import { desk_tag_types_enabled } from '../../services/store';
+  import { desk_tag_card_enabled } from '../../services/store';
+  import { person_tag_map } from '../../services/store';
+  import { tag_type_map } from '../../services/store';
   import Tag from '../Tag/Tag.svelte';
   import PersonMemberPeriodFilterTag from './PersonMemberPeriodFilterTag.svelte';
-  import { desk_member_period_filter } from '../services/store';
-  import { member_person_map } from '../services/store';
+  import { desk_member_period_filter } from '../../services/store';
+  import { member_person_map } from '../../services/store';
 
   export let person_id = undefined;
   export let show_member_period = false;

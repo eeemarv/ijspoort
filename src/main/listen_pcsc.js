@@ -1,7 +1,7 @@
-require('dotenv').config();
-const { ipcMain } = require('electron');
-const { NFC, TAG_ISO_14443_3, KEY_TYPE_A, KEY_TYPE_B } = require('nfc-pcsc');
-const crypto = require('crypto');
+import 'dotenv/config';
+import { ipcMain } from 'electron';
+import { NFC, TAG_ISO_14443_3, KEY_TYPE_A, KEY_TYPE_B } from 'nfc-pcsc';
+import crypto from 'crypto';
 
 const env = process.env;
 
@@ -94,7 +94,7 @@ const listen_pcsc = (wwin) => {
 		if (!can_reply('nfc.test_a_key', data)){
 			return;
 		}
-	
+
 		try {
 			await rdr.authenticate(6, KEY_TYPE_A, key_a);
 			await rdr.read(6, 16, 16);
@@ -180,7 +180,7 @@ const listen_pcsc = (wwin) => {
 			event_reply(event, 'nfc.read.ok', {
 				...data,
 				date_of_birth,
-				member_id		
+				member_id
 			});
 		} catch (err) {
 			console.log(err);
@@ -248,7 +248,7 @@ const listen_pcsc = (wwin) => {
 			console.log('key_a', key_a);
 
 			win_send('nfc.on', {nfc_uid});
-		});		
+		});
 
 		reader.on('card.off', (card) => {
 			unset_reader();
@@ -270,4 +270,4 @@ const listen_pcsc = (wwin) => {
 	});
 }
 
-module.exports = listen_pcsc;
+export default listen_pcsc;

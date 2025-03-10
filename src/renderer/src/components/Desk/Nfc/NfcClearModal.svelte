@@ -1,8 +1,8 @@
 <script>
 //  const { ipcRenderer } = window.require('electron');
-  import { nfc_del } from '../../db_put/nfc_put';
+  import { nfc_del } from '../../../db_put/nfc_put';
   import NfcInfoModal from './NfcInfoModal.svelte';
-  import { nfc_id_to_uid } from '../../nfc/nfc_id';
+  import { nfc_id_to_uid } from '../../../nfc/nfc_id';
 
   export let nfc_id;
 

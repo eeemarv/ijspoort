@@ -1,6 +1,6 @@
 <script>
   import { Button } from 'sveltestrap';
-  import { nfc_map } from '../../services/store';
+  import { nfc_map } from '../../../services/store';
   import NfcLogModal from '../NfcLog/NfcLogModal.svelte';
 
   let toggle;

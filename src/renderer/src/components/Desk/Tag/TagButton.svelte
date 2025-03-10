@@ -1,5 +1,5 @@
 <script>
-  import { tag_type_map } from '../../services/store';
+  import { tag_type_map } from '../../../services/store';
 
   export let type_id = undefined;
 

@@ -1,9 +1,9 @@
 <script>
   import PersonTagListItem from './PersonTagListItem.svelte';
-  import { desk_tag_types_enabled } from '../../services/store';
-  import { tag_type_map } from '../../services/store';
-  import { person_tag_map } from '../../services/store';
-  import { desk_tag_card_enabled } from '../../services/store';
+  import { desk_tag_types_enabled } from '../../../services/store';
+  import { tag_type_map } from '../../../services/store';
+  import { person_tag_map } from '../../../services/store';
+  import { desk_tag_card_enabled } from '../../../services/store';
 
   export let person_id = undefined;
 </script>

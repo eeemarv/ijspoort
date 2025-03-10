@@ -1,10 +1,10 @@
 <script>
   import { Card, CardHeader, CardBody, CardFooter, CardGroup } from 'sveltestrap';
   import { Button } from 'sveltestrap';
-  import { person_get_count_by_simular } from '../../db_get/person_get';
-  import { person_map } from '../../services/store';
-  import { desk_selected_person_id } from '../../services/store';
-  import { desk_tag_card_enabled } from '../../services/store';
+  import { person_get_count_by_simular } from '../../../db_get/person_get';
+  import { person_map } from '../../../services/store';
+  import { desk_selected_person_id } from '../../../services/store';
+  import { desk_tag_card_enabled } from '../../../services/store';
   import PersonMemberId from '../../Person/PersonMemberId.svelte';
   import PersonTagList from './PersonTagList.svelte';
   import PersonNfcList from './PersonNfcList.svelte';
@@ -13,12 +13,12 @@
   import PersonSimularButton from './PersonSimularButton.svelte';
   import PersonSimularModal from './PersonSimularModal.svelte';
   import PersonData from './PersonData.svelte';
-  import { reg_add_by_desk_manual } from '../../db_put/reg_put';
-  import { person_last_reg_ts_map } from '../../services/store';
-  import { fresh_reg_ts_map } from '../../services/store';
-  import { get_time_str } from '../../services/functions';
-  import { get_ts_epoch } from '../../services/functions';
-  import { person_is_already_registered } from '../../person/person_already_registered';
+  import { reg_add_by_desk_manual } from '../../../db_put/reg_put';
+  import { person_last_reg_ts_map } from '../../../services/store';
+  import { fresh_reg_ts_map } from '../../../services/store';
+  import { get_time_str } from '../../../services/functions';
+  import { get_ts_epoch } from '../../../services/functions';
+  import { person_is_already_registered } from '../../../person/person_already_registered';
   import ListGroup from '../../Common/ListGroup.svelte';
   import ListGroupItem from '../../Common/ListGroupItem.svelte';
   import PersonMemberPeriodList from '../../Person/PersonMemberPeriodList.svelte';

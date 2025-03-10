@@ -2,9 +2,9 @@
   import { Card } from 'sveltestrap';
   import NfcActivate from './NfcActivate.svelte';
   import NfcDeviceCardHeader from './NfcDeviceCardHeader.svelte';
-  import { en_nfc_status } from '../../services/enum';
-  import { ev_nfc_scan } from '../../services/events';
-  import { desk_selected_nfc_id } from '../../services/store';
+  import { en_nfc_status } from '../../../services/enum';
+  import { ev_nfc_scan } from '../../../services/events';
+  import { desk_selected_nfc_id } from '../../../services/store';
   import NfcStatus from './NfcStatus.svelte';
   import NfcPersonDataOpen from './NfcPersonDataOpen.svelte';
   import NfcReg from './NfcReg.svelte';

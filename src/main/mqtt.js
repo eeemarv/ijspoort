@@ -1,6 +1,6 @@
-require('dotenv').config();
-const { ipcMain } = require('electron');
-const mqtt = require('mqtt');
+import 'dotenv/config';
+import { ipcMain } from 'electron';
+import mqtt from 'mqtt';
 
 const env = process.env;
 const env_mqtt_host = env.MQTT_HOST;
@@ -192,4 +192,4 @@ const mqtt_init = (win) => {
 	}
 }
 
-module.exports = { mqtt_init };
+export { mqtt_init };

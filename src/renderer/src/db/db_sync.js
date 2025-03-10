@@ -14,7 +14,7 @@ const sync_options = {
   live: true,
   retry: true,
   batch_size: 1000,
-  batch_limit: 10,
+  batches_limit: 1,
   checkpoint: 'source',
   filter: (doc) => {
     return !doc._id.startsWith('_design');
@@ -43,7 +43,7 @@ const reg_sync = () => {
   .on('change', () => {
     dispatch_sync('reg', 'change');
   }).on('paused', () => {
-    dispatch_sync('reg', 'paused');  
+    dispatch_sync('reg', 'paused');
   }).on('active', () => {
     dispatch_sync('reg', 'active');
   }).on('denied', (err) => {

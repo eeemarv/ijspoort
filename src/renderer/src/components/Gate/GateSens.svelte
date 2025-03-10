@@ -1,9 +1,9 @@
 <script>
   import { createEventDispatcher } from 'svelte';
-  import { gate_in_map } from '../services/store';
-  import { gate_out_map } from '../services/store';
-  import { handle_sens_in } from '../gate/gate_trigger';
-  import { handle_sens_out } from '../gate/gate_trigger';
+  import { gate_in_map } from '../../services/store';
+  import { gate_out_map } from '../../services/store';
+  import { handle_sens_in } from '../../gate/gate_trigger';
+  import { handle_sens_out } from '../../gate/gate_trigger';
 
   const dispatch = createEventDispatcher();
 
@@ -53,6 +53,8 @@
   title="Ingangssensor"
   on:click={() => handle_click_in()}
   on:keyup
+  role="button"
+  tabindex="-1"
 >
   In: {$gate_in_map.size}
 </span>
@@ -64,7 +66,9 @@
   title="Uitgangssensor"
   on:click={() => handle_click_out()}
   on:keyup
->
+  role="button"
+  tabindex="-1"
+  >
   Uit: {$gate_out_map.size}
 </span>
 

@@ -1,6 +1,6 @@
 <script>
   import { TabPane, Card } from 'sveltestrap';
-  import { temperature_card_enabled } from '../../services/store';
+  import { temperature_card_enabled } from '../../../services/store';
   import TemperatureCard from '../../Common/TemperatureCard.svelte';
 
   export let tab;

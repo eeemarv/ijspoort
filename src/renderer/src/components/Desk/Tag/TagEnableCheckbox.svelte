@@ -1,6 +1,6 @@
 <script>
   import Checkbox from '../../Common/Checkbox.svelte';
-  import { desk_tag_types_enabled } from '../../services/store';
+  import { desk_tag_types_enabled } from '../../../services/store';
 
   export let type_id;
 

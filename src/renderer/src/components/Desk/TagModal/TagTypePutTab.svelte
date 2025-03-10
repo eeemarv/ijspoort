@@ -9,9 +9,9 @@
   import { TabPane } from 'sveltestrap';
   import { FormGroup } from 'sveltestrap';
   import Radio from '../../Common/Radio.svelte';
-  import { tag_type_map } from '../../services/store';
+  import { tag_type_map } from '../../../services/store';
   import TagSpan from '../../Tag/TagSpan.svelte';
-  import { tag_type_put } from '../../db_put/tag_put';
+  import { tag_type_put } from '../../../db_put/tag_put';
 
   const { setActiveTab } = getContext('tabContent');
   const dispatch = createEventDispatcher();

@@ -1,5 +1,5 @@
 <script>
-  import { ev_nfc_scan } from '../../services/events';
+  import { ev_nfc_scan } from '../../../services/events';
 
   export let font_size = '1em';
   let on;

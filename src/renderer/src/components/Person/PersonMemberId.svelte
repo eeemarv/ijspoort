@@ -1,5 +1,5 @@
 <script>
-  import { person_id_to_member_id } from '../person/person_id';
+  import { person_id_to_member_id } from '../../person/person_id';
 
   export let person_id = undefined;
 </script>
