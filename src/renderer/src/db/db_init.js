@@ -42,8 +42,8 @@ const dispatch_step = async (step, name) => {
 };
 
 const replicate_options = {
-  batch_size: 1000,
-  batches_limit: 1,
+  batch_size: 500000,
+  batches_limit: 5,
   checkpoint: 'source',
   filter: (doc) => {
     return !doc._id.startsWith('_design');
@@ -90,11 +90,14 @@ const db_init = async (trig) => {
     await dispatch_step(15, 'tag.replicate.out');
   }
 
+  /**
+
   if (window.bridge.envKioskEnabled()){
     for (let j = 16; j < 21; j++){
       await dispatch_step(16, 'skip step in kiosk modus');
     }
   } else {
+  **/
     await person_put_design();
     await dispatch_step(16, 'person.put.design');
     await reg_put_design();
@@ -105,8 +108,9 @@ const db_init = async (trig) => {
     await dispatch_step(19, 'person.build_idx.by_simular');
     await reg_build_idx_by_person_id();
     await dispatch_step(20, 'reg.build_idx.by_person_id');
+  /**
   }
-
+  */
   await nfc_map_build();
   await dispatch_step(21, 'nfc.map.build');
   nfc_map_listen_changes();

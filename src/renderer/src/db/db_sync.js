@@ -13,8 +13,8 @@ import { db_remote_tag } from './db';
 const sync_options = {
   live: true,
   retry: true,
-  batch_size: 1000,
-  batches_limit: 1,
+  batch_size: 500000,
+  batches_limit: 5,
   checkpoint: 'source',
   filter: (doc) => {
     return !doc._id.startsWith('_design');

@@ -80,7 +80,7 @@
         <input type=text
           id=desk_member_period_import class=form-control
           bind:value={$desk_member_period_import}
-          pattern="[a-z0-9-]*"
+          pattern="[a-z0-9-]+"
         />
       </div>
       <FormText>

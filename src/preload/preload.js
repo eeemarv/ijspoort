@@ -5,7 +5,7 @@ import { e_store_get, e_store_set } from './../main/e_store';
 import * as XLSX from 'xlsx/xlsx.mjs';
 const env = process.env;
 
-console.log('PRELOAD PRELOAD PRELOAD');
+console.log('+++ PRELOAD +++');
 
 contextBridge.exposeInMainWorld('bridge', {
   openGithubRepo: () => shell.openExternal('https://github.com/eeemarv/ijspoort'),

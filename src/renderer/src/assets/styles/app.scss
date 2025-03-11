@@ -1,9 +1,9 @@
-@import '~/bootswatch/dist/darkly/variables';
+@import 'bootswatch/dist/darkly/variables';
 // does not compile, update sass necessary
 // @import './../vanillajs-datepicker/sass/datepicker-bs5';
 // @import '../datepicker-bs5.css';
-@import 'variables';
-@import 'custom';
+@import './variables';
+@import './custom';
 // does not compile, update sass necessary
 // @import './../js-datepicker/src/datepicker';
 //@import 'datepicker';

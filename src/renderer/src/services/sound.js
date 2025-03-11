@@ -1,11 +1,13 @@
 import { sub_gate_sound_ok_enabled } from './sub';
 import { sub_gate_sound_error_enabled } from './sub';
+import ok3 from '../assets/audio/ok3.mp3';
+import error2 from '../assets/audio/error2.mp3';
 
 let sound_ok = () => {};
 let sound_error = () => {};
 
-const sound_ok_el = new Audio('../audio/ok3.mp3');
-const sound_error_el = new Audio('../audio/error2.mp3');
+const sound_ok_el = new Audio(ok3);
+const sound_error_el = new Audio(error2);
 
 sound_ok_el.addEventListener('canplaythrough', (ev) => {
   sound_ok = () => {

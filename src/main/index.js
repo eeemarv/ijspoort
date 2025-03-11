@@ -68,11 +68,13 @@ const createWindow = () => {
 		win.setKiosk(true);
   }
 
-  win.loadFile(path.join(__dirname, '../../public/index.html'))
+  win.loadFile(path.join(__dirname, '../renderer/index.html'))
   .then(() => {
 		console.log('win then');
 		listen_pcsc(win);
 		//e_store_handle();
+
+		/**
 		if (mfrc522_enabled){
 			try {
 				// disabled for now, to write own mfrc522 interface
@@ -81,6 +83,8 @@ const createWindow = () => {
 				console.log(err);
 			}
 		}
+		*/
+
 		mqtt_init(win);
 		if (!gate_modus){
 			build_menu(win);
@@ -98,6 +102,7 @@ const createWindow = () => {
 		console.log('win event ready-to-show');
 		win.show();
   });
+
 };
 
 app.on('ready', () => {
