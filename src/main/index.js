@@ -3,7 +3,7 @@ import { app, BrowserWindow } from 'electron';
 import path from 'path';
 //import listen_mfrc from './listen_mfrc.js';
 import build_menu from './build_menu.js';
-import listen_import_file_select from './listen_import_file_select.js';
+import listen_import_file from './listen_import_file.js';
 import { mqtt_init } from './mqtt.js';
 import listen_pcsc from './listen_pcsc.js';
 import EStore from 'electron-store';
@@ -88,7 +88,7 @@ const createWindow = () => {
 		mqtt_init(win);
 		if (!gate_modus){
 			build_menu(win);
-			listen_import_file_select(win);
+			listen_import_file(win);
 		}
   });
 

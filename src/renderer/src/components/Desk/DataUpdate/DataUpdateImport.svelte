@@ -23,12 +23,12 @@
     open = !open;
   };
 
-  const handle_file_select = () => {
-    console.log('import_file.select');
-    window.bridge.sendImportFileSelect();
+  const handle_file_select = async () => {
+    file_path = await window.bridge.getAssistFileSelect();
+    console.log('--assist_file.select', file_path);
   };
 
-  const handle_import_file = () => {
+  const handle_import_file = async() => {
     const member_period = $desk_member_period_import;
     console.log('handle_import_file');
     if (!file_path){
@@ -40,15 +40,9 @@
       return;
     }
     $desk_member_data_update = true;
-    person_assist_import(file_path, member_period);
+    await person_assist_import(file_path, member_period);
     open = false;
   };
-
-  window.bridge.onImportFileSelected((selected_file_path) => {
-//  ipcRenderer.on('import_file.selected', (ev, selected_file_path) => {
-    console.log('import_file.selected', selected_file_path);
-    file_path = selected_file_path;
-  });
 
   $: $desk_member_period_import = $desk_member_period_import.replace(/[^a-z0-9-]/g, '');
 
@@ -59,6 +53,7 @@
   $: if (open){
     file_path = '';
   }
+
   $:file_name = file_path.split(/[\\\/]/).pop();
 
 </script>

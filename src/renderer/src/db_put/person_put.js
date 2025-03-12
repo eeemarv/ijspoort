@@ -89,7 +89,7 @@ const assist_person_map = {
  * @param {string} member_period
  * @returns {undefined}
  */
-const person_assist_import = (file, member_period) => {
+const person_assist_import = async (file, member_period) => {
   if (!member_period){
     console.log('- No member_period set error.');
     return;
@@ -100,7 +100,7 @@ const person_assist_import = (file, member_period) => {
     return;
   }
 
-  const json_sheet = window.bridge.getJsonFromXlsxFile(file);
+  const json_sheet = await window.bridge.getAssistFileJson(file);
   const persons_bulk = [];
 
   const import_map = new Map();
@@ -218,7 +218,7 @@ const person_assist_import = (file, member_period) => {
 
   console.log('+++ persons_bulk +++', persons_bulk);
 
-  db_person.bulkDocs(persons_bulk).then((res) => {
+  await db_person.bulkDocs(persons_bulk).then((res) => {
     console.log('++ person bulkDocs ready', res);
     return person_build_idx_by_text();
   }).then(() => {

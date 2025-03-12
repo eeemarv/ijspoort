@@ -80,14 +80,14 @@
       person: true,
       open_gate: true,
       gate_auth: true,
-      send: window.bridge.sendScanGateValidMember
+      send: window.bridge.sendScanGatePersonValidMember
     },
     person_not_member: {
       msg: 'Lidmaatschap niet in orde',
       color: 'purple',
       person: true,
       gate_auth: true,
-      send: window.bridge.sendScanPersonNotMember
+      send: window.bridge.sendScanGatePersonNotMember
     },
     nfc_not_found: {
       msg: 'Tag niet herkend',

@@ -25,6 +25,7 @@ contextBridge.exposeInMainWorld('bridge', {
   getFromStore: (key, default_value) => e_store_get(key, default_value),
   setToStore: (key, value) => e_store_set(key, value),
 
+  /** menu for Desk */
   onMenuMembersImport: (callback) => ipcRenderer.on('menu.members.import', () => callback()),
   onMenuMembersRemove: (callback) => ipcRenderer.on('menu.members.remove', () => callback()),
   onMenuMembersCleanup: (callback) => ipcRenderer.on('menu.members.cleanup', () => callback()),
@@ -36,9 +37,11 @@ contextBridge.exposeInMainWorld('bridge', {
 
   onMenuOpenConfig: (callback) => ipcRenderer.on('menu.open_config', () => callback()),
 
+  /** for Desk and Kiosk from temperature sensors */
   onWaterTemp: (callback) => ipcRenderer.on('water_temp', (ev, value) => callback(value)),
   onAirTemp: (callback) => ipcRenderer.on('air_temp', (ev, value) => callback(value)),
 
+  /** Desk to main process */
   sendNfcReset: (data) => ipcRenderer.send('nfc.reset', data),
   onNfcResetOk: (callback) => ipcRenderer.on('nfc.reset.ok', (ev, data) => callback(data)),
   onNfcResetFail: (callback) => ipcRenderer.on('nfc.reset.fail', (ev, data) => callback(data)),
@@ -49,9 +52,12 @@ contextBridge.exposeInMainWorld('bridge', {
   onNfcInitOk: (callback) => ipcRenderer.on('nfc.init.ok', (ev, data) => callback(data)),
   onNfcInitFail: (callback) => ipcRenderer.on('nfc.init.fail', (ev, data) => callback(data)),
 
+  /** from Kiosk to Gate Interface */
   sendGateOpen: () => ipcRenderer.send('gate.open', {}),
   sendGateClose: () => ipcRenderer.send('gate.close', {}),
   sendGateOpenOnceWithTimer: (seconds) => ipcRenderer.send('gate.open_once_with_timer', seconds),
+
+  /** from Gate interface to Desk and Kiosk */
   onGateIsOpen: (callback) => ipcRenderer.on('gate.is_open', (ev) => callback()),
   onGateOpenErr: (callback) => ipcRenderer.on('gate.open.err', (ev) => callback()),
   onGateIsClosed: (callback) => ipcRenderer.on('gate.is_closed', (ev) => callback()),
@@ -60,6 +66,7 @@ contextBridge.exposeInMainWorld('bridge', {
   onSensIn: (callback) => ipcRenderer.on('sens.in', (ev) => callback()),
   onSensOut: (callback) => ipcRenderer.on('sens.out', (ev) => callback()),
 
+  /** from Kiosk to mqtt (to Desk) */
   sendScanGateWait: (nfc_id) => ipcRenderer.send('scan.gate.wait', nfc_id),
   sendScanGateFull: (nfc_id) => ipcRenderer.send('scan.gate.full', nfc_id),
   sendScanGatePersonValidMember: (nfc_id) => ipcRenderer.send('scan.gate.person_valid_member', nfc_id),
@@ -68,12 +75,15 @@ contextBridge.exposeInMainWorld('bridge', {
   sendScanGateNfcNotFound: (nfc_id) => ipcRenderer.send('scan.gate.nfc_not_found', nfc_id),
   sendScanGateNfcBlocked: (nfc_id) => ipcRenderer.send('scan.gate.nfc_blocked', nfc_id),
 
+  /** for Desk and Kiosk from main process */
   onDevNfcOn: (callback) => ipcRenderer.on('dev.nfc.on', (ev) => callback()),
   onDevNfcOff: (callback) => ipcRenderer.on('dev.nfc.off', (ev) => callback()),
   onDevNfcError: (callback) => ipcRenderer.on('dev.nfc.error', (ev) => callback()),
 
   onNfcOn: (callback) => ipcRenderer.on('nfc.on', (ev, data) => callback(data)),
   onNfcOff: (callback) => ipcRenderer.on('nfc.off', (ev) => callback()),
+
+  /** for Desk from main process */
   sendNfcTestTransportKey: (data) => ipcRenderer.send('nfc.test_transport_key', data),
   onNfcTestTransportKeyOk: (callback) => ipcRenderer.on('nfc.test_transport_key.ok', (ev, data) => callback(data)),
   onNfcTestTransportKeyFail: (callback) => ipcRenderer.on('nfc.test_transport_key.fail', (ev, data) => callback(data)),
@@ -83,12 +93,7 @@ contextBridge.exposeInMainWorld('bridge', {
   onNfcTestBKeyOk: (callback) => ipcRenderer.on('nfc.test_b_key.ok', (ev, data) => callback(data)),
   onNfcTestBKeyFail: (callback) => ipcRenderer.on('nfc.test_b_key.fail', (ev, data) => callback(data)),
 
-  sendScanValidMember: (nfc_id) => ipcRenderer.send('scan.person_valid_member', nfc_id),
-  sendScanNfcNotFound: (nfc_id) => ipcRenderer.send('scan.nfc_not_found', nfc_id),
-  sendScanNfcBlocked: (nfc_id) => ipcRenderer.send('scan.nfc_blocked', nfc_id),
-  sendScanPersonNotFound: (nfc_id) => ipcRenderer.send('scan.person_not_found', nfc_id),
-  sendScanPersonNotMember: (nfc_id) => ipcRenderer.send('scan.person_not_member', nfc_id),
-
+  /** from mqtt (Kiosk) to Desk */
   onScanGateWait: (callback) => ipcRenderer.on('scan.gate.wait', (ev, nfc_id) => callback(nfc_id)),
   onScanGateFull: (callback) => ipcRenderer.on('scan.gate.full', (ev, nfc_id) => callback(nfc_id)),
   onScanGatePersonValidMember: (callback) => ipcRenderer.on('scan.gate.person_valid_member', (ev, nfc_id) => callback(nfc_id)),
@@ -97,12 +102,7 @@ contextBridge.exposeInMainWorld('bridge', {
   onScanGateNfcNotFound: (callback) => ipcRenderer.on('scan.gate.nfc_not_found', (ev, nfc_id) => callback(nfc_id)),
   onScanGateNfcBlocked: (callback) => ipcRenderer.on('scan.gate.nfc_blocked', (ev, nfc_id) => callback(nfc_id)),
 
-  onImportFileSelected: (callback) => ipcRenderer.on('import_file.selected', (ev, selected_file_path) => callback(selected_file_path)),
-  sendImportFileSelect: () => ipcRenderer.send('import_file.select'),
-
-  getJsonFromXlsxFile: (file) => {
-    const workbook = XLSX.readFile(file);
-    const sheet_name_list = workbook.SheetNames;
-    return XLSX.utils.sheet_to_json(workbook.Sheets[sheet_name_list[0]], {defval: '', raw: false});
-  }
+  /** file for Assist import */
+  getAssistFileSelect: () => ipcRenderer.invoke('assist_file.select'),
+  getAssistFileJson: (file) => ipcRenderer.invoke('assist_file.get_json', file),
 });

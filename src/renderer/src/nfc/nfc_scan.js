@@ -28,17 +28,6 @@ const ev_nfc_scan_dispatch = (name, detail = {}) => {
   ev_nfc_scan.dispatchEvent(new CustomEvent(name, {detail}));
 };
 
-/*
-if (window.bridge.envKioskEnabled()){
-  console.log('ipcRenderer.send scan.' + name + ' ' + nfc_id);
-  ipcRenderer.send('scan.' + name, nfc_id);
-}
-if (window.bridge.envKioskEnabled()){
-  window.bridge.sendScan(nfc_id);
-}
-*/
-
-
 /**
  * @returns {undefined}
  */
@@ -71,26 +60,19 @@ const listen_nfc = () => {
 
     if (!sub_nfc_map.has(nfc_id)){
       ev_nfc_scan_dispatch('nfc_not_found', {nfc_id});
-      if (window.bridge.envKioskEnabled()){
-        window.bridge.sendScanNfcNotFound(nfc_id);
-      } else {
+      if (!window.bridge.envKioskEnabled()){
         window.bridge.sendNfcTestTransportKey({nfc_uid});
       }
-      //ipcRenderer.send('nfc.test_transport_key', {nfc_uid});
       return;
     }
 
     ev_nfc_scan_dispatch('nfc_found', {nfc_id});
-    // no ipcRenderer send
 
     const nfc = sub_nfc_map.get(nfc_id);
 
     if (!sub_person_map.has(nfc.person_id)){
       ev_nfc_scan_dispatch('person_not_found', {nfc_id});
-      //ipcRenderer.send('nfc.test_transport_key', {nfc_uid});
-      if (window.bridge.envKioskEnabled()){
-        window.bridge.sendScanPersonNotFound(nfc_id);
-      } else {
+      if (!window.bridge.envKioskEnabled()){
         window.bridge.sendNfcTestTransportKey({nfc_uid});
       }
       return;
@@ -102,10 +84,6 @@ const listen_nfc = () => {
     if (!person_is_member(person_id, sub_member_period_select)){
       desk_selected_person_id.set(person_id);
       ev_nfc_scan_dispatch('person_not_member', {nfc_id});
-      if (window.bridge.envKioskEnabled()){
-        window.bridge.sendScanPersonNotMember(nfc_id);
-      }
-      // reg invalid.not_member_in
       invalid_msg_sent = true;
     }
 
@@ -113,9 +91,6 @@ const listen_nfc = () => {
       desk_selected_person_id.set(person_id);
       if (!invalid_msg_sent){
         ev_nfc_scan_dispatch('nfc_blocked', {nfc_id});
-        if (window.bridge.envKioskEnabled()){
-          window.bridge.sendScanNfcBlocked(nfc_id);
-        }
       }
 
       // reg invalid.nfc_blocked
@@ -133,9 +108,6 @@ const listen_nfc = () => {
 
     if (!invalid_msg_sent){
       ev_nfc_scan_dispatch('person_valid_member', {nfc_id});
-      if (window.bridge.envKioskEnabled()){
-        window.bridge.sendScanPersonValidMember(nfc_id);
-      }
     }
 
     if (sub_desk_nfc_auto_open_person_data_enabled){
