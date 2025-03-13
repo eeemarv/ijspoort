@@ -24,11 +24,11 @@
   };
 
   const handle_file_select = async () => {
-    file_path = await window.bridge.getAssistFileSelect();
+    file_path = await window.bridge.invokeAssistFileSelect();
     console.log('--assist_file.select', file_path);
   };
 
-  const handle_import_file = async() => {
+  const handle_import_file = () => {
     const member_period = $desk_member_period_import;
     console.log('handle_import_file');
     if (!file_path){
@@ -40,7 +40,7 @@
       return;
     }
     $desk_member_data_update = true;
-    await person_assist_import(file_path, member_period);
+    person_assist_import(file_path, member_period);
     open = false;
   };
 

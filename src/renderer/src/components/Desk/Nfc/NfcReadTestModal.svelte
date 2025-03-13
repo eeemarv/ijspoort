@@ -1,5 +1,4 @@
 <script>
-//  const { ipcRenderer } = window.require('electron');
   import NfcInfoModal from './NfcInfoModal.svelte';
   import { nfc_id_to_uid } from '../../../nfc/nfc_id';
 
@@ -10,27 +9,28 @@
   let message = '';
   let contentClassName = 'bg-dark';
 
-  export const handle_nfc_read_test = () => {
+  export const handle_nfc_read_test = async () => {
     console.log('handle_nfc_read');
     const nfc_uid = nfc_id_to_uid(nfc_id);
-    window.bridge.sendNfcRead({nfc_uid});
     contentClassName = 'bg-dark';
     progress = 0;
     message = 'Start';
     open = true;
-  };
 
-  window.bridge.onNfcReadOk((data) => {
-    console.log('nfc.read.ok', data);
-    progress = 100;
-    message = data.date_of_birth + '.' + data.member_id;
-  });
+    const d = await window.bridge.invokeNfcRead({nfc_uid});
 
-  window.bridge.onNfcReadFail((data) => {
+    if (typeof d.error === 'undefined'){
+      console.log('nfc.read.ok', d);
+      progress = 100;
+      message = d.date_of_birth + '.' + d.member_id;
+
+      return;
+    }
+
     contentClassName = 'bg-danger';
     progress = 50;
     message = 'Test niet geslaagd.';
-  });
+  };
 </script>
 
 <NfcInfoModal

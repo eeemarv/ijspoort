@@ -1,4 +1,3 @@
-// const { ipcRenderer } = window.require('electron');
 import { reg_add_by_desk_nfc } from '../db_put/reg_put';
 import { reg_add_by_gate_nfc } from '../db_put/reg_put';
 import { ev_nfc_scan } from '../services/events';
@@ -13,13 +12,13 @@ import { person_is_member } from '../person/person_member';
 import { nfc_uid_to_id } from './nfc_id';
 import { nfc_block_others } from '../db_put/nfc_put';
 import { get_ts_epoch } from '../services/functions';
+import { nfc_test_transport_key } from './nfc_test_key';
 
 let gate_flood_block_same_nfc_id = undefined;
 let gate_flood_timeout_id = undefined;
 const gate_flood_block_time = 3000;
 
 /**
- * local
  * @param {string} name
  * @param {Object} detail
  */
@@ -61,8 +60,9 @@ const listen_nfc = () => {
     if (!sub_nfc_map.has(nfc_id)){
       ev_nfc_scan_dispatch('nfc_not_found', {nfc_id});
       if (!window.bridge.envKioskEnabled()){
-        window.bridge.sendNfcTestTransportKey({nfc_uid});
+        nfc_test_transport_key({nfc_uid});
       }
+
       return;
     }
 
@@ -73,7 +73,7 @@ const listen_nfc = () => {
     if (!sub_person_map.has(nfc.person_id)){
       ev_nfc_scan_dispatch('person_not_found', {nfc_id});
       if (!window.bridge.envKioskEnabled()){
-        window.bridge.sendNfcTestTransportKey({nfc_uid});
+        nfc_test_transport_key({nfc_uid});
       }
       return;
     }
@@ -115,48 +115,6 @@ const listen_nfc = () => {
     }
   });
 
-  window.bridge.onNfcTestTransportKeyOk(({nfc_uid}) => {
-//  ipcRenderer.on('nfc.test_transport_key.ok', (ev, {nfc_uid}) => {
-    console.log('nfc.test_transport_key.ok', nfc_uid);
-    const nfc_id = nfc_uid_to_id(nfc_uid);
-
-    ev_nfc_scan_dispatch('nfc_transport_key_ok', {nfc_id});
-  });
-
-  window.bridge.onNfcTestTransportKeyFail(({nfc_uid}) => {
-//  ipcRenderer.on('nfc.test_transport_key.fail', (ev, {nfc_uid}) => {
-    console.log('nfc.test_transport_key.fail', nfc_uid);
-    console.log('test for B key, nfc.test_b_key');
-//    ipcRenderer.send('nfc.test_b_key', {nfc_uid});
-    window.bridge.sendNfcTestBKey({nfc_uid});
-    const nfc_id = nfc_uid_to_id(nfc_uid);
-    ev_nfc_scan_dispatch('nfc_transport_key_fail', {nfc_id});
-  });
-
-  window.bridge.onNfcTestAKeyOk(({nfc_uid}) => {
-//  ipcRenderer.on('nfc.test_a_key.ok', (ev, {nfc_uid}) => {
-    console.log('A key OK', nfc_uid);
-  });
-
-  window.bridge.onNfcTestAKeyFail(({nfc_uid}) => {
-//  ipcRenderer.on('nfc.test_a_key.fail', (ev, {nfc_uid}) => {
-    console.log('A key FAIL', nfc_uid);
-  });
-
-  window.bridge.onNfcTestBKeyOk(({nfc_uid}) => {
-//  ipcRenderer.on('nfc.test_b_key.ok', (ev, {nfc_uid}) => {
-    console.log('nfc.test_b_key.ok', nfc_uid);
-    const nfc_id = nfc_uid_to_id(nfc_uid);
-    ev_nfc_scan_dispatch('nfc_writable', {nfc_id});
-  });
-
-  window.bridge.onNfcTestBKeyFail(({nfc_uid}) => {
-//  ipcRenderer.on('nfc.test_b_key.fail', (ev, {nfc_uid}) => {
-    console.log('nfc.test_b_key.fail', nfc_uid);
-    const nfc_id = nfc_uid_to_id(nfc_uid);
-    ev_nfc_scan_dispatch('nfc_not_writable', {nfc_id});
-  });
-
   window.bridge.onNfcOff(() => {
     ev_nfc_scan_dispatch('nfc_off');
     desk_selected_nfc_id.set(undefined);
@@ -164,3 +122,4 @@ const listen_nfc = () => {
 };
 
 export { listen_nfc };
+export { ev_nfc_scan_dispatch };

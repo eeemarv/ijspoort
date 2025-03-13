@@ -1,4 +1,3 @@
-// const { ipcRenderer } = window.require('electron');
 import { ev_nfc_scan } from '../services/events';
 
 let on = false;

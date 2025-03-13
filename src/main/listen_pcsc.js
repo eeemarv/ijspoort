@@ -38,115 +38,100 @@ const win_send = (ev_name, data = undefined) => {
 	win.webContents.send(ev_name, data);
 };
 
-const event_reply = (ev, reply_ev_name, data) => {
-	console.log(reply_ev_name, data);
+const handle_return = (ev_name, data, error = undefined) => {
 	reader_ready = true;
-	ev.reply(reply_ev_name, data);
+	if (typeof error === 'undefined'){
+		console.log(ev_name + ':: ok', data);
+		return {...data};
+	}
+	console.log(ev_name + ':: error', data, error);
+	return {...data, error};
 };
 
-const can_reply = (ev_name, data) => {
+const handle_error = (ev_name, data) => {
 	if (!reader_ready){
-		console.log(ev_name + ' can not reply, reader busy ...');
-		return false;
+		return ev_name + ':: can not reply, reader busy ...';
 	}
 	if (typeof rdr !== 'object'){
-		console.log('reader is not an object');
-		return false;
+		return ev_name + ':: reader is not an object';
 	}
 	if (typeof nfc_uid !== 'string'){
-		console.log('nfc_uid is not a string');
-		return false;
+		return ev_name + ':: nfc_uid is not a string';
 	}
 	if (typeof data !== 'object'){
-		console.log('data is not an object');
-		return false;
+		return ev_name + ':: data is not an object';
 	}
 	if (typeof data.nfc_uid !== 'string'){
-		console.log('data.uid is not a string');
-		return false;
+		return ev_name + ':: data.uid is not a string';
 	}
 	if (nfc_uid !== data.nfc_uid){
-		console.log('data.uid to nfc_uid mismatch', data, nfc_uid);
-		return false;
+		return ev_name + ':: data.uid to nfc_uid mismatch ';
 	}
 	if (typeof key_a !== 'string'){
-		console.log('key_a is not a string');
-		return false;
+		return ev_name + ':: key_a is not a string';
 	}
 	if (typeof key_b !== 'string'){
-		console.log('key_b is not a string');
-		return false;
+		return ev_name + ':: key_b is not a string';
 	}
 	if (typeof win !== 'object'){
-		console.log('win is not an object');
-		return false;
+		return ev_name + ':: win is not an object';
 	}
-
-	console.log('reply to ' + ev_name);
 	reader_ready = false;
-	return true;
+	return;
 };
 
 const listen_pcsc = (wwin) => {
 	win = wwin;
 
-	ipcMain.on('nfc.test_a_key', async (event, data) => {
-		if (!can_reply('nfc.test_a_key', data)){
-			return;
-		}
+	ipcMain.handle('nfc.test_b', async (event, data) => {
+
+		const error = handle_error('nfc.test_b', data);
 
 		try {
-			await rdr.authenticate(6, KEY_TYPE_A, key_a);
-			await rdr.read(6, 16, 16);
-			event_reply(event, 'nfc.test_a_key.ok', {...data});
-		} catch (err) {
-			console.log(err);
-			event_reply(event, 'nfc.test_a_key.fail', {...data});
-		}
-	});
-
-	ipcMain.on('nfc.test_b_key', async (event, data) => {
-		if (!can_reply('nfc.test_b_key', data)){
-			return;
-		}
-
-		try {
+			if (typeof error !== 'undefined'){
+				throw error;
+			}
 			await rdr.authenticate(6, KEY_TYPE_B, key_b);
 			await rdr.read(6, 16, 16);
-			event_reply(event, 'nfc.test_b_key.ok', {...data});
-		} catch (err) {
-			console.log(err);
-			event_reply(event, 'nfc.test_b_key.fail', {...data});
+			return handle_return('nfc.test_b', {...data});
+		} catch (error) {
+			return handle_return('nfc.test_b', {...data}, error);
 		}
 	});
 
-	ipcMain.on('nfc.test_transport_key', async (event, data) => {
-		if (!can_reply('nfc.test_transport_key', data)){
-			return;
-		}
+	ipcMain.handle('nfc.test_transport', async (event, data) => {
+
+		const error = handle_error('nfc.test_transport', data);
 
 		try {
+			if (typeof error !== 'undefined'){
+				throw error;
+			}
 			await rdr.authenticate(6, KEY_TYPE_A, transport_key);
-			event_reply(event, 'nfc.test_transport_key.ok', {...data});
-		} catch (err) {
-			console.log(err);
-			event_reply(event, 'nfc.test_transport_key.fail', {...data});
+			return handle_return('nfc.test_transport', {...data});
+		} catch (error) {
+			return handle_return('nfc.test_transport', {...data}, error);
 		}
 	});
 
-	ipcMain.on('nfc.init', async (event, data) => {
-		if (!can_reply('nfc.init',  data)){
-			return;
-		}
-		const person = data.person;
-		const member_id = person._id.substring(1).padStart(8, '0');
-		const db = person.date_of_birth.split('/');
-		const date_of_birth = (db[2] + db[1] + db[0]).padStart(8, '0');
-		const str = date_of_birth + member_id;
-		const new_access = Buffer.from(key_a + read_a_write_b_access + key_b, 'hex');
-		const str_data = Buffer.alloc(16);
-		str_data.write(str, 'utf-8');
+	ipcMain.handle('nfc.write', async (event, data) => {
+
+		const error = handle_error('nfc.write', data);
+
 		try {
+			if (typeof error !== 'undefined'){
+				throw error;
+			}
+
+			const person = data.person;
+			const member_id = person._id.substring(1).padStart(8, '0');
+			const db = person.date_of_birth.split('/');
+			const date_of_birth = (db[2] + db[1] + db[0]).padStart(8, '0');
+			const str = date_of_birth + member_id;
+			const new_access = Buffer.from(key_a + read_a_write_b_access + key_b, 'hex');
+			const str_data = Buffer.alloc(16);
+			str_data.write(str, 'utf-8');
+
 			await rdr.authenticate(6, KEY_TYPE_A, transport_key);
 			await rdr.write(6, str_data, 16);
 			await rdr.write(7, new_access, 16);
@@ -156,19 +141,21 @@ const listen_pcsc = (wwin) => {
 			// try key A
 			await rdr.authenticate(6, KEY_TYPE_A, key_a);
 			console.log('key A set for reading', nfc_uid);
-			event_reply(event, 'nfc.init.ok', {...data});
-		} catch (err){
-			console.log(err);
-			event_reply(event, 'nfc.init.fail', {...data});
+			return handle_return('nfc.write', {...data});
+		} catch (error){
+			return handle_return('nfc.write', {...data}, error);
 		}
 	});
 
-	ipcMain.on('nfc.read', async (event, data) => {
-		if (!can_reply('nfc.read', data)){
-			return;
-		}
+	ipcMain.handle('nfc.read', async (event, data) => {
+
+		const error = handle_error('nfc.read', data);
 
 		try {
+			if (typeof error !== 'undefined'){
+				throw error;
+			}
+
 			await rdr.authenticate(6, KEY_TYPE_A, key_a);
 			const read_data = await rdr.read(6, 16, 16);
 			const str = read_data.toString();
@@ -177,33 +164,36 @@ const listen_pcsc = (wwin) => {
 			const bdate = str.substring(6, 8);
 			const date_of_birth = byear + '.' + bmonth + '.' + bdate;
 			const member_id = str.substring(8, 16);
-			event_reply(event, 'nfc.read.ok', {
+			return handle_return('nfc.read', {
 				...data,
 				date_of_birth,
 				member_id
 			});
-		} catch (err) {
-			console.log(err);
-			event_reply(event, 'nfc.read.fail', {...data});
+		} catch (error) {
+			return handle_return('nfc.read', {...data}, error);
 		}
 	});
 
-	ipcMain.on('nfc.reset', async (event, data) => {
-		if (!can_reply('nfc.reset', data)){
-			return;
-		}
-		const reset_access = Buffer.from(transport_key + transport_access + transport_key, 'hex');
-		const null_data = Buffer.alloc(16);
+	ipcMain.handle('nfc.reset', async (event, data) => {
+
+		const error = handle_error('nfc.reset', data);
+
 		try {
+			if (typeof error !== 'undefined'){
+				throw error;
+			}
+
+			const reset_access = Buffer.from(transport_key + transport_access + transport_key, 'hex');
+			const null_data = Buffer.alloc(16);
+
 			await rdr.authenticate(6, KEY_TYPE_B, key_b);
 			await rdr.write(6, null_data, 16);
 			await rdr.write(7, reset_access, 16);
 			// try transport_key
 			await rdr.authenticate(6, KEY_TYPE_A, transport_key);
-			event_reply(event, 'nfc.reset.ok', {...data});
-		} catch (err){
-			console.log(err);
-			event_reply(event, 'nfc.reset.fail', {...data});
+			return handle_return('nfc.reset', {...data});
+		} catch (error){
+			return handle_return('nfc.reset', {...data}, error);
 		}
 	});
 
@@ -237,7 +227,6 @@ const listen_pcsc = (wwin) => {
 
 			console.log(reader.reader.name);
 
-			rdr = reader;
 			nfc_uid = card.uid.toLowerCase();
 			key_b = crypto.createHash('sha256').update(feed_b + nfc_uid).digest('hex').substr(0, 12);
 			key_a = crypto.createHash('sha256').update(feed_a + nfc_uid).digest('hex').substr(0, 12);

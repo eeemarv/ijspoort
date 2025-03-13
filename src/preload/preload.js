@@ -2,7 +2,6 @@ import 'dotenv/config';
 import { shell } from 'electron';
 import { contextBridge, ipcRenderer } from 'electron/renderer';
 import { e_store_get, e_store_set } from './../main/e_store';
-import * as XLSX from 'xlsx/xlsx.mjs';
 const env = process.env;
 
 console.log('+++ PRELOAD +++');
@@ -41,16 +40,13 @@ contextBridge.exposeInMainWorld('bridge', {
   onWaterTemp: (callback) => ipcRenderer.on('water_temp', (ev, value) => callback(value)),
   onAirTemp: (callback) => ipcRenderer.on('air_temp', (ev, value) => callback(value)),
 
-  /** Desk to main process */
-  sendNfcReset: (data) => ipcRenderer.send('nfc.reset', data),
-  onNfcResetOk: (callback) => ipcRenderer.on('nfc.reset.ok', (ev, data) => callback(data)),
-  onNfcResetFail: (callback) => ipcRenderer.on('nfc.reset.fail', (ev, data) => callback(data)),
-  sendNfcRead: (data) => ipcRenderer.send('nfc.read', data),
-  onNfcReadOk: (callback) => ipcRenderer.on('nfc.read.ok', (ev, data) => callback(data)),
-  onNfcReadFail: (callback) => ipcRenderer.on('nfc.read.fail', (ev, data) => callback(data)),
-  sendNfcInit: (data) => ipcRenderer.send('nfc.init', data),
-  onNfcInitOk: (callback) => ipcRenderer.on('nfc.init.ok', (ev, data) => callback(data)),
-  onNfcInitFail: (callback) => ipcRenderer.on('nfc.init.fail', (ev, data) => callback(data)),
+  /** NFC Desk to main */
+
+  invokeNfcWrite: (data) => ipcRenderer.invoke('nfc.write', data),
+  invokeNfcRead: (data) => ipcRenderer.invoke('nfc.read', data),
+  invokeNfcReset: (data) => ipcRenderer.invoke('nfc.reset', data),
+  invokeNfcTestB: (data) => ipcRenderer.invoke('nfc.test_b', data),
+  invokeNfcTestTransport: (data) => ipcRenderer.invoke('nfc.test_transport', data),
 
   /** from Kiosk to Gate Interface */
   sendGateOpen: () => ipcRenderer.send('gate.open', {}),
@@ -83,16 +79,6 @@ contextBridge.exposeInMainWorld('bridge', {
   onNfcOn: (callback) => ipcRenderer.on('nfc.on', (ev, data) => callback(data)),
   onNfcOff: (callback) => ipcRenderer.on('nfc.off', (ev) => callback()),
 
-  /** for Desk from main process */
-  sendNfcTestTransportKey: (data) => ipcRenderer.send('nfc.test_transport_key', data),
-  onNfcTestTransportKeyOk: (callback) => ipcRenderer.on('nfc.test_transport_key.ok', (ev, data) => callback(data)),
-  onNfcTestTransportKeyFail: (callback) => ipcRenderer.on('nfc.test_transport_key.fail', (ev, data) => callback(data)),
-  onNfcTestAKeyOk: (callback) => ipcRenderer.on('nfc.test_a_key.ok', (ev, data) => callback(data)),
-  sendNfcTestBKey: (data) => ipcRenderer.send('nfc.test_b_key', data),
-  onNfcTestAKeyFail: (callback) => ipcRenderer.on('nfc.test_a_key.fail', (ev, data) => callback(data)),
-  onNfcTestBKeyOk: (callback) => ipcRenderer.on('nfc.test_b_key.ok', (ev, data) => callback(data)),
-  onNfcTestBKeyFail: (callback) => ipcRenderer.on('nfc.test_b_key.fail', (ev, data) => callback(data)),
-
   /** from mqtt (Kiosk) to Desk */
   onScanGateWait: (callback) => ipcRenderer.on('scan.gate.wait', (ev, nfc_id) => callback(nfc_id)),
   onScanGateFull: (callback) => ipcRenderer.on('scan.gate.full', (ev, nfc_id) => callback(nfc_id)),
@@ -103,6 +89,6 @@ contextBridge.exposeInMainWorld('bridge', {
   onScanGateNfcBlocked: (callback) => ipcRenderer.on('scan.gate.nfc_blocked', (ev, nfc_id) => callback(nfc_id)),
 
   /** file for Assist import */
-  getAssistFileSelect: () => ipcRenderer.invoke('assist_file.select'),
-  getAssistFileJson: (file) => ipcRenderer.invoke('assist_file.get_json', file),
+  invokeAssistFileSelect: () => ipcRenderer.invoke('assist_file.select'),
+  invokeAssistFileJson: (file) => ipcRenderer.invoke('assist_file.get_json', file),
 });

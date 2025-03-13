@@ -1,4 +1,3 @@
-// const { ipcRenderer } = window.require('electron');
 import { ev_nfc_scan } from '../services/events';
 import { gate_count } from '../services/store';
 import { gate_count_enabled } from '../services/store';

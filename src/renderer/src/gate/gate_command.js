@@ -1,4 +1,3 @@
-// const { ipcRenderer } = window.require('electron');
 import { sub_gate_member_open_time } from '../services/sub';
 
 const send_gate_open_once_with_timer = () => {

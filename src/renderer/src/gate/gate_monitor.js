@@ -1,4 +1,3 @@
-// const { ipcRenderer } = window.require('electron');
 import { gate_open } from '../services/store';
 
 const listen_gate_open = () => {

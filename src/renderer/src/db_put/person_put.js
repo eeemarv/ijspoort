@@ -100,7 +100,7 @@ const person_assist_import = async (file, member_period) => {
     return;
   }
 
-  const json_sheet = await window.bridge.getAssistFileJson(file);
+  const json_sheet = await window.bridge.invokeAssistFileJson(file);
   const persons_bulk = [];
 
   const import_map = new Map();

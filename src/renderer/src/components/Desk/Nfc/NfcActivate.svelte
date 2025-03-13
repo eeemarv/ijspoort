@@ -21,7 +21,7 @@
   let message = '';
   let contentClassName = 'bg-default';
 
-  const handle_activate_nfc = () => {
+  const handle_activate_nfc = async () => {
     if (!$desk_selected_person_id){
       return;
     }
@@ -48,28 +48,28 @@
       person: {...$person_map.get($desk_selected_person_id)},
       nfc_uid: nfc_id_to_uid(nfc_id)
     };
-    window.bridge.sendNfcInit(data);
-  };
 
-  window.bridge.onNfcInitOk((data) => {
-    nfc_add($desk_selected_person_id, nfc_uid_to_id(data.nfc_uid));
-    dispatch('activated');
-    setTimeout(() => {
-      open = false;
-    }, 1000);
-    message = 'Initialisatie ok.';
-    contentClassName = 'bg-success';
-    progress = 100;
-  });
+    const d = await window.bridge.invokeNfcWrite(data);
 
-  window.bridge.onNfcInitFail((data) => {
+    if (typeof d.error === 'undefined'){
+      nfc_add($desk_selected_person_id, nfc_uid_to_id(data.nfc_uid));
+      dispatch('activated');
+      setTimeout(() => {
+        open = false;
+      }, 1000);
+      message = 'Initialisatie ok.';
+      contentClassName = 'bg-success';
+      progress = 100;
+      return;
+    }
+    console.log('-error write nfc', d);
     setTimeout(() => {
       open = false;
     }, 5000);
     message = 'Initialisatie niet gelukt.';
     contentClassName = 'bg-danger';
     progress = 20;
-  });
+  };
 
   $: person_nfc_count = $person_nfc_map.get($desk_selected_person_id)?.size ?? 0;
 </script>
