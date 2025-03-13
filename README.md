@@ -60,8 +60,17 @@ Start app (dev mode):
 ```
 yarn dev
 ```
-
-Zie [dot_env_info](./dot_env_info) voor informatie over alle omgevingsvariabelen waarmee de applicatie opgestart wordt.
+Build Linux
+```
+yarn build:linux
+```
+De builds worden gegenereerd in de `dist` directory.
+[Voor AppImage is in Ubuntu 22.04 `libfuse2` nodig](https://askubuntu.com/questions/1403811/appimage-on-ubuntu-22-04):
+```
+sudo add-apt-repository universe
+sudo apt-get install libfuse2
+```
+Zie [dot_env_info](./dot_env_info) voor informatie over alle omgevingsvariabelen waarmee de applicatie opgestart wordt, te plaatsen in een `.env` bestand in de zelfde directory als de AppImage.
 
 ## MIT license
 

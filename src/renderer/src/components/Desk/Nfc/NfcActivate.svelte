@@ -1,5 +1,4 @@
 <script>
-//  const { ipcRenderer } = window.require('electron');
   import { createEventDispatcher } from 'svelte';
   import { Button } from '@sveltestrap/sveltestrap';
   import { nfc_map } from '../../../services/store';
@@ -49,7 +48,6 @@
       person: {...$person_map.get($desk_selected_person_id)},
       nfc_uid: nfc_id_to_uid(nfc_id)
     };
-    ipcRenderer.send('nfc.init', data);
     window.bridge.sendNfcInit(data);
   };
 
