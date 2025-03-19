@@ -1,6 +1,6 @@
 import rpio from 'rpio';
 
-const run_rtest = () => {
+const rtest = () => {
 
 rpio.spiBegin();
 rpio.spiChipSelect(0);                  /* Use CE0 */
