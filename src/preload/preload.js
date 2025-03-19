@@ -16,8 +16,8 @@ contextBridge.exposeInMainWorld('bridge', {
   getEnvDbPrefix: () => env.DB_PREFIX,
   getEnvDbLocalPrefix: () => env.DB_LOCAL_PREFIX,
   getEnvDbRemotePrefix: () => env.DB_REMOTE_PREFIX,
-  getEnvKioskAuth: () => env.GATE_AUTH,
-  envKioskEnabled: () => env.GATE === '1',
+  getEnvKioskAuth: () => env.KIOSK_AUTH || env.GATE_AUTH,
+  envKioskEnabled: () => env.KIOSK === '1' || env.GATE === '1',
   envDebugEnabled: () => env.DEBUG === '1',
   envEmulateSensEnabled: () => env.EMULATE_SENS === '1',
 

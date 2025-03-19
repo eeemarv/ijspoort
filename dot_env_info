@@ -17,21 +17,26 @@ DB_PREFIX=ijspoort_
 # DB_LOCAL_PREFIX=ijspoort_
 
 # Set GATE to "1" for gate modus (kiosk)
+# depreciated, will be renamed to kiosk
+
 GATE=0
+KIOSK=0
 
 # Authorize gate configuration
 # to users with a member_id or
 # a group in Assist
 # (or groups and/or member_id's
 # comma separated)
-# Group names are case and space 
+# Group names are case and space
 # insensitive
+# GATE_AUTH depreciated, use KIOSK_AUTH
 GATE_AUTH=dagelijks-bestuur,2050
+KIOSK_AUTH=dagelijks-bestuur,2050
 
 # Set DEBUG to "1" to open developer tools
 DEBUG=0
 
-# MFRC522 on Rasberry Pi 4B, 
+# MFRC522 on Rasberry Pi 4B,
 # for pin connection see ./scr/main/listen_mfrc.js
 # Set to "1" to enable
 MFRC522=0
@@ -40,4 +45,3 @@ MFRC522=0
 # EMULATE_SENS_IN_OUT=0
 # Emulate GPIO pins for testing (set to "1")
 # EMULATE_GPIO=0
-

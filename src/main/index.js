@@ -7,6 +7,7 @@ import listen_import_file from './listen_import_file.js';
 import { mqtt_init } from './mqtt.js';
 import listen_pcsc from './listen_pcsc.js';
 import EStore from 'electron-store';
+import { rtest } from './rtest.js';
 
 EStore.initRenderer();
 
@@ -15,8 +16,10 @@ let win;
 const env = process.env;
 
 const debug_enabled = env.DEBUG === '1';
-const gate_modus = env.GATE === '1';
+const kiosk_modus = env.KIOSK === '1' || env.GATE === '1';
 const mfrc522_enabled = env.MFRC522 === '1';
+
+rtest();
 
 // https://stackoverflow.com/questions/68874940/gpu-process-isnt-usable-goodbye
 //app.commandLine.appendSwitch('in-process-gpu');
@@ -59,12 +62,12 @@ const createWindow = () => {
     }
   });
 
-	if (!gate_modus){
+	if (!kiosk_modus){
 		win.setMinimumSize(1366, 768);
 		win.maximize();
 	}
 
-  if (gate_modus && !debug_enabled){
+  if (kiosk_modus && !debug_enabled){
 		win.setKiosk(true);
   }
 
@@ -86,7 +89,8 @@ const createWindow = () => {
 		*/
 
 		mqtt_init(win);
-		if (!gate_modus){
+
+		if (!kiosk_modus){
 			build_menu(win);
 			listen_import_file(win);
 		}

@@ -28,9 +28,7 @@ Voeg toe aan het einde van dit bestand:
 install nfc /bin/false
 install pn533 /bin/false
 ```
-* [node-hid](https://github.com/node-hid/node-hid#compiling-from-source)
-```
-sudo apt-get install libusb-1.0
+
 ```
 * [nfc-pcsc](https://github.com/pokusew/nfc-pcsc)
 ```
@@ -43,12 +41,30 @@ sudo apt-get install gcc
 Voor de poort-modus, aansturing door een Raspberry Pi 4B([Info](https://askubuntu.com/questions/1230947/gpio-for-raspberry-pi-gpio-group)):
 
 ```
-sudo apt install rpi.gpio-common
+sudo apt-get install rpi.gpio-common
 sudo adduser <user> dialout
 sudo reboot
 ```
+[Installeer node 22 en npm met nvm (Node Version Manager)](https://github.com/nvm-sh/nvm)
+```
+wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.2/install.sh | bash
+# reopen terminal
+nvm install 22
+```
+[Installeer yarn](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable)
+```
+npm install --global yarn
+```
+Installeer Git
+```
+sudo apt-get install git
+```
 
-Installatie:
+Installatie (in root directory van ijspoort):
+```
+git clone https://github.com/eeemarv/ijspoort
+```
+In de nieuw gecreëerde directory `ijspoort`, installeer node modules met:
 ```
 yarn install
 ```
@@ -64,6 +80,20 @@ Build Linux
 ```
 yarn build:linux
 ```
+[Voor mogelijk probleem met node-gyp](https://github.com/electron/rebuild/issues/1116)
+```
+pip install setuptools
+# or
+python3 -m pip install --break-system-packages setuptools
+```
+
+Voor ARM builds (Raspberry Pi, Orange Pi), see [these workarounds](https://www.beekeeperstudio.io/blog/electron-apps-for-arm-and-raspberry-pi)
+```
+export SNAPCRAFT_BUILD_ENVIRONMENT=host
+export USE_SYSTEM_FPM=true
+yarn run electron-builder --arm64 --armv7l --linux
+```
+
 De builds worden gegenereerd in de `dist` directory.
 [Voor AppImage is in Ubuntu 22.04 `libfuse2` nodig](https://askubuntu.com/questions/1403811/appimage-on-ubuntu-22-04):
 ```
