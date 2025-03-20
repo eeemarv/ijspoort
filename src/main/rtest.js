@@ -8,16 +8,20 @@ rpio.spiSetCSPolarity(0, rpio.LOW);
 rpio.spiSetClockDivider(128);           /*  128 == 1.95MHz */
 rpio.spiSetDataMode(0);
 
-var tx = Buffer.from([0x3, 0x0, 0x0, 0x0]);
+var tx = Buffer.from([0x03, 0x08, 0x08, 0x08]);
 var rx = Buffer.alloc(4);
-var out;
 var i, j = 0;
 
-for (i = 0; i < 128; i++, ++j) {
+console.log('-- spi test ---');
+
+for (i = 0; i < 128; i++) {
         tx[1] = i;
         rpio.spiTransfer(tx, rx, 4);
-        out = ((rx[2] << 1) | (rx[3] >> 7));
-        process.stdout.write(out.toString(16) + ((j % 16 == 0) ? '\n' : ' '));
+        for (j = 0; j < 4; j++){
+                console.log('tx ' + tx[j]);
+                console.log('rx ' + rx[j]);
+        }
+        console.log(' -- ' + i);
 }
 rpio.spiEnd();
 };
