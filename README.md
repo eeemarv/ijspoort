@@ -38,7 +38,7 @@ sudo apt-get install gcc
 
 ```
 
-Voor de poort-modus, aansturing door een Raspberry Pi 4B([Info](https://askubuntu.com/questions/1230947/gpio-for-raspberry-pi-gpio-group)):
+Voor de kiosk-modus, aansturing door een Raspberry Pi 4B([Info](https://askubuntu.com/questions/1230947/gpio-for-raspberry-pi-gpio-group)):
 
 ```
 sudo apt-get install rpi.gpio-common

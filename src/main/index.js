@@ -8,8 +8,9 @@ import { mqtt_init } from './mqtt.js';
 import listen_pcsc from './listen_pcsc.js';
 import EStore from 'electron-store';
 import icon from '../../resources/icon.png?asset';
+import SPI from 'pi-spi';
 
-import { rtest } from './rtest.js';
+//import { rtest } from './rtest.js';
 
 EStore.initRenderer();
 
@@ -22,7 +23,26 @@ const kiosk_modus = env.KIOSK === '1' || env.GATE === '1';
 const mfrc522_enabled = env.MFRC522 === '1';
 
 if (typeof env.RTEST_DIS === 'undefined'){
-	rtest();
+
+	var spi = SPI.initialize("/dev/spidev0.0"),
+	test = Buffer.from("Hello, World!");
+
+	// reads and writes simultaneously
+	// e.g. jumper MOSI [BCM 10, physical pin 19] to MISO [BCM 9, physical pin 21]
+	spi.transfer(test, test.length, function (e,d) {
+		if (e) console.error(e);
+		else console.log("Got \""+d.toString()+"\" back.");
+
+		if (test.toString() === d.toString()) {
+				console.log(msg);
+		} else {
+			// NOTE: this will likely happen unless MISO is jumpered to MOSI
+			console.warn(msg);
+			process.exit(-2);
+	}
+});
+
+//	rtest();
 }
 
 
