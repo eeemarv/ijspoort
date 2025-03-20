@@ -7,6 +7,8 @@ import listen_import_file from './listen_import_file.js';
 import { mqtt_init } from './mqtt.js';
 import listen_pcsc from './listen_pcsc.js';
 import EStore from 'electron-store';
+import icon from '../../resources/icon.png?asset';
+
 import { rtest } from './rtest.js';
 
 EStore.initRenderer();
@@ -19,7 +21,10 @@ const debug_enabled = env.DEBUG === '1';
 const kiosk_modus = env.KIOSK === '1' || env.GATE === '1';
 const mfrc522_enabled = env.MFRC522 === '1';
 
-rtest();
+if (typeof env.RTEST_DIS === 'undefined'){
+	rtest();
+}
+
 
 // https://stackoverflow.com/questions/68874940/gpu-process-isnt-usable-goodbye
 //app.commandLine.appendSwitch('in-process-gpu');
@@ -47,18 +52,12 @@ const createWindow = () => {
 		show: false,
 		darkTheme: true,
 		backgroundColor: '#000010',
-		icon: path.join(__dirname, '/../../icon/512x512.png'),
+		...(process.platform === 'linux' ? { icon } : {}),
+		//icon: path.join(__dirname, '/../../icon/512x512.png'),
     webPreferences: {
 			preload: path.join(__dirname, '/../preload/preload.js'),
 			sandbox: false,
-			contextIsolation: true,
-
-			// to_remove
-			/*
-      nodeIntegration: false,
-			nodeIntegrationInWorker: false,
-			enableRemoteModule: false
-			*/
+			contextIsolation: true
     }
   });
 
@@ -75,8 +74,6 @@ const createWindow = () => {
   .then(() => {
 		console.log('win then');
 		listen_pcsc(win);
-		//e_store_handle();
-
 		/**
 		if (mfrc522_enabled){
 			try {

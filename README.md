@@ -8,7 +8,7 @@ Het programma kent twee algemene modi:
 * Een poort modus: enkel voor toegangs-registratie met tags waarbij eventueel een elektrische poort wordt aangestuurd.
 
 Reguirements:
-* OS Ubuntu 22.04
+* OS Ubuntu 22.04, 24.04
 * NFC tag reader ACR122u
 * NFC tag reader MFRC522 (poort modus met Raspberry Pi 4B)
 
@@ -60,7 +60,7 @@ Installeer Git
 sudo apt-get install git
 ```
 
-Installatie (in root directory van ijspoort):
+Download code:
 ```
 git clone https://github.com/eeemarv/ijspoort
 ```
@@ -101,6 +101,12 @@ sudo add-apt-repository universe
 sudo apt-get install libfuse2
 ```
 Zie [dot_env_info](./dot_env_info) voor informatie over alle omgevingsvariabelen waarmee de applicatie opgestart wordt, te plaatsen in een `.env` bestand in de zelfde directory als de AppImage.
+
+De applicatie opstarten kan waarschijnlijk enkel [zonder sandbox](https://authmane512.medium.com/solve-the-suid-sandbox-helper-binary-was-found-but-is-not-configured-correctly-3-solutions-4f1425a9a76c).
+```
+cd dist
+./ijspoort.AppImage --no-sandbox
+```
 
 ## MIT license
 
