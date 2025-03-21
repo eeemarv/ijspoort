@@ -1,9 +1,8 @@
 "use strict";
 
 import { MFRC522 } from './mfrc522';
-
-const rpio = require('rpio');
-const { e_store_get } = require('./e_store');
+import rpio from 'rpio';
+import { e_store_get } from '../e_store';
 
 // connect mfrc522 to Raspberry Pi 4 B
 const reset_pin = 22;

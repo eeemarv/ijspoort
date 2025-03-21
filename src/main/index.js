@@ -1,12 +1,12 @@
 import 'dotenv/config';
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
-//import listen_mfrc from './listen_mfrc.js';
-import { listen_mfrc } from './mfrc/listen_mfrc.js';
+//import listen_mfrc from './listen_mfrc';
+import { listen_mfrc } from './mfrc/listen_mfrc';
 import build_menu from './build_menu.js';
-import listen_import_file from './listen_import_file.js';
-import { mqtt_init } from './mqtt.js';
-import listen_pcsc from './listen_pcsc.js';
+import listen_import_file from './listen_import_file';
+import { mqtt_init } from './mqtt';
+import listen_pcsc from './listen_pcsc';
 import EStore from 'electron-store';
 import icon from '../../resources/icon.png?asset';
 
