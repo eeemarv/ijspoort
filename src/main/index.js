@@ -2,15 +2,13 @@ import 'dotenv/config';
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 //import listen_mfrc from './listen_mfrc.js';
+import { listen_mfrc } from './mfrc/listen_mfrc.js';
 import build_menu from './build_menu.js';
 import listen_import_file from './listen_import_file.js';
 import { mqtt_init } from './mqtt.js';
 import listen_pcsc from './listen_pcsc.js';
 import EStore from 'electron-store';
 import icon from '../../resources/icon.png?asset';
-import SPI from 'pi-spi';
-
-//import { rtest } from './rtest.js';
 
 EStore.initRenderer();
 
@@ -21,30 +19,6 @@ const env = process.env;
 const debug_enabled = env.DEBUG === '1';
 const kiosk_modus = env.KIOSK === '1' || env.GATE === '1';
 const mfrc522_enabled = env.MFRC522 === '1';
-
-if (typeof env.RTEST_DIS === 'undefined'){
-
-	var spi = SPI.initialize("/dev/spidev0.0"),
-	test = Buffer.from("Hello, World!");
-
-	// reads and writes simultaneously
-	// e.g. jumper MOSI [BCM 10, physical pin 19] to MISO [BCM 9, physical pin 21]
-	spi.transfer(test, test.length, function (e,d) {
-		if (e) console.error(e);
-		else console.log("Got \""+d.toString()+"\" back.");
-
-		if (test.toString() === d.toString()) {
-				console.log(msg);
-		} else {
-			// NOTE: this will likely happen unless MISO is jumpered to MOSI
-			console.warn(msg);
-			process.exit(-2);
-	}
-});
-
-//	rtest();
-}
-
 
 // https://stackoverflow.com/questions/68874940/gpu-process-isnt-usable-goodbye
 //app.commandLine.appendSwitch('in-process-gpu');
@@ -94,16 +68,14 @@ const createWindow = () => {
   .then(() => {
 		console.log('win then');
 		listen_pcsc(win);
-		/**
+
 		if (mfrc522_enabled){
 			try {
-				// disabled for now, to write own mfrc522 interface
-				// listen_mfrc(win);
+				listen_mfrc(win);
 			} catch (err) {
 				console.log(err);
 			}
 		}
-		*/
 
 		mqtt_init(win);
 

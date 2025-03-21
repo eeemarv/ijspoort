@@ -4189,13 +4189,6 @@ pend@~1.2.0:
   resolved "https://registry.npmjs.org/pend/-/pend-1.2.0.tgz"
   integrity sha512-F3asv42UuXchdzt+xXqfW1OGlVBe+mxa2mqI0pg5yAHZPvFmY3Y6drSf/GQ1A86WgWEN9Kzh/WrgKa6iGcHXLg==
 
-pi-spi@^1.2.1:
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/pi-spi/-/pi-spi-1.2.1.tgz#14275e906adb0e5117f00ac3c2d4a2e5e3168040"
-  integrity sha512-cPquRYzFZJzPwFpFpLOY13bg+jYzufo0hhYi+IsMlcSSdmzHqHLvghUz4vZWcjm6tqiEwNoMP8MQR1wuyLpnnw==
-  dependencies:
-    nan "^2.14.0"
-
 picocolors@^1.0.0, picocolors@^1.1.1:
   version "1.1.1"
   resolved "https://registry.npmjs.org/picocolors/-/picocolors-1.1.1.tgz"
@@ -4554,7 +4547,14 @@ rollup@^4.30.1:
     "@rollup/rollup-win32-x64-msvc" "4.35.0"
     fsevents "~2.3.2"
 
-rpio@^2.4.2:
+rpi-softspi@^1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/rpi-softspi/-/rpi-softspi-1.0.5.tgz#f63bb7dd86358220dcdc2d90c546389ad6cb3f61"
+  integrity sha512-b9umzQUk7p6HRSmQV3U9+ooboBOaodzJwqvZjX993D88geQePNzLaZDDQkMW2Ny14FwSUB3IvpBP3KFzv2rdaA==
+  dependencies:
+    rpio "*"
+
+rpio@*, rpio@^2.4.2:
   version "2.4.2"
   resolved "https://registry.yarnpkg.com/rpio/-/rpio-2.4.2.tgz#e16d58f7937cc8b30083c3f8df051f5d9f14a1b3"
   integrity sha512-SiWw2VorgUh+0hbu6eJkRGG+luvS9BboXz6PQl8Z49kJ+8Nn7R/b4ohybLIYSMbQqcW1WYqSooadDuv1VOAiFw==
