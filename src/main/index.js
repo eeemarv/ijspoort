@@ -67,15 +67,12 @@ const createWindow = () => {
   win.loadFile(path.join(__dirname, '../renderer/index.html'))
   .then(() => {
 		console.log('win then');
-		listen_pcsc(win);
 
 		if (mfrc522_enabled){
-			try {
-				listen_mfrc(win);
-			} catch (err) {
-				console.log(err);
-			}
+			listen_mfrc(win);
 		}
+
+		listen_pcsc(win);
 
 		mqtt_init(win);
 
