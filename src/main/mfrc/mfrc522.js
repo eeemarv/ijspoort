@@ -158,7 +158,7 @@ class MFRC522 {
    * @param {Array} byteAry - sent to the card through the RC522 data
    * @returns {{success: boolean, data: Array, size: number}}
    */
-  toCard(command, bitsToSend) {
+  toCard(command, byteAry) {
     let data = [];
     let size = 0;
     let success = false;
@@ -179,18 +179,22 @@ class MFRC522 {
     this.clearRegisterBitMask(PCD_Reg.ComIrq, 0x80); //Clears all interrupt request bits
     this.setRegisterBitMask(PCD_Reg.FIFOLevel, 0x80); //FlushBuffer=1, FIFO initialization
     this.writeRegister(PCD_Reg.Command, PCD_Command.Idle); // Stop calculating CRC for new content in the FIFO.
+
     //Write data to the FIFO
     for (let i = 0; i < byteAry.length; i++) {
       this.writeRegister(PCD_Reg.FIFOData, byteAry[i]);
     }
+
     //Excuting command
     this.writeRegister(PCD_Reg.Command, command);
     if (command === PCD_Command.Transceive) {
       this.setRegisterBitMask(PCD_Reg.BitFraming, 0x80); //StartSend=1,transmission of data starts
     }
+
     //Wait for the received data to complete
     let i = 2000; //According to the clock frequency adjustment, operation M1 card maximum waiting time 25ms
     let n = 0;
+
     do {
       n = this.readRegister(PCD_Reg.ComIrq);
       i--;
