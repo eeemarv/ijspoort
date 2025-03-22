@@ -21,8 +21,10 @@ const kiosk_modus = env.KIOSK === '1' || env.GATE === '1';
 const mfrc522_enabled = env.MFRC522 === '1';
 
 // https://stackoverflow.com/questions/68874940/gpu-process-isnt-usable-goodbye
-//app.commandLine.appendSwitch('in-process-gpu');
-//app.commandLine.appendSwitch('no-sandbox');
+if (kiosk_modus){
+	app.commandLine.appendSwitch('in-process-gpu');
+	app.commandLine.appendSwitch('no-sandbox');
+}
 
 // Live Reload
 /**
