@@ -4,7 +4,7 @@ import mqtt from 'mqtt';
 
 const env = process.env;
 const env_mqtt_host = env.MQTT_HOST;
-const kiosk_modus = env.KIOSK === 1 || env.GATE === '1';
+const kiosk_modus = env.KIOSK === '1' || env.GATE === '1';
 const mqtt_client_type = kiosk_modus ? 'kiosk' : 'desk';
 const mqtt_client_id = mqtt_client_type + '_' + Math.random().toString(16).slice(3).substring(0,4);
 
