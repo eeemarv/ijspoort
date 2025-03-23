@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { app, BrowserWindow } from 'electron';
 import path from 'path';
 //import listen_mfrc from './listen_mfrc';
-import { listen_mfrc } from './mfrc/listen_mfrc';
+import listen_mfrc from './mfrc_2/listen_mfrc';
 import build_menu from './build_menu.js';
 import listen_import_file from './listen_import_file';
 import { mqtt_init } from './mqtt';
