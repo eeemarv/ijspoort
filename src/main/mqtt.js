@@ -4,8 +4,8 @@ import mqtt from 'mqtt';
 
 const env = process.env;
 const env_mqtt_host = env.MQTT_HOST;
-const gate_modus = env?.GATE === '1';
-const mqtt_client_type = gate_modus ? 'gate' : 'desk';
+const kiosk_modus = env.KIOSK === 1 || env.GATE === '1';
+const mqtt_client_type = kiosk_modus ? 'kiosk' : 'desk';
 const mqtt_client_id = mqtt_client_type + '_' + Math.random().toString(16).slice(3).substring(0,4);
 
 const topics_subscr_common = () => {
@@ -17,8 +17,8 @@ const topics_subscr_common = () => {
 	];
 };
 
-const topics_subscr_gate_modus = () => {
-	if (!gate_modus){
+const topics_subscr_kiosk_modus = () => {
+	if (!kiosk_modus){
 		return [];
 	}
 	return [
@@ -28,7 +28,7 @@ const topics_subscr_gate_modus = () => {
 };
 
 const topics_subscr_desk_modus = () => {
-	if (gate_modus){
+	if (kiosk_modus){
 		return [];
 	}
 	return [
@@ -63,7 +63,7 @@ const mqtt_init = (win) => {
 
 	const topic_subscr_ary = [
 		...topics_subscr_common(),
-		...topics_subscr_gate_modus(),
+		...topics_subscr_kiosk_modus(),
 		...topics_subscr_desk_modus()
 	];
 
@@ -157,7 +157,7 @@ const mqtt_init = (win) => {
 		}
 	});
 
-	if (gate_modus){
+	if (kiosk_modus){
 		on_main_to_mqtt('gate.open', 'g/open/in');
 		on_main_to_mqtt('gate.open_once_with_timer', 'g/once/in');
 		on_main_to_mqtt('gate.close', 'g/close/in');
@@ -181,7 +181,7 @@ const mqtt_init = (win) => {
 		}, 5000);
 	}
 
-	if (!gate_modus){
+	if (!kiosk_modus){
 		setInterval(() => {
 			mqtt_client.publish('desk/p', mqtt_client_id, {}, (err) => {
 				if (err){
