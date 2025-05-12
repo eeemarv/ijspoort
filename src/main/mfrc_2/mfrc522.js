@@ -8,6 +8,7 @@
 
 import CMD from './reg_cmd';
 import rpio from 'rpio';
+import { SPIDevice } from './spi';
 import SoftSPI from 'rpi-softspi';
 
 const OK = true;
@@ -19,6 +20,7 @@ class MFRC522 {
   /**
    */
   constructor() {
+    /*
     this.spi = new SoftSPI({
       clock: 23,
       mosi: 19,
@@ -26,6 +28,8 @@ class MFRC522 {
       client: 24
     });;
     this.spi.open();
+    */
+    this.spi = new SPIDevice();
     return this;
   }
 
@@ -34,7 +38,7 @@ class MFRC522 {
     // Hold RESET pin low for 50ms to hard reset the reader
     rpio.open(this.reset_pin, rpio.OUTPUT, rpio.LOW);
     setTimeout(function() {
-          rpio.write(this.reset_pin, rpio.HIGH);
+      rpio.write(this.reset_pin, rpio.HIGH);
     }.bind(this), 50);
     return this;
   }
@@ -69,7 +73,7 @@ class MFRC522 {
   }
 
   /**
-   * Writes a bit to the specified register in the MFRC522 chip.
+   * Writes a byte to the specified register in the MFRC522 chip.
    * The interface is described in the datasheet section 8.1.2.
    *
    * @param {any} addr
@@ -78,8 +82,10 @@ class MFRC522 {
    */
   writeRegister(addr, val) {
     const data = [(addr << 1) & 0x7e, val];
-    const uint8Data = Uint8Array.from(data);
-    this.spi.write(uint8Data);
+    //const uint8Data = Uint8Array.from(data);
+    const buffer = Buffer.from(data);
+    //this.spi.write(uint8Data);
+    this.spi.transferSync(uint8Data);
   }
 
   /**
@@ -105,7 +111,7 @@ class MFRC522 {
   }
 
   /**
-   * Reads a bit from the specified register in the MFRC522 chip.
+   * Reads a byte from the specified register in the MFRC522 chip.
    * The interface is described in the datasheet section 8.1.2.
    *
    * @param {any} addr
@@ -114,9 +120,12 @@ class MFRC522 {
    */
   readRegister(addr) {
     const data = [((addr << 1) & 0x7e) | 0x80, 0];
-    const uint8Data = Uint8Array.from(data);
-    const uint8DataResponse = this.spi.transfer(uint8Data);
-    return uint8DataResponse[1];
+    //const uint8Data = Uint8Array.from(data);
+    //const uint8DataResponse = this.spi.transfer(uint8Data);
+    const txBuffer = Buffer.from(data);
+    const rxBuffer = this.spi.transferSync(txBuffer);
+    //return uint8DataResponse[1];
+    return rxBuffer[1];
   }
 
   /**

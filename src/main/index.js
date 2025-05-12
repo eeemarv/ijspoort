@@ -8,7 +8,7 @@ import listen_import_file from './listen_import_file';
 import { mqtt_init } from './mqtt';
 import listen_pcsc from './listen_pcsc';
 import EStore from 'electron-store';
-import icon from '../../resources/icon.png?asset';
+import icon from '../../resources/512x512.png?asset';
 
 EStore.initRenderer();
 
@@ -49,7 +49,6 @@ const createWindow = () => {
 		darkTheme: true,
 		backgroundColor: '#000010',
 		...(process.platform === 'linux' ? { icon } : {}),
-		//icon: path.join(__dirname, '/../../icon/512x512.png'),
     webPreferences: {
 			preload: path.join(__dirname, '/../preload/preload.js'),
 			sandbox: false,
