@@ -9,7 +9,8 @@
 import CMD from './reg_cmd';
 import rpio from 'rpio';
 import { SPIDevice } from './spi';
-import SoftSPI from 'rpi-softspi';
+import { Buffer } from 'buffer';
+//import SoftSPI from 'rpi-softspi';
 
 const OK = true;
 const ERROR = false;
@@ -83,9 +84,9 @@ class MFRC522 {
   writeRegister(addr, val) {
     const data = [(addr << 1) & 0x7e, val];
     //const uint8Data = Uint8Array.from(data);
-    const buffer = Buffer.from(data);
+    const txBuffer = Buffer.from(data);
     //this.spi.write(uint8Data);
-    this.spi.transferSync(uint8Data);
+    this.spi.transferSync(txBuffer);
   }
 
   /**

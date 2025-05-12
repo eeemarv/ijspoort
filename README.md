@@ -68,6 +68,20 @@ Download code:
 ```
 git clone https://github.com/eeemarv/ijspoort
 ```
+Op Raspberry Pi 4B, voor rechten op de gpio, kopiëer files in /udev van repo naar /etc/udev/rules.d
+Dan, herlaad udev rules.
+```
+sudo udevadm control --reload-rules
+sudo udevadm trigger
+```
+Check na reboot de rechten. Dit moet geven:
+```
+> ls -l /dev/gpio*
+crw-rw----+ 1 root gpio 254, 0 Mai 12 11:55 /dev/gpiochip0
+crw-rw----  1 root gpio 254, 1 Mai 12 11:55 /dev/gpiochip1
+crw-rw----  1 root gpio 239, 0 Mai 12 11:55 /dev/gpiomem
+
+```
 In de nieuw gecreëerde directory `ijspoort`, installeer node modules met:
 ```
 yarn install
