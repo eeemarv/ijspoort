@@ -55,6 +55,10 @@ nvm install 22
 ```
 npm install --global yarn
 ```
+Installeer node-gyp
+```
+yarn global add node-gyp
+```
 Installeer Git
 ```
 sudo apt-get install git
