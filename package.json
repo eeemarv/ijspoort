@@ -18,6 +18,7 @@
     "build:linux": "npm run build && electron-builder --linux"
   },
   "dependencies": {
+    "@eeemarv/io-spi": "^0.1.0",
     "@electron-toolkit/preload": "^3.0.1",
     "@electron-toolkit/utils": "^4.0.0",
     "nfc-pcsc": "^0.8.1",

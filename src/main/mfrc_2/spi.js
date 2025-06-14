@@ -2,6 +2,7 @@
 
 import fs from 'fs';
 import { Buffer } from 'buffer';
+import { setTimeout } from 'timers/promises';
 
 class SPIDevice {
   constructor(device = '/dev/spidev0.0') {
@@ -12,6 +13,7 @@ class SPIDevice {
     const rxBuffer = Buffer.alloc(txBuffer.length);
     fs.writeSync(this.fd, txBuffer);
     fs.readSync(this.fd, rxBuffer);
+
     return rxBuffer;
   }
 
