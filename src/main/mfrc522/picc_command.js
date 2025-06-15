@@ -1,11 +1,13 @@
+// @ts-check
 "use strict";
 
 /**
  * Based on https://github.com/miguelbalboa/rfid
  * Commands sent to the PICC.
+ * https://www.nxp.com/docs/en/data-sheet/MFRC522.pdf
  */
 
-export const PICC_Command = {
+const PICC_Cmd = {
 		// The commands used by the PCD to manage communication with several PICCs (ISO 14443-3, Type A, section 6.4)
   REQA: 0x26,		// REQuest command, Type A. Invites PICCs in state IDLE to go to READY and prepare for anticollision or selection. 7 bit frame.
   WUPA: 0x52,		// Wake-UP command, Type A. Invites PICCs in state IDLE and HALT to go to READY(*) and prepare for anticollision or selection. 7 bit frame.
@@ -30,3 +32,5 @@ export const PICC_Command = {
 		// The MF_READ and MF_WRITE can also be used for MIFARE Ultralight.
   UL_WRITE: 0xA2		// Writes one 4 byte page to the PICC.
 };
+
+export { PICC_Cmd };

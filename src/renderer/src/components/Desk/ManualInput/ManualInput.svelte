@@ -90,6 +90,7 @@
             show_not_member
           />
         </label>
+      </div>
     </span>
   </div>
   <span id="manual_help">

@@ -25,6 +25,14 @@ const listen_nfc_device = () => {
     }, 5000);
   });
 
+  window.bridge.onDevNfcSpeed((speed) => {
+    ev_nfc_scan.dispatchEvent(new CustomEvent('nfc_device_speed', {
+      detail: {
+        speed
+      }
+    }));
+  });
+
   setInterval(() => {
     ev_nfc_scan.dispatchEvent(new Event(on ? 'nfc_device_on' : 'nfc_device_off'));
     ev_nfc_scan.dispatchEvent(new Event(error ? 'nfc_device_error' : 'nfc_device_no_error'));

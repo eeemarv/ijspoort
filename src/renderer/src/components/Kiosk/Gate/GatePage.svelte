@@ -36,13 +36,13 @@
       <Col md=3 class="h-100 d-flex justify-content-center align-items-center">
         <TemperatureCard font_size=.9em />
       </Col>
-      <Col md=3 class="h-100 d-flex justify-content-center align-items-center">
+      <Col md=2 class="h-100 d-flex justify-content-center align-items-center">
         {#if $gate_count_enabled}
-          <Clock font_size=2em />
+          <Clock font_size=1.5em />
         {/if}
       </Col>
     {:else}
-      <Col md=6 class="h-100 d-flex justify-content-center align-items-center">
+      <Col md=5 class="h-100 d-flex justify-content-center align-items-center">
         {#if $gate_count_enabled}
           <Clock font_size=3em />
         {/if}

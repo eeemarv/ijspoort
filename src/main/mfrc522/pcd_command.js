@@ -1,11 +1,13 @@
+// @ts-check
 "use strict";
 
 /**
  * based on https://github.com/miguelbalboa/rfid
  * MFRC522 commands. chapter 10
+ * https://www.nxp.com/docs/en/data-sheet/MFRC522.pdf
 */
 
-export const PCD_Command = {
+const PCD_Cmd = {
   Idle: 0x00,		// no action, cancels current command execution
   Mem: 0x01,		// stores 25 bytes into the internal buffer
   GenerateRandomID: 0x02,		// generates a 10-byte random ID number
@@ -17,3 +19,5 @@ export const PCD_Command = {
   MFAuthent: 0x0E,		// performs the MIFARE standard authentication as a reader
   SoftReset: 0x0F		// resets the MFRC522
 };
+
+export { PCD_Cmd };

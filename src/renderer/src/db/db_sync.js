@@ -30,7 +30,7 @@ const dispatch_sync = (source, type, err_msg = undefined) => {
     detail.err = err;
   }
   ev_db_sync.dispatchEvent(new CustomEvent('sync', {
-    detail: detail
+    detail
   }));
   console.log('__sync__' + source + '.' + type);
   if (typeof err_msg !== 'undefined'){

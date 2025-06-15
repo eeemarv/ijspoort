@@ -75,6 +75,7 @@ contextBridge.exposeInMainWorld('bridge', {
   onDevNfcOn: (callback) => ipcRenderer.on('dev.nfc.on', (ev) => callback()),
   onDevNfcOff: (callback) => ipcRenderer.on('dev.nfc.off', (ev) => callback()),
   onDevNfcError: (callback) => ipcRenderer.on('dev.nfc.error', (ev) => callback()),
+  onDevNfcSpeed: (callback) => ipcRenderer.on('dev.nfc.speed', (ev, speed) => callback(speed)),
 
   onNfcOn: (callback) => ipcRenderer.on('nfc.on', (ev, data) => callback(data)),
   onNfcOff: (callback) => ipcRenderer.on('nfc.off', (ev) => callback()),
