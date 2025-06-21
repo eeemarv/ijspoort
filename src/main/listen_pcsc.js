@@ -7,9 +7,9 @@ const env = process.env;
 
 const feed_a = env?.FEED_A;
 const feed_b = env?.FEED_B;
-const read_a_write_b_access = '78778800';
-const transport_access = 'FF078000';
-const transport_key = 'ffffffffffff';
+const READ_A_WRITE_B_ACCESS = '78778800';
+const TRANSPORT_ACCESS = 'FF078000';
+const TRANSPORT_KEY = 'ffffffffffff';
 
 if (typeof feed_a !== 'string' || !feed_a){
 	throw 'No FEED_A set!';
@@ -107,7 +107,7 @@ const listen_pcsc = (wwin) => {
 			if (typeof error !== 'undefined'){
 				throw error;
 			}
-			await rdr.authenticate(6, KEY_TYPE_A, transport_key);
+			await rdr.authenticate(6, KEY_TYPE_A, TRANSPORT_KEY);
 			return handle_return('nfc.test_transport', {...data});
 		} catch (error) {
 			return handle_return('nfc.test_transport', {...data}, error);
@@ -128,11 +128,11 @@ const listen_pcsc = (wwin) => {
 			const db = person.date_of_birth.split('/');
 			const date_of_birth = (db[2] + db[1] + db[0]).padStart(8, '0');
 			const str = date_of_birth + member_id;
-			const new_access = Buffer.from(key_a + read_a_write_b_access + key_b, 'hex');
+			const new_access = Buffer.from(key_a + READ_A_WRITE_B_ACCESS + key_b, 'hex');
 			const str_data = Buffer.alloc(16);
 			str_data.write(str, 'utf-8');
 
-			await rdr.authenticate(6, KEY_TYPE_A, transport_key);
+			await rdr.authenticate(6, KEY_TYPE_A, TRANSPORT_KEY);
 			await rdr.write(6, str_data, 16);
 			await rdr.write(7, new_access, 16);
 			// try key B
@@ -183,14 +183,14 @@ const listen_pcsc = (wwin) => {
 				throw error;
 			}
 
-			const reset_access = Buffer.from(transport_key + transport_access + transport_key, 'hex');
+			const reset_access = Buffer.from(TRANSPORT_KEY + TRANSPORT_ACCESS + TRANSPORT_KEY, 'hex');
 			const null_data = Buffer.alloc(16);
 
 			await rdr.authenticate(6, KEY_TYPE_B, key_b);
 			await rdr.write(6, null_data, 16);
 			await rdr.write(7, reset_access, 16);
 			// try transport_key
-			await rdr.authenticate(6, KEY_TYPE_A, transport_key);
+			await rdr.authenticate(6, KEY_TYPE_A, TRANSPORT_KEY);
 			return handle_return('nfc.reset', {...data});
 		} catch (error){
 			return handle_return('nfc.reset', {...data}, error);

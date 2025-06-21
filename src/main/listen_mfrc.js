@@ -1,19 +1,20 @@
 "use strict";
 
 import { MFRC522Scan } from './mfrc522/mfrc522';
-import rpio from 'rpio';
+import { Chip, Line } from 'node-libgpiod'
 import { e_store_get } from './e_store';
 
-const buzzer_pin = 18;
-const buzzer_time = 20;
+const BUZZER_GPIO = 24; // Corresponds to physical pin 18 on RPi 4B
+const BUZZER_TIME = 50;
 
-const uid_timeout_ms = 500;
+const UID_TIMEOUT_MS = 500;
 let uid_timeout_id;
 let uid_send;
 
 const listen_mfrc = (win) => {
-	rpio.open(buzzer_pin, rpio.OUTPUT);
-	rpio.write(buzzer_pin, rpio.HIGH);
+	const gpiochip = new Chip('gpiochip0');
+	const buzzer_pin = new Line(gpiochip, BUZZER_GPIO);
+	buzzer_pin.requestOutputMode('ijspoort-buzzer', 1);
 
 	const scan = new MFRC522Scan();
 
@@ -39,7 +40,7 @@ const listen_mfrc = (win) => {
 		uid_timeout_id = setTimeout(() => {
 			win.webContents.send('nfc.off');
 			uid_send = undefined;
-		}, uid_timeout_ms);
+		}, UID_TIMEOUT_MS);
 
 		if (uid_send === nfc_uid){
 			// uid already send, skip
@@ -48,10 +49,10 @@ const listen_mfrc = (win) => {
 
 		// beep
 		if (e_store_get('gate_beep_enabled', false)){
-			rpio.write(buzzer_pin, rpio.LOW);
+			buzzer_pin.setValue(0);
 			setTimeout(() => {
-				rpio.write(buzzer_pin, rpio.HIGH);
-			}, buzzer_time);
+				buzzer_pin.setValue(1);
+			}, BUZZER_TIME);
 		}
 
 		win.webContents.send('nfc.on', {nfc_uid});

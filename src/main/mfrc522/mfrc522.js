@@ -510,13 +510,13 @@ class MFRC522Scan {
    * Set time before trying to attempt
    * raise the SPI clock
    * at least 10 minutes:
-   * <attempt_cycles> * 50ms * 12_000 before
+   * <attempt_cycles> * 50ms * 1200 before
    * speed attempts to go up.
    * At lower speeds the device will be busy, so
    * scan time will be a multiple of 50ms.
    */
   #setSpeedTimer = () => {
-    this.#speedTimer = 12_000;
+    this.#speedTimer = 1200;
   }
 
   /**

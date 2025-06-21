@@ -22,8 +22,7 @@ export default defineConfig({
           rollupOptions: {
             // Here are some C/C++ modules them can't be built properly
             external: [
-              'nfc-pcsc',
-              'rpio',
+              'nfc-pcsc'
             ],
           },
         },
