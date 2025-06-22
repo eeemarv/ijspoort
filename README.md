@@ -26,7 +26,6 @@ sudo apt-get install pcscd pcsc-tools
 
 [Blacklist pre-installed drivers](https://oneguyoneblog.com/2016/11/02/acr122u-nfc-usb-reader-linux-mint/)
 
-
 ```bash
 sudo nano /etc/modprobe.d/blacklist.conf
 ```
@@ -124,7 +123,6 @@ Download code
 git clone https://github.com/eeemarv/ijspoort
 ```
 
-```
 In de nieuw gecreëerde directory `ijspoort`, installeer node modules
 
 ```bash
