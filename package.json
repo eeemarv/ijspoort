@@ -84,7 +84,7 @@
   },
   "linux": {
     "target": "AppImage",
-    "icon": "resources/512x512.png",
+    "icon": "build/icon.png",
     "category": "Utility"
   }
 }

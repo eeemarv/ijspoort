@@ -18,7 +18,7 @@ export default defineConfig({
       entry: 'src/main/index.js',
       vite: {
         build: {
-          assetsInclude: ['resources/512x512.png'],
+          assetsInclude: ['build/icon.png'],
           rollupOptions: {
             // Here are some C/C++ modules them can't be built properly
             external: [
