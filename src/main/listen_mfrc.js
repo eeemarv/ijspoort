@@ -6,15 +6,16 @@ import { e_store_get } from './e_store';
 
 const BUZZER_GPIO = 24; // Corresponds to physical pin 18 on RPi 4B
 const BUZZER_TIME = 20;
-global.gpiochip = new Chip('gpiochip0');
-global.buz = new Line(gpiochip, BUZZER_GPIO);
+const buz = {};
 
 const UID_TIMEOUT_MS = 500;
 let uid_timeout_id;
 let uid_send;
 
 const listen_mfrc = (win) => {
-	buz.requestOutputMode('ijspoort-buzzer', 1);
+	buz.gpiochip = new Chip('gpiochip0');
+	buz.p = new Line(buz.gpiochip, BUZZER_GPIO);
+	buz.p.requestOutputMode('ijspoort-buzzer', 1);
 
 	const scan = new MFRC522Scan();
 
@@ -49,9 +50,9 @@ const listen_mfrc = (win) => {
 
 		// beep
 		if (e_store_get('gate_beep_enabled', false)){
-			buz.setValue(0);
+			buz.p.setValue(0);
 			setTimeout(() => {
-				buz.setValue(1);
+				buz.p.setValue(1);
 			}, BUZZER_TIME);
 		}
 

@@ -184,4 +184,4 @@ cd dist
 
 ## MIT license
 
-[MIT license](./LICENSE)
+[MIT license](https://github.com/eeemarv/ijspoort/blob/main/LICENSE)
