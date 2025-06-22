@@ -5,16 +5,16 @@ import { Chip, Line } from 'node-libgpiod'
 import { e_store_get } from './e_store';
 
 const BUZZER_GPIO = 24; // Corresponds to physical pin 18 on RPi 4B
-const BUZZER_TIME = 50;
+const BUZZER_TIME = 20;
+global.gpiochip = new Chip('gpiochip0');
+global.buz = new Line(gpiochip, BUZZER_GPIO);
 
 const UID_TIMEOUT_MS = 500;
 let uid_timeout_id;
 let uid_send;
 
 const listen_mfrc = (win) => {
-	const gpiochip = new Chip('gpiochip0');
-	const buzzer_pin = new Line(gpiochip, BUZZER_GPIO);
-	buzzer_pin.requestOutputMode('ijspoort-buzzer', 1);
+	buz.requestOutputMode('ijspoort-buzzer', 1);
 
 	const scan = new MFRC522Scan();
 
@@ -49,9 +49,9 @@ const listen_mfrc = (win) => {
 
 		// beep
 		if (e_store_get('gate_beep_enabled', false)){
-			buzzer_pin.setValue(0);
+			buz.setValue(0);
 			setTimeout(() => {
-				buzzer_pin.setValue(1);
+				buz.setValue(1);
 			}, BUZZER_TIME);
 		}
 

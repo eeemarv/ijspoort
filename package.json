@@ -5,6 +5,26 @@
   "main": "./out/main/index.js",
   "author": "Maarten Vandekeybus",
   "homepage": "https://github.com/eeemarv/ijspoort",
+  "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eeemarv/ijspoort.git"
+  },
+  "bugs": {
+    "url": "https://github.com/eeemarv/ijspoort/issues"
+  },
+  "keywords": [
+    "electron",
+    "svelte",
+    "desktop",
+    "entrance",
+    "mifare"
+  ],
+  "engines": {
+    "node": ">=22.0.0",
+    "npm": ">=11.0.0"
+  },
   "scripts": {
     "format": "prettier --plugin prettier-plugin-svelte --write .",
     "lint": "eslint --cache .",
