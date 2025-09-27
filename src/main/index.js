@@ -91,6 +91,7 @@ const createWindow = () => {
 
   win.once('ready-to-show', () => {
 		console.log('win event ready-to-show');
+		win.maximize();
 		win.show();
   });
 
